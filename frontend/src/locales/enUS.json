@@ -1,0 +1,6 @@
+{
+    "loading_state_changed":  "Loading: ",
+    "loading_ajax_finished": "Everything loaded, Initializing buffers...",
+    "loading_finished": "Everything loaded and initialized!",
+    "loading_failed": "ERROR: Failed to load ${name}"
+}

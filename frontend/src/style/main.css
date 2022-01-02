@@ -1,0 +1,22 @@
+body {
+    margin: 0 !important;
+}
+
+#game-canvas {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    margin: 0;
+}
+
+#loading-screen-div {
+    display: flex;
+    background-color: rgb(27, 22, 22);
+    color:rgb(241, 229, 229);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9;
+    margin: 0;
+}

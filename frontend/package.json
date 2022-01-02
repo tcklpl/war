@@ -1,0 +1,26 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "minify-html": "npx html-minifier --collapse-whitespace --remove-comments --input-dir ./src/ --output-dir ./out/ --file-ext html",
+    "watch-html": "npx nodemon -e html -w ./src/ -x \"npm run minify-html\"",
+    "watch-ts": "npx nodemon -e ts -w ./src/ -x \"tsc\"",
+    "sync-others": "rsync -a --exclude '*.html' --exclude '*.ts' src/ out/",
+    "compile": "npm run minify-html && tsc && npm run sync-others",
+    "watch": "npm run watch-html & npm run watch-ts",
+    "clean": "rm -r ./out/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jquery": "^3.5.10",
+    "html-minifier": "^4.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0"
+  }
+}
