@@ -31,7 +31,7 @@ export class Renderer {
 
         gl.clearColor(0, 0, 0, 1);
 
-        let pickingShader = Game.instance.getEngine().shaders.getByName('picking');
+        let pickingShader = Game.instance.engine.shaders.getByName('picking');
         if (!pickingShader) throw `Failed to acquire the picking shader`;
         this.pickingShaderProgram = pickingShader;
 
@@ -40,7 +40,7 @@ export class Renderer {
     }
 
     render() {
-        Game.instance.getEngine().cameras.updateView();
+        Game.instance.engine.cameras.updateView();
 
         // first render into the picking framebuffer
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.pickingFrameBuffer);
@@ -56,19 +56,12 @@ export class Renderer {
         });
 
         let mousePickId = this.mouse.getPixelIdOnMouse();
+        Game.instance.engine.interactions.changeIdUnderMouse(mousePickId);
 
         // now render into the canvas
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-
-        this.visibleObjects.forEach(vo => {
-            vo.colorOverlay = new Vec4(0, 0, 0, 1);
-        });
-
-        if (mousePickId > 0) {
-            this.visibleObjects[mousePickId - 1].colorOverlay = new Vec4(0.2, 0.2, 0.2, 1);
-        }
 
         this.visibleObjects.forEach(vo => {
             vo.draw();
@@ -130,7 +123,7 @@ export class Renderer {
 
     resize(width: number, height: number) {
         this.perspectiveProjectionMatrix = Mat4.perspective(MUtils.degToRad(this.fovY), width / height, this.near, this.far);
-        Game.instance.getEngine().shaders.setUniformMat4OnAllPrograms('u_projection', this.perspectiveProjectionMatrix);
+        Game.instance.engine.shaders.setUniformMat4OnAllPrograms('u_projection', this.perspectiveProjectionMatrix);
         this.setupPickingProjectionMatrix(this.mouse.x, this.mouse.y);
     }
 }

@@ -360,7 +360,7 @@ class Loader {
         this.sourceGameObjects.forEach(go => {
             if (!go.shader) throw "Failed to create game object without a shader";
             go.objSource.forEach(mesh => {
-                let g3dobj = Game.instance.getObjectHolder().construct3dObject(`${go.name}.${mesh.name}`, mesh, go.material, go.shader as ShaderProgram);
+                let g3dobj = Game.instance.objectHolder.construct3dObject(`${go.name}.${mesh.name}`, mesh, go.material, go.shader as ShaderProgram);
                 this.loadedGameObjects.push(g3dobj);
                 console.log(`Registered object ${g3dobj.name} with id ${g3dobj.id} as color: ${g3dobj.idVec4.asArray()}`);
             });
@@ -369,7 +369,7 @@ class Loader {
     }
 
     postConstruct() {
-        this.loadedShaders.forEach(s => Game.instance.getEngine().shaders.registerShaderProgram(s));
+        this.loadedShaders.forEach(s => Game.instance.engine.shaders.registerShaderProgram(s));
     }
 
 }

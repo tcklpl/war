@@ -11,7 +11,7 @@ $(window).on("resize", () => {
     if (resizeTimeout != -1)
         clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-        game.getEngine().adjustToWindowSize()
+        game.engine.adjustToWindowSize()
         resizeTimeout = -1;
     }, 500);
 });

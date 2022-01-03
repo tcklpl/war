@@ -17,7 +17,7 @@ export class CameraManager {
 
     updateView() {
         if (this.activeCamera)
-            Game.instance.getEngine().shaders.setUniformMat4OnAllPrograms('u_view', this.activeCamera?.viewMat4);
+            Game.instance.engine.shaders.setUniformMat4OnAllPrograms('u_view', this.activeCamera?.viewMat4);
     }
 
     get active() {

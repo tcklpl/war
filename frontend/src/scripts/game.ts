@@ -1,4 +1,7 @@
+import { FPSCamera } from "./engine/camera/fps_camera";
+import { Vec3 } from "./engine/data_formats/vec/vec3";
 import { Engine } from "./engine/engine";
+import { GameBoard } from "./game/game_board";
 import { GameObjectHolder } from "./game/game_object_holder";
 import { Mouse } from "./game/mouse";
 import { UILoading } from "./game/ui/ui_loading";
@@ -8,11 +11,12 @@ class Game {
 
     static instance: Game;
 
-    private loader: Loader = new Loader();
-    private engine!: Engine;
+    private _loader: Loader = new Loader();
+    private _engine!: Engine;
     private glInstance: WebGL2RenderingContext;
     private objHolder: GameObjectHolder;
     private _mouse: Mouse;
+    private _board!: GameBoard;
 
     constructor(canvas: JQuery<HTMLElement>) {
         const webgl2context = (canvas.get(0) as HTMLCanvasElement).getContext("webgl2");
@@ -35,29 +39,32 @@ class Game {
     }
 
     private loadFinished(webgl2context: WebGL2RenderingContext) {
-        this.engine = new Engine(webgl2context);
+        this._engine = new Engine(webgl2context);
         this.loader.postConstruct();
         UILoading.buffersInitialized();
-        this.engine.test();
+        this.engine.finalizeSetup();
+        this.mouse.registerMouseClickCallback(() => this.engine.interactions.notifyClick());
+        this._board = new GameBoard();
+
+        let testCamera = new FPSCamera(new Vec3(-4, 10, 0), new Vec3(0, 1, 0), -80, 0);
+        this.engine.cameras.registerCamera(testCamera);
+        this.engine.cameras.setActiveCamera(testCamera);
+
     }
 
-    resizeWindowCallback() {
-        
+    public get loader(): Loader {
+        return this._loader;
     }
 
-    getLoader(): Loader {
-        return this.loader;
-    }
-
-    getEngine(): Engine {
-        return this.engine;
+    public get engine(): Engine {
+        return this._engine;
     }
 
     getGL(): WebGL2RenderingContext {
         return this.glInstance;
     }
 
-    getObjectHolder(): GameObjectHolder {
+    public get objectHolder(): GameObjectHolder {
         return this.objHolder;
     }
 

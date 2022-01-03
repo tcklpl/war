@@ -3,15 +3,17 @@ import { Camera } from "./camera/camera";
 import { CameraManager } from "./camera/camera_manager";
 import { FPSCamera } from "./camera/fps_camera";
 import { Vec3 } from "./data_formats/vec/vec3";
+import { ObjectInteractionManager } from "./obj_interaction_manager";
 import { Renderer } from "./rederer";
 import { ShaderManager } from "./shader_manager";
 
 export class Engine {
 
     private gl: WebGL2RenderingContext;
-    private renderer!: Renderer;
+    private _renderer!: Renderer;
     private shaderManager: ShaderManager = new ShaderManager();
     private cameraManager: CameraManager = new CameraManager();
+    private objInteractionManager: ObjectInteractionManager = new ObjectInteractionManager();
 
     deltaTime: number = 0;
     private lastFrame: number = 0;
@@ -33,15 +35,10 @@ export class Engine {
         this.renderer.resize(this.gl.canvas.width, this.gl.canvas.height);
     }
 
-    test() {
-        this.renderer = new Renderer(this.gl);
+    finalizeSetup() {
+        this._renderer = new Renderer(this.gl);
         this.adjustToWindowSize();
 
-        let testCamera = new FPSCamera(new Vec3(-4, 10, 0), new Vec3(0, 1, 0), -80, 0);
-        this.cameraManager.registerCamera(testCamera);
-        this.cameraManager.setActiveCamera(testCamera);
-
-        Game.instance.getObjectHolder().allObjects.forEach(x => this.renderer.addVisible(x));
         requestAnimationFrame((t) => this.draw(t));
     }
 
@@ -68,6 +65,14 @@ export class Engine {
 
     public get cameras(): CameraManager {
         return this.cameraManager;
+    }
+
+    public get interactions(): ObjectInteractionManager {
+        return this.objInteractionManager;
+    }
+
+    public get renderer() {
+        return this._renderer;
     }
 
 }

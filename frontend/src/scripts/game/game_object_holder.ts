@@ -16,11 +16,11 @@ export class GameObjectHolder {
     }
 
     getObjectByName(name: string) {
-        return this.objects.find(x => x.name === name);
+        return this.objects.find(x => x.name == name);
     }
 
     getObjectById(id: number) {
-        return this.objects.find(x => x.id === id);
+        return this.objects.find(x => x.id == id);
     }
 
     public get allObjects(): Game3DObject[] {

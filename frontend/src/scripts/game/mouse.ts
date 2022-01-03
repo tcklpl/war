@@ -8,6 +8,7 @@ export class Mouse {
     private gl: WebGL2RenderingContext;
 
     private mouseMoveCallbacks: ((mouseX: number, mouseY: number) => void)[] = [];
+    private mouseClickCallbacks: (() => void)[] = [];
 
     constructor() {
         this.gl = Game.instance.getGL();
@@ -22,10 +23,18 @@ export class Mouse {
             this.y = e.clientY - rect.top;
             this.mouseMoveCallbacks.forEach(c => c(this.x, this.y));
         });
+
+        this.gl.canvas.addEventListener('click', e => {
+            this.mouseClickCallbacks.forEach(c => c());
+        });
     }
 
     registerMouseMoveCallback(callback: (mouseX: number, mouseY: number) => void) {
         this.mouseMoveCallbacks.push(callback);
+    }
+
+    registerMouseClickCallback(callback: () => void) {
+        this.mouseClickCallbacks.push(callback);
     }
 
     getPixelIdOnMouse(): number {
