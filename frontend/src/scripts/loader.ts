@@ -6,6 +6,8 @@ import { Game } from "./game";
 import { GameLocale } from "./localization/locale";
 import { LocalizationProvider } from "./localization/localization_provider";
 import { OBJLoader } from "./engine/utils/objloader";
+import { Animation, IKeyframe, KeyframeInterpolation } from "./engine/animations/animation";
+import { Vec3 } from "./engine/data_formats/vec/vec3";
 
 interface LoadList {
     locale_dir: string;
@@ -33,6 +35,9 @@ interface LoadList {
         albedo: string;
         normal: string;
     }[];
+
+    animation_folder: string;
+    animations: string[];
 }
 
 interface LocaleSource {
@@ -59,6 +64,17 @@ interface GameObjectSource {
     material: Material;
 }
 
+interface AnimationSource {
+    name: string;
+    keyframes: {
+        delay: number;
+        interpolation: string;
+        position?: { x: number, y: number, z: number};
+        rotation?: { x: number, y: number, z: number};
+        scale?: { x: number, y: number, z: number};
+    }[];
+}
+
 export enum LoadingState {
     FETCHING_LOAD_LIST = "fetch_load_list",
     LOADING_LOCALES = "loading_locales",
@@ -69,6 +85,8 @@ export enum LoadingState {
     CONSTRUCTING_MATERIALS = "constructing_materials",
     LOADING_MODELS = "loading_models",
     INITIALIZING_MODELS = "constructing_models",
+    LOADING_ANIMATIONS = "loading_animations",
+    INITIALIZING_ANIMATIONS = "initializing_animations",
     FINISHED = "finished"
 }
 
@@ -82,6 +100,7 @@ class Loader {
     private sourceShaders: ShaderProgramSource[] = [];
     private sourceMaterials: MaterialSource[] = [];
     private sourceGameObjects: GameObjectSource[] = [];
+    private sourceAnimations: AnimationSource[] = [];
 
     private loadedShaders: ShaderProgram[] = [];
     private loadedMaterials: Material[] = [];
@@ -193,10 +212,23 @@ class Loader {
                 break;
             case LoadingState.INITIALIZING_MODELS:
                 console.log('all models initialized');
+                this.state = LoadingState.LOADING_ANIMATIONS;
+                this.triggerLoadStateChange();
+                this.loadAnimations();
+                break;
+            case LoadingState.LOADING_ANIMATIONS:
+                console.log('loaded all animations');
+                this.state = LoadingState.INITIALIZING_ANIMATIONS;
+                this.triggerLoadStateChange();
+                this.registerAnimations();
+                break;
+            case LoadingState.INITIALIZING_ANIMATIONS:
+                console.log('initialized all animations');
                 this.state = LoadingState.FINISHED;
                 this.triggerLoadStateChange();
                 if (this.loadFinishedCallback)
                     this.loadFinishedCallback();
+                break;
                 
         }
     }
@@ -364,6 +396,41 @@ class Loader {
                 this.loadedGameObjects.push(g3dobj);
                 console.log(`Registered object ${g3dobj.name} with id ${g3dobj.id} as color: ${g3dobj.idVec4.asArray()}`);
             });
+        });
+        this.nextStage();
+    }
+
+    /**
+     *  9. Load all animations
+     */
+    private loadAnimations() {
+        this.loadList.animations.forEach(a => {
+            this.ajaxGet(`${this.loadList.animation_folder}/${a}`, (ret: AnimationSource) => {
+                this.sourceAnimations.push(ret);
+                if (this.sourceAnimations.length == this.loadList.animations.length) this.nextStage();
+            });
+        });
+    }
+
+    /**
+     *  10. Register animations
+     */
+    private registerAnimations() {
+        this.sourceAnimations.forEach(a => {
+            let animation = new Animation(
+                a.name,
+                a.keyframes.map(k => {
+
+                    return <IKeyframe> {
+                        delay: k.delay,
+                        interpolation: k.interpolation as KeyframeInterpolation,
+                        position: (k.position ? new Vec3(k.position.x, k.position.y, k.position.z) : undefined),
+                        rotation: (k.rotation ? new Vec3(k.rotation.x, k.rotation.y, k.rotation.z) : undefined),
+                        scale: (k.scale ? new Vec3(k.scale.x, k.scale.y, k.scale.z) : undefined)
+                    }
+                })
+            );
+            Game.instance.animations.registerAnimation(animation);
         });
         this.nextStage();
     }

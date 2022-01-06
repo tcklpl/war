@@ -33,5 +33,10 @@
             "albedo": "war_albedo.png",
             "normal": "war_normal.png"
         }
+    ],
+    "animation_folder": "animations",
+    "animations": [
+        "country_hover.json",
+        "country_click.json"
     ]
 }

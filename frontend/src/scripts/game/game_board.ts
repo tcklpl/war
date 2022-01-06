@@ -5,11 +5,23 @@ import { Country } from "./objects/country";
 export class GameBoard {
 
     private countries!: Country[];
+    private selectedCountry?: Country;
 
     constructor() {
         this.initializeCountries();
         this.countries.forEach(c => c.parts.forEach(p => Game.instance.engine.interactions.registerInteractableObject(p)));
         this.registerAsRederable();
+    }
+
+    public set selected(country: Country) {
+        if (this.selectedCountry == country) return;
+        if (this.selectedCountry) {
+            this.selectedCountry.fixed = false;
+            this.selectedCountry.onMouseLeave();
+        }
+        country.fixed = true;
+        country.onBoardSelection();
+        this.selectedCountry = country;
     }
 
     private initializeCountries() {

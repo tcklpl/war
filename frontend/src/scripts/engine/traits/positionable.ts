@@ -40,6 +40,13 @@ export class Positionable implements IMovable {
         this.generateModelMatrix();
     }
 
+    setDefaultTransformations() {
+        this.worldPos = new Vec3(0, 0, 0);
+        this.rotation = new Vec3(0, 0, 0);
+        this.objectScale = new Vec3(1, 1, 1);
+        this.generateModelMatrix();
+    }
+
     protected generateModelMatrix(): void {
         this.modelMatrix = Mat4.identity();
         this.modelMatrix.multiplyBy(Mat4.scaling(this.objectScale.x, this.objectScale.y, this.objectScale.z));

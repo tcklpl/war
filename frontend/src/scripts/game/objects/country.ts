@@ -1,3 +1,5 @@
+import { Animation } from "../../engine/animations/animation";
+import { Vec3 } from "../../engine/data_formats/vec/vec3";
 import { InteractableObject } from "../../engine/objects/interactable_object";
 import { Game } from "../../game";
 
@@ -6,6 +8,14 @@ export class Country {
     private _code: string;
     private name: string;
     private countryParts: InteractableObject[] = [];
+
+    private fixedPosition: boolean = false;
+
+    private hoverAnimation: Animation;
+    private hoverAnimationIds?: number[];
+
+    private clickAnimation: Animation;
+    private clickAnimationIds?: number[];
 
     constructor(code: string, name: string, parts: string[]) {
         this._code = code;
@@ -19,18 +29,46 @@ export class Country {
             iobj.onClick = () => this.onClick();
             this.countryParts.push(iobj);
         });
+        this.hoverAnimation = Game.instance.animations.getAnimation('country_hover') as Animation;
+        this.clickAnimation = Game.instance.animations.getAnimation('country_click') as Animation;
     }
 
     onHover() {
-        console.log(`hovered over ${this.name}`);
+        if (this.fixed) return;
+        this.hoverAnimationIds = [];
+        this.countryParts.forEach(cp => {
+            let aid = Game.instance.animations.playAnimation(cp.obj, this.hoverAnimation, () => this.hoverAnimationIds = undefined);
+            this.hoverAnimationIds?.push(aid);
+        });
     }
 
     onMouseLeave() {
-        console.log(`mouse left ${this.name}`);
+        if (this.fixed) return;
+        if (this.hoverAnimationIds) {
+            this.hoverAnimationIds.forEach(id => {
+                Game.instance.animations.stopAnimation(id);
+            });
+        }
+        this.hoverAnimationIds = undefined;
+        this.countryParts.forEach(cp => {
+            cp.obj.setTranslation(new Vec3(0, 0, 0));
+        });
     }
 
     onClick() {
-        console.log(`clicked on ${this.name}`);
+        Game.instance.board.selected = this;
+    }
+
+    onBoardSelection() {
+        this.countryParts.forEach(cp => {
+            let aid = Game.instance.animations.playAnimation(cp.obj, this.clickAnimation);
+        });
+    }
+
+    resetPosition() {
+        this.countryParts.forEach(cp => {
+            cp.obj.setDefaultTransformations();
+        });
     }
 
     public get code() {
@@ -39,5 +77,13 @@ export class Country {
 
     public get parts() {
         return this.countryParts;
+    }
+
+    public get fixed() {
+        return this.fixedPosition;
+    }
+
+    public set fixed(value: boolean) {
+        this.fixedPosition = value;
     }
 }

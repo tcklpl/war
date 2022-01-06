@@ -44,12 +44,14 @@ export class Engine {
 
     draw(time: number) {
         // defining deltaTime, here time is defined as ms, we need to divide by 1000 to be as seconds
-        this.deltaTime = (time - this.lastFrame) / 1000;
+        let msDiff = (time - this.lastFrame);
+        this.deltaTime = msDiff / 1000;
         this.lastFrame = time;
 
         $('#test').html(`FPS: ${(1 / this.deltaTime).toFixed(2)}`);
 
         // draw here
+        Game.instance.animations.animate(msDiff);
         this.renderer.render();
 
         requestAnimationFrame((t) => this.draw(t));

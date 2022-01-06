@@ -1,3 +1,4 @@
+import { AnimationManager } from "./engine/animations/animation_manager";
 import { FPSCamera } from "./engine/camera/fps_camera";
 import { Vec3 } from "./engine/data_formats/vec/vec3";
 import { Engine } from "./engine/engine";
@@ -15,6 +16,7 @@ class Game {
     private _engine!: Engine;
     private glInstance: WebGL2RenderingContext;
     private objHolder: GameObjectHolder;
+    private animationManager: AnimationManager = new AnimationManager();
     private _mouse: Mouse;
     private _board!: GameBoard;
 
@@ -46,7 +48,8 @@ class Game {
         this.mouse.registerMouseClickCallback(() => this.engine.interactions.notifyClick());
         this._board = new GameBoard();
 
-        let testCamera = new FPSCamera(new Vec3(-4, 10, 0), new Vec3(0, 1, 0), -80, 0);
+        //let testCamera = new FPSCamera(new Vec3(-4, 10, 0), new Vec3(0, 1, 0), -80, 0);
+        let testCamera = new FPSCamera(new Vec3(0, 10, 0), new Vec3(0, 1, 0), -80, 0);
         this.engine.cameras.registerCamera(testCamera);
         this.engine.cameras.setActiveCamera(testCamera);
 
@@ -70,6 +73,14 @@ class Game {
 
     public get mouse() {
         return this._mouse;
+    }
+
+    public get animations() {
+        return this.animationManager;
+    }
+
+    public get board() {
+        return this._board;
     }
 }
 
