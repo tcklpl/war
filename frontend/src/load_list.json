@@ -1,7 +1,9 @@
 {
     "locale_dir": "locales",
     "locales" : [
-        "enUS.json"
+        "enUS.json",
+	      "ptBR.json",
+        "frFR.json"
     ],
     "shader_dir": "shaders",
     "shaders": [
