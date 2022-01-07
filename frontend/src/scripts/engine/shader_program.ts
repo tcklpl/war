@@ -84,7 +84,7 @@ export class ShaderProgram {
             throw `Cannot get uniform ${uniform}`;
         }
         this.gl.useProgram(this.program);
-        this.gl.uniform4fv(this.uniforms.get(uniform) as WebGLUniformLocation, new Float32Array(value.asArray()));
+        this.gl.uniform4fv(this.uniforms.get(uniform) as WebGLUniformLocation, new Float32Array(value.values));
     }
 
     getName(): string {

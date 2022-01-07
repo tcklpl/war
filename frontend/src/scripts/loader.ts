@@ -394,7 +394,7 @@ class Loader {
             go.objSource.forEach(mesh => {
                 let g3dobj = Game.instance.objectHolder.construct3dObject(`${go.name}.${mesh.name}`, mesh, go.material, go.shader as ShaderProgram);
                 this.loadedGameObjects.push(g3dobj);
-                console.log(`Registered object ${g3dobj.name} with id ${g3dobj.id} as color: ${g3dobj.idVec4.asArray()}`);
+                console.log(`Registered object ${g3dobj.name} with id ${g3dobj.id} as color: ${g3dobj.idVec4.values}`);
             });
         });
         this.nextStage();

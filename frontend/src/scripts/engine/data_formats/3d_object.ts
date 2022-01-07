@@ -48,21 +48,21 @@ export class I3DObject {
         if (!bufferPosic) throw `Failed to allocate posic buffer when creating '${name}'`;
         this.bufferPosic = bufferPosic;
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufferPosic);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices.map(v => [v.position.x, v.position.y, v.position.z]).flat(1)), this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices.flatMap(v => v.position.values)), this.gl.STATIC_DRAW);
 
         // create UV coordinate buffer
         bufferUV = this.gl.createBuffer();
         if (!bufferUV) throw `Failed to allocate uv buffer when creating '${name}'`;
         this.bufferUV = bufferUV;
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufferUV);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices.map(v => [v.uv.x, v.uv.y]).flat(1)), this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices.flatMap(v => v.uv.values)), this.gl.STATIC_DRAW);
 
         // create normal buffer
         bufferNormal = this.gl.createBuffer();
         if (!bufferNormal) throw `Failed to allocate normal buffer when creating '${name}'`;
         this.bufferNormal = bufferNormal;
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufferNormal);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices.map(v => [v.normal.x, v.normal.y, v.normal.z]).flat(1)), this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices.flatMap(v => v.normal.values)), this.gl.STATIC_DRAW);
 
         // create vao
         let vao = this.gl.createVertexArray();
@@ -90,7 +90,7 @@ export class I3DObject {
         if (!bufferIndex) throw `Failed to allocate index buffer when creating '${name}'`;
         this.bufferIndex = bufferIndex;
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.bufferIndex);
-        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices.map(v => [v.x, v.y, v.z]).flat(1)), this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices.flatMap(v => v.values)), this.gl.STATIC_DRAW);
 
         this.vaoSize = this.gl.getBufferParameter(this.gl.ELEMENT_ARRAY_BUFFER, this.gl.BUFFER_SIZE);
     }

@@ -2,15 +2,17 @@ import { Vec3 } from "./vec3";
 
 export class Vec4 extends Vec3 {
 
-    w: number;
-
     constructor(x: number, y: number, z: number, w: number) {
         super(x, y, z);
-        this.w = w;
+        this._values[3] = w;
     }
 
-    asArray(): number[] {
-        return [this.x, this.y, this.z, this.w];
+    public get w() {
+        return this._values[3];
+    }
+
+    public set w(v: number) {
+        this._values[3] = v;
     }
 
     static fromId(id: number): Vec4 {
