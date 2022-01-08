@@ -1,11 +1,11 @@
 import { Game } from "../game";
 import { Mat4 } from "./data_formats/mat/mat4";
 import { MUtils } from "./data_formats/math_utils";
-import { Vec4 } from "./data_formats/vec/vec4";
 import { Game3DObject } from "./objects/game3d_obj";
 import { ShaderProgram } from "./shader_program";
+import { IMouseListener } from "./traits/mouse_listener";
 
-export class Renderer {
+export class Renderer implements IMouseListener {
 
     private gl: WebGL2RenderingContext;
     private visibleObjects: Game3DObject[] = [];
@@ -36,7 +36,11 @@ export class Renderer {
         this.pickingShaderProgram = pickingShader;
 
         this.setupPicking();
-        this.mouse.registerMouseMoveCallback((x, y) => this.setupPickingProjectionMatrix(x, y));
+        Game.instance.mouse.registerMouseListener(this);
+    }
+
+    onMouseMove(mouseX: number, mouseY: number) {
+        this.setupPickingProjectionMatrix(mouseX, mouseY);
     }
 
     render() {

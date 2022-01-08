@@ -1,10 +1,16 @@
+import { Game } from "../game";
 import { InteractableObject } from "./objects/interactable_object";
+import { IMouseListener } from "./traits/mouse_listener";
 
-export class ObjectInteractionManager {
+export class ObjectInteractionManager implements IMouseListener {
 
     private interactables: InteractableObject[] = [];
     private idUnderMouse: number = -1;
     private interactableUnderMouse?: InteractableObject;
+
+    constructor() {
+        Game.instance.mouse.registerMouseListener(this);
+    }
 
     registerInteractableObject(io: InteractableObject) {
         this.interactables.push(io);
@@ -28,7 +34,7 @@ export class ObjectInteractionManager {
         this.idUnderMouse = newId;
     }
 
-    notifyClick() {
+    onMouseLeftClick() {
         if (this.interactableUnderMouse?.onClick) this.interactableUnderMouse.onClick();
     }
 

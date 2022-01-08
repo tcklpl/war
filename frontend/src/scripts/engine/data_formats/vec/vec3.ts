@@ -1,6 +1,9 @@
+import { MUtils } from "../math_utils";
 import { Vec2 } from "./vec2";
 
 export class Vec3 extends Vec2 {
+
+    private static _zero: Vec3 = new Vec3(0, 0, 0);
 
     constructor(x: number, y: number, z: number) {
         super(x, y);
@@ -15,6 +18,10 @@ export class Vec3 extends Vec2 {
         this._values[2] = v;
     }
 
+    differentFrom(other: Vec3) {
+        return this.x != other.x || this.y != other.y || this.z != other.z;
+    }
+
     add(v: Vec3) {
         this.x += v.x;
         this.y += v.y;
@@ -25,6 +32,10 @@ export class Vec3 extends Vec2 {
         this.x /= factor;
         this.y /= factor;
         this.z /= factor;
+    }
+
+    static get zero() {
+        return this._zero;
     }
 
     static cross(a: Vec3, b: Vec3): Vec3 {
@@ -61,6 +72,14 @@ export class Vec3 extends Vec2 {
         let accumulated = v.reduce((accumulated, current) => Vec3.add(accumulated, current));
         accumulated.divide(v.length);
         return accumulated;
+    }
+
+    static clamp(min: Vec3, max: Vec3, value: Vec3) {
+        return new Vec3(
+            MUtils.clamp(min.x, max.x, value.x),
+            MUtils.clamp(min.y, max.y, value.y),
+            MUtils.clamp(min.z, max.z, value.z)
+        );
     }
 
 }

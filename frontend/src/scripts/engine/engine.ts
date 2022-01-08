@@ -1,11 +1,9 @@
 import { Game } from "../game";
-import { Camera } from "./camera/camera";
 import { CameraManager } from "./camera/camera_manager";
-import { FPSCamera } from "./camera/fps_camera";
-import { Vec3 } from "./data_formats/vec/vec3";
 import { ObjectInteractionManager } from "./obj_interaction_manager";
 import { Renderer } from "./rederer";
 import { ShaderManager } from "./shader_manager";
+import { ITimeSensitive } from "./traits/time_sensitive";
 
 export class Engine {
 
@@ -15,8 +13,10 @@ export class Engine {
     private cameraManager: CameraManager = new CameraManager();
     private objInteractionManager: ObjectInteractionManager = new ObjectInteractionManager();
 
-    deltaTime: number = 0;
+    private _deltaTime: number = 0;
     private lastFrame: number = 0;
+    private preDrawListeners: ITimeSensitive[] = [];
+
 
     constructor(gl: WebGL2RenderingContext) {
         this.gl = gl;
@@ -45,16 +45,21 @@ export class Engine {
     draw(time: number) {
         // defining deltaTime, here time is defined as ms, we need to divide by 1000 to be as seconds
         let msDiff = (time - this.lastFrame);
-        this.deltaTime = msDiff / 1000;
+        this._deltaTime = msDiff / 1000;
         this.lastFrame = time;
 
-        $('#test').html(`FPS: ${(1 / this.deltaTime).toFixed(2)}`);
+        $('#test').html(`FPS: ${(1 / this._deltaTime).toFixed(2)}`);
+        this.preDrawListeners.forEach(l => l.update(this._deltaTime));
 
         // draw here
         Game.instance.animations.animate(msDiff);
         this.renderer.render();
 
         requestAnimationFrame((t) => this.draw(t));
+    }
+
+    registerPreDrawListener(listener: ITimeSensitive) {
+        this.preDrawListeners.push(listener);
     }
 
     getWebGL(): WebGL2RenderingContext {
@@ -75,6 +80,10 @@ export class Engine {
 
     public get renderer() {
         return this._renderer;
+    }
+
+    public get deltaTime() {
+        return this._deltaTime;
     }
 
 }

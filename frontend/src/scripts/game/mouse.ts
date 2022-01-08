@@ -1,3 +1,4 @@
+import { IMouseListener } from "../engine/traits/mouse_listener";
 import { Game } from "../game";
 
 export class Mouse {
@@ -6,9 +7,9 @@ export class Mouse {
     y: number = -1;
 
     private gl: WebGL2RenderingContext;
+    private mouseListeners: IMouseListener[] = [];
 
-    private mouseMoveCallbacks: ((mouseX: number, mouseY: number) => void)[] = [];
-    private mouseClickCallbacks: (() => void)[] = [];
+    private scrollStopTimer: number = -1;
 
     constructor() {
         this.gl = Game.instance.getGL();
@@ -21,20 +22,35 @@ export class Mouse {
             const rect = this.gl.canvas.getBoundingClientRect();
             this.x = e.clientX - rect.left;
             this.y = e.clientY - rect.top;
-            this.mouseMoveCallbacks.forEach(c => c(this.x, this.y));
+            this.mouseListeners.forEach(c => {
+                if (c.onMouseMove) c.onMouseMove(this.x, this.y);
+            });
         });
 
         this.gl.canvas.addEventListener('click', e => {
-            this.mouseClickCallbacks.forEach(c => c());
+            this.mouseListeners.forEach(c => {
+                if (c.onMouseLeftClick) c.onMouseLeftClick();
+            });
+        });
+
+        this.gl.canvas.addEventListener('wheel', e => {
+            this.mouseListeners.forEach(c => {
+                if (c.onMouseScroll) c.onMouseScroll(e.deltaY);
+            });
+            if (this.scrollStopTimer != -1) clearTimeout(this.scrollStopTimer)
+            this.scrollStopTimer = setTimeout(() => this.triggerMouseScrollStop(), 300);
         });
     }
 
-    registerMouseMoveCallback(callback: (mouseX: number, mouseY: number) => void) {
-        this.mouseMoveCallbacks.push(callback);
+    private triggerMouseScrollStop() {
+        this.scrollStopTimer = -1;
+        this.mouseListeners.forEach(c => {
+            if (c.onMouseScrollStop) c.onMouseScrollStop();
+        });
     }
 
-    registerMouseClickCallback(callback: () => void) {
-        this.mouseClickCallbacks.push(callback);
+    registerMouseListener(listener: IMouseListener) {
+        this.mouseListeners.push(listener);
     }
 
     getPixelIdOnMouse(): number {

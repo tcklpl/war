@@ -4,7 +4,7 @@ import { Camera } from "./camera";
 
 export class LookAtCamera extends Camera {
 
-    private target: Vec3;
+    protected target: Vec3;
 
     constructor(worldPos: Vec3, up: Vec3, target: Vec3) {
         super(worldPos, up);
@@ -14,6 +14,7 @@ export class LookAtCamera extends Camera {
 
     generateViewMatrix(): void {
         this.viewMatrix = Mat4.lookAt(this.worldPos, this.target, this.cameraUp);
+        this.viewMatrix = Mat4.inverse(this.viewMatrix);
     }
     
 }
