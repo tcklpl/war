@@ -1,10 +1,16 @@
-export class Mat3 {
+import { IUniformable } from "../../traits/uniformable";
+
+export class Mat3 implements IUniformable {
 
     values: number[] = new Array<number>(9);
 
     constructor(values: number[]) {
         if (values.length != 9) throw `Failed to create 3x3 matrix with ${values.length} values`;
         this.values = values;
+    }
+
+    setUniform(gl: WebGL2RenderingContext, to: WebGLUniformLocation): void {
+        gl.uniformMatrix3fv(to, false, new Float32Array(this.values));
     }
 
     set(row: number, col: number, value: number) {

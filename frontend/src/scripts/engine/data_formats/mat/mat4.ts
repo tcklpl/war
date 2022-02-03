@@ -1,13 +1,22 @@
+import { IUniformable } from "../../traits/uniformable";
 import { MUtils } from "../math_utils";
 import { Vec3 } from "../vec/vec3";
 
-export class Mat4 {
+export class Mat4 implements IUniformable {
 
     values: number[] = new Array<number>(16);
 
     constructor(values: number[]) {
         if (values.length != 16) throw `Failed to create 4x4 matrix with ${values.length} values`;
         this.values = values;
+    }
+
+    duplicate() {
+        return new Mat4(this.values);
+    }
+
+    setUniform(gl: WebGL2RenderingContext, to: WebGLUniformLocation): void {
+        gl.uniformMatrix4fv(to, false, new Float32Array(this.values));
     }
 
     set(row: number, col: number, value: number) {
@@ -165,6 +174,15 @@ export class Mat4 {
         ]);
     }
 
+    static orthographic(left: number, right: number, bottom: number, top: number, near: number, far: number): Mat4 {
+        return new Mat4([
+            2 / (right - left), 0, 0, 0,
+            0, 2 / (top - bottom), 0, 0,
+            0, 0, 2 / (near - far), 0,
+            (left + right) / (left - right), (bottom + top) / (bottom - top), (near + far) / (near - far), 1
+        ]);
+    }
+
     static lookAt(cameraPos: Vec3, target: Vec3, up: Vec3): Mat4 {
         let zAxis = Vec3.normalize(Vec3.subtract(cameraPos, target));
         let xAxis = Vec3.normalize(Vec3.cross(up, zAxis));
@@ -273,5 +291,12 @@ export class Mat4 {
             (left + right) / dx, (top + bottom) / dy, -(far + near) / dz, -1,
             0, 0, -2 * near * far / dz, 0
         ]);
+    }
+
+    static NDCtoUV() {
+        let m = this.identity();
+        m.translate(0.5, 0.5, 0.5);
+        m.scale(0.5, 0.5, 0.5);
+        return m;
     }
 }

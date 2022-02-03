@@ -8,6 +8,10 @@ export class Vec4 extends Vec3 {
         this._values[3] = w;
     }
 
+    setUniform(gl: WebGL2RenderingContext, to: WebGLUniformLocation): void {
+        gl.uniform4fv(to, new Float32Array(this.values));
+    }
+
     public get w() {
         return this._values[3];
     }
@@ -36,5 +40,9 @@ export class Vec4 extends Vec3 {
             MUtils.clamp(min.z, max.z, value.z),
             MUtils.clamp(min.w, max.w, value.w)
         );
+    }
+
+    static fromValue(val: number) {
+        return new Vec4(val, val, val, val);
     }
 }

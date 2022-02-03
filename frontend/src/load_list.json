@@ -16,6 +16,16 @@
             "name": "picking",
             "frag": "picking.frag",
             "vert": "picking.vert"
+        },
+        {
+            "name": "shaded",
+            "frag": "shaded.frag",
+            "vert": "shaded.vert"
+        },
+        {
+            "name": "solid_color",
+            "frag": "solid_color.frag",
+            "vert": "solid_color.vert"
         }
     ],
     "game_object_dir": "gameobjects",
@@ -23,8 +33,14 @@
         {
             "name": "map",
             "mesh": "war.obj",
-            "shader": "basic",
+            "shader": "shaded",
             "material": "map"
+        },
+        {
+            "name": "back",
+            "mesh": "back.obj",
+            "shader": "shaded",
+            "material": "back"
         }
     ],
     "material_folder": "materials",
@@ -34,6 +50,12 @@
             "folder": "map",
             "albedo": "war_albedo.png",
             "normal": "war_normal.png"
+        },
+        {
+            "name": "back",
+            "folder": "back",
+            "albedo": "back_albedo.png",
+            "normal": "back_normal.png"
         }
     ],
     "animation_folder": "animations",

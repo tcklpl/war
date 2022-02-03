@@ -1,4 +1,5 @@
-import { Mat4 } from "./data_formats/mat/mat4";
+import { Mat4 } from "../data_formats/mat/mat4";
+import { IShaderProgram } from "./programs/i_shader_program";
 import { ShaderProgram } from "./shader_program";
 
 export class ShaderManager {
@@ -17,4 +18,11 @@ export class ShaderManager {
     setUniformMat4OnAllPrograms(name: string, value: Mat4) {
         this.programs.forEach(p => p.setUniformMat4f(name, value));
     }
+
+    getInstantiatedProgram<T extends IShaderProgram>(name: string, subclass: new(...args: any) => T): T {
+        let program = this.getByName(name);
+        if (!program) throw `Could not get program ${name} in order to instantiate it`;
+        return new subclass(program);
+    }
+
 }

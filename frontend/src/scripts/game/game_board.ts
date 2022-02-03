@@ -1,3 +1,5 @@
+import { Game3DObject } from "../engine/objects/game3d_obj";
+import { InteractableObject } from "../engine/objects/interactable_object";
 import { Game } from "../game";
 import { LocalizationProvider } from "../localization/localization_provider";
 import { Country } from "./objects/country";
@@ -10,6 +12,9 @@ export class GameBoard {
     constructor() {
         this.initializeCountries();
         this.countries.forEach(c => c.parts.forEach(p => Game.instance.engine.interactions.registerInteractableObject(p)));
+        let back = Game.instance.objectHolder.getObjectByName('back.Cube') as Game3DObject;
+        Game.instance.engine.renderer.addVisible(back);
+        Game.instance.engine.interactions.registerInteractableObject(new InteractableObject(back));
         this.registerAsRederable();
     }
 
@@ -73,7 +78,7 @@ export class GameBoard {
             new Country('tchi', LocalizationProvider.locale.strings.country_tchita, ['map.Tchita_Cube.048']),
             new Country('sibe', LocalizationProvider.locale.strings.country_siberia, ['map.Sibéria_Cube.051']),
             new Country('vlad', LocalizationProvider.locale.strings.country_vladvostok, ['map.Vladivostok_Cube.033', 'map.Vladivostok_ilha_Cube.031']),
-            new Country('japa', LocalizationProvider.locale.strings.country_japan, ['map.Japão_ilha_1_Cube.035', 'map.Japão_ilha_3_Cube.037', 'map.Japão_ilha_2_Cube.039'])
+            new Country('japa', LocalizationProvider.locale.strings.country_japan, ['map.Japão_ilha_1_Cube.035', 'map.Japão_ilha_3_Cube.037', 'map.Japão_ilha_2_Cube.039']),
         ]
     }
 

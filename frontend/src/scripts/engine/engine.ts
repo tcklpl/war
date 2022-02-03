@@ -1,8 +1,9 @@
 import { Game } from "../game";
 import { CameraManager } from "./camera/camera_manager";
+import { LightManager } from "./lights/light_manager";
 import { ObjectInteractionManager } from "./obj_interaction_manager";
 import { Renderer } from "./rederer";
-import { ShaderManager } from "./shader_manager";
+import { ShaderManager } from "./shaders/shader_manager";
 import { ITimeSensitive } from "./traits/time_sensitive";
 
 export class Engine {
@@ -11,6 +12,7 @@ export class Engine {
     private _renderer!: Renderer;
     private shaderManager: ShaderManager = new ShaderManager();
     private cameraManager: CameraManager = new CameraManager();
+    private lightManager: LightManager = new LightManager();
     private objInteractionManager: ObjectInteractionManager = new ObjectInteractionManager();
 
     private _deltaTime: number = 0;
@@ -80,6 +82,10 @@ export class Engine {
 
     public get renderer() {
         return this._renderer;
+    }
+
+    public get lights() {
+        return this.lightManager;
     }
 
     public get deltaTime() {

@@ -14,7 +14,7 @@ export class Material {
 
     constructor(name: string, albedo: HTMLImageElement, normal: HTMLImageElement) {
         this._name = name;
-        this.gl = Game.instance.getGL();
+        this.gl = Game.instance.gl;
         
         let tmpAlbedo = this.gl.createTexture();
         if (!tmpAlbedo) throw `Failed to allocate albedo texture map when creating material '${name}'`;

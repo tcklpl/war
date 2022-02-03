@@ -1,4 +1,4 @@
-import { Vec3 } from "../data_formats/vec/vec3";
+import { Vec3 } from "../../data_formats/vec/vec3";
 
 export interface IMovable {
 

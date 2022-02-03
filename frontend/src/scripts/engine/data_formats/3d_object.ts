@@ -104,4 +104,9 @@ export class I3DObject {
         //this.gl.drawElements(this.gl.TRIANGLES, this.vaoSize, this.gl.UNSIGNED_SHORT, 0);
         this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vaoSize / 3);
     }
+
+    drawLines() {
+        this.gl.bindVertexArray(this.vao);
+        this.gl.drawArrays(this.gl.LINES, 0, this.vaoSize / 3);
+    }
 }

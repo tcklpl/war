@@ -1,5 +1,5 @@
 import { Vec3 } from "../data_formats/vec/vec3";
-import { Positionable } from "./positionable";
+import { Positionable } from "./transformative/positionable";
 
 export class BoxPositionable extends Positionable {
 

@@ -1,5 +1,6 @@
 import { AnimationManager } from "./engine/animations/animation_manager";
 import { Engine } from "./engine/engine";
+import { Limitations } from "./engine/limitations";
 import { GameBoard } from "./game/game_board";
 import { GameCamera } from "./game/game_camera";
 import { GameObjectHolder } from "./game/game_object_holder";
@@ -27,6 +28,7 @@ class Game {
         if (!webgl2context) throw "Failed to acquire webgl2 context from canvas";
 
         Game.instance = this;
+        Limitations.gl = webgl2context;
         this.glInstance = webgl2context;
         this.objHolder = new GameObjectHolder();
         this._mouse = new Mouse();
@@ -63,7 +65,7 @@ class Game {
         return this._engine;
     }
 
-    getGL(): WebGL2RenderingContext {
+    public get gl(): WebGL2RenderingContext {
         return this.glInstance;
     }
 

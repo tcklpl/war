@@ -1,8 +1,8 @@
 import { I3DObject } from "../data_formats/3d_object";
 import { Vec4 } from "../data_formats/vec/vec4";
 import { Material, MaterialLocation } from "../material";
-import { ShaderProgram } from "../shader_program";
-import { Positionable } from "../traits/positionable";
+import { ShaderProgram } from "../shaders/shader_program";
+import { Positionable } from "../traits/transformative/positionable";
 import { Identifiable } from "./indentifiable";
 
 export class Game3DObject extends Positionable implements Identifiable {
@@ -33,7 +33,7 @@ export class Game3DObject extends Positionable implements Identifiable {
         if (shader.hasMaterialUniforms())
             this.material.bind(shader.materialUniforms as MaterialLocation);
 
-        shader.setUniformVec4('u_overlay_color', this.colorOverlay, true);
+        // shader.setUniformVec4('u_overlay_color', this.colorOverlay, true);
 
         this.object.draw();
     }
@@ -48,5 +48,9 @@ export class Game3DObject extends Positionable implements Identifiable {
 
     public get name() {
         return this._name;
+    }
+
+    public get mesh() {
+        return this.object;
     }
 }

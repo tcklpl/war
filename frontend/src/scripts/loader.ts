@@ -1,7 +1,7 @@
 import { I3DObject } from "./engine/data_formats/3d_object";
 import { Material } from "./engine/material";
 import { Game3DObject } from "./engine/objects/game3d_obj";
-import { ShaderProgram } from "./engine/shader_program";
+import { ShaderProgram } from "./engine/shaders/shader_program";
 import { Game } from "./game";
 import { GameLocale } from "./localization/locale";
 import { LocalizationProvider } from "./localization/localization_provider";

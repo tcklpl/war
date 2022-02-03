@@ -1,6 +1,6 @@
-import { Mat4 } from "../data_formats/mat/mat4";
-import { MUtils } from "../data_formats/math_utils";
-import { Vec3 } from "../data_formats/vec/vec3";
+import { Mat4 } from "../../data_formats/mat/mat4";
+import { MUtils } from "../../data_formats/math_utils";
+import { Vec3 } from "../../data_formats/vec/vec3";
 import { IMovable } from "./movable";
 
 export class Positionable implements IMovable {

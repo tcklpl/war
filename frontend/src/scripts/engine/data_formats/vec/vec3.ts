@@ -1,3 +1,4 @@
+import { IUniformable } from "../../traits/uniformable";
 import { MUtils } from "../math_utils";
 import { Vec2 } from "./vec2";
 
@@ -8,6 +9,10 @@ export class Vec3 extends Vec2 {
     constructor(x: number, y: number, z: number) {
         super(x, y);
         this._values[2] = z;
+    }
+
+    setUniform(gl: WebGL2RenderingContext, to: WebGLUniformLocation): void {
+        gl.uniform3fv(to, new Float32Array(this.values));
     }
 
     public get z() {
@@ -80,6 +85,10 @@ export class Vec3 extends Vec2 {
             MUtils.clamp(min.y, max.y, value.y),
             MUtils.clamp(min.z, max.z, value.z)
         );
+    }
+
+    static fromValue(val: number) {
+        return new Vec3(val, val, val);
     }
 
 }

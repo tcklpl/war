@@ -44,7 +44,7 @@ export class ShaderUtils {
             return program;
 
         gl.deleteProgram(program);
-        throw `Failed to link shader program with shaders: ${vertexShader} and ${fragmentShader}`
+        throw `Failed to link shader program with shaders: \n\n${vertexShader}\n\n and \n\n${fragmentShader}\n\nError: ${gl.getError()}`
     }
 
 }
