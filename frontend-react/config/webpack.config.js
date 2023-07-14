@@ -339,13 +339,6 @@ module.exports = function (webpackEnv) {
     module: {
       strictExportPresence: true,
       rules: [
-        {
-          test: /\.(wgsl)$/i,
-          loader: 'file-loader',
-          options: {
-            publicPath: 'assets',
-          }
-        },
         // Handle node_modules packages that contain sourcemaps
         shouldUseSourceMap && {
           enforce: 'pre',
@@ -358,6 +351,10 @@ module.exports = function (webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
+            {
+              test: [/\.wgsl$/],
+              type: 'asset/source'
+            },
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
             {

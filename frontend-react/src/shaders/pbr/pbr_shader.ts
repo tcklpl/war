@@ -8,10 +8,9 @@ export class PBRShader extends Shader {
         VERTEX_MODEL: 1
     }
 
-    constructor(name: string) {
+    constructor(name: string, cb: () => void) {
         super(name);
-        console.log(shaderSource);
-        this.compileShader(shaderSource);
+        this.compileShader(shaderSource).then(() => cb());
     }
 
 }
