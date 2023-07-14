@@ -12,7 +12,7 @@ export class BufferUtils {
             usage: usage,
             mappedAtCreation: true
         });
-        const dst = new (data.constructor as { new(x: ArrayBuffer): typeof data})(buffer.getMappedRange());
+        const dst = new Uint8Array(buffer.getMappedRange());
         dst.set(data);
         buffer.unmap();
 

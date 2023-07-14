@@ -41,10 +41,8 @@ export class GLTFBufferView {
 
     buildBuffer() {
         const slice = this._buffer.data.slice(this._offset, this._offset + this._length);
-        // f32array for vertices and ui16array for indices
-        const newTypedArray = this._target === gl.ARRAY_BUFFER ? Float32Array.from(slice) : Uint16Array.from(slice);
-        const bufferUsage = this._target === gl.ARRAY_BUFFER ? GPUBufferUsage.VERTEX : GPUBufferUsage.INDEX;
-        const buffer = BufferUtils.createBuffer(newTypedArray, bufferUsage);
+        const bufferUsage = (this._target === gl.ARRAY_BUFFER ? GPUBufferUsage.VERTEX : GPUBufferUsage.INDEX) | GPUBufferUsage.COPY_DST;
+        const buffer = BufferUtils.createBuffer(slice, bufferUsage);
         return buffer;
     }
 
