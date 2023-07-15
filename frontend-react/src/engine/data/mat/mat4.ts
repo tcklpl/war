@@ -227,10 +227,10 @@ export class Mat4 implements IUniformBindable {
         var rangeInv = 1.0 / (near - far);
 
         return new Mat4([
-            f / aspect, 0, 0, 0,
-            0, f, 0, 0,
-            0, 0, (near + far) * rangeInv, -1,
-            0, 0, near * far * rangeInv * 2, 0,
+            -f / aspect, 0, 0, 0,
+            0, -f, 0, 0,
+            0, 0, far * rangeInv, -1,
+            0, 0, near * far * rangeInv, 0,
         ]);
     }
     
