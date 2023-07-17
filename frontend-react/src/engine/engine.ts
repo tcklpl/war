@@ -1,6 +1,7 @@
 import { CameraManager } from "./camera/camera_manager";
 import { MeshManager } from "./data/meshes/mesh_manager";
 import { SceneManager } from "./data/scene/scene_manager";
+import { IFrameListener } from "./data/traits/frame_listener";
 import { IdentifierPool } from "./identifier_pool";
 import { Renderer } from "./render/renderer";
 import { VanillaRenderer } from "./render/vanilla/vanilla_renderer";
@@ -18,7 +19,12 @@ export class Engine {
         scene: new SceneManager()
     }
 
+    private _frameListeners: IFrameListener[] = [];
+
     private renderLoop() {
+        this._frameListeners.forEach(fl => {
+            if (fl.onEachFrame) fl.onEachFrame();
+        });
         if (this._shouldRender) {
             this._renderer.render();
         }
@@ -31,6 +37,10 @@ export class Engine {
 
     resumeRender() {
         this._shouldRender = true;
+    }
+
+    registerFrameListener(l: IFrameListener) {
+        this._frameListeners.push(l);
     }
 
     get idPool() {
