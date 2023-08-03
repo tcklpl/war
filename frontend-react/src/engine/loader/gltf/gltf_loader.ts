@@ -1,4 +1,4 @@
-import { GLTFFileFormat } from "gltf";
+import { GLBChunk, GLTFFileFormat } from "gltf";
 import { GLTFBuffer } from "../../data/gltf/gltf_buffer";
 import { FetchUtils } from "../../../utils/fetch_utils";
 import { GLTFBufferView } from "../../data/gltf/gltf_buffer_view";
@@ -27,6 +27,9 @@ import { GLTFLight } from "../../data/gltf/gltf_light";
  *  [ ] Images
  *  [ ] Animations
  *  [ ] Skins
+ * 
+ *  [X] .gltf Support
+ *  [X] .glb  Support
  */
 export class GLTFLoader {
 
@@ -37,7 +40,10 @@ export class GLTFLoader {
         "KHR_lights_punctual"
     ];
 
-    async constructGLTFAsset(gltfSave: GLTFFileFormat) {
+    async constructGLTFAsset(gltfSave: GLTFFileFormat, binaryBuffers?: ArrayBuffer[]) {
+
+        // validate header
+        if (gltfSave.asset.version !== '2.0') throw new BadGLTFFileError(`Unsupported GLTF File version '${gltfSave.asset.version}', should be '2.0'`);
 
         // validate extensions
         const extensions = new Set((gltfSave.extensionsRequired ?? []).concat(gltfSave.extensionsUsed ?? []));
@@ -48,8 +54,20 @@ export class GLTFLoader {
 
         // buffers
         const buffers: GLTFBuffer[] = [];
-        for (const buf of gltfSave.buffers) {
-            const data = await FetchUtils.fetchByteBuffer(buf.uri);
+        for (let i = 0; i < gltfSave.buffers.length; i++) {
+            const buf = gltfSave.buffers[i];
+
+            let data: Uint8Array;
+            // JSON files will have an base64 buffer
+            if (buf.uri) {
+                data = await FetchUtils.fetchByteBuffer(buf.uri);
+            } 
+            // GLB Files will supply the buffer by the second function argument
+            else {
+                if (!binaryBuffers || i >= binaryBuffers.length) throw new BadGLTFFileError(`Buffer of index '${i}' cannot be found on supplied list of length '${binaryBuffers?.length}'`);
+                data = new Uint8Array(binaryBuffers[i]);
+            }
+            
             buffers.push(new GLTFBuffer(data));
         }
 
@@ -129,18 +147,20 @@ export class GLTFLoader {
 
         // cameras
         const cameras: GLTFCamera[] = [];
-        for (const camera of gltfSave.cameras) {
-            const znear = camera.perspective?.znear ?? camera.orthographic?.znear;
-            const zfar = camera.perspective?.zfar ?? camera.orthographic?.zfar;
-            if (!znear || !zfar) throw new BadGLTFFileError('Camera missing either znear or zfar properties (or both)');
-
-            cameras.push(new GLTFCamera(camera.name, camera.type, znear, zfar, {
-                aspectRatio: camera.perspective?.aspectRatio,
-                yfov: camera.perspective?.yfov,
-
-                xmag: camera.orthographic?.xmag,
-                ymag: camera.orthographic?.ymag
-            }));
+        if (gltfSave.cameras) {
+            for (const camera of gltfSave.cameras) {
+                const znear = camera.perspective?.znear ?? camera.orthographic?.znear;
+                const zfar = camera.perspective?.zfar ?? camera.orthographic?.zfar;
+                if (!znear || !zfar) throw new BadGLTFFileError('Camera missing either znear or zfar properties (or both)');
+    
+                cameras.push(new GLTFCamera(camera.name, camera.type, znear, zfar, {
+                    aspectRatio: camera.perspective?.aspectRatio,
+                    yfov: camera.perspective?.yfov,
+    
+                    xmag: camera.orthographic?.xmag,
+                    ymag: camera.orthographic?.ymag
+                }));
+            }
         }
 
         // lights
@@ -159,6 +179,8 @@ export class GLTFLoader {
         for (const node of gltfSave.nodes) {
 
             const translation = node.translation ?? [0, 0, 0];
+            const rotation = node.rotation ?? [0, 0, 0, 1];
+            const scale = node.scale ?? [1, 1, 1];
 
             // mesh nodes
             if (node.mesh !== undefined) {
@@ -167,8 +189,9 @@ export class GLTFLoader {
                 
                 nodes.push(new GLTFNodeMesh(
                     node.name,
-                    node.rotation,
+                    rotation,
                     translation,
+                    scale,
                     meshes[node.mesh]
                 ));
                 continue;
@@ -181,8 +204,9 @@ export class GLTFLoader {
                 
                 nodes.push(new GLTFNodeCamera(
                     node.name,
-                    node.rotation,
+                    rotation,
                     translation,
+                    scale,
                     cameras[node.camera]
                 ));
                 continue;
@@ -195,8 +219,9 @@ export class GLTFLoader {
                 
                 nodes.push(new GLTFNodeLight(
                     node.name,
-                    node.rotation,
+                    rotation,
                     translation,
+                    scale,
                     lights[node.extensions.KHR_lights_punctual.light]
                 ));
                 continue;
@@ -228,6 +253,61 @@ export class GLTFLoader {
             gltfSave.scene
         );
 
+    }
+
+    async loadGLBAsset(blob: ArrayBuffer) {
+        
+        if (blob.byteLength < 12) throw new BadGLTFFileError(`GLB File with less then 12 bytes of length`);
+
+        const header = new Uint32Array(blob.slice(0, 12));
+        const magicNumber = header[0];
+        const version = header[1];
+        const length = header[2];
+
+        // header validation
+        if (magicNumber !== 0x46546C67) throw new BadGLTFFileError(`GLB File header magic number doesn't match`);
+        if (version !== 2) throw new BadGLTFFileError(`GLB File header version is not 2`);
+        if (length !== blob.byteLength) throw new BadGLTFFileError(`GLB File header length of '${length}' doesn't match blob length of '${blob.byteLength}'`);
+
+        // chunk validation
+        const chunks = this.parseGLBChunks(blob);
+        const jsonChunks = chunks.filter(c => c.type === 0x4E4F534A);
+        const binChunks = chunks.filter(c => c.type === 0x004E4942);
+        if (jsonChunks.length !== 1) throw new BadGLTFFileError(`GLB File has '${jsonChunks.length}' JSON chunks (should be 1)`);
+        if (binChunks.length > 1) throw new BadGLTFFileError(`GLB File has '${binChunks.length}' BINARY chunks (should be 0 or 1)`);
+
+        const json = JSON.parse(new TextDecoder().decode(jsonChunks[0].data)) as GLTFFileFormat;
+        return await this.constructGLTFAsset(json, binChunks.map(c => c.data));
+
+    }
+
+    private parseGLBChunks(blob: ArrayBuffer) {
+
+        const chunks: GLBChunk[] = [];
+        let position = 12; // start from header
+
+        while (position < blob.byteLength) {
+
+            const chunkHeader = new Uint32Array(blob.slice(position, position + 8));
+            const chunkLength = chunkHeader[0];
+            const chunkType = chunkHeader[1];
+
+            if (chunkType !== 0x4E4F534A && chunkType !== 0x004E4942) throw new BadGLTFFileError(`GLB File chunk header has an invalid type '${chunkType}', should be '${0x4E4F534A}' or '${0x004E4942}'`);
+            const chunkDataEnd = Math.ceil((position + 8 + chunkLength) / 4) * 4; // chunks MUST be aligned to a 4-byte boundary
+            if (chunkDataEnd > blob.byteLength) 
+                throw new BadGLTFFileError(`GLB File chunk length of '${chunkLength}' exceeds the blob size of '${blob.byteLength}' (chunk from '${position + 8}' to '${chunkDataEnd}')`);
+            
+            const chunkData = blob.slice(position + 8, chunkDataEnd);
+            chunks.push({
+                type: chunkType,
+                length: chunkLength,
+                data: chunkData
+            });
+
+            position = chunkDataEnd;
+        }
+
+        return chunks;
     }
 
 }

@@ -6,6 +6,9 @@ declare module 'gltf' {
 
     type KHR_lights_punctual_Types = 'directional' | 'point' | 'spot';
 
+    type GLBChunkJSONType = 0x4E4F534A;
+    type GLBChunkBINType = 0x004E4942;
+
     interface GLTFFileFormat {
 
         asset: {
@@ -54,8 +57,9 @@ declare module 'gltf' {
 
         nodes: {
             name: string;
-            rotation: number[]; // quaternion
+            rotation?: number[]; // quaternion
             translation?: number[]; // vec3
+            scale?: number[]; // vec3
             
             extensions?: {
                 KHR_lights_punctual?: {
@@ -137,8 +141,14 @@ declare module 'gltf' {
 
         buffers: {
             byteLength: number;
-            uri: string;
+            uri?: string;
         }[];
 
+    }
+
+    interface GLBChunk {
+        length: number;
+        type: GLBChunkJSONType | GLBChunkBINType; // ASCII 'JSON' or 'BIN'
+        data: ArrayBuffer;
     }
 }
