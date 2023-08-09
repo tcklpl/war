@@ -8,6 +8,8 @@ export class GLTFMesh {
     private _name: string;
     private _primitives: GLTFMeshPrimitive[];
 
+    private _engineMesh?: Mesh;
+
     constructor(name: string, primitives: GLTFMeshPrimitive[]) {
         this._name = name;
         this._primitives = primitives;
@@ -21,7 +23,7 @@ export class GLTFMesh {
         return this._primitives;
     }
 
-    constructEngineMesh() {
+    private constructEngineMesh() {
 
         const constructedPrimitives: Primitive[] = [];
         this._primitives.forEach(p => {
@@ -38,10 +40,15 @@ export class GLTFMesh {
                 normals: normalBuffer,
                 tangent: tangentBuffer,
                 indices: indicesBuffer
-            }, p.indices.count, p.material.constructPBRMaterial()));
+            }, p.indices.count, p.material.asEnginePBRMaterial));
         });
 
-        return new Mesh(this._name, constructedPrimitives);
+        this._engineMesh = new Mesh(this._name, constructedPrimitives);
+    }
+
+    get asEngineMesh() {
+        if (!this._engineMesh) this.constructEngineMesh();
+        return this._engineMesh as Mesh;
     }
 
 }

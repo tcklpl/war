@@ -25,6 +25,8 @@ export class GLTFMaterial {
     private _specular: number[];
     private _transmission: number;
 
+    private _pbrMaterial?: PBRMaterial;
+
     constructor(name: string, properties: GLTFMaterialProperties) {
         this._name = name;
         this._doubleSided = properties.doubleSided;
@@ -36,15 +38,18 @@ export class GLTFMaterial {
         this._transmission = properties.transmission ?? 0;
     }
 
-    constructPBRMaterial() {
-        return new PBRMaterial(this._name);
-        // return new PBRShader(this._name, {
-        //     baseColor: new Vec4(this._baseColor[0], this._baseColor[1], this._baseColor[2], this._baseColor[3]),
-        //     metallic: this._metallic,
-        //     roughness: this._roughness,
-        //     ior: this._ior,
-        //     specularColor: new Vec3(this._specular[0], this._specular[1], this._specular[2]),
-        //     transmission: this._transmission
-        // });
+    private constructPBRMaterial() {
+        this._pbrMaterial = new PBRMaterial(this._name, {
+            baseColor: Vec4.fromArray(this._baseColor),
+            metallic: this._metallic,
+            roughness: this._roughness,
+            ior: this._ior
+        });
+
+    }
+
+    get asEnginePBRMaterial(): PBRMaterial {
+        if (!this._pbrMaterial) this.constructPBRMaterial();
+        return this._pbrMaterial as PBRMaterial;
     }
 }
