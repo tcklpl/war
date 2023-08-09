@@ -1,4 +1,7 @@
+import { AssetManager } from "./asset/AssetManager";
 import { CameraManager } from "./camera/camera_manager";
+import { LightManager } from "./data/lights/light_manager";
+import { MaterialManager } from "./data/material/material_manager";
 import { MeshManager } from "./data/meshes/mesh_manager";
 import { SceneManager } from "./data/scene/scene_manager";
 import { IFrameListener } from "./data/traits/frame_listener";
@@ -9,23 +12,30 @@ import { VanillaRenderer } from "./render/vanilla/vanilla_renderer";
 export class Engine {
     
     private _renderer: Renderer = new VanillaRenderer();
-    private _shouldRender: boolean = true;
+    private _shouldRender: boolean = false;
 
     private _idPool = new IdentifierPool();
 
     private _managers = {
+        asset: new AssetManager(),
         camera: new CameraManager(),
         mesh: new MeshManager(),
-        scene: new SceneManager()
+        scene: new SceneManager(),
+        material: new MaterialManager(),
+        light: new LightManager()
     }
 
     private _frameListeners: IFrameListener[] = [];
 
+    constructor() {
+        this.renderLoop();
+    }
+
     private renderLoop() {
-        this._frameListeners.forEach(fl => {
-            if (fl.onEachFrame) fl.onEachFrame();
-        });
         if (this._shouldRender) {
+            this._frameListeners.forEach(fl => {
+                if (fl.onEachFrame) fl.onEachFrame();
+            });
             this._renderer.render();
         }
         requestAnimationFrame(() => this.renderLoop());
@@ -41,6 +51,20 @@ export class Engine {
 
     registerFrameListener(l: IFrameListener) {
         this._frameListeners.push(l);
+    }
+
+    free() {
+        // prevent rendering while we destroy the whole engine
+        this.pauseRender();
+
+        // assets don't need any memory freeing
+        // cameras also don't need any memory freeing
+        this._managers.mesh.freeMeshes();
+        // scenes also don't need any memory freeing
+        this._managers.material.freeMaterials();
+        this._managers.light.freeLights();
+
+        this._renderer.free();
     }
 
     get idPool() {
