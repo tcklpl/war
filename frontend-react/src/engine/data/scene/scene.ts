@@ -1,12 +1,17 @@
 import { Camera } from "../../camera/camera";
 import { Entity } from "../../entity/entity";
+import { Light } from "../lights/light";
 
 export class Scene {
 
     private _activeCamera?: Camera;
     
-    constructor(private _name: string, private _entities: Entity[], private _cameras: Camera[]) {
+    constructor(private _name: string, private _entities: Entity[], private _cameras: Camera[], private _lights: Light[]) {
 
+    }
+
+    set activeCamera(c: Camera | undefined) {
+        this._activeCamera = c;
     }
 
     get activeCamera() {
@@ -19,6 +24,10 @@ export class Scene {
 
     get entitiesToRender() {
         return this._entities;
+    }
+
+    get lights() {
+        return this._lights;
     }
 
 }
