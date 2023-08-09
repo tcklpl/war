@@ -19,14 +19,14 @@ export class GLTFScene {
     }
 
     get meshes(): GLTFNodeMesh[] {
-        return this._nodes.filter(x => x.nodeType === 'mesh') as GLTFNodeMesh[];
+        return this._nodes.filter(x => x instanceof GLTFNodeMesh) as GLTFNodeMesh[];
     }
 
     get cameras(): GLTFNodeCamera[] {
-        return this._nodes.filter(x => x.nodeType === 'camera') as GLTFNodeCamera[];
+        return this._nodes.filter(x => x instanceof GLTFNodeCamera) as GLTFNodeCamera[];
     }
 
     get lights(): GLTFNodeLight[] {
-        return this._nodes.filter(x => x.nodeType === 'light') as GLTFNodeLight[];
+        return this._nodes.filter(x => x instanceof GLTFNodeLight) as GLTFNodeLight[];
     }
 }
