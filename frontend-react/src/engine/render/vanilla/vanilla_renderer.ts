@@ -1,17 +1,16 @@
-import { UniformBlockIndices } from "uniform-block-indices";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { Renderer } from "../renderer";
 import { Mat4 } from "../../data/mat/mat4";
 import { MathUtils } from "../../../utils/math_utils";
 import { PBRShader } from "../../../shaders/pbr/pbr_shader";
+import { Vec3 } from "../../data/vec/vec3";
 
 export class VanillaRenderer extends Renderer {
 
-    private sizeofMat4 = 4 * 4 * 4; // a (4 x 4) matrix with each element using 4 bytes
 
     private _projectionMat!: Mat4;
-    private _viewProjBuffer!: GPUBuffer;
     private _viewProjBindGroup!: GPUBindGroup;
+    private _pbrViewProjectionBuffer!: GPUBuffer;
 
     private _presentationFormat!: GPUTextureFormat;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
@@ -20,9 +19,8 @@ export class VanillaRenderer extends Renderer {
     private _depthTexture!: GPUTexture;
     private _depthTextureView!: GPUTextureView;
 
-    private _pbrShader = new PBRShader('Main PBR Shader');
+    private _pbrShader = new PBRShader('Main PBR Shader', () => this.initialize());
     private _pbrPipeline!: GPURenderPipeline;
-    private _pbrViewProjectionBuffer!: GPUBuffer;
 
     private _renderSettings = {
         near: 0.1,
@@ -41,36 +39,36 @@ export class VanillaRenderer extends Renderer {
             vertex: {
                 module: this._pbrShader.module,
                 entryPoint: 'vertex',
-                buffers: <GPUVertexBufferLayout[]> [
+                buffers: [
                     // position
                     {
                         arrayStride: 3 * 4, // 3 floats, 4 bytes each
-                        attributes: <GPUVertexAttribute[]> [
+                        attributes: [
                             { shaderLocation: 0, offset: 0, format: 'float32x3' }
                         ]
                     },
                     // uv
                     {
                         arrayStride: 2 * 4, // 3 floats, 4 bytes each
-                        attributes: <GPUVertexAttribute[]> [
+                        attributes: [
                             { shaderLocation: 1, offset: 0, format: 'float32x2' }
                         ]
                     },
                     // normals
                     {
                         arrayStride: 3 * 4, // 3 floats, 4 bytes each
-                        attributes: <GPUVertexAttribute[]> [
+                        attributes: [
                             { shaderLocation: 2, offset: 0, format: 'float32x3' }
                         ]
                     },
                     // tangents
                     {
                         arrayStride: 4 * 4, // 3 floats, 4 bytes each
-                        attributes: <GPUVertexAttribute[]> [
+                        attributes: [
                             { shaderLocation: 3, offset: 0, format: 'float32x4' }
                         ]
                     }
-                ]
+                ] as GPUVertexBufferLayout[]
             },
             fragment: {
                 module: this._pbrShader.module,
@@ -81,7 +79,19 @@ export class VanillaRenderer extends Renderer {
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'back'
+                /*
+                    I concluded that cullMode as none will be a favorable trade-off since otherwise I would need to create 2 PBR pipelines:
+                    one for each winding (CW and CCW) as gltf specifies that:
+                    
+                    "the determinant of the node’s global transform defines the winding order of that primitive. 
+                    If the determinant is a positive value, the winding order triangle faces is counterclockwise; 
+                    in the opposite case, the winding order is clockwise."
+
+                    As the game will not have that many objects AND this pipeline will not make a lot of calculation (as we'll be rendering to a gBuffer),
+                    I decided to remove the GPU culling. If mirrored geometry becomes a necessity in the future I'll edit this, in that case I would need
+                    to check each primitives winding order and separate them into 2 groups and render with 2 pipelines (don't switch pipelines per object).
+                */
+                cullMode: 'none'
             },
             depthStencil: {
                 depthWriteEnabled: true,
@@ -94,15 +104,15 @@ export class VanillaRenderer extends Renderer {
         });
 
         this._renderPassDescriptor = {
-            colorAttachments: <GPURenderPassColorAttachment[]>[
+            colorAttachments: [
                 {
                     // view: undefined, Assigned later
                     // resolveTarget: undefined, Assigned Later
-                    clearValue: { r: 0, g: 0, b: 0, a: 1 },
+                    clearValue: { r: 0.3, g: 0.3, b: 0.3, a: 1 },
                     loadOp: 'clear',
                     storeOp: 'store'
                 }
-            ],
+            ] as GPURenderPassColorAttachment[],
             depthStencilAttachment: {
                 view: this._renderTargetView, // Assigned later
                 depthClearValue: 1,
@@ -111,15 +121,20 @@ export class VanillaRenderer extends Renderer {
             }
         }
 
-        this._pbrViewProjectionBuffer = BufferUtils.createEmptyBuffer(Mat4.byteSize * 2, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+        // buffer has 2 mat4 (view and projection) and 1 vec3 (camera position)
+        const viewProjByteSize = Mat4.byteSize * 2 + Vec3.byteSize;
+        this._pbrViewProjectionBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
         this.buildProjectionMatrix();
 
         this._viewProjBindGroup = device.createBindGroup({
+            label: 'PBR ViewProj',
             layout: this._pbrPipeline.getBindGroupLayout(PBRShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ),
             entries: [
                 { binding: 0, resource: { buffer: this._pbrViewProjectionBuffer }}
             ]
         });
+
+        game.engine.managers.light.constructBuffers();
     }
 
     private buildProjectionMatrix() {
@@ -146,6 +161,8 @@ export class VanillaRenderer extends Renderer {
 
         gameCanvas.width = width;
         gameCanvas.height = height;
+        this._renderSettings.width = width;
+        this._renderSettings.height = height;
 
         const renderTarget = device.createTexture({
             size: [width, height],
@@ -168,6 +185,7 @@ export class VanillaRenderer extends Renderer {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = this._depthTextureView;
 
         this.buildProjectionMatrix();
+        game.engine.managers.light.writeBuffer();
     }
     
     render(): void {
@@ -177,16 +195,22 @@ export class VanillaRenderer extends Renderer {
             return;
         }
 
-        this.assertCanvasResolution();
+        this.assertCanvasResolution(); 
 
         // write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
         device.queue.writeBuffer(this._pbrViewProjectionBuffer, 0, camera.viewMatrix.asF32Array);
+        device.queue.writeBuffer(this._pbrViewProjectionBuffer, 2 * Mat4.byteSize, camera.position.asF32Array);
+
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = this._renderTargetView;
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].resolveTarget = gpuCtx.getCurrentTexture().createView();
+        (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = this._depthTextureView;
 
         const commandEncoder = device.createCommandEncoder();
         const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
         passEncoder.setPipeline(this._pbrPipeline);
         passEncoder.setBindGroup(PBRShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroup);
 
+        game.engine.managers.light.bindLights(passEncoder);
         game.engine.managers.scene.activeScene?.entitiesToRender.forEach(e => e.draw(passEncoder));
 
         passEncoder.end();
@@ -194,7 +218,9 @@ export class VanillaRenderer extends Renderer {
     }
 
     free(): void {
-        gl.deleteBuffer(this._viewProjBuffer);
+        this._renderTarget?.destroy();
+        this._depthTexture?.destroy();
+        this._pbrViewProjectionBuffer?.destroy();
     }
 
     get pbrPipeline() {
