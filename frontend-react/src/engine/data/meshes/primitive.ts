@@ -1,5 +1,4 @@
 import { BindDeletedMeshPrimitiveError } from "../../../errors/engine/data/bind_deleted_mesh_primitive";
-import { Shader } from "../../../shaders/shader";
 import { Material } from "../material/material";
 
 type PrimitiveBuffers = {
@@ -25,7 +24,8 @@ export class Primitive {
 
     draw(passEncoder: GPURenderPassEncoder) {
         if (!this._available) throw new BindDeletedMeshPrimitiveError();
-        // TODO: bind material
+        
+        this._material.bind(passEncoder);
         
         passEncoder.setVertexBuffer(0, this._buffers.positions);
         passEncoder.setVertexBuffer(1, this._buffers.uv);
@@ -35,7 +35,7 @@ export class Primitive {
         passEncoder.drawIndexed(this._indicesSize);
     }
 
-    delete() {
+    free() {
         this._buffers.positions.destroy();
         this._buffers.uv.destroy();
         this._buffers.normals.destroy();
