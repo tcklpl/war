@@ -1,4 +1,6 @@
 import { BufferUtils } from "../../utils/buffer_utils";
+import { MathUtils } from "../../utils/math_utils";
+import { Mat3 } from "../data/mat/mat3";
 import { Mat4 } from "../data/mat/mat4";
 import { Quaternion } from "../data/quaternion/quaternion";
 import { Vec3 } from "../data/vec/vec3";
@@ -8,7 +10,7 @@ export class MatrixTransformative {
     private _parent?: MatrixTransformative;
 
     private _translation = Vec3.fromValue(0);
-    private _rotation = Quaternion.fromEulerAngles(0, 0, 0);
+    private _rotation = Quaternion.fromEulerAnglesRadians(0, 0, 0);
     private _scale = Vec3.fromValue(1);
 
     private _translationMatrix = Mat4.identity();
@@ -31,6 +33,18 @@ export class MatrixTransformative {
         device.queue.writeBuffer(this._modelMatrixUniformBuffer, 0, this._modelMatrix.asF32Array);
     }
 
+    buildTranslationMatrix() {
+        this._translationMatrix = Mat4.translation(this._translation.x, this._translation.y, this._translation.z);
+    }
+
+    buildRotationMatrix() {
+        this._rotationMatrix = this._rotation.asMat4;
+    }
+
+    buildScaleMatrix() {
+        this._scaleMatrix = Mat4.scaling(this._scale.x, this._scale.y, this._scale.z);
+    }
+
     get translation() {
         return this._translation;
     }
@@ -47,13 +61,19 @@ export class MatrixTransformative {
 
     set rotationQuaternion(q: Quaternion) {
         this._rotation = q;
-        this._rotationMatrix = this._rotation.asMat4;
+        this.buildRotationMatrix();
         this.buildModelMatrix();
     }
 
-    set rotationEuler(r: Vec3) {
-        this._rotation = Quaternion.fromEulerAngles(r.x, r.y, r.z);
-        this._rotationMatrix = this._rotation.asMat4;
+    set rotationEulerRadians(r: Vec3) {
+        this._rotation = Quaternion.fromEulerAnglesRadians(r.x, r.y, r.z);
+        this.buildRotationMatrix();
+        this.buildModelMatrix();
+    }
+
+    set rotationEulerDegrees(r: Vec3) {
+        this._rotation = Quaternion.fromEulerAnglesRadians(MathUtils.degToRad(r.x), MathUtils.degToRad(r.y), MathUtils.degToRad(r.z));
+        this.buildRotationMatrix();
         this.buildModelMatrix();
     }
 
@@ -63,7 +83,7 @@ export class MatrixTransformative {
 
     set scale(s: Vec3) {
         this._scale = s;
-        this._scaleMatrix = Mat4.scaling(s.x, s.y, s.z);
+        this.buildScaleMatrix();
         this.buildModelMatrix();
     }
 
