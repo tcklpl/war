@@ -5,6 +5,7 @@ declare global {
     var device: GPUDevice;
     var gameCanvas: HTMLCanvasElement;
     var game: WarGame;
+    var gpuCtx: GPUCanvasContext;
 }
 
 export default global;
