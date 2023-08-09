@@ -18,8 +18,8 @@ export class Mesh {
         this._primitives.forEach(p => p.draw(passEncoder));
     }
 
-    delete() {
-        this._primitives.forEach(p => p.delete());
+    free() {
+        this._primitives.forEach(p => p.free());
     }
 
 }
