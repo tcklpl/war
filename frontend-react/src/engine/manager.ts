@@ -7,6 +7,10 @@ export abstract class Manager<T> {
         this._registered.push(item);
     }
 
+    registerAll(items: T[]) {
+        this._registered.push(...items);
+    }
+
     get all() {
         return this._registered;
     }
