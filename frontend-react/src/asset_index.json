@@ -1,5 +1,6 @@
 {
-    "gltf": [
-        { "name": "board", "url": "/assets/board.gltf" }
-    ]
+    "gltf": {
+        "board": { "url": "/assets/board.gltf" }
+    }
+    
 }
