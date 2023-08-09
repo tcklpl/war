@@ -1,3 +1,4 @@
+import { BadVectorLengthError } from "../../../errors/engine/data/bad_vector_length";
 import { MathUtils } from "../../../utils/math_utils";
 import { Vector } from "./vector";
 
@@ -177,5 +178,10 @@ export class Vec3 extends Vector {
         const yDiff = a.y - b.y;
         const zDiff = a.z - b.z;
         return new Vec3(a.x + (xDiff * n), a.y + (yDiff * n), a.z + (zDiff * n));
+    }
+
+    static fromArray(a: number[]) {
+        if (a.length !== 3) throw new BadVectorLengthError(`Trying to create vec3 with an array of ${a.length} elements`);
+        return new Vec3(a[0], a[1], a[2]);
     }
 }

@@ -1,3 +1,4 @@
+import { BadVectorLengthError } from "../../../errors/engine/data/bad_vector_length";
 import { Vector } from "./vector";
 
 export class Vec4 extends Vector {
@@ -53,5 +54,14 @@ export class Vec4 extends Vector {
             ((id >> 16) & 0xFF) / 0xFF,
             ((id >> 24) & 0xFF) / 0xFF
         );
+    }
+
+    static fromValue(v: number) {
+        return new Vec4(v, v, v, v);
+    }
+
+    static fromArray(a: number[]) {
+        if (a.length !== 4) throw new BadVectorLengthError(`Trying to create vec4 with an array of ${a.length} elements`);
+        return new Vec4(a[0], a[1], a[2], a[3]);
     }
 }
