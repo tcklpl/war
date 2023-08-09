@@ -1,7 +1,11 @@
 import { Constructor } from "typeUtils";
 
+interface IKeyboardListener {
+    onKeyDown(key: string, fn: () => void): void;
+    onKeyUp(key: string, fn: () => void): void;
+}
 
-export function keyboardListener<T extends Constructor>(base: T): Constructor & T {
+export function keyboardListener<T extends Constructor>(base: T): Constructor<IKeyboardListener> & T {
     return class extends base {
 
         constructor(...args: any[]) {
