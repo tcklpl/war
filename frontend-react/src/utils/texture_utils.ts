@@ -20,6 +20,8 @@ export class TextureUtils {
             { bytesPerRow: 4, rowsPerImage: 1 },
             { width: 1, height: 1 }
         );
+
+        return tex;
     }
 
 }
