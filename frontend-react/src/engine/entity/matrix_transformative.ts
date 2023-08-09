@@ -1,6 +1,5 @@
 import { BufferUtils } from "../../utils/buffer_utils";
 import { MathUtils } from "../../utils/math_utils";
-import { Mat3 } from "../data/mat/mat3";
 import { Mat4 } from "../data/mat/mat4";
 import { Quaternion } from "../data/quaternion/quaternion";
 import { Vec3 } from "../data/vec/vec3";
