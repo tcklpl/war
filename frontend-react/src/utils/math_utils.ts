@@ -13,4 +13,8 @@ export class MathUtils {
         return (value > max ? max : (value < min ? min : value));
     }
 
+    static ensurePadding(value: number, dividend = 16) {
+        return Math.ceil(value / dividend) * dividend;
+    }
+
 }
