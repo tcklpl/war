@@ -7,8 +7,8 @@ export class Keyboard {
     private _keyUpListeners: Map<string, (() => void)[]> = new Map();
 
     constructor() {
-        gameCanvas.addEventListener('keydown', e => this.onKeyEvent(e, 'down'));
-        gameCanvas.addEventListener('keyup', e => this.onKeyEvent(e, 'up'));
+        window.addEventListener('keydown', e => this.onKeyEvent(e, 'down'));
+        window.addEventListener('keyup', e => this.onKeyEvent(e, 'up'));
     }
 
     private onKeyEvent(e: KeyboardEvent, eventType: KeyEvent) {
