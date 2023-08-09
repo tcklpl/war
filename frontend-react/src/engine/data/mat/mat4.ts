@@ -8,7 +8,7 @@ export class Mat4 implements IUniformBindable {
     values: number[] = new Array<number>(16);
 
     constructor(values: number[]) {
-        if (values.length != 16) throw new BadMatrixLengthError(`Trying to create a 4x4 matrix with ${values.length} elements`);
+        if (values.length !== 16) throw new BadMatrixLengthError(`Trying to create a 4x4 matrix with ${values.length} elements`);
         this.values = values;
     }
 
@@ -76,6 +76,15 @@ export class Mat4 implements IUniformBindable {
 
     duplicate() {
         return new Mat4(this.values.map(x => x));
+    }
+
+    transpose() {
+        return new Mat4([
+            this.values[ 0], this.values[ 4], this.values[ 8], this.values[12], 
+            this.values[ 1], this.values[ 5], this.values[ 9], this.values[13], 
+            this.values[ 2], this.values[ 6], this.values[10], this.values[14], 
+            this.values[ 3], this.values[ 7], this.values[11], this.values[15]
+        ]);
     }
 
     get inverse() {
@@ -192,18 +201,6 @@ export class Mat4 implements IUniformBindable {
         ]);
     }
 
-    static lookAt(cameraPos: Vec3, target: Vec3, up: Vec3): Mat4 {
-        let zAxis = Vec3.normalize(Vec3.subtract(cameraPos, target));
-        let xAxis = Vec3.normalize(Vec3.cross(up, zAxis));
-        let yAxis = Vec3.normalize(Vec3.cross(zAxis, xAxis));
-        return new Mat4([
-            xAxis.x, xAxis.y, xAxis.z, 0,
-            yAxis.x, yAxis.y, yAxis.z, 0,
-            zAxis.x, zAxis.y, zAxis.z, 0,
-            cameraPos.x, cameraPos.y, cameraPos.z, 1
-        ]);
-    }
-
     static translation(x: number, y: number, z: number): Mat4 {
         return new Mat4([
             1, 0, 0, 0,
@@ -223,14 +220,87 @@ export class Mat4 implements IUniformBindable {
     }
 
     static perspective(fovRadians: number, aspect: number, near: number, far: number): Mat4 {
-        var f = Math.tan(Math.PI * 0.5 - 0.5 * fovRadians);
-        var rangeInv = 1.0 / (near - far);
+        const f = Math.tan(Math.PI * 0.5 - 0.5 * fovRadians);
+        const rangeInv = 1 / (near - far);
 
         return new Mat4([
-            -f / aspect, 0, 0, 0,
-            0, -f, 0, 0,
-            0, 0, far * rangeInv, -1,
-            0, 0, near * far * rangeInv, 0,
+            f / aspect , 0 , 0                    , 0,
+            0          , f , 0                    , 0,
+            0          , 0 , far * rangeInv       , -1,
+            0          , 0 , near * far * rangeInv, 0,
+        ]);
+    }
+
+    static ortho(left: number, right: number, bottom: number, top: number, near: number, far: number) {
+        return new Mat4([
+            2 / (right - left), 0, 0, 0,
+            0, 2 / (top - bottom), 0, 0,
+            0, 0, 1 / (near - far), 0,
+            (right + left) / (left - right), (top + bottom) / (bottom - top), near / (near - far), 1
+        ]);
+    }
+
+    static frustum(left: number, right: number, bottom: number, top: number, near: number, far: number) {
+
+        const dx = (right - left);
+        const dy = (top - bottom);
+        const dz = (near - far);
+
+        return new Mat4([
+            2 * near / dx, 0, 0, 0,
+            0, 2 * near / dy, 0, 0,
+            (left + right) / dx, (top + bottom) / dy, far / dz, -1,
+            0, 0, near * far / dz, 0
+        ]);
+    }
+
+    /**
+     * Aim matrix, makes an object aim down +Z toward the target.
+     * 
+     * @param pos Position
+     * @param target Target position
+     * @param up Vector pointing upwards
+     * @returns The aim matrix
+     */
+    static aim(pos: Vec3, target: Vec3, up: Vec3) {
+        const zAxis = Vec3.subtract(target, pos).normalize();
+        const xAxis = Vec3.cross(up, zAxis).normalize();
+        const yAxis = Vec3.cross(zAxis, xAxis).normalize();
+
+        return new Mat4([
+            xAxis.x, xAxis.y, xAxis.z, 0,
+            yAxis.x, yAxis.y, yAxis.z, 0,
+            zAxis.x, zAxis.y, zAxis.z, 0,
+            pos.x  , pos.y  , pos.z  , 1
+        ]);
+    }
+
+    static cameraAim(pos: Vec3, target: Vec3, up: Vec3) {
+        const zAxis = Vec3.subtract(pos, target).normalize();
+        const xAxis = Vec3.cross(up, zAxis).normalize();
+        const yAxis = Vec3.cross(zAxis, xAxis).normalize();
+
+        return new Mat4([
+            xAxis.x, xAxis.y, xAxis.z, 0,
+            yAxis.x, yAxis.y, yAxis.z, 0,
+            zAxis.x, zAxis.y, zAxis.z, 0,
+            pos.x  , pos.y  , pos.z  , 1
+        ]);
+    }
+
+    static lookAt(pos: Vec3, target: Vec3, up: Vec3): Mat4 {
+        let zAxis = Vec3.subtract(pos, target).normalize();
+        let xAxis = Vec3.cross(up, zAxis).normalize();
+        let yAxis = Vec3.cross(zAxis, xAxis).normalize();
+
+        return new Mat4([
+            xAxis.x, yAxis.x, zAxis.x, 0,
+            xAxis.y, yAxis.y, zAxis.y, 0,
+            xAxis.z, yAxis.z, zAxis.z, 0,
+            -(xAxis.x * pos.x + xAxis.y * pos.y + xAxis.z * pos.z),
+            -(yAxis.x * pos.x + yAxis.y * pos.y + yAxis.z * pos.z),
+            -(zAxis.x * pos.x + zAxis.y * pos.y + zAxis.z * pos.z),
+            1
         ]);
     }
     
