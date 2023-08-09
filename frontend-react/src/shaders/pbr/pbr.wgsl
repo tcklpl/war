@@ -24,8 +24,7 @@ struct VSCommonUniforms {
     Vertex uniforms that are unique to each entity
 */
 struct VSUniqueUniforms {
-    model: mat4x4f,
-    model3x3: mat3x3f
+    model: mat4x4f
 };
 @group(1) @binding(0) var<uniform> vsUniqueUniforms: VSUniqueUniforms;
 
