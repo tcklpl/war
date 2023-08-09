@@ -1,10 +1,11 @@
+import { BadQuaternionLengthError } from "../../../errors/engine/data/bad_quaternion_length";
 import { MathUtils } from "../../../utils/math_utils";
 import { Mat4 } from "../mat/mat4";
 import { Vec3 } from "../vec/vec3";
 
 export class Quaternion {
 
-    constructor(public x: number, public y: number, public z: number, public w: number) {
+    constructor(public w: number, public x: number, public y: number, public z: number) {
     }
 
     normalize() {
@@ -45,6 +46,13 @@ export class Quaternion {
             (2 * xz) + (2 * wy)    , (2 * yz) - (2 * wx)    , 1 - (2 * x2) - (2 * y2), 0,
             0                      , 0                      , 0                      , 1
         ]);
+    }
+
+    get asDirectionVector() {
+        const x = 2 * (this.x * this.z + this.w * this.y);
+        const y = 2 * (this.y * this.z - this.w * this.x);
+        const z = 1 - 2 * (this.x * this.x + this.y * this.y);
+        return new Vec3(x, y, z);
     }
 
     multiplyByVec3(v: Vec3) {
@@ -103,7 +111,7 @@ export class Quaternion {
      * @param pitch pitch in radians
      * @param yaw yaw in radians
      */
-    static fromEulerAngles(roll: number, pitch: number, yaw: number) {
+    static fromEulerAnglesRadians(roll: number, pitch: number, yaw: number) {
         const cosYaw = Math.cos(yaw / 2);
         const sinYaw = Math.sin(yaw / 2);
         const cosPitch = Math.cos(pitch / 2);
@@ -119,10 +127,24 @@ export class Quaternion {
         );
     }
 
+    static fromEulerAnglesDegrees(roll: number, pitch: number, yaw: number) {
+        return this.fromEulerAnglesRadians(MathUtils.degToRad(roll), MathUtils.degToRad(pitch), MathUtils.degToRad(yaw));
+    }
+
     static fromAngleAxis(axis: Vec3, angle: number) {
         const s = Math.sin(angle / 2);
         const u = axis.normalize();
         return new Quaternion(Math.cos(angle / 2), u.x * s, u.y * s, u.z * s);
+    }
+
+    static fromArrayWXYZ(v: number[]) {
+        if (v.length !== 4) throw new BadQuaternionLengthError(`Trying to create quaternion from an array with ${v.length} values`);
+        return new Quaternion(v[0], v[1], v[2], v[3]);
+    }
+
+    static fromArrayXYZW(v: number[]) {
+        if (v.length !== 4) throw new BadQuaternionLengthError(`Trying to create quaternion from an array with ${v.length} values`);
+        return new Quaternion(v[3], v[0], v[1], v[2]);
     }
 
     static lookAt(source: Vec3, dest: Vec3, front: Vec3, up: Vec3) {
@@ -130,7 +152,7 @@ export class Quaternion {
         const toVector = Vec3.subtract(dest, source).normalize();
 
         let rotAxis = Vec3.cross(front, toVector).normalize();
-        if (rotAxis.squaredNorm() == 0) {
+        if (rotAxis.squaredNorm() === 0) {
             rotAxis = up;
         }
 
@@ -180,5 +202,9 @@ export class Quaternion {
         const c = b.clone().subtract(a.clone().multiplyByFactor(dot)).normalize();
 
         return a.clone().multiplyByFactor(Math.cos(theta)).add(c.multiplyByFactor(Math.sin(theta)));
+    }
+
+    static get up() {
+        return new Quaternion(0.707, 0, 0, 0.707);
     }
 }
