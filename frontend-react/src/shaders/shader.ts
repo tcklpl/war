@@ -20,7 +20,10 @@ export abstract class Shader {
             throw new ShaderError(`Error when compiling shader '${this._name}'`);
         }
 
-        console.log(info.messages);
+        if (info.messages.length > 0) {
+            console.log(info.messages);
+        }
+        
         this._module = module;
     }
 
