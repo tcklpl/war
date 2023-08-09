@@ -7,8 +7,10 @@ export class BufferUtils {
 
         device.pushErrorScope('out-of-memory');
 
+        const size = Math.ceil(data.byteLength / 4) * 4;
+
         const buffer = device.createBuffer({
-            size: data.byteLength,
+            size: size,
             usage: usage,
             mappedAtCreation: true
         });
@@ -28,6 +30,8 @@ export class BufferUtils {
     static createEmptyBuffer(size: number, usage: number) {
 
         device.pushErrorScope('out-of-memory');
+
+        size = Math.ceil(size / 16) * 16;
 
         const buffer = device.createBuffer({
             size: size,
