@@ -1,0 +1,8 @@
+{
+    "gltf": {
+        "board": { "url": "/assets/gltf/board.gltf" }
+    },
+    "hdr": {
+        "kloofendal_43d_clear": { "url": "/assets/hdr/kloofendal_43d_clear_1k.hdr" }
+    }
+}

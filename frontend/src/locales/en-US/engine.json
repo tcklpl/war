@@ -1,0 +1,6 @@
+{
+    "invalid_canvas": "Invalid canvas reference",
+    "unsupported_webgpu": "Your browser doesn't seem to support WebGPU",
+    "disabled_webgpu": "Your browser seems to support WebGPU but it appears disabled",
+    "unsupported_webgl2": "Your browser doesn't seem to support WebGL2, which is weird as it supports WebGPU"
+}
