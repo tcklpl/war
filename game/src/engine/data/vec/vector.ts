@@ -1,7 +1,6 @@
 import { MathUtils } from "../../../utils/math_utils";
-import { IUniformBindable } from "../traits/i_uniform_bindable";
 
-export abstract class Vector implements IUniformBindable {
+export abstract class Vector  {
 
     protected _values: number[];
 
@@ -16,8 +15,6 @@ export abstract class Vector implements IUniformBindable {
     get asF32Array() {
         return new Float32Array(this._values);
     }
-
-    abstract bindUniform(to: WebGLUniformLocation): void;
 
     clamp(min: number, max: number) {
         this._values = this._values.map(x => MathUtils.clamp(min, max, x));

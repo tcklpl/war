@@ -1,4 +1,3 @@
-import { Mat3 } from "../data/mat/mat3";
 import { Mat4 } from "../data/mat/mat4";
 import { Vec3 } from "../data/vec/vec3";
 
@@ -9,7 +8,6 @@ export abstract class Camera {
 
     private _cameraMatrix!: Mat4;
     private _viewMatrix!: Mat4;
-    private _viewMatrixNoTranslation!: Mat3;
 
     constructor(pos: Vec3, up: Vec3) {
         this._pos = pos;
@@ -20,8 +18,7 @@ export abstract class Camera {
 
     protected set cameraMatrix(m: Mat4) {
         this._cameraMatrix = m;
-        this._viewMatrix = m.inverse;
-        this._viewMatrixNoTranslation = m.topLeft;
+        this._viewMatrix = m.inverse();
     }
 
     get cameraMatrix() {
@@ -30,10 +27,6 @@ export abstract class Camera {
 
     get viewMatrix() {
         return this._viewMatrix;
-    }
-
-    get viewMatrixNoTranslation() {
-        return this._viewMatrixNoTranslation;
     }
 
     get position() {

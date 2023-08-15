@@ -1,9 +1,7 @@
 import { BadMatrixLengthError } from "../../../errors/engine/data/bad_matrix_length";
-import { IUniformBindable } from "../traits/i_uniform_bindable";
 import { Vec3 } from "../vec/vec3";
-import { Mat3 } from "./mat3";
 
-export class Mat4 implements IUniformBindable {
+export class Mat4 {
 
     values: number[] = new Array<number>(16);
 
@@ -14,10 +12,6 @@ export class Mat4 implements IUniformBindable {
 
     static get byteSize() {
         return 4 * 4 * 4;
-    }
-
-    bindUniform(to: WebGLUniformLocation): void {
-        gl.uniformMatrix4fv(to, false, new Float32Array(this.values));
     }
 
     multiplyBy(other: Mat4) {
@@ -87,7 +81,7 @@ export class Mat4 implements IUniformBindable {
         ]);
     }
 
-    get inverse() {
+    inverse() {
         let m00 = this.values[0 * 4 + 0];
         let m01 = this.values[0 * 4 + 1];
         let m02 = this.values[0 * 4 + 2];
@@ -169,20 +163,6 @@ export class Mat4 implements IUniformBindable {
                 (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
             d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
                 (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
-        ]);
-    }
-
-    get topLeft() {
-        return new Mat3([
-            this.values[0 * 4 + 0],
-            this.values[0 * 4 + 1],
-            this.values[0 * 4 + 2],
-            this.values[1 * 4 + 0],
-            this.values[1 * 4 + 1],
-            this.values[1 * 4 + 2],
-            this.values[2 * 4 + 0],
-            this.values[2 * 4 + 1],
-            this.values[2 * 4 + 2]
         ]);
     }
 

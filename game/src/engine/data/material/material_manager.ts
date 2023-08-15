@@ -1,4 +1,3 @@
-import { PBRShader } from "../../../shaders/pbr/pbr_shader";
 import { Manager } from "../../manager";
 import { Material } from "./material";
 

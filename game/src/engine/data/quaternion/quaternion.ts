@@ -204,7 +204,4 @@ export class Quaternion {
         return a.clone().multiplyByFactor(Math.cos(theta)).add(c.multiplyByFactor(Math.sin(theta)));
     }
 
-    static get up() {
-        return new Quaternion(0.707, 0, 0, 0.707);
-    }
 }

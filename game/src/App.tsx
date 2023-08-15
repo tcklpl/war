@@ -1,5 +1,4 @@
 import WarCanvas from './components/canvas';
-import LoadingScreen from './components/loading/loading_screen';
 import './style/globals.scss';
 import '@fontsource/roboto/400.css';
 

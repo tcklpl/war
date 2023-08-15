@@ -27,10 +27,6 @@ export class Vec2 extends Vector {
         this._values[1] = val;
     }
 
-    bindUniform(to: WebGLUniformLocation): void {
-        gl.uniform2fv(to, this.asF32Array);
-    }
-
     equals(other: Vec2) {
         return this.x == other.x && this.y == other.y;
     }

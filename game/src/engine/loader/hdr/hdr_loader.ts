@@ -184,7 +184,7 @@ export class HDRLoader {
                 return this.RGBEReadPixels(data, y, scanlineWidth * numScanlines - 1, dst, dstOffset);
             }
 
-            if (((rgbeBuffer[2]) << 8 | rgbeBuffer[3]) !== scanlineWidth) {
+            if (((rgbeBuffer[2] << 8) | rgbeBuffer[3]) !== scanlineWidth) {
                 throw new BadHDRFileError(`Wrong scanline width for scanline ${y}`);
             }
 

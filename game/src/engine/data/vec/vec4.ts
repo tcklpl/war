@@ -43,9 +43,7 @@ export class Vec4 extends Vector {
         this._values[3] = val;
     }
 
-    bindUniform(to: WebGLUniformLocation): void {
-        gl.uniform3fv(to, this.asF32Array);
-    }
+    // -----------------[ STATIC UTILS ]-----------------
 
     static fromId(id: number): Vec4 {
         return new Vec4(

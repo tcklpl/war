@@ -4,8 +4,6 @@ import { Vector } from "./vector";
 
 export class Vec3 extends Vector {
 
-    static UP = new Vec3(0, 1, 0);
-
     constructor(x: number, y: number, z: number) {
         super([x, y, z]);
     }
@@ -99,14 +97,14 @@ export class Vec3 extends Vector {
         return this;
     }
 
-    bindUniform(to: WebGLUniformLocation): void {
-        gl.uniform3fv(to, this.asF32Array);
-    }
-
     // -----------------[ STATIC UTILS ]-----------------
 
     static get zero() {
         return new Vec3(0, 0, 0);
+    }
+
+    static get up() {
+        return new Vec3(0, 1, 0);
     }
 
     static fromValue(val: number) {
