@@ -1,26 +1,19 @@
-# War
+# War Game
 
-This is the browser version of a class-based war2-inspired game made using NodeJS, Typescript and WebGL2.
+This is the browser version of a class-based war2-inspired game made using NodeJS, Typescript and WebGPU.
 
 # Compiling
 
-Make sure you have `node` and `npm` installed on your system. I'm currently using `node v16.13.0` and `npm 8.1.0`
+Make sure you have `node` and `npm` installed on your system. I'm currently using `node v16.17.1` and `npm 8.15.0`
 
-First you'll need to compile the backend, to do so, just go to the backend folder and compile it as:
-```
-cd backend
-npm install
-tsc
-```
-After this you can compile the frontend as:
-```
-cd ../frontend
-npm install
-npm run compile
-```
-> For the time being, the backend just refers to the frontend out folder to serve the website instead of being in a proper distribution directory.
+For now the server is still a TODO and any files there are to be ignored. **there is no server for the time being**.
 
-With everything compiled it can be executed as:
-```
-node backend/out/index.js
-```
+The game is still in early development and the engine is currently being worked on. To start the game in development mode (hot reload) you can do the following:
+````
+cd game
+npm install
+npm start
+````
+This will open a browser and start the react-scripts server in hot-reload mode: your changes will be reflected on the page as you save the files.
+
+Be sure to check out [game/README](./game/README.md), it will be updated as the development progresses.

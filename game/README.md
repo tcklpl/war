@@ -1,4 +1,4 @@
-# War Game - Frontend
+# [War Game](../README.md) > Game
 
 [CREDITS](./CREDITS.md)
 

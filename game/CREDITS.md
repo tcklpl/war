@@ -1,4 +1,4 @@
-# Game Credits
+# [War Game](../README.md) > [Game](./README.md) > Game Credits
 
 Stuff used in the game/engine and who made it.
 
