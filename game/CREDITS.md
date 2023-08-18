@@ -12,7 +12,7 @@ Game Board | board.gltf | [Jader](https://github.com/JaderGedeon), [tcklpl](http
 ### HDR Assets
 Asset name | File Name | Author(s) | License | Extra Info
 ---|---|---|---|---
-kloofendal_43d_clear_1k | kloofendal_43d_clear_1k.AVIF | [Greg Zaal](https://gregzaal.com/) | CC0 | [File in Poly Haven](https://polyhaven.com/a/kloofendal_43d_clear). The HDR file was converted to AVIF so it could be easily loaded.
+kloofendal_43d_clear_4k | kloofendal_43d_clear_4k.AVIF | [Greg Zaal](https://gregzaal.com/) | CC0 | [File in Poly Haven](https://polyhaven.com/a/kloofendal_43d_clear). The HDR file was converted to AVIF so it could be easily loaded.
 
 ## Localizations
 Locale | Author(s)
