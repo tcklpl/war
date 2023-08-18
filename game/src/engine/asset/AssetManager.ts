@@ -6,24 +6,22 @@ import { GLTFAsset } from "./GLTFAsset";
 import { GLTFLoader } from "../loader/gltf/gltf_loader";
 import { GLTFFile } from "../data/gltf/gltf_file";
 import { BadGLTFFileError } from "../../errors/engine/gltf/bad_gltf_file";
-import { HDRLoader } from "../loader/hdr/hdr_loader";
-import { HDRasset } from "./HDRAsset";
+import { IMGAsset } from "./IMGAsset";
 
 type AssetIndex = typeof assetIndex;
 type GLTFAssetName = keyof AssetIndex["gltf"];
-type HDRAssetName = keyof AssetIndex["hdr"];
+type IMGAssetName = keyof AssetIndex["img"];
 type AddressableAsset = { url: string };
 
 export class AssetManager extends Manager<Asset> {
 
     private loaders = {
-        gltf: new GLTFLoader(),
-        hdr: new HDRLoader()
+        gltf: new GLTFLoader()
     }
 
     async loadAssets() {
         await this.loadGLTFAssets();
-        await this.loadHDRAssets();
+        await this.loadIMGAssets();
     }
 
     private async fetchAssetFile(name: string, asset: AddressableAsset) {
@@ -33,6 +31,21 @@ export class AssetManager extends Manager<Asset> {
         if (!assetRequest.ok) throw new MissingAssetError(`Failed to load asset '${name}'`);
 
         return assetRequest;
+    }
+
+    private async fetchAssetImage(name: string, asset: AddressableAsset) {
+        const img = new Image();
+        try {
+            await new Promise((r, e) => {
+                img.onload = r;
+                img.onerror = e;
+                img.src = asset.url;
+            });
+        } catch (e) {
+            throw new MissingAssetError(`Failed to load asset '${name}'`);
+        }
+        
+        return img;
     }
 
     private async loadGLTFAssets() {
@@ -56,18 +69,17 @@ export class AssetManager extends Manager<Asset> {
         }
     }
 
-    private async loadHDRAssets() {
-        const hdrAssets = Object.keys(assetIndex.hdr);
+    private async loadIMGAssets() {
+        const hdrAssets = Object.keys(assetIndex.img);
 
         for (let k of hdrAssets) {
-            const assetInfo = assetIndex.hdr[k as HDRAssetName];
-            const assetRequest = await this.fetchAssetFile(k, assetInfo);
-
-            this.register(new HDRasset(k, assetInfo.url, this.loaders.hdr.loadHDRFile(await assetRequest.arrayBuffer())))
+            const assetInfo = assetIndex.img[k as IMGAssetName];
+            const asset = await this.fetchAssetImage(k, assetInfo);
+            this.register(new IMGAsset(k, assetInfo.url, asset));
         }
     }
 
-    assertGetAsset(name: GLTFAssetName) {
+    assertGetAsset(name: GLTFAssetName | IMGAssetName) {
         const temp = this.all.find(a => a.name === name);
         if (!temp) throw new MissingAssetError(name);
         return temp;
@@ -75,6 +87,10 @@ export class AssetManager extends Manager<Asset> {
     
     getGLTFAsset(name: GLTFAssetName) {
         return this.assertGetAsset(name) as GLTFAsset;
+    }
+
+    getHDRAsset(name: IMGAssetName) {
+        return this.assertGetAsset(name) as IMGAsset;
     }
 
 }

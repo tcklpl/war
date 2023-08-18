@@ -24,4 +24,22 @@ export class TextureUtils {
         return tex;
     }
 
+    static createRGBA16fFromHDRBitmap(data: ImageBitmap, width: number, height: number) {
+
+        const tex = device.createTexture({
+            size: [width, height],
+            format: 'rgba16float',
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
+        });
+
+        device.queue.copyExternalImageToTexture(
+            { source: data },
+            { texture: tex, colorSpace: 'display-p3' },
+            { width: width, height: height }
+        );
+
+        return tex;
+
+    }
+
 }
