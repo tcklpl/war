@@ -1,7 +1,6 @@
 {
     "gltf": {
-        "board": { "url": "/assets/gltf/board.gltf" },
-        "cube": { "url": "/assets/gltf/cube.glb" }
+        "board": { "url": "/assets/gltf/board.gltf" }
     },
     "img": {
         "kloofendal_43d_clear": { "url": "/assets/img/kloofendal_43d_clear_4k.AVIF" }
