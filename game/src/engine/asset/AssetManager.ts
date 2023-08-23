@@ -3,7 +3,7 @@ import { Asset } from "./Asset";
 import assetIndex from "../../asset_index.json";
 import { MissingAssetError } from "../../errors/engine/asset/missing_asset";
 import { GLTFAsset } from "./GLTFAsset";
-import { GLTFLoader } from "../loader/gltf/gltf_loader";
+import { GLTFLoader } from "./loaders/gltf_loader";
 import { GLTFFile } from "../data/gltf/gltf_file";
 import { BadGLTFFileError } from "../../errors/engine/gltf/bad_gltf_file";
 import { IMGAsset } from "./IMGAsset";
