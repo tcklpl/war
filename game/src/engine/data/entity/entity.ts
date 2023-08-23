@@ -1,6 +1,6 @@
-import { PBRShader } from "../../shaders/pbr/pbr_shader";
-import { Mesh } from "../data/meshes/mesh";
-import { identifiable } from "../data/traits/identifiable";
+import { PBRShader } from "../../../shaders/pbr/pbr_shader";
+import { Mesh } from "../meshes/mesh";
+import { identifiable } from "../traits/identifiable";
 import { MatrixTransformative } from "./matrix_transformative";
 
 

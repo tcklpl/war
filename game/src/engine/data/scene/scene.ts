@@ -1,5 +1,5 @@
-import { Camera } from "../../camera/camera";
-import { Entity } from "../../entity/entity";
+import { Camera } from "../camera/camera";
+import { Entity } from "../entity/entity";
 import { Light } from "../lights/light";
 
 export class Scene {

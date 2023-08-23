@@ -1,8 +1,9 @@
-import { BufferUtils } from "../../utils/buffer_utils";
-import { MathUtils } from "../../utils/math_utils";
-import { Mat4 } from "../data/mat/mat4";
-import { Quaternion } from "../data/quaternion/quaternion";
-import { Vec3 } from "../data/vec/vec3";
+import { BufferUtils } from "../../../utils/buffer_utils";
+import { MathUtils } from "../../../utils/math_utils";
+import { Mat4 } from "../mat/mat4";
+import { Quaternion } from "../quaternion/quaternion";
+import { Vec3 } from "../vec/vec3";
+
 
 export class MatrixTransformative {
 
