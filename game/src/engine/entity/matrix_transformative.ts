@@ -7,6 +7,7 @@ import { Vec3 } from "../data/vec/vec3";
 export class MatrixTransformative {
 
     private _parent?: MatrixTransformative;
+    private _children: MatrixTransformative[] = [];
 
     private _translation = Vec3.fromValue(0);
     private _rotation = Quaternion.fromEulerAnglesRadians(0, 0, 0);
@@ -31,10 +32,13 @@ export class MatrixTransformative {
             this._modelMatrix = this._parent.modelMatrix.duplicate().multiplyBy(this._modelMatrix);
         }
 
-        // Models that have a negative transformation matrix should be drawn in clockwise winding order, this allows mirrored geometry
+        // models that have a negative transformation matrix should be drawn in clockwise winding order, this allows mirrored geometry
         this._windingOrder = this._modelMatrix.determinant >= 0 ? 'ccw' : 'cw';
 
         device.queue.writeBuffer(this._modelMatrixUniformBuffer, 0, this._modelMatrix.asF32Array);
+
+        // update children
+        this._children.forEach(c => c.buildModelMatrix());
     }
 
     buildTranslationMatrix() {
@@ -102,6 +106,14 @@ export class MatrixTransformative {
     set parent(p: MatrixTransformative | undefined) {
         this._parent = p;
         this.buildModelMatrix();
+    }
+
+    get children() {
+        return this._children;
+    }
+
+    set children(c: MatrixTransformative[]) {
+        this._children = c;
     }
 
     get modelMatrixUniformBuffer() {

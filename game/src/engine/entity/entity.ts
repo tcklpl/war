@@ -10,8 +10,6 @@ export class Entity extends EntityBase {
 
     visible: boolean = true;
 
-    private _children: MatrixTransformative[] = [];
-
     private _name: string;
     private _mesh: Mesh;
     
@@ -38,7 +36,7 @@ export class Entity extends EntityBase {
     registerChildren(...children: MatrixTransformative[]) {
         children.forEach(c => {
             c.parent = this;
-            this._children.push(c);
+            this.children.push(c);
         });
     }
 
@@ -46,18 +44,15 @@ export class Entity extends EntityBase {
         children.forEach(c => {
             c.parent = undefined;
         });
-        this._children = this._children.filter(c => !children.find(x => x === c));
+        this.children = this.children.filter(c => !children.find(x => x === c));
     }
 
     clearChildren() {
-        this.removeChildren(...this._children);
+        this.removeChildren(...this.children);
     }
 
     get name() {
         return this._name;
     }
 
-    get children() {
-        return this._children;
-    }
 }
