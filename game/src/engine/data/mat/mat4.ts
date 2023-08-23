@@ -170,6 +170,44 @@ export class Mat4 {
         return new Float32Array(this.values);
     }
 
+    get determinant() {
+        /*
+            00 01 02 03
+            10 11 12 13
+            20 21 22 23
+            30 31 32 33
+        */
+        const a00 = this.values[0 * 4 + 0];
+        const a01 = this.values[0 * 4 + 1];
+        const a02 = this.values[0 * 4 + 2];
+        const a03 = this.values[0 * 4 + 3];
+        const a10 = this.values[1 * 4 + 0];
+        const a11 = this.values[1 * 4 + 1];
+        const a12 = this.values[1 * 4 + 2];
+        const a13 = this.values[1 * 4 + 3];
+        const a20 = this.values[2 * 4 + 0];
+        const a21 = this.values[2 * 4 + 1];
+        const a22 = this.values[2 * 4 + 2];
+        const a23 = this.values[2 * 4 + 3];
+        const a30 = this.values[3 * 4 + 0];
+        const a31 = this.values[3 * 4 + 1];
+        const a32 = this.values[3 * 4 + 2];
+        const a33 = this.values[3 * 4 + 3];
+
+        let total = 0;
+        total += a00 * a11 * a22 * a33;
+        total += a10 * a21 * a32 * a03;
+        total += a20 * a31 * a02 * a13;
+        total += a30 * a01 * a12 * a23;
+
+        total -= a03 * a12 * a21 * a30;
+        total -= a13 * a22 * a31 * a00;
+        total -= a23 * a32 * a01 * a10;
+        total -= a33 * a02 * a11 * a20;
+
+        return total;
+    }
+
     // -----------------[ STATIC UTILS ]-----------------
 
     static identity(): Mat4 {
