@@ -19,6 +19,8 @@ export class MatrixTransformative {
     private _modelMatrix = Mat4.identity();
     private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
 
+    private _windingOrder: 'cw' | 'ccw' = 'ccw';
+
     private buildModelMatrix() {
         this._modelMatrix = Mat4.identity();
         this._modelMatrix.multiplyBy(this._translationMatrix);
@@ -28,6 +30,9 @@ export class MatrixTransformative {
         if (this._parent) {
             this._modelMatrix = this._parent.modelMatrix.duplicate().multiplyBy(this._modelMatrix);
         }
+
+        // Models that have a negative transformation matrix should be drawn in clockwise winding order, this allows mirrored geometry
+        this._windingOrder = this._modelMatrix.determinant >= 0 ? 'ccw' : 'cw';
 
         device.queue.writeBuffer(this._modelMatrixUniformBuffer, 0, this._modelMatrix.asF32Array);
     }
@@ -101,6 +106,10 @@ export class MatrixTransformative {
 
     get modelMatrixUniformBuffer() {
         return this._modelMatrixUniformBuffer;
+    }
+
+    get windingOrder() {
+        return this._windingOrder;
     }
 
 }
