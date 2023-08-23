@@ -1,4 +1,4 @@
-import { Manager } from "../manager";
+import { Manager } from "../../manager";
 import { Camera } from "./camera";
 
 export class CameraManager extends Manager<Camera> {

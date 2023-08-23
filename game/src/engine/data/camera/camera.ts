@@ -1,5 +1,5 @@
-import { Mat4 } from "../data/mat/mat4";
-import { Vec3 } from "../data/vec/vec3";
+import { Mat4 } from "../mat/mat4";
+import { Vec3 } from "../vec/vec3";
 
 export abstract class Camera {
 
