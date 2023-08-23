@@ -15,38 +15,38 @@ export class Mat4 {
     }
 
     multiplyBy(other: Mat4) {
-        var a00 = this.values[0 * 4 + 0];
-        var a01 = this.values[0 * 4 + 1];
-        var a02 = this.values[0 * 4 + 2];
-        var a03 = this.values[0 * 4 + 3];
-        var a10 = this.values[1 * 4 + 0];
-        var a11 = this.values[1 * 4 + 1];
-        var a12 = this.values[1 * 4 + 2];
-        var a13 = this.values[1 * 4 + 3];
-        var a20 = this.values[2 * 4 + 0];
-        var a21 = this.values[2 * 4 + 1];
-        var a22 = this.values[2 * 4 + 2];
-        var a23 = this.values[2 * 4 + 3];
-        var a30 = this.values[3 * 4 + 0];
-        var a31 = this.values[3 * 4 + 1];
-        var a32 = this.values[3 * 4 + 2];
-        var a33 = this.values[3 * 4 + 3];
-        var b00 = other.values[0 * 4 + 0];
-        var b01 = other.values[0 * 4 + 1];
-        var b02 = other.values[0 * 4 + 2];
-        var b03 = other.values[0 * 4 + 3];
-        var b10 = other.values[1 * 4 + 0];
-        var b11 = other.values[1 * 4 + 1];
-        var b12 = other.values[1 * 4 + 2];
-        var b13 = other.values[1 * 4 + 3];
-        var b20 = other.values[2 * 4 + 0];
-        var b21 = other.values[2 * 4 + 1];
-        var b22 = other.values[2 * 4 + 2];
-        var b23 = other.values[2 * 4 + 3];
-        var b30 = other.values[3 * 4 + 0];
-        var b31 = other.values[3 * 4 + 1];
-        var b32 = other.values[3 * 4 + 2];
-        var b33 = other.values[3 * 4 + 3];
+        const a00 = this.values[0 * 4 + 0];
+        const a01 = this.values[0 * 4 + 1];
+        const a02 = this.values[0 * 4 + 2];
+        const a03 = this.values[0 * 4 + 3];
+        const a10 = this.values[1 * 4 + 0];
+        const a11 = this.values[1 * 4 + 1];
+        const a12 = this.values[1 * 4 + 2];
+        const a13 = this.values[1 * 4 + 3];
+        const a20 = this.values[2 * 4 + 0];
+        const a21 = this.values[2 * 4 + 1];
+        const a22 = this.values[2 * 4 + 2];
+        const a23 = this.values[2 * 4 + 3];
+        const a30 = this.values[3 * 4 + 0];
+        const a31 = this.values[3 * 4 + 1];
+        const a32 = this.values[3 * 4 + 2];
+        const a33 = this.values[3 * 4 + 3];
+        const b00 = other.values[0 * 4 + 0];
+        const b01 = other.values[0 * 4 + 1];
+        const b02 = other.values[0 * 4 + 2];
+        const b03 = other.values[0 * 4 + 3];
+        const b10 = other.values[1 * 4 + 0];
+        const b11 = other.values[1 * 4 + 1];
+        const b12 = other.values[1 * 4 + 2];
+        const b13 = other.values[1 * 4 + 3];
+        const b20 = other.values[2 * 4 + 0];
+        const b21 = other.values[2 * 4 + 1];
+        const b22 = other.values[2 * 4 + 2];
+        const b23 = other.values[2 * 4 + 3];
+        const b30 = other.values[3 * 4 + 0];
+        const b31 = other.values[3 * 4 + 1];
+        const b32 = other.values[3 * 4 + 2];
+        const b33 = other.values[3 * 4 + 3];
         this.values = [
             b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
             b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
@@ -82,57 +82,57 @@ export class Mat4 {
     }
 
     inverse() {
-        let m00 = this.values[0 * 4 + 0];
-        let m01 = this.values[0 * 4 + 1];
-        let m02 = this.values[0 * 4 + 2];
-        let m03 = this.values[0 * 4 + 3];
-        let m10 = this.values[1 * 4 + 0];
-        let m11 = this.values[1 * 4 + 1];
-        let m12 = this.values[1 * 4 + 2];
-        let m13 = this.values[1 * 4 + 3];
-        let m20 = this.values[2 * 4 + 0];
-        let m21 = this.values[2 * 4 + 1];
-        let m22 = this.values[2 * 4 + 2];
-        let m23 = this.values[2 * 4 + 3];
-        let m30 = this.values[3 * 4 + 0];
-        let m31 = this.values[3 * 4 + 1];
-        let m32 = this.values[3 * 4 + 2];
-        let m33 = this.values[3 * 4 + 3];
-        let tmp_0 = m22 * m33;
-        let tmp_1 = m32 * m23;
-        let tmp_2 = m12 * m33;
-        let tmp_3 = m32 * m13;
-        let tmp_4 = m12 * m23;
-        let tmp_5 = m22 * m13;
-        let tmp_6 = m02 * m33;
-        let tmp_7 = m32 * m03;
-        let tmp_8 = m02 * m23;
-        let tmp_9 = m22 * m03;
-        let tmp_10 = m02 * m13;
-        let tmp_11 = m12 * m03;
-        let tmp_12 = m20 * m31;
-        let tmp_13 = m30 * m21;
-        let tmp_14 = m10 * m31;
-        let tmp_15 = m30 * m11;
-        let tmp_16 = m10 * m21;
-        let tmp_17 = m20 * m11;
-        let tmp_18 = m00 * m31;
-        let tmp_19 = m30 * m01;
-        let tmp_20 = m00 * m21;
-        let tmp_21 = m20 * m01;
-        let tmp_22 = m00 * m11;
-        let tmp_23 = m10 * m01;
+        const m00 = this.values[0 * 4 + 0];
+        const m01 = this.values[0 * 4 + 1];
+        const m02 = this.values[0 * 4 + 2];
+        const m03 = this.values[0 * 4 + 3];
+        const m10 = this.values[1 * 4 + 0];
+        const m11 = this.values[1 * 4 + 1];
+        const m12 = this.values[1 * 4 + 2];
+        const m13 = this.values[1 * 4 + 3];
+        const m20 = this.values[2 * 4 + 0];
+        const m21 = this.values[2 * 4 + 1];
+        const m22 = this.values[2 * 4 + 2];
+        const m23 = this.values[2 * 4 + 3];
+        const m30 = this.values[3 * 4 + 0];
+        const m31 = this.values[3 * 4 + 1];
+        const m32 = this.values[3 * 4 + 2];
+        const m33 = this.values[3 * 4 + 3];
+        const tmp_0 = m22 * m33;
+        const tmp_1 = m32 * m23;
+        const tmp_2 = m12 * m33;
+        const tmp_3 = m32 * m13;
+        const tmp_4 = m12 * m23;
+        const tmp_5 = m22 * m13;
+        const tmp_6 = m02 * m33;
+        const tmp_7 = m32 * m03;
+        const tmp_8 = m02 * m23;
+        const tmp_9 = m22 * m03;
+        const tmp_10 = m02 * m13;
+        const tmp_11 = m12 * m03;
+        const tmp_12 = m20 * m31;
+        const tmp_13 = m30 * m21;
+        const tmp_14 = m10 * m31;
+        const tmp_15 = m30 * m11;
+        const tmp_16 = m10 * m21;
+        const tmp_17 = m20 * m11;
+        const tmp_18 = m00 * m31;
+        const tmp_19 = m30 * m01;
+        const tmp_20 = m00 * m21;
+        const tmp_21 = m20 * m01;
+        const tmp_22 = m00 * m11;
+        const tmp_23 = m10 * m01;
 
-        var t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
+        const t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
             (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
-        var t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
+        const t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
             (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
-        var t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
+        const t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
             (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
-        var t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
+        const t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
             (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
 
-        var d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
+        const d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
 
         return new Mat4([
             d * t0,
