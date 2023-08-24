@@ -1,11 +1,11 @@
 import { Box, Container, Grid, LinearProgress, Stack, Typography } from "@mui/material"
-import React from "react"
+import React, { useEffect } from "react"
 import './loading_screen.scss';
 import { useTranslation } from "react-i18next";
 
 const LoadingScreen: React.FC = () => {
 
-    const { t } = useTranslation(['loading', 'common']);
+    const { t } = useTranslation(['loading']);
 
     return (
         <Container maxWidth="sm">
@@ -21,7 +21,7 @@ const LoadingScreen: React.FC = () => {
                         <LinearProgress color="secondary" variant="determinate" value={50} />
 
                         <Typography>
-                            {t("loading:initializing")}: 5 {t("common:out_of")} 10 
+                            {t("loading:starting")}
                         </Typography>
                     </Stack>
 
