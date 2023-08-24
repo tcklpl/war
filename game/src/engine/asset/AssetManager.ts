@@ -19,9 +19,9 @@ export class AssetManager extends Manager<Asset> {
         gltf: new GLTFLoader()
     }
 
-    async loadAssets() {
-        await this.loadGLTFAssets();
-        await this.loadIMGAssets();
+    async loadAssets(onAssetLoadCallback?: () => void) {
+        await this.loadGLTFAssets(onAssetLoadCallback);
+        await this.loadIMGAssets(onAssetLoadCallback);
     }
 
     private async fetchAssetFile(name: string, asset: AddressableAsset) {
@@ -48,7 +48,7 @@ export class AssetManager extends Manager<Asset> {
         return img;
     }
 
-    private async loadGLTFAssets() {
+    private async loadGLTFAssets(onAssetLoadCallback?: () => void) {
         const gltfAssets = Object.keys(assetIndex.gltf);
         
         for (let k of gltfAssets) {
@@ -66,16 +66,18 @@ export class AssetManager extends Manager<Asset> {
             } else throw new BadGLTFFileError(`GLTF With unsupported filename extension (not .gltf or .glb)`);
             
             this.register(new GLTFAsset(k, assetInfo.url, asset));
+            if (onAssetLoadCallback) onAssetLoadCallback();
         }
     }
 
-    private async loadIMGAssets() {
+    private async loadIMGAssets(onAssetLoadCallback?: () => void) {
         const hdrAssets = Object.keys(assetIndex.img);
 
         for (let k of hdrAssets) {
             const assetInfo = assetIndex.img[k as IMGAssetName];
             const asset = await this.fetchAssetImage(k, assetInfo);
             this.register(new IMGAsset(k, assetInfo.url, asset));
+            if (onAssetLoadCallback) onAssetLoadCallback();
         }
     }
 
@@ -91,6 +93,12 @@ export class AssetManager extends Manager<Asset> {
 
     getHDRAsset(name: IMGAssetName) {
         return this.assertGetAsset(name) as IMGAsset;
+    }
+
+    get assetCount() {
+        return Object.keys(assetIndex).reduce((prev, cur) => 
+            prev += Object.keys(assetIndex[cur as keyof AssetIndex]).length
+        , 0);
     }
 
 }
