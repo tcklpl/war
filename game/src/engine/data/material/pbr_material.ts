@@ -1,4 +1,4 @@
-import { PBRShader } from "../../../shaders/pbr/pbr_shader";
+import { PrincipledBSDFShader } from "../../../shaders/principled_bsdf/principled_bsdf_shader";
 import { TextureUtils } from "../../../utils/texture_utils";
 import { Vec4 } from "../vec/vec4";
 import { Material } from "./material";
@@ -19,7 +19,8 @@ export class PBRMaterial extends Material {
     private _ao!: GPUTexture;
 
     private _sampler!: GPUSampler;
-    private _bindGroup!: GPUBindGroup;
+
+    private _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
 
     constructor(name: string, private _props: PBRMaterialProps) {
         super(name);
@@ -46,9 +47,15 @@ export class PBRMaterial extends Material {
             label: `PBR Material '${this.name} sampler'`
         });
 
-        this._bindGroup = device.createBindGroup({
+    }
+
+    getBindGroup(pipeline: GPURenderPipeline) {
+        const result = this._pipelineBindGroups.get(pipeline);
+        if (result) return result;
+
+        const newBindGroup = device.createBindGroup({
             label: `PBR Material '${this.name}' bind group`,
-            layout: game.engine.renderer.pbrPipeline.getBindGroupLayout(PBRShader.UNIFORM_BINDING_GROUPS.FRAGMENT_MATERIAL),
+            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_MATERIAL),
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: this._albedo.createView() },
@@ -58,10 +65,8 @@ export class PBRMaterial extends Material {
                 { binding: 5, resource: this._ao.createView() },
             ]
         });
-    }
-
-    get bindBroup() {
-        return this._bindGroup;
+        this._pipelineBindGroups.set(pipeline, newBindGroup);
+        return newBindGroup;
     }
 
     free() {

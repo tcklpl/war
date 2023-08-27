@@ -1,4 +1,4 @@
-import { PBRShader } from "../../../shaders/pbr/pbr_shader";
+import { PrincipledBSDFShader } from "../../../shaders/principled_bsdf/principled_bsdf_shader";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { Manager } from "../../manager";
 import { DirectionalLight } from "./directional_light";
@@ -7,19 +7,26 @@ import { Light } from "./light";
 export class LightManager extends Manager<Light> {
 
     private _directionalLightsBuffer!: GPUBuffer;
-
-    private _bindGroup!: GPUBindGroup;
+    private _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
     
-
+    
     constructBuffers() {
         this._directionalLightsBuffer = BufferUtils.createEmptyBuffer(DirectionalLight.byteSize * 2 + 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
-        this._bindGroup = device.createBindGroup({
-            label: 'PBR Lights',
-            layout: game.engine.renderer.pbrPipeline.getBindGroupLayout(PBRShader.UNIFORM_BINDING_GROUPS.FRAGMENT_LIGHTS),
+    }
+
+    getBindGroup(pipeline: GPURenderPipeline) {
+        const result = this._pipelineBindGroups.get(pipeline);
+        if (result) return result;
+
+        const newBindGroup = device.createBindGroup({
+            label: `PBR Lights`,
+            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_LIGHTS),
             entries: [
                 { binding: 0, resource: { buffer: this._directionalLightsBuffer } }
             ]
         });
+        this._pipelineBindGroups.set(pipeline, newBindGroup);
+        return newBindGroup;
     }
 
     writeBuffer() {
@@ -31,8 +38,8 @@ export class LightManager extends Manager<Light> {
         directionalLights.forEach((l, i) => l.writeToBuffer(this._directionalLightsBuffer, i, 16));
     }
 
-    bindLights(passEncoder: GPURenderPassEncoder) {
-        passEncoder.setBindGroup(PBRShader.UNIFORM_BINDING_GROUPS.FRAGMENT_LIGHTS, this._bindGroup);
+    bindLights(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline) {
+        passEncoder.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_LIGHTS, this.getBindGroup(pipeline));
     }
 
     freeLights() {

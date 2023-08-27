@@ -6,7 +6,7 @@ export class TextureUtils {
      * Creates a 1x1 texture from a normalized ([0-1]) Vec4
      * @param v Normalized Vec4
      */
-    static async createTextureFromNormalizedVec4(v: Vec4) {
+    static createTextureFromNormalizedVec4(v: Vec4) {
 
         const tex = device.createTexture({
             size: [1, 1],
@@ -20,8 +20,6 @@ export class TextureUtils {
             { bytesPerRow: 4, rowsPerImage: 1 },
             { width: 1, height: 1 }
         );
-
-        await device.queue.onSubmittedWorkDone();
 
         return tex;
     }
