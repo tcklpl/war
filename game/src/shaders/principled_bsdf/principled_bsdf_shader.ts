@@ -1,7 +1,7 @@
 import { Shader } from "../shader";
-import shaderSource from './pbr.wgsl';
+import shaderSource from './principled_bsdf.wgsl';
 
-export class PBRShader extends Shader {
+export class PrincipledBSDFShader extends Shader {
 
     static UNIFORM_BINDING_GROUPS = {
         VERTEX_VIEWPROJ: 0,

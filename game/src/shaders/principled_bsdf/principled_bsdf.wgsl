@@ -97,7 +97,8 @@ struct CommonVectors {
     N: vec3f,
     V: vec3f,
     NoV: f32,
-    V_reflected_N: vec3f
+    V_reflected_N: vec3f,
+    Geometry_N: vec3f
 }
 
 struct MaterialInputs {
@@ -298,10 +299,11 @@ fn diffuse(roughness: f32, NoV: f32, NoL: f32, LoH: f32) -> f32 {
     --------------------------------------------------------------------------------------------------
 */
 
-fn clearCoatLobe(pixel: PixelInfo, H: vec3f, NoH: f32, LoH: f32) -> f32 {
+fn clearCoatLobe(pixel: PixelInfo, H: vec3f, NoH: f32, LoH: f32, Fcc: ptr<function, f32>) -> f32 {
     var D = distributionClearCoat(pixel.clearCoatRoughness, NoH, H);
     var V = visibilityClearCoat(LoH);
     var F = F_Schlick_F0f32_F90_VoH(0.04, 1.0, LoH) * pixel.clearCoat;
+    (*Fcc) = F;
     return D * V * F;
 }
 
@@ -339,7 +341,18 @@ fn surfaceShading(pixel: PixelInfo, light: Light, cv: CommonVectors, occlusion: 
 
     var color = Fd + Fr * pixel.energyCompensation;
 
-    // TODO: clearcoat
+    // // Clear Coat
+    // var Fcc = 0.0;
+    // var clearCoatNoH = saturate(dot(cv.Geometry_N, H));
+    // var clearCoatNoL = saturate(dot(cv.Geometry_N, H));
+    // var Cc = clearCoatLobe(pixel, H, clearCoatNoH, LoH, &Fcc);
+    // var attenuation = 1.0 - Fcc;
+
+    // color *= attenuation * NoL;
+    // color += pixel.clearCoat * clearCoatNoL;
+    // // End of clear coat
+
+    // return  (color * light.color.rgb) * (light.color.w * light.attenuation * occlusion);
 
     return (color * light.color.rgb) * (light.color.w * light.attenuation * NoL * occlusion);
 }
@@ -350,8 +363,16 @@ fn surfaceShading(pixel: PixelInfo, light: Light, cv: CommonVectors, occlusion: 
     --------------------------------------------------------------------------------------------------
 */
 
-fn directionalLightAsAreaLight(cv: CommonVectors, direction: vec3f) {
+fn directionalLightAsDiscAreaLight(cv: CommonVectors, direction: vec3f) -> vec3f {
     var LoR = dot(direction, cv.V_reflected_N);
+    var d = direction.x;
+    var s = cv.V_reflected_N - LoR * direction;
+    return normalize(direction * d + normalize(s) * direction.y);
+    // if (LoR < d) {
+    //     return normalize(direction * d + normalize(s) * direction.y);
+    // } else {
+    //     return cv.V_reflected_N;
+    // }
 }
 
 fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors) -> vec3f {
@@ -455,7 +476,8 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
         normal,                                 // N
         viewVector,                             // V
         saturate(dot(normal, viewVector)),      // NoV
-        reflect(-viewVector, normal)            // V_reflected_N
+        reflect(-viewVector, normal),           // V_reflected_N
+        v.model_normal                          // Geometry_N
     );
 
     var mat = MaterialInputs(
