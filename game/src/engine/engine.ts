@@ -54,6 +54,7 @@ export class Engine {
     }
 
     async initializeRenderers() {
+        await this._renderer.initialize();
         await this.utilRenderers.equirecToCubemap.initialize();
         await this.utilRenderers.cubemapConvolution.initialize();
     }
