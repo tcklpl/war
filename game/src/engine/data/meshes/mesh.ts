@@ -14,8 +14,26 @@ export class Mesh {
         return this._name;
     }
 
-    draw(passEncoder: GPURenderPassEncoder) {
-        this._primitives.forEach(p => p.draw(passEncoder));
+    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options = {
+        position: {
+            use: true,
+            index: 0
+        },
+        uv: {
+            use: true,
+            index: 1
+        },
+        normal: {
+            use: true,
+            index: 2
+        },
+        tangent: {
+            use: true,
+            index: 3
+        },
+        useMaterial: true
+    }) {
+        this._primitives.forEach(p => p.draw(passEncoder, pipeline, options));
     }
 
     free() {

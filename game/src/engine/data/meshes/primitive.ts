@@ -22,15 +22,33 @@ export class Primitive {
         this._material = material;
     }
 
-    draw(passEncoder: GPURenderPassEncoder) {
+    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options = {
+        position: {
+            use: true,
+            index: 0
+        },
+        uv: {
+            use: true,
+            index: 1
+        },
+        normal: {
+            use: true,
+            index: 2
+        },
+        tangent: {
+            use: true,
+            index: 3
+        },
+        useMaterial: true
+    }) {
         if (!this._available) throw new BindDeletedMeshPrimitiveError();
         
-        this._material.bind(passEncoder);
+        if (options.useMaterial) this._material.bind(passEncoder, pipeline);
         
-        passEncoder.setVertexBuffer(0, this._buffers.positions);
-        passEncoder.setVertexBuffer(1, this._buffers.uv);
-        passEncoder.setVertexBuffer(2, this._buffers.normals);
-        passEncoder.setVertexBuffer(3, this._buffers.tangent);
+        if (options.position.use) passEncoder.setVertexBuffer(options.position.index, this._buffers.positions);
+        if (options.uv.use) passEncoder.setVertexBuffer(options.uv.index, this._buffers.uv);
+        if (options.normal.use) passEncoder.setVertexBuffer(options.normal.index, this._buffers.normals);
+        if (options.tangent.use) passEncoder.setVertexBuffer(options.tangent.index, this._buffers.tangent);
         passEncoder.setIndexBuffer(this._buffers.indices, 'uint16');
         passEncoder.drawIndexed(this._indicesSize);
     }
