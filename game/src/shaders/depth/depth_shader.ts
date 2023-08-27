@@ -1,7 +1,7 @@
-import { Shader } from '../../shader';
-import shaderSource from './rs0_depth.wgsl';
+import { Shader } from '../shader';
+import shaderSource from './depth.wgsl';
 
-export class RS0DepthShader extends Shader {
+export class DepthShader extends Shader {
 
     static UNIFORM_BINDING_GROUPS = {
         VERTEX_VIEWPROJ: 0,
