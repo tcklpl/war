@@ -18,6 +18,7 @@ export class WarGame {
 
     async initializeGame() {
         this._gameBoard = new GameBoard();
+        await this._gameBoard.initialize();
         this._engine.managers.scene.register(this._gameBoard);
         this._engine.managers.scene.activeScene = this._gameBoard;
 
