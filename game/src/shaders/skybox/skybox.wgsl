@@ -73,22 +73,21 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
 
     let pos = vertPositions[vertexIndex];
 
-    output.position = vsCommonUniforms.projection * vsCommonUniforms.camera * vec4f(pos * 50.0, 1.0);
+    output.position = vsCommonUniforms.projection * vsCommonUniforms.camera * vec4f(pos, 0.0);
     output.position = output.position.xyww; // make sure all the skybox fragments end up with max depth
-    output.localPos = pos;
+    output.localPos = 0.5 * (pos + vec3f(1.0, 1.0, 1.0));
 
     return output;
 }
 
 @group(1) @binding(0) var mapSampler: sampler;
-@group(1) @binding(1) var mapTexture: texture_3d<f32>;
+@group(1) @binding(1) var mapTexture: texture_cube<f32>;
 
 @fragment
 fn fragment(v: VSOutput) -> @location(0) vec4f {
 
-    var uv = normalize(v.localPos.xyz);
+    var uv = v.localPos.xyz - vec3f(0.5);
     var color = textureSample(mapTexture, mapSampler, uv).rgb;
-    color = pow(color, vec3f(2.2));
     
     return vec4f(color, 1.0);
     
