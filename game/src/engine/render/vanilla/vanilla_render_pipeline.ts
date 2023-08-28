@@ -5,12 +5,14 @@ import { RenderStage } from "./render_stages/render_stage";
 import { RenderStageDepthMap } from "./render_stages/rs0_depth_map";
 import { RenderStageLights } from "./render_stages/rs1_lights";
 import { RenderStageSolidGeometry } from "./render_stages/rs2_solid_geometry";
+import { RenderStageSkybox } from "./render_stages/rs3_skybox";
 
 export class VanillaRenderPipeline {
 
     private _rs0_depthPass = new RenderStageDepthMap();
     private _rs1_lights = new RenderStageLights();
     private _rs2_solid_geometry = new RenderStageSolidGeometry();
+    private _rs3_skybox = new RenderStageSkybox();
 
     private _currentPipeline: RenderStage[] = [];
 
@@ -18,7 +20,8 @@ export class VanillaRenderPipeline {
         this._currentPipeline = [
             this._rs0_depthPass,
             this._rs1_lights,
-            this._rs2_solid_geometry
+            this._rs2_solid_geometry,
+            this._rs3_skybox
         ];
     }
 
