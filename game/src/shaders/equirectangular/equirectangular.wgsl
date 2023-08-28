@@ -97,7 +97,6 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
 
     var uv = SampleSphericalMap(normalize(v.localPos.xyz)); // make sure to normalize localPos
     var color = textureSample(mapTexture, mapSampler, uv).rgb;
-    color = pow(color, vec3f(2.2));
     
     return vec4f(color, 1.0);
     
