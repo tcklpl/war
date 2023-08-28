@@ -13,12 +13,12 @@ export class CubemapConvolutionRenderer {
 
     private _projectionMat = Mat4.perspective(MathUtils.degToRad(90), 1, 0.1, 10);
     private _cameraMatrices = [
-        Mat4.lookAt(Vec3.zero, new Vec3( 1,  0,  0), new Vec3( 0, -1,  0)), // + X
-        Mat4.lookAt(Vec3.zero, new Vec3(-1,  0,  0), new Vec3( 0, -1,  0)), // - X
+        Mat4.lookAt(Vec3.zero, new Vec3( 1,  0,  0), new Vec3( 0,  1,  0)), // + X
+        Mat4.lookAt(Vec3.zero, new Vec3(-1,  0,  0), new Vec3( 0,  1,  0)), // - X
         Mat4.lookAt(Vec3.zero, new Vec3( 0,  1,  0), new Vec3( 0,  0,  1)), // + Y
         Mat4.lookAt(Vec3.zero, new Vec3( 0, -1,  0), new Vec3( 0,  0, -1)), // - Y
-        Mat4.lookAt(Vec3.zero, new Vec3( 0,  0,  1), new Vec3( 0, -1,  0)), // + Z
-        Mat4.lookAt(Vec3.zero, new Vec3( 0,  0, -1), new Vec3( 0, -1,  0))  // - Z
+        Mat4.lookAt(Vec3.zero, new Vec3( 0,  0, -1), new Vec3( 0,  1,  0)), // - Z
+        Mat4.lookAt(Vec3.zero, new Vec3( 0,  0,  1), new Vec3( 0,  1,  0))  // + Z
     ];
     private _uniformBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
 
@@ -79,7 +79,9 @@ export class CubemapConvolutionRenderer {
 
     private createSampler() {
         return device.createSampler({
-            label: 'cubemap convolution sampler'
+            label: 'cubemap convolution sampler',
+            magFilter: 'linear',
+            minFilter: 'linear'
         });
     }
 
@@ -100,10 +102,11 @@ export class CubemapConvolutionRenderer {
 
         // create destination 3d texture
         const renderTarget = device.createTexture({
+            label: 'final convoluted cubemap texture',
             format: 'rgba16float',
-            dimension: '3d',
+            dimension: '2d',
             size: [cubemapResolution, cubemapResolution, 6],
-            usage: GPUTextureUsage.RENDER_ATTACHMENT
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT
         });
 
         // create bindgroup to hold the supplied texture
@@ -112,11 +115,9 @@ export class CubemapConvolutionRenderer {
             layout: this._pipeline.getBindGroupLayout(CubemapConvolutionShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
-                { binding: 1, resource: cubemap.createView() },
+                { binding: 1, resource: cubemap.createView({ dimension: 'cube' }) },
             ]
         });
-
-        const commandEncoder = device.createCommandEncoder();
 
         // render for all 6 sides
         for (let i = 0; i < 6; i++) {
@@ -126,8 +127,11 @@ export class CubemapConvolutionRenderer {
             // write view matrix to buffer
             device.queue.writeBuffer(this._uniformBuffer, 0, cameraMatrix.asF32Array);
 
+            const commandEncoder = device.createCommandEncoder();
+
             (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = renderTarget.createView({
-                baseArrayLayer: i   // render to the ith layer as we're rendering to a cubemap
+                arrayLayerCount: 1,
+                baseArrayLayer: i
             });
 
             const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
@@ -141,13 +145,10 @@ export class CubemapConvolutionRenderer {
             // draw to texture
             // will draw 36 vertices, no data needs to be supplied as the vertices are hard coded into the shader
             passEncoder.draw(36);
-            
-
             passEncoder.end();
-        }
 
-        // submit all draw calls to the GPU
-        device.queue.submit([commandEncoder.finish()]);
+            device.queue.submit([commandEncoder.finish()]);
+        }
 
         // wait for all the rendering to be done and return the texture
         await device.queue.onSubmittedWorkDone();
