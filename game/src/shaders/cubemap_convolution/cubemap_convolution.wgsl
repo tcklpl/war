@@ -76,13 +76,13 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
     let pos = vertPositions[vertexIndex];
 
     output.position = vsCommonUniforms.projection * vsCommonUniforms.camera * vec4f(pos, 1.0);
-    output.localPos = pos;
+    output.localPos = 0.5 * (pos + vec3f(1.0, 1.0, 1.0));
 
     return output;
 }
 
 @group(1) @binding(0) var mapSampler: sampler;
-@group(1) @binding(1) var mapTexture: texture_3d<f32>;
+@group(1) @binding(1) var mapTexture: texture_cube<f32>;
 
 
 const invAtan = vec2f(0.1591, 0.3183);
@@ -97,7 +97,7 @@ fn SampleSphericalMap(v: vec3f) -> vec2f {
 fn fragment(v: VSOutput) -> @location(0) vec4f {
 
     // the sample direction equals the hemisphere's orientation 
-    var normal = normalize(v.localPos);
+    var normal = normalize(v.localPos - vec3f(0.5));
     var irradiance = vec3f(0.0);
   
     var up    = vec3(0.0, 1.0, 0.0);
