@@ -1,4 +1,3 @@
-import { BufferUtils } from "../../../utils/buffer_utils";
 import { Mesh } from "../meshes/mesh";
 import { Primitive } from "../meshes/primitive";
 import { GLTFMeshPrimitive } from "./gltf_mesh_primitive";

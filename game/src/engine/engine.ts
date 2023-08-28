@@ -1,11 +1,13 @@
 import { AssetManager } from "./asset/AssetManager";
-import { CameraManager } from "./camera/camera_manager";
+import { CameraManager } from "./data/camera/camera_manager";
 import { LightManager } from "./data/lights/light_manager";
 import { MaterialManager } from "./data/material/material_manager";
 import { MeshManager } from "./data/meshes/mesh_manager";
 import { SceneManager } from "./data/scene/scene_manager";
 import { IFrameListener } from "./data/traits/frame_listener";
 import { IdentifierPool } from "./identifier_pool";
+import { CubemapConvolutionRenderer } from "./render/cubemap_convolution/cubemap_convolution_renderer";
+import { EquirectangularToCubemapRenderer } from "./render/equirec_to_cubemap/equirec_to_cubemap_renderer";
 import { Renderer } from "./render/renderer";
 import { VanillaRenderer } from "./render/vanilla/vanilla_renderer";
 
@@ -23,11 +25,17 @@ export class Engine {
         scene: new SceneManager(),
         material: new MaterialManager(),
         light: new LightManager()
-    }
+    };
+
+    private _utilRenderers = {
+        equirecToCubemap: new EquirectangularToCubemapRenderer(),
+        cubemapConvolution: new CubemapConvolutionRenderer()
+    };
 
     private _frameListeners: IFrameListener[] = [];
 
     constructor() {
+        this.initializeRenderers();
         this.renderLoop();
     }
 
@@ -43,6 +51,12 @@ export class Engine {
 
     pauseRender() {
         this._shouldRender = false;
+    }
+
+    async initializeRenderers() {
+        await this._renderer.initialize();
+        await this.utilRenderers.equirecToCubemap.initialize();
+        await this.utilRenderers.cubemapConvolution.initialize();
     }
 
     resumeRender() {
@@ -77,6 +91,10 @@ export class Engine {
 
     get renderer() {
         return this._renderer;
+    }
+
+    get utilRenderers() {
+        return this._utilRenderers;
     }
 
 }

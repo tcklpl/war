@@ -1,7 +1,6 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import countries_enUS from './locales/en-US/countries.json';
-import common_enUS from './locales/en-US/common.json';
 import loading_enUS from './locales/en-US/loading.json';
 import engine_enUS from './locales/en-US/engine.json';
 
@@ -10,7 +9,6 @@ export const defaultNS = 'ns1';
 export const resources = {
     en: {
         countries: countries_enUS,
-        common: common_enUS,
         loading: loading_enUS,
         engine: engine_enUS
     }

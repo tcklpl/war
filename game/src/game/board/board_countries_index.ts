@@ -1,3 +1,4 @@
+import { EmptyEntity } from "../../engine/data/entity/empty_entity";
 import { BCAlaska } from "./board_countries/bc_alaska";
 import { BCAlgeria } from "./board_countries/bc_algeria";
 import { BCAral } from "./board_countries/bc_aral";
@@ -41,7 +42,6 @@ import { BCVancouver } from "./board_countries/bc_vancouver";
 import { BCVenezuela } from "./board_countries/bc_venezuela";
 import { BCVietnam } from "./board_countries/bc_vietnam";
 import { BCVladvostok } from "./board_countries/bc_vladvostok";
-import { EmptyEntity } from "../../engine/entity/empty_entity";
 
 export class BoardCountriesIndex extends EmptyEntity {
 

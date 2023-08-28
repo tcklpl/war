@@ -1,4 +1,4 @@
-import { Entity } from "../../engine/entity/entity";
+import { Entity } from "../../engine/data/entity/entity";
 import { MissingAssetError } from "../../errors/engine/asset/missing_asset";
 
 export class BoardCountry extends Entity {

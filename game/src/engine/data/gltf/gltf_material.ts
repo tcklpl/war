@@ -1,6 +1,4 @@
-import { PBRShader } from "../../../shaders/pbr/pbr_shader";
 import { PBRMaterial } from "../material/pbr_material";
-import { Vec3 } from "../vec/vec3";
 import { Vec4 } from "../vec/vec4";
 
 interface GLTFMaterialProperties {

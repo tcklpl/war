@@ -12,7 +12,7 @@ Game Board | board.gltf | [Jader](https://github.com/JaderGedeon), [tcklpl](http
 ### HDR Assets
 Asset name | File Name | Author(s) | License | Extra Info
 ---|---|---|---|---
-kloofendal_43d_clear_1k | kloofendal_43d_clear_1k.hdr | [Greg Zaal](https://gregzaal.com/) | CC0 | [File in Poly Haven](https://polyhaven.com/a/kloofendal_43d_clear)
+kloofendal_43d_clear_4k | kloofendal_43d_clear_4k.AVIF | [Greg Zaal](https://gregzaal.com/) | CC0 | [File in Poly Haven](https://polyhaven.com/a/kloofendal_43d_clear). The HDR file was converted to AVIF so it could be easily loaded.
 
 ## Localizations
 Locale | Author(s)
@@ -33,4 +33,3 @@ en | [tcklpl](https://github.com/tcklpl)
 
 - KhronosGroup's glTF 2.0 [Specification](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/README.md) and [Tutorial](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/README.md). This project heavily uses glTF files and I wrote the glTF importer based on these pages.
 
-- [OpenImageIO](https://github.com/OpenImageIO/oiio), ["Radiance HDR file format" by Paul Bourke](http://paulbourke.net/dataformats/pic/) and [parse-hdr](https://github.com/vorg/parse-hdr): Writing a HDR file parser was a massive pain in the ass. Really thankful for these references.

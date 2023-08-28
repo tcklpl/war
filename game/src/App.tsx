@@ -1,12 +1,11 @@
-import WarCanvas from './components/canvas';
-import LoadingScreen from './components/loading/loading_screen';
+import WarGameComponent from './components/game/war_game_component';
 import './style/globals.scss';
 import '@fontsource/roboto/400.css';
 
 function App() {
     return (
         <div className="App">
-            <WarCanvas />
+            <WarGameComponent/>
         </div>
     );
 }

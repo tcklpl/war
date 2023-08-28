@@ -1,8 +1,7 @@
 import { BadMatrixLengthError } from "../../../errors/engine/data/bad_matrix_length";
-import { IUniformBindable } from "../traits/i_uniform_bindable";
 import { Mat4 } from "./mat4";
 
-export class Mat3 implements IUniformBindable {
+export class Mat3 {
 
     values: number[] = new Array<number>(9);
 
@@ -38,10 +37,6 @@ export class Mat3 implements IUniformBindable {
             0,
             1
         ]);
-    }
-
-    bindUniform(to: WebGLUniformLocation): void {
-        gl.uniformMatrix3fv(to, false, this.asF32Array);
     }
 
     // -----------------[ STATIC UTILS ]-----------------

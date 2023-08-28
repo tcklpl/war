@@ -2,7 +2,7 @@
     "gltf": {
         "board": { "url": "/assets/gltf/board.gltf" }
     },
-    "hdr": {
-        "kloofendal_43d_clear": { "url": "/assets/hdr/kloofendal_43d_clear_1k.hdr" }
+    "img": {
+        "kloofendal_43d_clear": { "url": "/assets/img/kloofendal_43d_clear_4k.AVIF" }
     }
 }

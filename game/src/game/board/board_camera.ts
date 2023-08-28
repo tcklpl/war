@@ -1,4 +1,4 @@
-import { LookAtCamera } from "../../engine/camera/lookat_camera";
+import { LookAtCamera } from "../../engine/data/camera/lookat_camera";
 import { frameListener } from "../../engine/data/traits/frame_listener";
 import { Vec3 } from "../../engine/data/vec/vec3";
 import { MathUtils } from "../../utils/math_utils";
@@ -65,7 +65,7 @@ export class BoardCamera extends BoardCameraBase {
         this._camTarget.x += this._tDeltaX;
         this._camTarget.y -= 5;
         this._camTarget.z += this._tDeltaZ;
-        this.target = this._camTarget;
+        // this.target = this._camTarget;
         
         this.generateCameraMatrix();
     }
