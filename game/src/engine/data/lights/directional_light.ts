@@ -18,9 +18,14 @@ export class DirectionalLight extends Light {
 
         /*
             Directional light buffer format:
-            (vec3f) [12 bytes] -> color
-            (vec3f) [12 bytes] [+4 padding] -> direction
-            (float) [ 4 bytes] -> intensity
+
+            0   4   8   B   F
+            ░░░ color ░░░----   [vec3f "color" (12 bytes)] + [padding (4 bytes)]
+            ░ direction ░▒▒▒▒   [vec3f "direction" (12 bytes)] + [f32 "intensity" (4 bytes)]
+
+            -: padding
+            ░: vec3f
+            ▒: f32
         */
         device.queue.writeBuffer(buf, offset, this.color.asF32Array);
         device.queue.writeBuffer(buf, offset + Vec3.byteSize + 4, this.rotation.asDirectionVector.multiplyByFactor(-1).normalize().asF32Array);
