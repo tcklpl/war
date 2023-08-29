@@ -82,8 +82,8 @@ export class RenderStageSkybox implements RenderStage {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthTex;
     }
 
-    private setCanvasTexture(canvasTex: GPUTexture) {
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = gpuCtx.getCurrentTexture().createView();
+    private setCanvasTexture(canvasTex: GPUTextureView) {
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = canvasTex;
     }
 
     render(pool: RenderResourcePool) {
@@ -91,7 +91,7 @@ export class RenderStageSkybox implements RenderStage {
         if (!pool.scene.activeSkybox) return;
         
         this.setDepthTexture(pool.depthTextureView);
-        this.setCanvasTexture(pool.canvasTexture);
+        this.setCanvasTexture(pool.canvasTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pipeline);

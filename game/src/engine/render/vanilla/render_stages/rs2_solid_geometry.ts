@@ -118,16 +118,14 @@ export class RenderStageSolidGeometry implements RenderStage {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthTex;
     }
 
-    private setCanvasTexture(canvasTex: GPUTexture) {
-        // const view = canvasTex.createView();
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = gpuCtx.getCurrentTexture().createView();
-        // (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].resolveTarget = gpuCtx.getCurrentTexture().createView();
+    private setCanvasTexture(canvasTex: GPUTextureView) {
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = canvasTex;
     }
 
     render(pool: RenderResourcePool) {
 
         this.setDepthTexture(pool.depthTextureView);
-        this.setCanvasTexture(pool.canvasTexture);
+        this.setCanvasTexture(pool.canvasTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {

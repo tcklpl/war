@@ -107,8 +107,7 @@ export class VanillaRenderer extends Renderer {
 
         this._renderResourcePool.scene = scene;
         this._renderResourcePool.viewProjBuffer = this._pbrViewProjectionBuffer;
-        this._renderResourcePool.canvasTexture = this._renderTarget;
-        this._renderResourcePool.depthTexture = this._depthTexture;
+        this._renderResourcePool.canvasTextureView = gpuCtx.getCurrentTexture().createView();
         this._renderResourcePool.depthTextureView = this._depthTexture.createView();
         this._renderResourcePool.commandEncoder = commandEncoder;
 
