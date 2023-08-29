@@ -96,7 +96,7 @@ export class RenderStageSkybox implements RenderStage {
 
         rpe.setPipeline(this._pipeline);
         rpe.setBindGroup(SkyboxShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroup);
-        rpe.setBindGroup(SkyboxShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, pool.scene.activeSkybox.getBindGroup(this._pipeline).convolutedSkybox);
+        rpe.setBindGroup(SkyboxShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, pool.scene.activeSkybox.getBindGroup(this._pipeline).skybox);
         rpe.draw(36);
         rpe.end();
 
