@@ -44,4 +44,25 @@ export class TextureUtils {
 
     }
 
+    static createBlackSkybox() {
+
+        const skybox = device.createTexture({
+            size: [1, 1, 6],
+            dimension: '2d',
+            format: 'rgba16float',
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST
+        });
+
+        for (let i = 0; i < 6; i++) {
+            device.queue.writeTexture(
+                { texture: skybox, origin: [0, 0, i] },
+                new Float32Array([0, 0, 0, 0]),
+                { bytesPerRow: 16, rowsPerImage: 1 },
+                { width: 1, height: 1, depthOrArrayLayers: 1 }
+            );
+        }
+
+        return skybox;
+    }
+
 }
