@@ -78,16 +78,6 @@ fn vertex(v: VSInput) -> VSOutput {
 }
 
 /*
-    Fragment Shader Material uniforms
-*/
-@group(2) @binding(0) var matSampler: sampler;
-@group(2) @binding(1) var matAlbedo: texture_2d<f32>;
-@group(2) @binding(2) var matNormal: texture_2d<f32>;
-@group(2) @binding(3) var matMetallic: texture_2d<f32>;
-@group(2) @binding(4) var matRoughness: texture_2d<f32>;
-@group(2) @binding(5) var matAO: texture_2d<f32>;
-
-/*
     --------------------------------------------------------------------------------------------------
     Common structs to be shared inside the shader
     --------------------------------------------------------------------------------------------------
@@ -132,8 +122,20 @@ struct Light {
 }
 
 /*
-    Directional lights (like the sun)
+    --------------------------------------------------------------------------------------------------
+    Fragment Uniforms
+    --------------------------------------------------------------------------------------------------
 */
+
+// Material
+@group(2) @binding(0) var matSampler: sampler;
+@group(2) @binding(1) var matAlbedo: texture_2d<f32>;
+@group(2) @binding(2) var matNormal: texture_2d<f32>;
+@group(2) @binding(3) var matMetallic: texture_2d<f32>;
+@group(2) @binding(4) var matRoughness: texture_2d<f32>;
+@group(2) @binding(5) var matAO: texture_2d<f32>;
+
+// Scene Info - Directional lights (like the sun)
 struct DirectionalLightInfo {
     color: vec3f,
     direction: vec3f,
@@ -144,6 +146,12 @@ struct DirectionalLights {
     lights: array<DirectionalLightInfo, MAX_DIRECTIONAL_LIGHTS>
 };
 @group(3) @binding(0) var<uniform> directionalLights: DirectionalLights;
+
+// TODO: Scene Info - Punctual Lights
+
+// Scene Info - IBL
+@group(3) @binding(1) var iblSampler: sampler;
+@group(3) @binding(2) var iblIrradiance: texture_cube<f32>;
 
 /*
     --------------------------------------------------------------------------------------------------
@@ -224,6 +232,10 @@ fn F_Schlick_F0vec3f_VoH(F0: vec3f, VoH: f32) -> vec3f {
 
 fn F_Schlick_F0f32_F90_VoH(f0: f32, f90: f32, VoH: f32) -> f32 {
     return f0 + (f90 - f0) * pow(1.0 - VoH, 5.0);
+}
+
+fn F_Schlick_Roughness(f0: vec3f, roughness: f32, NoV: f32) -> vec3f {
+    return f0 + (max(vec3f(1.0 - roughness), f0) - f0) * pow(saturate(1.0 - NoV), 5.0);
 }
 
 /*
@@ -399,6 +411,25 @@ fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors) -> vec3f {
 
 /*
     --------------------------------------------------------------------------------------------------
+    Image-Based Lighting
+    --------------------------------------------------------------------------------------------------
+*/
+
+fn evaluateIBL(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec3f {
+    
+    var color = vec3f(0.0);
+
+    var kS = F_Schlick_Roughness(pixel.f0, mat.roughness, cv.NoV);
+    var kD = 1.0 - kS;
+    var irradiance = textureSample(iblIrradiance, iblSampler, cv.N).rgb;
+    var diffuse = irradiance * mat.albedo;
+    var ambient = (kD * diffuse) * mat.ao;
+
+    return ambient;
+}
+
+/*
+    --------------------------------------------------------------------------------------------------
     Pixel Params and Remapping
     --------------------------------------------------------------------------------------------------
 */
@@ -442,7 +473,7 @@ fn evaluateLights(mat: MaterialInputs, cv: CommonVectors) -> vec4f {
 
     var color = vec3f(0.0);
 
-    // TODO: IBL
+    color += evaluateIBL(mat, pixel, cv);
     color += evaluateDirectionalLights(pixel, cv);
     // TODO: Punctual Lights (point and spot)
 

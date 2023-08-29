@@ -7,7 +7,7 @@ export class PrincipledBSDFShader extends Shader {
         VERTEX_VIEWPROJ: 0,
         VERTEX_MODEL: 1,
         FRAGMENT_MATERIAL: 2,
-        FRAGMENT_LIGHTS: 3
+        FRAGMENT_SCENE_INFO: 3
     }
 
     constructor(name: string, cb: () => void) {
