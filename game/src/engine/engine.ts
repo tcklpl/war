@@ -76,7 +76,7 @@ export class Engine {
         this._managers.mesh.freeMeshes();
         // scenes also don't need any memory freeing
         this._managers.material.freeMaterials();
-        this._managers.light.freeLights();
+        this._managers.scene.freeScenes();
 
         this._renderer.free();
     }

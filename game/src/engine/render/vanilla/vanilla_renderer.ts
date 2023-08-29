@@ -39,8 +39,6 @@ export class VanillaRenderer extends Renderer {
             canvasPreferredTextureFormat: this._presentationFormat,
             viewProjBuffer: this._pbrViewProjectionBuffer
         });
-        
-        game.engine.managers.light.constructBuffers();
     }
 
     private buildProjectionMatrix() {
@@ -85,7 +83,6 @@ export class VanillaRenderer extends Renderer {
         this._depthTexture = depthTexture;
 
         this.buildProjectionMatrix();
-        game.engine.managers.light.writeBuffer();
     }
     
     render(): void {
