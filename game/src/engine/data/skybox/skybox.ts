@@ -59,5 +59,13 @@ export abstract class Skybox {
     protected set convolutedSkybox(tex: GPUTexture) {
         this._convoluted_skybox = tex;
     }
+
+    get sampler() {
+        return this._sampler;
+    }
+
+    protected set sampler(s: GPUSampler) {
+        this._sampler = s;
+    }
     
 }
