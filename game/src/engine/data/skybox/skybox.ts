@@ -8,6 +8,7 @@ export abstract class Skybox {
     });
     private _skybox!: GPUTexture;
     private _convoluted_skybox!: GPUTexture;
+    private _prefiltered_skybox!: GPUTexture;
 
     private _pipelineBindGroups = new Map<GPURenderPipeline, {skybox: GPUBindGroup, convolutedSkybox: GPUBindGroup}>();
 
@@ -58,6 +59,14 @@ export abstract class Skybox {
 
     protected set convolutedSkybox(tex: GPUTexture) {
         this._convoluted_skybox = tex;
+    }
+
+    get prefilteredSkybox() {
+        return this._prefiltered_skybox;
+    }
+
+    protected set prefilteredSkybox(t: GPUTexture) {
+        this._prefiltered_skybox = t;
     }
 
     get sampler() {
