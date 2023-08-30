@@ -33,6 +33,8 @@ export class SceneInfo {
             0       Directional light buffer
             1       IBL irradiance sampler
             2       IBL irradiance cubemap
+            3       IBL prefiltered map
+            4       IBL LUT
         */
         return device.createBindGroup({
             label: `Scene info bind group`,
@@ -40,7 +42,9 @@ export class SceneInfo {
             entries: [
                 { binding: 0, resource: { buffer: this._directionalLightBuffer } },
                 { binding: 1, resource: this._skybox.sampler },
-                { binding: 2, resource: this._skybox.convolutedSkybox.createView({ dimension: 'cube' }) }
+                { binding: 2, resource: this._skybox.convolutedSkybox.createView({ dimension: 'cube' }) },
+                { binding: 3, resource: this._skybox.prefilteredSkybox.createView({ dimension: 'cube' }) },
+                { binding: 4, resource: game.engine.brdfLUT.createView() }
             ]
         });
     }
