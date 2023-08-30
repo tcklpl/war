@@ -1,13 +1,9 @@
 import { Shader } from "../shader";
-import shaderSource from './principled_bsdf.wgsl';
+import shaderSource from "./brdf_convolution_integral.wgsl";
 
-export class PrincipledBSDFShader extends Shader {
+export class BRDFConvolutionIntegralShader extends Shader {
 
     static UNIFORM_BINDING_GROUPS = {
-        VERTEX_VIEWPROJ: 0,
-        VERTEX_MODEL: 1,
-        FRAGMENT_MATERIAL: 2,
-        FRAGMENT_SCENE_INFO: 3
     }
 
     constructor(name: string, cb: () => void) {

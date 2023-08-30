@@ -1,13 +1,11 @@
 import { Shader } from "../shader";
-import shaderSource from './principled_bsdf.wgsl';
+import shaderSource from './prefilter_cubemap.wgsl';
 
-export class PrincipledBSDFShader extends Shader {
+export class PrefilterCubemapShader extends Shader {
 
     static UNIFORM_BINDING_GROUPS = {
         VERTEX_VIEWPROJ: 0,
-        VERTEX_MODEL: 1,
-        FRAGMENT_MATERIAL: 2,
-        FRAGMENT_SCENE_INFO: 3
+        FRAGMENT_TEXTURE: 1
     }
 
     constructor(name: string, cb: () => void) {

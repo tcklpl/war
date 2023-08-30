@@ -5,9 +5,8 @@ export class RenderResourcePool {
     commandEncoder!: GPUCommandEncoder;
     scene!: Scene;
 
-    depthTexture!: GPUTexture;
     depthTextureView!: GPUTextureView;
-    canvasTexture!: GPUTexture;
+    canvasTextureView!: GPUTextureView;
 
     viewProjBuffer!: GPUBuffer;
     

@@ -1,7 +1,9 @@
 import { Camera } from "../camera/camera";
 import { Entity } from "../entity/entity";
 import { Light } from "../lights/light";
+import { BlackSkybox } from "../skybox/black_skybox";
 import { Skybox } from "../skybox/skybox";
+import { SceneInfo } from "./scene_info";
 
 export class Scene {
 
@@ -13,6 +15,8 @@ export class Scene {
     private _activeCamera?: Camera;
     private _activeSkybox?: Skybox;
 
+    private _sceneInfo!: SceneInfo;
+
     private _entitiesPerWindingOrder = {
         cw: [] as Entity[],
         ccw: [] as Entity[]
@@ -22,13 +26,20 @@ export class Scene {
         entities: Entity[],
         cameras: Camera[],
         lights: Light[],
-        skyboxes: Skybox[]
+        skyboxes: Skybox[],
+
+        activeCamera?: Camera,
+        activeSkybox?: Skybox
     }) {
         this._entities = props.entities;
         this._cameras = props.cameras;
         this._lights = props.lights;
         this._skyboxes = props.skyboxes;
+
+        this._activeCamera = props.activeCamera;
+        this._activeSkybox = props.activeSkybox;
         this.buildWindingOrderCache();
+        game.engine.managers.scene.register(this);
     }
 
     buildWindingOrderCache() {
@@ -45,6 +56,24 @@ export class Scene {
                     break;
             }
         });
+    }
+
+    protected async buildSceneInfo() {
+        let skybox = this._activeSkybox;
+        if (!skybox) {
+            skybox = new BlackSkybox();
+            await skybox.initialize();
+        }
+        this._sceneInfo = new SceneInfo(this._lights, skybox);
+    }
+
+    private async updateSceneInfoSkybox() {
+        let skybox = this._activeSkybox;
+        if (!skybox) {
+            skybox = new BlackSkybox();
+            await skybox.initialize();
+        }
+        this._sceneInfo.skybox = skybox;
     }
 
     get activeCamera() {
@@ -64,7 +93,9 @@ export class Scene {
     }
 
     set activeSkybox(s: Skybox | undefined) {
+        const shouldUpdate = s !== this._activeSkybox;
         this._activeSkybox = s;
+        if (shouldUpdate) this.updateSceneInfoSkybox();
     }
 
     get entitiesToRender() {
@@ -81,6 +112,14 @@ export class Scene {
 
     get skyboxes() {
         return this._skyboxes;
+    }
+
+    get info() {
+        return this._sceneInfo;
+    }
+
+    free() {
+        this.info.free();
     }
 
 }

@@ -1,13 +1,13 @@
 import { BadResolutionError } from "../../../errors/engine/data/bad_resolution";
-import { CubemapConvolutionShader } from "../../../shaders/cubemap_convolution/cubemap_convolution_shader";
+import { PrefilterCubemapShader } from "../../../shaders/prefilter_cubemap/prefilter_cubemap_shader";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { MathUtils } from "../../../utils/math_utils";
 import { Mat4 } from "../../data/mat/mat4";
 import { Vec3 } from "../../data/vec/vec3";
 
-export class CubemapConvolutionRenderer {
+export class CubemapPrefilterRenderer {
 
-    private _convolutionShader!: CubemapConvolutionShader;
+    private _convolutionShader!: PrefilterCubemapShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
 
@@ -21,6 +21,7 @@ export class CubemapConvolutionRenderer {
         Mat4.lookAt(Vec3.zero, new Vec3( 0,  0,  1), new Vec3( 0,  1,  0))  // + Z
     ];
     private _uniformBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _optionsBuffer = BufferUtils.createEmptyBuffer(16, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
 
     private _matrixBindGroup!: GPUBindGroup;
     private _sampler!: GPUSampler;
@@ -28,7 +29,7 @@ export class CubemapConvolutionRenderer {
     async initialize() {
 
         await new Promise<void>(r => {
-            this._convolutionShader = new CubemapConvolutionShader('cubemap convolution shader', () => r());
+            this._convolutionShader = new PrefilterCubemapShader('cubemap prefilter shader', () => r());
         });
 
         this._pipeline = this.createPipeline();
@@ -88,23 +89,27 @@ export class CubemapConvolutionRenderer {
     private createMatrixBindGroup() {
         return device.createBindGroup({
             label: 'cubemap convolution matrix bindgroup',
-            layout: this._pipeline.getBindGroupLayout(CubemapConvolutionShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ),
+            layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ),
             entries: [
                 { binding: 0, resource: { buffer: this._uniformBuffer }}
             ]
         });
     }
 
-    async convoluteCubemap(cubemap: GPUTexture, cubemapResolution = 512) {
+    async prefilterCubemap(cubemap: GPUTexture, cubemapResolution = 128, mipLevels = 5) {
         if (cubemapResolution <= 0 || cubemapResolution > device.limits.maxTextureDimension3D) {
             throw new BadResolutionError(`Trying to render a cubemap of resolution ${cubemapResolution}, should be between [1, ${device.limits.maxTextureDimension3D}]`);
         }
+
+        // write cubemap resolution to the buffer (with an offset of 4 bytes as the first 4 bytes are the roughness)
+        device.queue.writeBuffer(this._optionsBuffer, 4, new Float32Array([cubemapResolution]));
 
         // create destination 3d texture
         const renderTarget = device.createTexture({
             label: 'final convoluted cubemap texture',
             format: 'rgba16float',
             dimension: '2d',
+            mipLevelCount: mipLevels,
             size: [cubemapResolution, cubemapResolution, 6],
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT
         });
@@ -112,10 +117,11 @@ export class CubemapConvolutionRenderer {
         // create bindgroup to hold the supplied texture
         const texBindGroup = device.createBindGroup({
             label: 'cubemap convolution texture bindgroup',
-            layout: this._pipeline.getBindGroupLayout(CubemapConvolutionShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
+            layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: cubemap.createView({ dimension: 'cube' }) },
+                { binding: 2, resource: { buffer: this._optionsBuffer }}
             ]
         });
 
@@ -127,27 +133,36 @@ export class CubemapConvolutionRenderer {
             // write view matrix to buffer
             device.queue.writeBuffer(this._uniformBuffer, 0, cameraMatrix.asF32Array);
 
-            const commandEncoder = device.createCommandEncoder();
+            // render all mip levels for each face
+            for (let mipLevel = 0; mipLevel < mipLevels; mipLevel++) {
 
-            (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = renderTarget.createView({
-                arrayLayerCount: 1,
-                baseArrayLayer: i
-            });
+                const roughness = mipLevel / (mipLevels - 1);
+                // write mip level to the first 4 bytes of the options buffer
+                device.queue.writeBuffer(this._optionsBuffer, 0, new Float32Array([roughness]));
 
-            const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
+                const commandEncoder = device.createCommandEncoder();
 
-            passEncoder.setPipeline(this._pipeline);
+                (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = renderTarget.createView({
+                    arrayLayerCount: 1,
+                    baseArrayLayer: i,
+                    mipLevelCount: 1,
+                    baseMipLevel: mipLevel
+                });
 
-            // bind uniforms
-            passEncoder.setBindGroup(CubemapConvolutionShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._matrixBindGroup);
-            passEncoder.setBindGroup(CubemapConvolutionShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, texBindGroup);
+                const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
+                passEncoder.setPipeline(this._pipeline);
 
-            // draw to texture
-            // will draw 36 vertices, no data needs to be supplied as the vertices are hard coded into the shader
-            passEncoder.draw(36);
-            passEncoder.end();
+                // bind uniforms
+                passEncoder.setBindGroup(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._matrixBindGroup);
+                passEncoder.setBindGroup(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, texBindGroup);
 
-            device.queue.submit([commandEncoder.finish()]);
+                // draw to texture
+                // will draw 36 vertices, no data needs to be supplied as the vertices are hard coded into the shader
+                passEncoder.draw(36);
+                passEncoder.end();
+
+                device.queue.submit([commandEncoder.finish()]);
+            }
         }
 
         // wait for all the rendering to be done and return the texture
@@ -157,5 +172,6 @@ export class CubemapConvolutionRenderer {
 
     free() {
         this._uniformBuffer?.destroy();
+        this._optionsBuffer?.destroy();
     }
 }

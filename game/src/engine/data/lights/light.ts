@@ -39,7 +39,6 @@ export abstract class Light {
 
     set enabled(e: boolean) {
         this._enabled = this.enabled;
-        game.engine.managers.light.writeBuffer();
     }
 
     abstract writeToBuffer(buf: GPUBuffer, index: number, generalBufferOffset: number): void;    

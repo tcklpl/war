@@ -21,18 +21,20 @@ export class GameBoard extends Scene {
             entities: [ ...countries.allCountries ],
             cameras: [ mainCamera ],
             lights: [ lights.sun ],
-            skyboxes: [ skybox ]
+            skyboxes: [ skybox ],
+
+            activeCamera: mainCamera,
+            activeSkybox: skybox
         });
         this._mainCamera = mainCamera;
         this._countries = countries;
         this._boardLights = lights;
         this._skybox = skybox;
-        this.activeCamera = this._mainCamera;
-        this.activeSkybox = this._skybox;
     }
 
     async initialize() {
         await this._skybox.initialize();
+        await this.buildSceneInfo();
     }
 
 }

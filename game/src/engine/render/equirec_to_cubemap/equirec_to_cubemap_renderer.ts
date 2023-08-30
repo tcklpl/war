@@ -152,4 +152,8 @@ export class EquirectangularToCubemapRenderer {
         await device.queue.onSubmittedWorkDone();
         return finalCubemap;
     }
+
+    free() {
+        this._uniformBuffer?.destroy();
+    }
 }

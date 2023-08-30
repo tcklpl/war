@@ -118,29 +118,29 @@ export class RenderStageSolidGeometry implements RenderStage {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthTex;
     }
 
-    private setCanvasTexture(canvasTex: GPUTexture) {
-        // const view = canvasTex.createView();
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = gpuCtx.getCurrentTexture().createView();
-        // (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].resolveTarget = gpuCtx.getCurrentTexture().createView();
+    private setCanvasTexture(canvasTex: GPUTextureView) {
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = canvasTex;
     }
 
     render(pool: RenderResourcePool) {
 
         this.setDepthTexture(pool.depthTextureView);
-        this.setCanvasTexture(pool.canvasTexture);
+        this.setCanvasTexture(pool.canvasTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
             rpe.setPipeline(this._pipelineCCW);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCCW);
-            game.engine.managers.light.bindLights(rpe, this._pipelineCCW);
+            const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCCW, PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO);
+            rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
             pool.scene.entitiesPerWindingOrder.ccw.forEach(e => e.draw(rpe, this._pipelineCCW));
         }
 
         if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
             rpe.setPipeline(this._pipelineCW);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCW);
-            game.engine.managers.light.bindLights(rpe, this._pipelineCW);
+            const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCW, PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO);
+            rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
             pool.scene.entitiesPerWindingOrder.cw.forEach(e => e.draw(rpe, this._pipelineCW));
         }
 
