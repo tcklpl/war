@@ -154,4 +154,8 @@ export class CubemapConvolutionRenderer {
         await device.queue.onSubmittedWorkDone();
         return renderTarget;
     }
+
+    free() {
+        this._uniformBuffer?.destroy();
+    }
 }
