@@ -152,6 +152,8 @@ struct DirectionalLights {
 // Scene Info - IBL
 @group(3) @binding(1) var iblSampler: sampler;
 @group(3) @binding(2) var iblIrradiance: texture_cube<f32>;
+@group(3) @binding(3) var iblPrefiltered: texture_cube<f32>;
+@group(3) @binding(4) var iblLUT: texture_2d<f32>;
 
 /*
     --------------------------------------------------------------------------------------------------
@@ -421,9 +423,16 @@ fn evaluateIBL(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec3
 
     var kS = F_Schlick_Roughness(pixel.f0, mat.roughness, cv.NoV);
     var kD = 1.0 - kS;
+
     var irradiance = textureSample(iblIrradiance, iblSampler, cv.N).rgb;
     var diffuse = irradiance * mat.albedo;
-    var ambient = (kD * diffuse) * mat.ao;
+
+    var MAX_REFLECTION_LOD = 4.0;
+    var prefilteredColor = textureSampleLevel(iblPrefiltered, iblSampler, cv.V_reflected_N, mat.roughness * MAX_REFLECTION_LOD).rgb;
+    var brdf = textureSample(iblLUT, iblSampler, vec2f(cv.NoV, mat.roughness)).rg;
+    var specular = prefilteredColor * (kS * brdf.x + brdf.y);
+
+    var ambient = (kD * diffuse + specular) * mat.ao;
 
     return ambient;
 }
