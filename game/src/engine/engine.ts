@@ -41,7 +41,6 @@ export class Engine {
     private _brdfLUT!: GPUTexture;
 
     constructor() {
-        this.initializeRenderers();
         this.renderLoop();
     }
 
