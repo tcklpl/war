@@ -395,11 +395,12 @@ fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors) -> vec3f {
     for (var i = 0u; i < directionalLights.count; i++) {
 
         var L = normalize(-directionalLights.lights[i].direction);
+        var intensity = log2(directionalLights.lights[i].intensity); // idk
         var visibility = 1.0; // shadow mapping
 
         // TODO: actually load light intensity
         var light = Light(
-            vec4f(directionalLights.lights[i].color, 4.0),  // color
+            vec4f(directionalLights.lights[i].color, intensity),  // color
             1.0,                                            // attenuation
             L,                                              // light vector
             saturate(dot(cv.N, L))                          // NoL
@@ -509,8 +510,6 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var reflectance = 1.0;
     var clearCoat = 0.0;
     var clearCoatPerceptualRoughness  = 0.0;
-
-    // normal = v.model_normal;
 
     var cv = CommonVectors(
         normal,                                 // N
