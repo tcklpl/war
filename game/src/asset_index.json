@@ -3,6 +3,7 @@
         "board": { "url": "/assets/gltf/board.gltf" }
     },
     "img": {
-        "kloofendal_43d_clear": { "url": "/assets/img/kloofendal_43d_clear_4k.AVIF" }
+        "kloofendal_43d_clear": { "url": "/assets/img/kloofendal_43d_clear_4k.AVIF" },
+        "thatch_chapel": { "url": "/assets/img/thatch_chapel_4k.AVIF" }
     }
 }
