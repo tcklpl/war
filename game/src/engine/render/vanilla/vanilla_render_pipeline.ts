@@ -6,6 +6,7 @@ import { RenderStageDepthMap } from "./render_stages/rs_depth_map";
 import { RenderStageLights } from "./render_stages/rs_lights";
 import { RenderStageSolidGeometry } from "./render_stages/rs_solid_geometry";
 import { RenderStageSkybox } from "./render_stages/rs_skybox";
+import { RenderStagePFXToneMapping } from "./render_stages/rs_pfx_tone_mapping";
 
 export class VanillaRenderPipeline {
 
@@ -14,6 +15,8 @@ export class VanillaRenderPipeline {
     private _rs2_solid_geometry = new RenderStageSolidGeometry();
     private _rs3_skybox = new RenderStageSkybox();
 
+    private _rs_pfx_tonemap = new RenderStagePFXToneMapping();
+
     private _currentPipeline: RenderStage[] = [];
 
     buildPipeline() {
@@ -21,7 +24,8 @@ export class VanillaRenderPipeline {
             this._rs0_depthPass,
             this._rs1_lights,
             this._rs2_solid_geometry,
-            this._rs3_skybox
+            this._rs3_skybox,
+            this._rs_pfx_tonemap
         ];
     }
 
@@ -34,6 +38,12 @@ export class VanillaRenderPipeline {
     render(pool: RenderResourcePool) {
         if (this._currentPipeline.length <= 0) throw new BadPipelineError(`Trying to render with an invalid (no-stages) pipeline`);
         this._currentPipeline.forEach(stage => stage.render(pool));
+    }
+
+    dispatchResizeCallback(resources: RenderInitializationResources) {
+        this._currentPipeline.forEach(stage => {
+            if (stage.resizeCallback) stage.resizeCallback(resources);
+        });
     }
 
     free() {

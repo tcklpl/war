@@ -1,4 +1,3 @@
-import { Shader } from "../../../../shaders/shader";
 import { SkyboxShader } from "../../../../shaders/skybox/skybox_shader";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
@@ -6,7 +5,7 @@ import { RenderStage } from "./render_stage";
 
 export class RenderStageSkybox implements RenderStage {
 
-    private _shader!: Shader;
+    private _shader!: SkyboxShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroup!: GPUBindGroup;
@@ -14,17 +13,17 @@ export class RenderStageSkybox implements RenderStage {
     async initialize(resources: RenderInitializationResources) {
         
         await new Promise<void>(r => {
-            this._shader = new SkyboxShader('rs3 skybox shader', () => r());
+            this._shader = new SkyboxShader('rs skybox shader', () => r());
         });
 
-        this._pipeline = this.createPipeline(resources.canvasPreferredTextureFormat);
+        this._pipeline = this.createPipeline();
         this._renderPassDescriptor = this.createRenderPassDescriptor();
         this._viewProjBindGroup = this.createViewProjBindGroup(resources.viewProjBuffer);
     }
 
-    private createPipeline(format: GPUTextureFormat) {
+    private createPipeline() {
         return device.createRenderPipeline({
-            label: `rs3 skybox pipeline`,
+            label: `rs skybox pipeline`,
             layout: 'auto',
             vertex: {
                 module: this._shader.module,
@@ -35,7 +34,7 @@ export class RenderStageSkybox implements RenderStage {
                 module: this._shader.module,
                 entryPoint: 'fragment',
                 targets: [
-                    { format: format }
+                    { format: 'rgba16float' as GPUTextureFormat }
                 ]
             },
             primitive: {
@@ -82,8 +81,8 @@ export class RenderStageSkybox implements RenderStage {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthTex;
     }
 
-    private setCanvasTexture(canvasTex: GPUTextureView) {
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = canvasTex;
+    private setColorTexture(colorTex: GPUTextureView) {
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = colorTex;
     }
 
     render(pool: RenderResourcePool) {
@@ -91,7 +90,7 @@ export class RenderStageSkybox implements RenderStage {
         if (!pool.scene.activeSkybox) return;
         
         this.setDepthTexture(pool.depthTextureView);
-        this.setCanvasTexture(pool.canvasTextureView);
+        this.setColorTexture(pool.hdrTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pipeline);
