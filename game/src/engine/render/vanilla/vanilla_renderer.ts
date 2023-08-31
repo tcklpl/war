@@ -12,7 +12,7 @@ export class VanillaRenderer extends Renderer {
     private _pbrViewProjectionBuffer!: GPUBuffer;
 
     private _presentationFormat!: GPUTextureFormat;
-    private _renderTarget!: GPUTexture;
+    private _hdrRenderTarget!: GPUTexture;
     private _depthTexture!: GPUTexture;
 
     private _renderPipeline = new VanillaRenderPipeline();
@@ -37,7 +37,9 @@ export class VanillaRenderer extends Renderer {
         this._renderPipeline.buildPipeline();
         await this._renderPipeline.initialize({
             canvasPreferredTextureFormat: this._presentationFormat,
-            viewProjBuffer: this._pbrViewProjectionBuffer
+            viewProjBuffer: this._pbrViewProjectionBuffer,
+            depthBufferTexture: this._depthTexture,
+            hdrBufferTexture: this._hdrRenderTarget
         });
     }
 
@@ -57,10 +59,10 @@ export class VanillaRenderer extends Renderer {
         const width = Math.max(1, Math.min(device.limits.maxTextureDimension2D, gameCanvas.clientWidth));
         const height = Math.max(1, Math.min(device.limits.maxTextureDimension2D, gameCanvas.clientHeight));
 
-        const resize = !this._renderTarget || width !== gameCanvas.width || height !== gameCanvas.height;
+        const resize = !this._hdrRenderTarget || width !== gameCanvas.width || height !== gameCanvas.height;
         if (!resize) return;
 
-        if (this._renderTarget) this._renderTarget.destroy();
+        if (this._hdrRenderTarget) this._hdrRenderTarget.destroy();
         if (this._depthTexture) this._depthTexture.destroy();
 
         gameCanvas.width = width;
@@ -70,10 +72,10 @@ export class VanillaRenderer extends Renderer {
 
         const renderTarget = device.createTexture({
             size: [width, height],
-            format: this._presentationFormat,
-            usage: GPUTextureUsage.RENDER_ATTACHMENT
+            format: 'rgba16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._renderTarget = renderTarget;
+        this._hdrRenderTarget = renderTarget;
 
         const depthTexture = device.createTexture({
             size: [width, height],
@@ -83,6 +85,12 @@ export class VanillaRenderer extends Renderer {
         this._depthTexture = depthTexture;
 
         this.buildProjectionMatrix();
+        this._renderPipeline.dispatchResizeCallback({
+            canvasPreferredTextureFormat: this._presentationFormat,
+            viewProjBuffer: this._pbrViewProjectionBuffer,
+            depthBufferTexture: this._depthTexture,
+            hdrBufferTexture: this._hdrRenderTarget
+        });
     }
     
     render(): void {
@@ -109,6 +117,7 @@ export class VanillaRenderer extends Renderer {
         this._renderResourcePool.viewProjBuffer = this._pbrViewProjectionBuffer;
         this._renderResourcePool.canvasTextureView = gpuCtx.getCurrentTexture().createView();
         this._renderResourcePool.depthTextureView = this._depthTexture.createView();
+        this._renderResourcePool.hdrTextureView = this._hdrRenderTarget.createView();
         this._renderResourcePool.commandEncoder = commandEncoder;
 
         this._renderPipeline.render(this._renderResourcePool);
@@ -117,7 +126,7 @@ export class VanillaRenderer extends Renderer {
     }
 
     free(): void {
-        this._renderTarget?.destroy();
+        this._hdrRenderTarget?.destroy();
         this._depthTexture?.destroy();
         this._pbrViewProjectionBuffer?.destroy();
     }
