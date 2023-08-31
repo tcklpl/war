@@ -2,10 +2,10 @@ import { BadPipelineError } from "../../../errors/engine/render/bad_pipeline";
 import { RenderInitializationResources } from "./render_initialization_resources";
 import { RenderResourcePool } from "./render_resource_pool";
 import { RenderStage } from "./render_stages/render_stage";
-import { RenderStageDepthMap } from "./render_stages/rs0_depth_map";
-import { RenderStageLights } from "./render_stages/rs1_lights";
-import { RenderStageSolidGeometry } from "./render_stages/rs2_solid_geometry";
-import { RenderStageSkybox } from "./render_stages/rs3_skybox";
+import { RenderStageDepthMap } from "./render_stages/rs_depth_map";
+import { RenderStageLights } from "./render_stages/rs_lights";
+import { RenderStageSolidGeometry } from "./render_stages/rs_solid_geometry";
+import { RenderStageSkybox } from "./render_stages/rs_skybox";
 
 export class VanillaRenderPipeline {
 
