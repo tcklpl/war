@@ -6,6 +6,7 @@ export class RenderResourcePool {
     scene!: Scene;
 
     depthTextureView!: GPUTextureView;
+    hdrTextureView!: GPUTextureView;
     canvasTextureView!: GPUTextureView;
 
     viewProjBuffer!: GPUBuffer;

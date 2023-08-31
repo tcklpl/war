@@ -1,5 +1,5 @@
 import { BadResolutionError } from "../../../errors/engine/data/bad_resolution";
-import { PrefilterCubemapShader } from "../../../shaders/prefilter_cubemap/prefilter_cubemap_shader";
+import { PrefilterCubemapShader } from "../../../shaders/cubemap_prefiltering/prefilter_cubemap_shader";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { MathUtils } from "../../../utils/math_utils";
 import { Mat4 } from "../../data/mat/mat4";

@@ -7,4 +7,6 @@ export interface RenderStage {
     render: (pool: RenderResourcePool) => void;
     free: () => void;
 
+    resizeCallback?: (resources: RenderInitializationResources) => void;
+
 }

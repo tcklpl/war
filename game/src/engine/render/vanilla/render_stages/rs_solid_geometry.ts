@@ -16,20 +16,20 @@ export class RenderStageSolidGeometry implements RenderStage {
     async initialize(resources: RenderInitializationResources) {
 
         await new Promise<void>(r => {
-            this._principledShader = new PrincipledBSDFShader('rs2 principled bsdf', () => r());
+            this._principledShader = new PrincipledBSDFShader('rs principled bsdf', () => r());
         });
 
-        this._pipelineCW = this.createPipeline('cw', resources.canvasPreferredTextureFormat);
-        this._pipelineCCW = this.createPipeline('ccw', resources.canvasPreferredTextureFormat);
+        this._pipelineCW = this.createPipeline('cw');
+        this._pipelineCCW = this.createPipeline('ccw');
         this._renderPassDescriptor = this.createRenderPassDescriptor();
         this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.viewProjBuffer);
         this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.viewProjBuffer);
 
     }
 
-    private createPipeline(windingOrder: 'cw' | 'ccw', format: GPUTextureFormat) {
+    private createPipeline(windingOrder: 'cw' | 'ccw') {
         return device.createRenderPipeline({
-            label: `rs0 depth pass ${windingOrder} pipeline`,
+            label: `rs solid geometry pipeline`,
             layout: 'auto',
             vertex: {
                 module: this._principledShader.module,
@@ -69,7 +69,7 @@ export class RenderStageSolidGeometry implements RenderStage {
                 module: this._principledShader.module,
                 entryPoint: 'fragment',
                 targets: [
-                    { format: format }
+                    { format: 'rgba16float' as GPUTextureFormat }
                 ]
             },
             primitive: {
@@ -118,14 +118,14 @@ export class RenderStageSolidGeometry implements RenderStage {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthTex;
     }
 
-    private setCanvasTexture(canvasTex: GPUTextureView) {
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = canvasTex;
+    private setColorTexture(colorTex: GPUTextureView) {
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = colorTex;
     }
 
     render(pool: RenderResourcePool) {
 
         this.setDepthTexture(pool.depthTextureView);
-        this.setCanvasTexture(pool.canvasTextureView);
+        this.setColorTexture(pool.hdrTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {

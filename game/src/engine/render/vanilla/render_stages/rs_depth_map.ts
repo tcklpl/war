@@ -35,7 +35,7 @@ export class RenderStageDepthMap implements RenderStage {
     async initialize(resources: RenderInitializationResources) {
 
         await new Promise<void>(r => {
-            this._depthShader = new DepthShader('rs0 depth shader', () => r());
+            this._depthShader = new DepthShader('rs depth shader', () => r());
         });
 
         this._depthPipelineCW = this.createDepthPipeline('cw');
@@ -47,7 +47,7 @@ export class RenderStageDepthMap implements RenderStage {
 
     private createDepthPipeline(windingOrder: 'cw' | 'ccw') {
         return device.createRenderPipeline({
-            label: `rs0 depth pass ${windingOrder} pipeline`,
+            label: `rs depth pass ${windingOrder} pipeline`,
             layout: 'auto',
             vertex: {
                 module: this._depthShader.module,
