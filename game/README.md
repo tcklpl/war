@@ -24,3 +24,11 @@ Images / Skyboxes / Cubemaps | Browser-loadable images | Preferably AVIF, as it 
 
 > **Remember to export glTF files with "+Y as up" and "include tangents"** (if the file has meshes) **options**. You can export in either embedded (.gltf) or binary (.glb) format, I will be using embedded as I develop the loader and later on switch to binary when the loader is complete, as the binary files are smaller.
 
+# Engine rendering
+
+Render Stage | Required | Description | Inputs | Outputs
+--|--|--|--|--
+Depth Map | Required | Renders the solid geometry into a depth texture | Solid geometry | Depth map
+Solid Geometry | Required | Renders the solid geometry using a PBR shader and the depth map from the previous step (setting depth as 'equals') | Depth map, Solid geometry, Material info (per primitive) and Scene info (skybox, lights etc.) | HDR Color map
+Skybox | Required | Renders the scene's skybox | Depth map, Scene's skybox | HDR Color map
+PFX and Tone Mapping | Required | Applies post effects (TODO) and tone maps the scene to the final color | HDR Color map | Screen color
