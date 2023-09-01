@@ -15,8 +15,10 @@ export class RenderResourcePool {
     private _hdrTexture!: GPUTexture;
     private _hdrTextureView!: GPUTextureView;
 
-    private _canvasTextureView!: GPUTextureView;
+    private _bloomMips!: GPUTexture;
+    private _bloomMipsLength = 7;
 
+    private _canvasTextureView!: GPUTextureView;
     private _viewProjBuffer!: GPUBuffer;
 
     constructor() {
@@ -29,6 +31,7 @@ export class RenderResourcePool {
 
         this._depthTexture?.destroy();
         this._hdrTexture?.destroy();
+        this._bloomMips?.destroy();
 
         this._depthTexture = device.createTexture({
             size: [resolution.full.x, resolution.full.y],
@@ -43,6 +46,13 @@ export class RenderResourcePool {
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this._hdrTextureView = this._hdrTexture.createView();
+
+        this._bloomMips = device.createTexture({
+            size: [resolution.half.x, resolution.half.y],
+            format: 'rgba16float',
+            mipLevelCount: this._bloomMipsLength,
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
 
     }
 
@@ -91,6 +101,14 @@ export class RenderResourcePool {
     
     get commandEncoder() {
         return this._commandEncoder;
+    }
+
+    get bloomMips() {
+        return this._bloomMips;
+    }
+
+    get bloomMipsLength() {
+        return this._bloomMipsLength;
     }
 
 }
