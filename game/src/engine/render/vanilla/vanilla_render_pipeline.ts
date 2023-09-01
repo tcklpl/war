@@ -7,13 +7,15 @@ import { RenderStageLights } from "./render_stages/rs_lights";
 import { RenderStageSolidGeometry } from "./render_stages/rs_solid_geometry";
 import { RenderStageSkybox } from "./render_stages/rs_skybox";
 import { RenderStagePFXToneMapping } from "./render_stages/rs_pfx_tone_mapping";
+import { RenderStageBloom } from "./render_stages/rs_bloom";
 
 export class VanillaRenderPipeline {
 
-    private _rs0_depthPass = new RenderStageDepthMap();
-    private _rs1_lights = new RenderStageLights();
-    private _rs2_solid_geometry = new RenderStageSolidGeometry();
-    private _rs3_skybox = new RenderStageSkybox();
+    private _rsDepthPass = new RenderStageDepthMap();
+    private _rsLights = new RenderStageLights();
+    private _rsSolidGeometry = new RenderStageSolidGeometry();
+    private _rsSkybox = new RenderStageSkybox();
+    private _rsBloom = new RenderStageBloom();
 
     private _rs_pfx_tonemap = new RenderStagePFXToneMapping();
 
@@ -21,10 +23,11 @@ export class VanillaRenderPipeline {
 
     buildPipeline() {
         this._currentPipeline = [
-            this._rs0_depthPass,
-            this._rs1_lights,
-            this._rs2_solid_geometry,
-            this._rs3_skybox,
+            this._rsDepthPass,
+            this._rsLights,
+            this._rsSolidGeometry,
+            this._rsSkybox,
+            this._rsBloom,
             this._rs_pfx_tonemap
         ];
     }
@@ -46,7 +49,7 @@ export class VanillaRenderPipeline {
     }
 
     get pbrStage() {
-        return this._rs2_solid_geometry;
+        return this._rsSolidGeometry;
     }
 
 }
