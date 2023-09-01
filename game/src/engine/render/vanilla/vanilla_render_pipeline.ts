@@ -40,12 +40,6 @@ export class VanillaRenderPipeline {
         this._currentPipeline.forEach(stage => stage.render(pool));
     }
 
-    dispatchResizeCallback(resources: RenderInitializationResources) {
-        this._currentPipeline.forEach(stage => {
-            if (stage.resizeCallback) stage.resizeCallback(resources);
-        });
-    }
-
     free() {
         this._currentPipeline.forEach(stage => stage.free());
         this._currentPipeline = [];
