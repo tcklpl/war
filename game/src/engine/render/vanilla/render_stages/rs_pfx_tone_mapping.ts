@@ -58,13 +58,14 @@ export class RenderStagePFXToneMapping implements RenderStage {
         } as GPURenderPassDescriptor;
     }
 
-    private updateBindGroup(hdrTextureView: GPUTextureView) {
+    private updateBindGroup(pool: RenderResourcePool) {
         this._texturesBindGroup = device.createBindGroup({
             label: 'PBR ViewProj',
             layout: this._pipeline.getBindGroupLayout(PFXTonemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
-                { binding: 1, resource: hdrTextureView }
+                { binding: 1, resource: pool.hdrTextureView },
+                { binding: 2, resource: pool.bloomMips.createView() }
             ]
         });
     }
@@ -75,7 +76,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
 
     render(pool: RenderResourcePool) {
         
-        this.updateBindGroup(pool.hdrTextureView);
+        this.updateBindGroup(pool);
         this.setColorTexture(pool.canvasTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
