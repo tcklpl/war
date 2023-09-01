@@ -28,7 +28,7 @@ export class Vec2 extends Vector {
     }
 
     equals(other: Vec2) {
-        return this.x == other.x && this.y == other.y;
+        return this.x === other.x && this.y === other.y;
     }
 
     // -----------------[ STATIC UTILS ]-----------------
