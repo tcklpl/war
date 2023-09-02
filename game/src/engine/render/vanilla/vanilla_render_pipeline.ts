@@ -40,7 +40,9 @@ export class VanillaRenderPipeline {
 
     render(pool: RenderResourcePool) {
         if (this._currentPipeline.length <= 0) throw new BadPipelineError(`Trying to render with an invalid (no-stages) pipeline`);
+        pool.commandEncoder.pushDebugGroup('Main Render Pipeline');
         this._currentPipeline.forEach(stage => stage.render(pool));
+        pool.commandEncoder.popDebugGroup();
     }
 
     free() {

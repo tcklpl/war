@@ -109,6 +109,7 @@ export class RenderStageDepthMap implements RenderStage {
 
     render(pool: RenderResourcePool) {
         
+        pool.commandEncoder.pushDebugGroup('Depth Map Renderer');
         this.setDepthTexture(pool.depthTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
@@ -125,6 +126,7 @@ export class RenderStageDepthMap implements RenderStage {
         }
 
         rpe.end();
+        pool.commandEncoder.popDebugGroup();
 
     }
 

@@ -143,8 +143,17 @@ export class RenderStageBloom implements RenderStage {
     }
 
     render(pool: RenderResourcePool) {
+        pool.commandEncoder.pushDebugGroup('Bloom Renderer');
+
+        pool.commandEncoder.pushDebugGroup('Downsampler');
         this.renderDownsamples(pool);
+        pool.commandEncoder.popDebugGroup();
+
+        pool.commandEncoder.pushDebugGroup('Upsampler');
         this.renderUpsamples(pool);
+        pool.commandEncoder.popDebugGroup();
+
+        pool.commandEncoder.popDebugGroup();
     }
 
     free() {

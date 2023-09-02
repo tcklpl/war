@@ -124,6 +124,7 @@ export class RenderStageSolidGeometry implements RenderStage {
 
     render(pool: RenderResourcePool) {
 
+        pool.commandEncoder.pushDebugGroup('Solid Geometry Renderer');
         this.setDepthTexture(pool.depthTextureView);
         this.setColorTexture(pool.hdrTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
@@ -145,6 +146,7 @@ export class RenderStageSolidGeometry implements RenderStage {
         }
 
         rpe.end();
+        pool.commandEncoder.popDebugGroup();
     }
 
     free() {

@@ -89,6 +89,7 @@ export class RenderStageSkybox implements RenderStage {
 
         if (!pool.scene.activeSkybox) return;
         
+        pool.commandEncoder.pushDebugGroup('Skybox Renderer');
         this.setDepthTexture(pool.depthTextureView);
         this.setColorTexture(pool.hdrTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
@@ -98,6 +99,7 @@ export class RenderStageSkybox implements RenderStage {
         rpe.setBindGroup(SkyboxShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, pool.scene.activeSkybox.getBindGroup(this._pipeline).skybox);
         rpe.draw(36);
         rpe.end();
+        pool.commandEncoder.popDebugGroup();
 
     }
 

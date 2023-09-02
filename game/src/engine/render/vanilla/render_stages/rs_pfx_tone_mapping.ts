@@ -76,6 +76,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
 
     render(pool: RenderResourcePool) {
         
+        pool.commandEncoder.pushDebugGroup('PFX and Tonemapper');
         this.updateBindGroup(pool);
         this.setColorTexture(pool.canvasTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
@@ -84,6 +85,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
         rpe.setBindGroup(PFXTonemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, this._texturesBindGroup);
         rpe.draw(6);
         rpe.end();
+        pool.commandEncoder.popDebugGroup();
     }
 
     free() {
