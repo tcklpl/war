@@ -18,12 +18,12 @@ export class RenderStagePFXToneMapping implements RenderStage {
             this._shader = new PFXTonemapShader('pfx and tonemap shader', () => r());
         });
 
-        this._pipeline = this.createPipeline(resources.canvasPreferredTextureFormat);
+        this._pipeline = await this.createPipeline(resources.canvasPreferredTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 
     private createPipeline(format: GPUTextureFormat) {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: `rs pfx and tonemapping pipeline`,
             layout: 'auto',
             vertex: {

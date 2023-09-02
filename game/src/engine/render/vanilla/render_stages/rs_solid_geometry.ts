@@ -19,8 +19,8 @@ export class RenderStageSolidGeometry implements RenderStage {
             this._principledShader = new PrincipledBSDFShader('rs principled bsdf', () => r());
         });
 
-        this._pipelineCW = this.createPipeline('cw');
-        this._pipelineCCW = this.createPipeline('ccw');
+        this._pipelineCW = await this.createPipeline('cw');
+        this._pipelineCCW = await this.createPipeline('ccw');
         this._renderPassDescriptor = this.createRenderPassDescriptor();
         this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.viewProjBuffer);
         this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.viewProjBuffer);
@@ -28,7 +28,7 @@ export class RenderStageSolidGeometry implements RenderStage {
     }
 
     private createPipeline(windingOrder: 'cw' | 'ccw') {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: `rs solid geometry pipeline`,
             layout: 'auto',
             vertex: {

@@ -16,13 +16,13 @@ export class RenderStageSkybox implements RenderStage {
             this._shader = new SkyboxShader('rs skybox shader', () => r());
         });
 
-        this._pipeline = this.createPipeline();
+        this._pipeline = await this.createPipeline();
         this._renderPassDescriptor = this.createRenderPassDescriptor();
         this._viewProjBindGroup = this.createViewProjBindGroup(resources.viewProjBuffer);
     }
 
     private createPipeline() {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: `rs skybox pipeline`,
             layout: 'auto',
             vertex: {

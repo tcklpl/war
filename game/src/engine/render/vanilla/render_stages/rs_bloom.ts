@@ -32,14 +32,14 @@ export class RenderStageBloom implements RenderStage {
             this._upsampleShader = new BloomUpsampleShader('bloom upsample shader', () => r());
         });
 
-        this._downsamplePipeline = this.createBloomPipeline(this._downsampleShader);
-        this._upsamplePipeline = this.createBloomPipeline(this._upsampleShader);
+        this._downsamplePipeline = await this.createBloomPipeline(this._downsampleShader);
+        this._upsamplePipeline = await this.createBloomPipeline(this._upsampleShader);
 
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 
     private createBloomPipeline(shader: Shader) {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: `rs bloom pipeline`,
             layout: 'auto',
             vertex: {
