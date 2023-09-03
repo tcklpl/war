@@ -33,21 +33,6 @@ export class AssetManager extends Manager<Asset> {
         return assetRequest;
     }
 
-    private async fetchAssetImage(name: string, asset: AddressableAsset) {
-        const img = new Image();
-        try {
-            await new Promise((r, e) => {
-                img.onload = r;
-                img.onerror = e;
-                img.src = asset.url;
-            });
-        } catch (e) {
-            throw new MissingAssetError(`Failed to load asset '${name}'`);
-        }
-        
-        return img;
-    }
-
     private async loadGLTFAssets(onAssetLoadCallback?: () => void) {
         const gltfAssets = Object.keys(assetIndex.gltf);
         
@@ -75,8 +60,9 @@ export class AssetManager extends Manager<Asset> {
 
         for (let k of hdrAssets) {
             const assetInfo = assetIndex.img[k as IMGAssetName];
-            const asset = await this.fetchAssetImage(k, assetInfo);
-            this.register(new IMGAsset(k, assetInfo.url, asset));
+            const assetFile = await this.fetchAssetFile(k, assetInfo);
+            const assetBlob = await assetFile.blob();
+            this.register(new IMGAsset(k, assetInfo.url, assetBlob));
             if (onAssetLoadCallback) onAssetLoadCallback();
         }
     }

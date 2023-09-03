@@ -44,4 +44,8 @@ export class Resolution {
         return this._quarter;
     }
 
+    get aspectRatio() {
+        return this._full.x / this._full.y;
+    }
+
 }

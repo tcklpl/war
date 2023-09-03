@@ -4,7 +4,8 @@ export abstract class Skybox {
 
     private _sampler = device.createSampler({
         minFilter: 'linear',
-        magFilter: 'linear'
+        magFilter: 'linear',
+        mipmapFilter: 'linear'
     });
     private _skybox!: GPUTexture;
     private _convoluted_skybox!: GPUTexture;

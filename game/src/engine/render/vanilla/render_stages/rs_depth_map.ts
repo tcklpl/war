@@ -38,15 +38,15 @@ export class RenderStageDepthMap implements RenderStage {
             this._depthShader = new DepthShader('rs depth shader', () => r());
         });
 
-        this._depthPipelineCW = this.createDepthPipeline('cw');
-        this._depthPipelineCCW = this.createDepthPipeline('ccw');
+        this._depthPipelineCW = await this.createDepthPipeline('cw');
+        this._depthPipelineCCW = await this.createDepthPipeline('ccw');
         this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.viewProjBuffer);
         this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.viewProjBuffer);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 
     private createDepthPipeline(windingOrder: 'cw' | 'ccw') {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: `rs depth pass ${windingOrder} pipeline`,
             layout: 'auto',
             vertex: {
@@ -109,6 +109,7 @@ export class RenderStageDepthMap implements RenderStage {
 
     render(pool: RenderResourcePool) {
         
+        pool.commandEncoder.pushDebugGroup('Depth Map Renderer');
         this.setDepthTexture(pool.depthTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
@@ -125,6 +126,7 @@ export class RenderStageDepthMap implements RenderStage {
         }
 
         rpe.end();
+        pool.commandEncoder.popDebugGroup();
 
     }
 

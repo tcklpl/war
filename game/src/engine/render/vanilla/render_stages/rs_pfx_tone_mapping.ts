@@ -18,12 +18,12 @@ export class RenderStagePFXToneMapping implements RenderStage {
             this._shader = new PFXTonemapShader('pfx and tonemap shader', () => r());
         });
 
-        this._pipeline = this.createPipeline(resources.canvasPreferredTextureFormat);
+        this._pipeline = await this.createPipeline(resources.canvasPreferredTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 
     private createPipeline(format: GPUTextureFormat) {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: `rs pfx and tonemapping pipeline`,
             layout: 'auto',
             vertex: {
@@ -58,19 +58,16 @@ export class RenderStagePFXToneMapping implements RenderStage {
         } as GPURenderPassDescriptor;
     }
 
-    private createBindGroup(resources: RenderInitializationResources) {
-        return device.createBindGroup({
+    private updateBindGroup(pool: RenderResourcePool) {
+        this._texturesBindGroup = device.createBindGroup({
             label: 'PBR ViewProj',
             layout: this._pipeline.getBindGroupLayout(PFXTonemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
-                { binding: 1, resource: resources.hdrBufferTexture.createView() }
+                { binding: 1, resource: pool.hdrTextureView },
+                { binding: 2, resource: pool.bloomMips.createView() }
             ]
         });
-    }
-
-    resizeCallback(resources: RenderInitializationResources) {
-        this._texturesBindGroup = this.createBindGroup(resources);
     }
 
     private setColorTexture(colorTex: GPUTextureView) {
@@ -79,6 +76,8 @@ export class RenderStagePFXToneMapping implements RenderStage {
 
     render(pool: RenderResourcePool) {
         
+        pool.commandEncoder.pushDebugGroup('PFX and Tonemapper');
+        this.updateBindGroup(pool);
         this.setColorTexture(pool.canvasTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
@@ -86,6 +85,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
         rpe.setBindGroup(PFXTonemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, this._texturesBindGroup);
         rpe.draw(6);
         rpe.end();
+        pool.commandEncoder.popDebugGroup();
     }
 
     free() {
