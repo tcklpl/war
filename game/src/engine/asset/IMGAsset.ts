@@ -2,28 +2,21 @@ import { Asset } from "./Asset";
 
 export class IMGAsset extends Asset {
 
-    constructor(name: string, url: string, private _imgElement: HTMLImageElement) {
+    constructor(name: string, url: string, private _blob: Blob) {
         super(name, url);
     }
 
     get imgElement() {
-        return this._imgElement;
+        return this._blob;
     }
 
-    get width() {
-        return this._imgElement.width;
-    }
-
-    get height() {
-        return this._imgElement.height;
-    }
-
-    async toBitmap() {
+    async toBitmap() {        
         return await createImageBitmap(
-            this._imgElement,
+            this._blob,
             {
                 colorSpaceConversion: 'none',
-                imageOrientation: 'flipY'
+                imageOrientation: 'flipY',
+                resizeQuality: 'high'
             }
         );
     }

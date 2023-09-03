@@ -7,7 +7,7 @@ export class BoardSkybox extends Skybox {
 
     async initialize() {
         const bitmap = await this._skyImage.toBitmap();
-        const equirecTex = await TextureUtils.createRGBA16fFromHDRBitmap(bitmap, this._skyImage.width, this._skyImage.height);
+        const equirecTex = await TextureUtils.createRGBA16fFromHDRBitmap(bitmap, bitmap.width, bitmap.height);
         this.skybox = await game.engine.utilRenderers.equirecToCubemap.renderEquirectangularMapToCubemap(equirecTex, 1024);
         this.convolutedSkybox = await game.engine.utilRenderers.cubemapConvolution.convoluteCubemap(this.skybox, 256);
         this.prefilteredSkybox = await game.engine.utilRenderers.cubemapPrefilter.prefilterCubemap(this.skybox);
