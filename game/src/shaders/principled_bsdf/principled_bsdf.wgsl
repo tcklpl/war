@@ -50,6 +50,12 @@ struct VSOutput {
     @location(4) model_bitangent: vec3f
 };
 
+// Outputs from the fragment shader
+struct FSOutput {
+    @location(0) hdr_color: vec4f,
+    @location(1) normal: vec4f
+};
+
 fn multiplyNTBModel(v: vec3f) -> vec3f {
     return normalize((vsUniqueUniforms.model * vec4f(v, 0.0)).xyz);
 }
@@ -496,7 +502,7 @@ fn evaluateMaterial(mat: MaterialInputs, cv: CommonVectors) -> vec4f {
 
 
 @fragment
-fn fragment(v: VSOutput) -> @location(0) vec4f {
+fn fragment(v: VSOutput) -> FSOutput {
 
     // getting parameters
     var normal = calculateNormal(v.uv, v.model_normal, v.model_tangent, v.model_bitangent);
@@ -531,5 +537,9 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
 
     var color = evaluateMaterial(mat, cv);
 
-    return color;
+    var output: FSOutput;
+    output.hdr_color = color;
+    output.normal = vec4f(normal, 1.0);
+
+    return output;
 }

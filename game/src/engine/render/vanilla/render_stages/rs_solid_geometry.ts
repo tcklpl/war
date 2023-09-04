@@ -69,7 +69,8 @@ export class RenderStageSolidGeometry implements RenderStage {
                 module: this._principledShader.module,
                 entryPoint: 'fragment',
                 targets: [
-                    { format: 'rgba16float' as GPUTextureFormat }
+                    { format: 'rgba16float' as GPUTextureFormat },
+                    { format: 'rgba8unorm' as GPUTextureFormat },
                 ]
             },
             primitive: {
@@ -88,10 +89,17 @@ export class RenderStageSolidGeometry implements RenderStage {
     private createRenderPassDescriptor() {
         return {
             colorAttachments: [
+                // HDR Output
                 {
                     // view: undefined, Assigned later
-                    // resolveTarget: undefined, Assigned Later
-                    clearValue: { r: 0.3, g: 0.3, b: 0.3, a: 1 },
+                    clearValue: { r: 0, g: 0, b: 0, a: 1 },
+                    loadOp: 'clear',
+                    storeOp: 'store'
+                },
+                // Normal Buffer Output
+                {
+                    // view: undefined, Assigned later
+                    clearValue: { r: 0, g: 0, b: 0, a: 0 },
                     loadOp: 'clear',
                     storeOp: 'store'
                 }
@@ -118,15 +126,16 @@ export class RenderStageSolidGeometry implements RenderStage {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthTex;
     }
 
-    private setColorTexture(colorTex: GPUTextureView) {
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = colorTex;
+    private setColorAttachment(index: number, view: GPUTextureView) {
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[index].view = view;
     }
 
     render(pool: RenderResourcePool) {
 
         pool.commandEncoder.pushDebugGroup('Solid Geometry Renderer');
         this.setDepthTexture(pool.depthTextureView);
-        this.setColorTexture(pool.hdrTextureView);
+        this.setColorAttachment(0, pool.hdrTextureView);
+        this.setColorAttachment(1, pool.normalTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {

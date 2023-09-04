@@ -29,6 +29,6 @@ Images / Skyboxes / Cubemaps | Browser-loadable images | Preferably AVIF, as it 
 Render Stage | Required | Description | Inputs | Outputs
 --|--|--|--|--
 Depth Map | Required | Renders the solid geometry into a depth texture | Solid geometry | Depth map
-Solid Geometry | Required | Renders the solid geometry using a PBR shader and the depth map from the previous step (setting depth as 'equals') | Depth map, Solid geometry, Material info (per primitive) and Scene info (skybox, lights etc.) | HDR Color map
+Solid Geometry | Required | Renders the solid geometry using a PBR shader and the depth map from the previous step (setting depth as 'equals') | Depth map, Solid geometry, Material info (per primitive) and Scene info (skybox, lights etc.) | HDR Color map, Normal map
 Skybox | Required | Renders the scene's skybox | Depth map, Scene's skybox | HDR Color map
 PFX and Tone Mapping | Required | Applies post effects (TODO) and tone maps the scene to the final color | HDR Color map | Screen color
