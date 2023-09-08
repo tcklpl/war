@@ -11,6 +11,7 @@
 */
 struct VSCommonUniforms {
     camera: mat4x4f,
+    camera_inverse: mat4x4f,
     projection: mat4x4f,
     camera_position: vec3f
 };
@@ -20,7 +21,8 @@ struct VSCommonUniforms {
     Vertex uniforms that are unique to each entity
 */
 struct VSUniqueUniforms {
-    model: mat4x4f
+    model: mat4x4f,
+    model_inverse: mat4x4f
 };
 @group(1) @binding(0) var<uniform> vsUniqueUniforms: VSUniqueUniforms;
 
@@ -30,7 +32,8 @@ fn vertex(@location(0) position: vec3f) -> @builtin(position) vec4f {
     // and precision issues start to occur if the calculation is different (even though the final result SHOULD be the same)
     // https://stackoverflow.com/questions/46914862/z-fighting-after-depth-prepass-on-gtx-980
     var worldPos = vsUniqueUniforms.model * vec4f(position, 1.0);
-    var pos = vsCommonUniforms.projection * vsCommonUniforms.camera * worldPos;
+    var viewPos  = vsCommonUniforms.camera * worldPos;
+    var pos = vsCommonUniforms.projection * viewPos;
     return pos;
 }
 

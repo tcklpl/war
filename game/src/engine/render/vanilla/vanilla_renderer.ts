@@ -40,8 +40,8 @@ export class VanillaRenderer extends Renderer {
             this._renderSettings.far
         );
         
-        // offset of 1 mat4 because the view matrix is also in there
-        device.queue.writeBuffer(this._renderResourcePool.viewProjBuffer, Mat4.byteSize, this._projectionMat.asF32Array);
+        // offset of 2 mat4s because the view matrices are also in there
+        device.queue.writeBuffer(this._renderResourcePool.viewProjBuffer, 2 * Mat4.byteSize, this._projectionMat.asF32Array);
     }
 
     private assertCanvasResolution() {
@@ -73,13 +73,14 @@ export class VanillaRenderer extends Renderer {
 
         this.assertCanvasResolution(); 
         const commandEncoder = device.createCommandEncoder();
-        this._renderResourcePool.prepareForFrame(scene, commandEncoder);
+        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._projectionMat);
         this._renderPipeline.render(this._renderResourcePool);
         device.queue.submit([commandEncoder.finish()]);
     }
 
     free(): void {
         this._renderResourcePool.free();
+        this._renderPipeline.free();
     }
 
 }
