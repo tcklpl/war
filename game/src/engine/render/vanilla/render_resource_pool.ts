@@ -50,6 +50,8 @@ export class RenderResourcePool {
         this._ssaoTextureBlurred?.destroy();
         this._positionTexture?.destroy();
 
+        const ssaoTextureSize = resolution.half;
+
         this._depthTexture = device.createTexture({
             size: [resolution.full.x, resolution.full.y],
             format: 'depth24plus',
@@ -80,14 +82,14 @@ export class RenderResourcePool {
 
         this._ssaoTextureNoisy = device.createTexture({
             label: 'render pool: ssao texture noisy',
-            size: [resolution.full.x, resolution.full.y],
+            size: [ssaoTextureSize.x, ssaoTextureSize.y],
             format: 'r16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this._ssaoTextureViewNoisy = this._ssaoTextureNoisy.createView();
 
         this._ssaoTextureBlurred = device.createTexture({
-            size: [resolution.full.x, resolution.full.y],
+            size: [ssaoTextureSize.x, ssaoTextureSize.y],
             format: 'r16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
