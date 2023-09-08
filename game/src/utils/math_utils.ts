@@ -17,4 +17,8 @@ export class MathUtils {
         return Math.ceil(value / dividend) * dividend;
     }
 
+    static lerp(a: number, b: number, factor: number) {
+        return a + factor * (b - a);
+    }
+
 }
