@@ -15,6 +15,7 @@ const MAX_DIRECTIONAL_LIGHTS = 2;
 */
 struct VSCommonUniforms {
     camera: mat4x4f,
+    camera_inverse: mat4x4f,
     projection: mat4x4f,
     camera_position: vec3f
 };
@@ -24,7 +25,8 @@ struct VSCommonUniforms {
     Vertex uniforms that are unique to each entity
 */
 struct VSUniqueUniforms {
-    model: mat4x4f
+    model: mat4x4f,
+    model_inverse: mat4x4f
 };
 @group(1) @binding(0) var<uniform> vsUniqueUniforms: VSUniqueUniforms;
 
@@ -42,18 +44,31 @@ struct VSInput {
     Values sent from the vertex shader to the fragment shader
 */
 struct VSOutput {
+    // NDC Vertex position and UV
     @builtin(position) position: vec4f,
     @location(0) uv: vec2f,
+
+    // Position, normal, tangent and bitangent in model-space
     @location(1) model_position: vec3f,
     @location(2) model_normal: vec3f,
     @location(3) model_tangent: vec3f,
-    @location(4) model_bitangent: vec3f
+    @location(4) model_bitangent: vec3f,
+
+    // Position in view-space. TEMPORARY, this position will be infered from the depth buffer
+    @location(5) view_position: vec3f,
+
+    // Matrix to transform normals into view-space. Used to write the normals to the normal buffer
+    // in order to calculate SSAO and SSR later.
+    @location(6) @interpolate(flat) normal_matrix_0: vec3f,
+    @location(7) @interpolate(flat) normal_matrix_1: vec3f,
+    @location(8) @interpolate(flat) normal_matrix_2: vec3f,
 };
 
 // Outputs from the fragment shader
 struct FSOutput {
     @location(0) hdr_color: vec4f,
-    @location(1) normal: vec4f
+    @location(1) position: vec4f,
+    @location(2) normal: vec4f
 };
 
 fn multiplyNTBModel(v: vec3f) -> vec3f {
@@ -66,10 +81,11 @@ fn vertex(v: VSInput) -> VSOutput {
 
     output.uv = v.uv;
     var worldPos = vsUniqueUniforms.model * vec4f(v.position, 1.0);
+    var viewPos  = vsCommonUniforms.camera * worldPos;
     output.model_position = vec3f(worldPos.xyz);
-    output.position = vsCommonUniforms.projection * vsCommonUniforms.camera * worldPos;
+    output.view_position = viewPos.xyz;
+    output.position = vsCommonUniforms.projection * viewPos;
 
-    var bitangent = normalize(cross(v.normal, v.tangent.xyz) * v.tangent.w);
     var N = multiplyNTBModel(v.normal);
     var T = multiplyNTBModel(v.tangent.xyz);
     T = normalize(T - dot(T, N) * N);
@@ -79,6 +95,23 @@ fn vertex(v: VSInput) -> VSOutput {
     output.model_tangent = T;
     output.model_bitangent = B;
 
+    /* 
+        Matrix to convert normals to view-space. Used to calculate SSAO and SSR later on.
+        The original calculation was:
+
+            transpose(invert(view * model))
+
+        But, as wgsl doesn't have any invert function, I changed it to:
+
+            transpose(model_inverse * view_inverse)
+
+        Which is mathematically equivalent plus we don't need to invert matrices on the shader. 
+    */
+    var normalMatrix = transpose(vsUniqueUniforms.model_inverse * vsCommonUniforms.camera_inverse);
+    // we split the matrix into 3 vec3f as for some reason I cannot pass a mat4x4f as a varying
+    output.normal_matrix_0 = normalMatrix[0].xyz;
+    output.normal_matrix_1 = normalMatrix[1].xyz;
+    output.normal_matrix_2 = normalMatrix[2].xyz;
 
     return output;
 }
@@ -166,10 +199,6 @@ struct DirectionalLights {
     Utility Functions
     --------------------------------------------------------------------------------------------------
 */
-
-fn saturate(v: f32) -> f32 {
-    return clamp(v, 0.0, 1.0);
-}
 
 fn calculateNormal(uv: vec2f, normal: vec3f, tangent: vec3f, bitangent: vec3f) -> vec3f {
     var normalSample = textureSample(matNormal, matSampler, uv);
@@ -506,7 +535,7 @@ fn fragment(v: VSOutput) -> FSOutput {
 
     // getting parameters
     var normal = calculateNormal(v.uv, v.model_normal, v.model_tangent, v.model_bitangent);
-    var viewVector = normalize((vsCommonUniforms.camera_position - v.model_position.xyz));
+    var viewVector = normalize(vsCommonUniforms.camera_position - v.model_position.xyz);
 
     var albedo = pow(textureSample(matAlbedo, matSampler, v.uv).rgb, vec3f(2.2));
     var metallic = textureSample(matMetallic, matSampler, v.uv).r;
@@ -537,9 +566,16 @@ fn fragment(v: VSOutput) -> FSOutput {
 
     var color = evaluateMaterial(mat, cv);
 
+    // reconstruct the normal matrix (transpose of inverse of model * view)
+    var normalMatrix = mat3x3f(v.normal_matrix_0, v.normal_matrix_1, v.normal_matrix_2);
+    // multiply the normal by the inverse of the model matrix to get the original vectors again
+    // as all the lighting calculation is done in model-space
+    var normalConversion = (vsUniqueUniforms.model_inverse * vec4f(normal, 0.0)).xyz;
+
     var output: FSOutput;
     output.hdr_color = color;
-    output.normal = vec4f(normal, 1.0);
+    output.position = vec4f(v.view_position, 1.0); // TODO: get this from the depth map
+    output.normal = vec4f(normalMatrix * normalConversion, 0.0);
 
     return output;
 }
