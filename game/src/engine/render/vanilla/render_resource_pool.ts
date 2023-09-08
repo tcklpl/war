@@ -8,6 +8,7 @@ export class RenderResourcePool {
 
     private _commandEncoder!: GPUCommandEncoder;
     private _scene!: Scene;
+    private _projectionMatrix!: Mat4;
 
     private _depthTexture!: GPUTexture;
     private _depthTextureView!: GPUTextureView;
@@ -21,12 +22,21 @@ export class RenderResourcePool {
     private _normalTexture!: GPUTexture;
     private _normalTextureView!: GPUTextureView;
 
+    private _positionTexture!: GPUTexture;
+    private _positionTextureView!: GPUTextureView;
+
+    private _ssaoTextureNoisy!: GPUTexture;
+    private _ssaoTextureViewNoisy!: GPUTextureView;
+
+    private _ssaoTextureBlurred!: GPUTexture;
+    private _ssaoTextureViewBlurred!: GPUTextureView;
+
     private _canvasTextureView!: GPUTextureView;
     private _viewProjBuffer!: GPUBuffer;
 
     constructor() {
         // buffer has 2 mat4 (view and projection) and 1 vec3 (camera position)
-        const viewProjByteSize = Mat4.byteSize * 2 + Vec3.byteSize;
+        const viewProjByteSize = Mat4.byteSize * 3 + Vec3.byteSize;
         this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
     }
 
@@ -36,11 +46,14 @@ export class RenderResourcePool {
         this._hdrTexture?.destroy();
         this._bloomMips?.destroy();
         this._normalTexture?.destroy();
+        this._ssaoTextureNoisy?.destroy();
+        this._ssaoTextureBlurred?.destroy();
+        this._positionTexture?.destroy();
 
         this._depthTexture = device.createTexture({
             size: [resolution.full.x, resolution.full.y],
             format: 'depth24plus',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this._depthTextureView = this._depthTexture.createView();
 
@@ -60,24 +73,48 @@ export class RenderResourcePool {
 
         this._normalTexture = device.createTexture({
             size: [resolution.full.x, resolution.full.y],
-            format: 'rgba8unorm',
+            format: 'rgba16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this._normalTextureView = this._normalTexture.createView();
 
+        this._ssaoTextureNoisy = device.createTexture({
+            label: 'render pool: ssao texture noisy',
+            size: [resolution.full.x, resolution.full.y],
+            format: 'r16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
+        this._ssaoTextureViewNoisy = this._ssaoTextureNoisy.createView();
+
+        this._ssaoTextureBlurred = device.createTexture({
+            size: [resolution.full.x, resolution.full.y],
+            format: 'r16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
+        this._ssaoTextureViewBlurred = this._ssaoTextureBlurred.createView();
+
+        this._positionTexture = device.createTexture({
+            size: [resolution.full.x, resolution.full.y],
+            format: 'rgba16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
+        this._positionTextureView = this._positionTexture.createView();
+
     }
 
-    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder) {
+    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projectionMatrix: Mat4) {
         this._scene = scene;
         this._commandEncoder = commandEncoder;
         this._canvasTextureView = gpuCtx.getCurrentTexture().createView();
+        this._projectionMatrix = projectionMatrix;
 
         const camera = scene.activeCamera;
         if (!camera) return;
 
         // write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
         device.queue.writeBuffer(this._viewProjBuffer, 0, camera.viewMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 2 * Mat4.byteSize, camera.position.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 1 * Mat4.byteSize, camera.cameraMatrix.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 3 * Mat4.byteSize, camera.position.asF32Array);
     }
 
     free() {
@@ -129,6 +166,34 @@ export class RenderResourcePool {
 
     get normalTextureView() {
         return this._normalTextureView;
+    }
+
+    get ssaoTextureNoisy() {
+        return this._ssaoTextureNoisy;
+    }
+
+    get ssaoTextureViewNoisy() {
+        return this._ssaoTextureViewNoisy;
+    }
+
+    get ssaoTextureBlurred() {
+        return this._ssaoTextureBlurred;
+    }
+
+    get ssaoTextureViewBlurred() {
+        return this._ssaoTextureViewBlurred;
+    }
+
+    get positionTexture() {
+        return this._positionTexture;
+    }
+
+    get positionTextureView() {
+        return this._positionTextureView;
+    }
+
+    get projectionMatrix() {
+        return this._projectionMatrix;
     }
 
 }
