@@ -56,7 +56,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var bloomColor = textureSample(pfx_bloom, pfx_sampler, v.uv).rgb;
     var ssao = textureSample(pfx_ssao, pfx_sampler, v.uv).r;
 
-    var mixedColor = mix(hdrColor * ssao * ssao, bloomColor, BLOOM_STRENGTH);
+    var mixedColor = mix(hdrColor * ssao, bloomColor, BLOOM_STRENGTH);
     var gamma = 2.2;
     var exposure = 1.0; // TODO: pass exposure as uniform
 
