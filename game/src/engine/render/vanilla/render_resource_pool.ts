@@ -73,7 +73,7 @@ export class RenderResourcePool {
 
         this._normalTexture = device.createTexture({
             size: [resolution.full.x, resolution.full.y],
-            format: 'rgba16float',
+            format: 'rgba8unorm',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this._normalTextureView = this._normalTexture.createView();

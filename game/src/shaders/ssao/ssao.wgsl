@@ -73,7 +73,7 @@ fn fragment(v: VSOutput) -> @location(0) f32 {
 
     // get normal from the texture
     var normal = textureSample(normal_texture, depth_sampler, v.uv).xyz;
-    normal = normalize(normal);
+    normal = normalize(normal * 2.0 - 1.0); // map normals from [0, 1] to [-1, 1] as they came from a rgba8 texture
 
     // get random vector from the texture
     var screenSize = vec2f(textureDimensions(pos_texture));

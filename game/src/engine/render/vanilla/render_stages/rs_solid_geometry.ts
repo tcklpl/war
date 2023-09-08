@@ -71,7 +71,7 @@ export class RenderStageSolidGeometry implements RenderStage {
                 targets: [
                     { format: 'rgba16float' as GPUTextureFormat },
                     { format: 'rgba16float' as GPUTextureFormat },
-                    { format: 'rgba16float' as GPUTextureFormat },
+                    { format: 'rgba8unorm' as GPUTextureFormat },
                 ]
             },
             primitive: {

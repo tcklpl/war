@@ -575,7 +575,7 @@ fn fragment(v: VSOutput) -> FSOutput {
     var output: FSOutput;
     output.hdr_color = color;
     output.position = vec4f(v.view_position, 1.0); // TODO: get this from the depth map
-    output.normal = vec4f(normalMatrix * normalConversion, 0.0);
+    output.normal = vec4f(normalMatrix * normalConversion, 0.0) * 0.5 + 0.5; // map normals from [-1, 1] to [0, 1] to save in a rgba8 texture
 
     return output;
 }
