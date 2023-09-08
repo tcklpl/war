@@ -66,7 +66,6 @@ export class RenderStageBloom implements RenderStage {
             colorAttachments: [
                 {
                     // view: undefined, Assigned later
-                    // resolveTarget: undefined, Assigned Later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'load',
                     storeOp: 'store'
