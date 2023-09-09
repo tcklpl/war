@@ -8,6 +8,7 @@ import { RenderStageSolidGeometry } from "./render_stages/rs_solid_geometry";
 import { RenderStageSkybox } from "./render_stages/rs_skybox";
 import { RenderStagePFXToneMapping } from "./render_stages/rs_pfx_tone_mapping";
 import { RenderStageBloom } from "./render_stages/rs_bloom";
+import { RenderStageSSAO } from "./render_stages/rs_ssao";
 
 export class VanillaRenderPipeline {
 
@@ -15,6 +16,7 @@ export class VanillaRenderPipeline {
     private _rsLights = new RenderStageLights();
     private _rsSolidGeometry = new RenderStageSolidGeometry();
     private _rsSkybox = new RenderStageSkybox();
+    private _rsSSAO = new RenderStageSSAO();
     private _rsBloom = new RenderStageBloom();
 
     private _rs_pfx_tonemap = new RenderStagePFXToneMapping();
@@ -27,6 +29,7 @@ export class VanillaRenderPipeline {
             this._rsLights,
             this._rsSolidGeometry,
             this._rsSkybox,
+            this._rsSSAO,
             this._rsBloom,
             this._rs_pfx_tonemap
         ];

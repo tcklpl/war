@@ -11,6 +11,7 @@
 */
 struct VSCommonUniforms {
     camera: mat4x4f,
+    camera_inverse: mat4x4f,
     projection: mat4x4f
 };
 @group(0) @binding(0) var<uniform> vsCommonUniforms: VSCommonUniforms;
