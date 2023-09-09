@@ -70,7 +70,6 @@ export class RenderStageSolidGeometry implements RenderStage {
                 entryPoint: 'fragment',
                 targets: [
                     { format: 'rgba16float' as GPUTextureFormat },
-                    { format: 'rgba16float' as GPUTextureFormat },
                     { format: 'rgba8unorm' as GPUTextureFormat },
                 ]
             },
@@ -94,13 +93,6 @@ export class RenderStageSolidGeometry implements RenderStage {
                 {
                     // view: undefined, Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
-                    loadOp: 'clear',
-                    storeOp: 'store'
-                },
-                // Position Buffer Output
-                {
-                    // view: undefined, Assigned later
-                    clearValue: { r: 0, g: 0, b: 1000, a: 0 },
                     loadOp: 'clear',
                     storeOp: 'store'
                 },
@@ -143,8 +135,7 @@ export class RenderStageSolidGeometry implements RenderStage {
         pool.commandEncoder.pushDebugGroup('Solid Geometry Renderer');
         this.setDepthTexture(pool.depthTextureView);
         this.setColorAttachment(0, pool.hdrTextureView);
-        this.setColorAttachment(1, pool.positionTextureView);
-        this.setColorAttachment(2, pool.normalTextureView);
+        this.setColorAttachment(1, pool.normalTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {

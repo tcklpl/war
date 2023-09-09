@@ -36,7 +36,7 @@ export class RenderStageSSAO implements RenderStage {
 
     private _ssaoShader!: SSAOShader;
     private _ssaoPipeline!: GPURenderPipeline;
-    private _ssaoOptionsBuffer = BufferUtils.createEmptyBuffer(Mat4.byteSize + 4, GPUBufferUsage.COPY_DST | GPUBufferUsage.UNIFORM);
+    private _ssaoOptionsBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize + 4, GPUBufferUsage.COPY_DST | GPUBufferUsage.UNIFORM);
     private _ssaoOptKernelBindGroup!: GPUBindGroup;
 
     private _ssaoBlurShader!: SSAOBlurShader;
@@ -119,14 +119,16 @@ export class RenderStageSSAO implements RenderStage {
 
                 0   4   8   B   F
             000 ░░  proj mat  ░░   [mat4x4f "projection matrix" (64 bytes)]
-            040 ░░░░------------   [f32 "bias" (4 bytes)] + [padding (12 bytes)]
+            040 ░ inv proj mat ░   [mat4x4f "inverse projection matrix" (64 bytes)]
+            080 ░░░░░░░░--------   [f32 "bias" (4 bytes)] + [f32 "tan half fov" (4 bytes)] + [padding (8 bytes)]
 
             -: padding
             ░: f32
         */
 
         device.queue.writeBuffer(this._ssaoOptionsBuffer, 0x00, pool.projectionMatrix.asF32Array);
-        device.queue.writeBuffer(this._ssaoOptionsBuffer, Mat4.byteSize, new Float32Array(this._bias));
+        device.queue.writeBuffer(this._ssaoOptionsBuffer, 1 * Mat4.byteSize, pool.inverseProjectionMatrix.asF32Array);
+        device.queue.writeBuffer(this._ssaoOptionsBuffer, 2 * Mat4.byteSize, new Float32Array([this._bias]));
     }
 
     private async buildNoiseMap() {
@@ -204,7 +206,7 @@ export class RenderStageSSAO implements RenderStage {
                 { binding: 0, resource: this._samplerRepeat },
                 { binding: 1, resource: this._samplerClamp },
                 { binding: 2, resource: this._noiseTexture.createView() },
-                { binding: 3, resource: pool.positionTextureView },
+                { binding: 3, resource: pool.depthTextureView },
                 { binding: 4, resource: pool.normalTextureView },
             ]
         })

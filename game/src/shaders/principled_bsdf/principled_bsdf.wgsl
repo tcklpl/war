@@ -67,8 +67,7 @@ struct VSOutput {
 // Outputs from the fragment shader
 struct FSOutput {
     @location(0) hdr_color: vec4f,
-    @location(1) position: vec4f,
-    @location(2) normal: vec4f
+    @location(1) normal: vec4f
 };
 
 fn multiplyNTBModel(v: vec3f) -> vec3f {
@@ -574,8 +573,7 @@ fn fragment(v: VSOutput) -> FSOutput {
 
     var output: FSOutput;
     output.hdr_color = color;
-    output.position = vec4f(v.view_position, 1.0); // TODO: get this from the depth map
-    output.normal = vec4f(normalMatrix * normalConversion, 0.0) * 0.5 + 0.5; // map normals from [-1, 1] to [0, 1] to save in a rgba8 texture
+    output.normal = vec4f((normalMatrix * normalConversion) * 0.5 + 0.5, 1.0); // map normals from [-1, 1] to [0, 1] to save in a rgba8 texture
 
     return output;
 }

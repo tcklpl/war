@@ -9,6 +9,7 @@ export class RenderResourcePool {
     private _commandEncoder!: GPUCommandEncoder;
     private _scene!: Scene;
     private _projectionMatrix!: Mat4;
+    private _inverseProjectionMatrix!: Mat4;
 
     private _depthTexture!: GPUTexture;
     private _depthTextureView!: GPUTextureView;
@@ -21,9 +22,6 @@ export class RenderResourcePool {
 
     private _normalTexture!: GPUTexture;
     private _normalTextureView!: GPUTextureView;
-
-    private _positionTexture!: GPUTexture;
-    private _positionTextureView!: GPUTextureView;
 
     private _ssaoTextureNoisy!: GPUTexture;
     private _ssaoTextureViewNoisy!: GPUTextureView;
@@ -48,7 +46,6 @@ export class RenderResourcePool {
         this._normalTexture?.destroy();
         this._ssaoTextureNoisy?.destroy();
         this._ssaoTextureBlurred?.destroy();
-        this._positionTexture?.destroy();
 
         const ssaoTextureSize = resolution.half;
 
@@ -95,13 +92,6 @@ export class RenderResourcePool {
         });
         this._ssaoTextureViewBlurred = this._ssaoTextureBlurred.createView();
 
-        this._positionTexture = device.createTexture({
-            size: [resolution.full.x, resolution.full.y],
-            format: 'rgba16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
-        this._positionTextureView = this._positionTexture.createView();
-
     }
 
     prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projectionMatrix: Mat4) {
@@ -109,6 +99,7 @@ export class RenderResourcePool {
         this._commandEncoder = commandEncoder;
         this._canvasTextureView = gpuCtx.getCurrentTexture().createView();
         this._projectionMatrix = projectionMatrix;
+        this._inverseProjectionMatrix = projectionMatrix.inverse();
 
         const camera = scene.activeCamera;
         if (!camera) return;
@@ -186,16 +177,12 @@ export class RenderResourcePool {
         return this._ssaoTextureViewBlurred;
     }
 
-    get positionTexture() {
-        return this._positionTexture;
-    }
-
-    get positionTextureView() {
-        return this._positionTextureView;
-    }
-
     get projectionMatrix() {
         return this._projectionMatrix;
+    }
+
+    get inverseProjectionMatrix() {
+        return this._inverseProjectionMatrix;
     }
 
 }
