@@ -1,6 +1,6 @@
 import { Engine } from "../engine/engine";
 import { GameBoard } from "./board/board";
-import { GameIO } from "./io/io";
+import { GameIO } from "../engine/io/io";
 import { GameLoader } from "./loader/game_loader";
 
 export class WarGame {
