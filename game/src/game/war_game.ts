@@ -1,13 +1,11 @@
 import { Engine } from "../engine/engine";
 import { GameBoard } from "./board/board";
-import { GameIO } from "../engine/io/io";
 import { GameLoader } from "./loader/game_loader";
 
 export class WarGame {
 
     private _loader = new GameLoader();
     private _engine = new Engine();
-    private _io = new GameIO();
 
     private _gameBoard!: GameBoard;
 
@@ -36,10 +34,6 @@ export class WarGame {
 
     get engine() {
         return this._engine;
-    }
-
-    get io() {
-        return this._io;
     }
 
 }
