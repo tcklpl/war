@@ -3,6 +3,11 @@ import { LoadStage } from "./load_stage";
 export class GameLoader {
 
     private _loadStage = LoadStage.STARTING;
+    private _loadListeners: ((ls: LoadStage) => void)[] = [];
+
+    onLoadStageChange(cb: (ls: LoadStage) => void) {
+        this._loadListeners.push(cb);
+    }
 
     async load() {
         this.loadStage = LoadStage.INITIALIZING_ENGINE;
@@ -31,6 +36,7 @@ export class GameLoader {
 
     private set loadStage(s: LoadStage) {
         this._loadStage = s;
+        this._loadListeners.forEach(ll => ll(this._loadStage));
     }
 
     get loadStage() {
