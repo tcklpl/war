@@ -9,6 +9,7 @@ import { RenderStageSkybox } from "./render_stages/rs_skybox";
 import { RenderStagePFXToneMapping } from "./render_stages/rs_pfx_tone_mapping";
 import { RenderStageBloom } from "./render_stages/rs_bloom";
 import { RenderStageSSAO } from "./render_stages/rs_ssao";
+import { RenderStagePicking } from "./render_stages/rs_picking";
 
 export class VanillaRenderPipeline {
 
@@ -18,6 +19,7 @@ export class VanillaRenderPipeline {
     private _rsSkybox = new RenderStageSkybox();
     private _rsSSAO = new RenderStageSSAO();
     private _rsBloom = new RenderStageBloom();
+    private _rsPicking = new RenderStagePicking();
 
     private _rs_pfx_tonemap = new RenderStagePFXToneMapping();
 
@@ -31,7 +33,8 @@ export class VanillaRenderPipeline {
             this._rsSkybox,
             this._rsSSAO,
             this._rsBloom,
-            this._rs_pfx_tonemap
+            this._rs_pfx_tonemap,
+            this._rsPicking
         ];
     }
 
@@ -51,10 +54,6 @@ export class VanillaRenderPipeline {
     free() {
         this._currentPipeline.forEach(stage => stage.free());
         this._currentPipeline = [];
-    }
-
-    get pbrStage() {
-        return this._rsSolidGeometry;
     }
 
 }

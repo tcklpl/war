@@ -9,11 +9,11 @@ export function keyboardListener<T extends Constructor>(base: T): Constructor<IK
     return class extends base {
 
         protected onKeyDown(key: string, fn: () => void) {
-            game.io.keyboard.registerKeyListener(key, 'down', fn);
+            game.engine.managers.io.keyboard.registerKeyListener(key, 'down', fn);
         }
 
         protected onKeyUp(key: string, fn: () => void) {
-            game.io.keyboard.registerKeyListener(key, 'up', fn);
+            game.engine.managers.io.keyboard.registerKeyListener(key, 'up', fn);
         }
 
     }
