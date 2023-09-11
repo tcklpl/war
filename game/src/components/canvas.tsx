@@ -3,21 +3,27 @@ import { InvalidCanvasError } from "../errors/engine/initialization/invalid_canv
 import { WebGPUUnsupportedError } from "../errors/engine/initialization/webgpu_unsupported";
 import { WarGame } from "../game/war_game";
 import { useTranslation } from "react-i18next";
+import { useGame } from "../hooks/use_game";
 
 const WarCanvas: React.FC = () => {
 
     const ref = useRef<HTMLCanvasElement>(null);
     const glRef = useRef<HTMLCanvasElement>(null);
     const { t } = useTranslation([ "engine" ]);
+    const { setGameInstance } = useGame();
 
     useEffect(() => {
-        getContext().then(() => WarGame.initialize());
+        getContext().then(() => {
+            const gameInstance = WarGame.initialize();
+            setGameInstance(gameInstance);
+        });
 
         // to run when unmounting the component
         return () => {
             game.kill();
+            setGameInstance(undefined);
         }
-    }, []);
+    }, [ setGameInstance ]);
 
     const getContext = async () => {
         if (!ref.current || !glRef.current) throw new InvalidCanvasError(t("engine:invalid_canvas"));

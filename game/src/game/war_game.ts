@@ -12,6 +12,7 @@ export class WarGame {
     static initialize() {
         globalThis.game = new WarGame();
         game.loader.load();
+        return game;
     }
 
     async initializeGame() {
