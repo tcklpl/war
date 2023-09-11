@@ -1,7 +1,9 @@
 import { Entity } from "../../engine/data/entity/entity";
+import { interactable } from "../../engine/data/traits/interactable";
 import { MissingAssetError } from "../../errors/engine/asset/missing_asset";
 
-export class BoardCountry extends Entity {
+const BoardCountryBase = interactable(Entity);
+export class BoardCountry extends BoardCountryBase {
 
     constructor(name: string, private _gltfName: string) {
         
@@ -15,6 +17,10 @@ export class BoardCountry extends Entity {
         this.translation = meshNode.translation;
         this.rotationQuaternion = meshNode.rotation;
         this.scale = meshNode.scale;
+    }
+
+    onMouseHover(): void {
+        console.log(this.name);
     }
 
 }
