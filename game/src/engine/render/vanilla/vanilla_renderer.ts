@@ -1,47 +1,28 @@
 import { Renderer } from "../renderer";
-import { Mat4 } from "../../data/mat/mat4";
-import { MathUtils } from "../../../utils/math_utils";
 import { VanillaRenderPipeline } from "./vanilla_render_pipeline";
 import { RenderResourcePool } from "./render_resource_pool";
-import { Resolution } from "../../resolution";
 import { Vec2 } from "../../data/vec/vec2";
+import { RenderProjection } from "./render_projection";
+import { BufferUtils } from "../../../utils/buffer_utils";
 
 export class VanillaRenderer extends Renderer {
 
-    private _projectionMat!: Mat4;
     private _presentationFormat!: GPUTextureFormat;
+    private _renderProjection = new RenderProjection();
     private _renderPipeline = new VanillaRenderPipeline();
     private _renderResourcePool = new RenderResourcePool();
-
-    private _renderSettings = {
-        near: 0.1,
-        far: 20,
-        resolution: new Resolution(new Vec2(1920, 1080)),
-        fovY: 60
-    };
+    private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
 
     async initialize() {
         this._presentationFormat = navigator.gpu.getPreferredCanvasFormat();
-        this._renderResourcePool.resizeBuffers(this._renderSettings.resolution);
-        this.buildProjectionMatrix();
+        this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
 
         this._renderPipeline.buildPipeline();
         await this._renderPipeline.initialize({
             canvasPreferredTextureFormat: this._presentationFormat,
-            viewProjBuffer: this._renderResourcePool.viewProjBuffer
+            viewProjBuffer: this._renderResourcePool.viewProjBuffer,
+            pickingBuffer: this._pickingBuffer
         });
-    }
-
-    private buildProjectionMatrix() {
-        this._projectionMat = Mat4.perspective(
-            MathUtils.degToRad(this._renderSettings.fovY),
-            this._renderSettings.resolution.aspectRatio,
-            this._renderSettings.near, 
-            this._renderSettings.far
-        );
-        
-        // offset of 2 mat4s because the view matrices are also in there
-        device.queue.writeBuffer(this._renderResourcePool.viewProjBuffer, 2 * Mat4.byteSize, this._projectionMat.asF32Array);
     }
 
     private assertCanvasResolution() {
@@ -53,13 +34,19 @@ export class VanillaRenderer extends Renderer {
 
         gameCanvas.width = width;
         gameCanvas.height = height;
-        this._renderSettings.resolution.full = new Vec2(width, height);
+        this._renderProjection.updateResolution(new Vec2(width, height));
+        this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
+    }
 
-        this._renderResourcePool.resizeBuffers(this._renderSettings.resolution);
-        this.buildProjectionMatrix();
+    private async updatePicking() {
+        await this._pickingBuffer.mapAsync(GPUMapMode.READ, 0, 4);
+        const idArray = new Uint32Array(this._pickingBuffer.getMappedRange(0, 4));
+        const id = idArray[0];
+        this._pickingBuffer.unmap();
+        game.engine.managers.io.mouseInteractionManager.notifyFramePickingID(id);
     }
     
-    render(): void {
+    async render() {
         const scene = game.engine.managers.scene.activeScene;
         if (!scene) {
             console.warn('Trying to render with no active scene');
@@ -73,12 +60,15 @@ export class VanillaRenderer extends Renderer {
 
         this.assertCanvasResolution(); 
         const commandEncoder = device.createCommandEncoder();
-        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._projectionMat);
+        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._renderProjection);
         this._renderPipeline.render(this._renderResourcePool);
         device.queue.submit([commandEncoder.finish()]);
+
+        await this.updatePicking();
+        
     }
 
-    free(): void {
+    free() {
         this._renderResourcePool.free();
         this._renderPipeline.free();
     }

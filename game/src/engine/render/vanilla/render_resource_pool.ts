@@ -3,6 +3,7 @@ import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
 import { Vec3 } from "../../data/vec/vec3";
 import { Resolution } from "../../resolution";
+import { RenderProjection } from "./render_projection";
 
 export class RenderResourcePool {
 
@@ -10,6 +11,7 @@ export class RenderResourcePool {
     private _scene!: Scene;
     private _projectionMatrix!: Mat4;
     private _inverseProjectionMatrix!: Mat4;
+    private _renderProjection!: RenderProjection;
 
     private _depthTexture!: GPUTexture;
     private _depthTextureView!: GPUTextureView;
@@ -94,12 +96,13 @@ export class RenderResourcePool {
 
     }
 
-    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projectionMatrix: Mat4) {
+    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection) {
         this._scene = scene;
         this._commandEncoder = commandEncoder;
         this._canvasTextureView = gpuCtx.getCurrentTexture().createView();
-        this._projectionMatrix = projectionMatrix;
-        this._inverseProjectionMatrix = projectionMatrix.inverse();
+        this._projectionMatrix = projection.projectionMatrix;
+        this._inverseProjectionMatrix = projection.inverseProjectionMatrix;
+        this._renderProjection = projection;
 
         const camera = scene.activeCamera;
         if (!camera) return;
@@ -107,6 +110,7 @@ export class RenderResourcePool {
         // write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
         device.queue.writeBuffer(this._viewProjBuffer, 0, camera.viewMatrix.asF32Array);
         device.queue.writeBuffer(this._viewProjBuffer, 1 * Mat4.byteSize, camera.cameraMatrix.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 2 * Mat4.byteSize, this.projectionMatrix.asF32Array);
         device.queue.writeBuffer(this._viewProjBuffer, 3 * Mat4.byteSize, camera.position.asF32Array);
     }
 
@@ -143,6 +147,14 @@ export class RenderResourcePool {
     
     get commandEncoder() {
         return this._commandEncoder;
+    }
+
+    get renderProjection() {
+        return this._renderProjection;
+    }
+
+    get resolution() {
+        return this._renderProjection.resolution;
     }
 
     get bloomMips() {
