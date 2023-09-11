@@ -1,11 +1,11 @@
+import { Vec2 } from "../data/vec/vec2";
 import { IMouseListener } from "./mouse_listener";
 
 export class Mouse {
     
     private _listeners: IMouseListener[] = [];
 
-    private _x: number = -1;
-    private _y: number = -1;
+    private _position = new Vec2(0, 0);
 
     private _scrollStopTimer: number = -1;
     private _mouseStopTimer: number = -1;
@@ -23,12 +23,12 @@ export class Mouse {
         // Movement
         gameCanvas.addEventListener('mousemove', e => {
             const rect = gameCanvas.getBoundingClientRect();
-            this._x = e.clientX - rect.left;
-            this._y = e.clientY - rect.top;
+            this._position.x = e.clientX - rect.left;
+            this._position.y = e.clientY - rect.top;
 
             this._listeners.forEach(l => {
-                if (l.onMouseMove) l.onMouseMove(this._x, this._y);
-                if (l.onMouseMoveOffset) l.onMouseMoveOffset(e.movementX, e.movementY);
+                if (l.onMouseMove) l.onMouseMove(this._position);
+                if (l.onMouseMoveOffset) l.onMouseMoveOffset(new Vec2(e.movementX, e.movementY));
             });
 
             if (this._mouseStopTimer !== -1) clearTimeout(this._mouseStopTimer);
@@ -53,7 +53,6 @@ export class Mouse {
         gameCanvas.addEventListener('wheel', e => {
             this._listeners.forEach(l => {
                 if (l.onMouseScroll) l.onMouseScroll(e.deltaY);
-                if (l.onMouseMoveOffset) l.onMouseMoveOffset(e.movementX, e.movementY);
             });
 
             if (this._scrollStopTimer !== -1) clearTimeout(this._scrollStopTimer);
@@ -73,6 +72,10 @@ export class Mouse {
         this._listeners.forEach(l => {
             if (l.onMouseScrollStop) l.onMouseScrollStop();
         });
+    }
+
+    get position() {
+        return this._position;
     }
 
 }

@@ -1,5 +1,6 @@
 import { LookAtCamera } from "../../engine/data/camera/lookat_camera";
 import { frameListener } from "../../engine/data/traits/frame_listener";
+import { Vec2 } from "../../engine/data/vec/vec2";
 import { Vec3 } from "../../engine/data/vec/vec3";
 import { keyboardListener } from "../../engine/io/keyboard_listener";
 import { mouseListener } from "../../engine/io/mouse_listener";
@@ -78,9 +79,9 @@ export class BoardCamera extends BoardCameraBase {
         this._deltaY = 0;
     }
 
-    onMouseMoveOffset(x: number, y: number): void {
-        this._tDeltaX = MathUtils.clamp(-0.1, 0.1, x);
-        this._tDeltaZ = MathUtils.clamp(-0.1, 0.1, y);
+    onMouseMoveOffset(offset: Vec2): void {
+        this._tDeltaX = MathUtils.clamp(-0.1, 0.1, offset.x);
+        this._tDeltaZ = MathUtils.clamp(-0.1, 0.1, offset.y);
     }
 
     onMouseStop(): void {
