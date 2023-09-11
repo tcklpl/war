@@ -34,3 +34,4 @@ Skybox | Required | Renders the scene's skybox | Depth map, Scene's skybox | HDR
 SSAO | Optional | Calculates SSAO | Depth map, Normal map, Random noise map | SSAO (r16f) textures: noisy and blurred
 Bloom | Optional | Calculates bloom from the HDR color map | HDR Color map | Bloom texture
 PFX and Tone Mapping | Required | Applies post effects (TODO) and tone maps the scene to the final color | HDR Color map, SSAO blurred texture, Bloom texture | Screen color
+Picking | Required | Renders 1x1 pixel below the mouse to know if the user is hovering any interactable object | Solid geometry | 1x1 `r32uint` texture
