@@ -10,8 +10,10 @@ const BoardCameraBase = keyboardListener(mouseListener(frameListener(LookAtCamer
 
 export class BoardCamera extends BoardCameraBase {
 
-    private _moveSpeed = 50;
-    private _step = 0.001;
+    private _moveSpeed = 5;
+    private _moveSpeedSlow = 5;
+    private _moveSpeedFast = 10;
+
     private _deltaX = 0;
     private _deltaY = 0;
     private _deltaZ = 0;
@@ -50,15 +52,15 @@ export class BoardCamera extends BoardCameraBase {
         this.onKeyDown('a', () => this.deltaX = this.deltaX - 1);
         this.onKeyUp('a', () => this.deltaX = this.deltaX + 1);
 
-        this.onKeyDown('shift', () => this._moveSpeed = 100);
-        this.onKeyUp('shift', () => this._moveSpeed = 50);
+        this.onKeyDown('shift', () => this._moveSpeed = this._moveSpeedFast);
+        this.onKeyUp('shift', () => this._moveSpeed = this._moveSpeedSlow);
     }
     
-    onEachFrame(): void {
+    onEachFrame(deltaTime: number): void {
         if (this._deltaX === 0 && this._deltaY === 0 && this._deltaZ === 0) return;
-        this.position.x += this._deltaX * this._moveSpeed * this._step;
-        this.position.y += this._deltaY * this._moveSpeed * this._step;
-        this.position.z += this._deltaZ * this._moveSpeed * this._step;
+        this.position.x += this._deltaX * this._moveSpeed * deltaTime;
+        this.position.y += this._deltaY * this._moveSpeed * deltaTime;
+        this.position.z += this._deltaZ * this._moveSpeed * deltaTime;
 
         this.position = Vec3.clamp(this._lBound, this._hBound, this.position);
 

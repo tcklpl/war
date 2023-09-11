@@ -13,6 +13,7 @@ import { CubemapPrefilterRenderer } from "./render/cubemap_prefilter/cubemap_pre
 import { EquirectangularToCubemapRenderer } from "./render/equirec_to_cubemap/equirec_to_cubemap_renderer";
 import { Renderer } from "./render/renderer";
 import { VanillaRenderer } from "./render/vanilla/vanilla_renderer";
+import { Time } from "./time";
 
 export class Engine {
     
@@ -42,18 +43,36 @@ export class Engine {
 
     private _brdfLUT!: GPUTexture;
 
+    // time
+    private _lastFrameTime = 0;
+    private _lastFullSecondTime = 0;
+    private _framesRenderedSinceLastSecond = 0;
+
     constructor() {
-        this.renderLoop();
+        requestAnimationFrame(time => this.renderLoop(time));
     }
 
-    private async renderLoop() {
+    private async renderLoop(time: number) {
+
+        const msDiff = time - this._lastFrameTime;
+        const deltaTime = msDiff / 1000;
+        Time.DeltaTime = deltaTime;
+        this._lastFrameTime = time;
+        if (time - this._lastFullSecondTime >= 1000) {
+            this._lastFullSecondTime = time;
+            Time.FPS = this._framesRenderedSinceLastSecond;
+            this._framesRenderedSinceLastSecond = 0;
+        }
+
         if (this._shouldRender) {
             this._frameListeners.forEach(fl => {
-                if (fl.onEachFrame) fl.onEachFrame();
+                if (fl.onEachFrame) fl.onEachFrame(deltaTime);
             });
             await this._renderer.render();
         }
-        requestAnimationFrame(() => this.renderLoop());
+
+        this._framesRenderedSinceLastSecond++;
+        requestAnimationFrame(time => this.renderLoop(time));
     }
 
     pauseRender() {
@@ -93,6 +112,8 @@ export class Engine {
         this.utilRenderers.cubemapConvolution.free();
         this.utilRenderers.cubemapPrefilter.free();
         this.utilRenderers.BRDF_LUT.free();
+
+        this._brdfLUT?.destroy();
 
         this._renderer.free();
     }

@@ -2,7 +2,7 @@ import { Constructor } from "typeUtils";
 
 export interface IFrameListener {
     
-    onEachFrame?(): void;
+    onEachFrame?(deltaTime: number): void;
 }
 
 export function frameListener<T extends Constructor>(base: T): Constructor<IFrameListener> & T {
