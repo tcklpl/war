@@ -26,7 +26,8 @@ struct VSCommonUniforms {
 */
 struct VSUniqueUniforms {
     model: mat4x4f,
-    model_inverse: mat4x4f
+    model_inverse: mat4x4f,
+    id: u32
 };
 @group(1) @binding(0) var<uniform> vsUniqueUniforms: VSUniqueUniforms;
 
@@ -456,15 +457,15 @@ fn evaluateIBL(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec3
     
     var color = vec3f(0.0);
 
-    var kS = F_Schlick_Roughness(pixel.f0, mat.roughness, cv.NoV);
+    var kS = F_Schlick_Roughness(pixel.f0, pixel.roughness, cv.NoV);
     var kD = 1.0 - kS;
 
     var irradiance = textureSample(iblIrradiance, iblSampler, cv.N).rgb;
-    var diffuse = irradiance * mat.albedo;
+    var diffuse = irradiance * pixel.diffuse;
 
     var MAX_REFLECTION_LOD = 4.0;
-    var prefilteredColor = textureSampleLevel(iblPrefiltered, iblSampler, cv.V_reflected_N, mat.roughness * MAX_REFLECTION_LOD).rgb;
-    var brdf = textureSample(iblLUT, iblSampler, vec2f(cv.NoV, mat.roughness)).rg;
+    var prefilteredColor = textureSampleLevel(iblPrefiltered, iblSampler, cv.V_reflected_N, pixel.roughness * MAX_REFLECTION_LOD).rgb;
+    var brdf = textureSample(iblLUT, iblSampler, vec2f(cv.NoV, pixel.roughness)).rg;
     var specular = prefilteredColor * (kS * brdf.x + brdf.y);
 
     var ambient = (kD * diffuse + specular) * mat.ao;
