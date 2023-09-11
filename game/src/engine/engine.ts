@@ -6,6 +6,7 @@ import { MeshManager } from "./data/meshes/mesh_manager";
 import { SceneManager } from "./data/scene/scene_manager";
 import { IFrameListener } from "./data/traits/frame_listener";
 import { IdentifierPool } from "./identifier_pool";
+import { GameIO } from "./io/io";
 import { BRDFLUTRenderer } from "./render/brdf_lut/brdf_lut_renderer";
 import { CubemapConvolutionRenderer } from "./render/cubemap_convolution/cubemap_convolution_renderer";
 import { CubemapPrefilterRenderer } from "./render/cubemap_prefilter/cubemap_prefilter_renderer";
@@ -21,6 +22,7 @@ export class Engine {
     private _idPool = new IdentifierPool();
 
     private _managers = {
+        io: new GameIO(),
         asset: new AssetManager(),
         camera: new CameraManager(),
         mesh: new MeshManager(),
@@ -44,12 +46,12 @@ export class Engine {
         this.renderLoop();
     }
 
-    private renderLoop() {
+    private async renderLoop() {
         if (this._shouldRender) {
             this._frameListeners.forEach(fl => {
                 if (fl.onEachFrame) fl.onEachFrame();
             });
-            this._renderer.render();
+            await this._renderer.render();
         }
         requestAnimationFrame(() => this.renderLoop());
     }
