@@ -1,4 +1,7 @@
 {
+    "unable_start_engine": "Unable to start the engine",
+    "unable_start_engine_explanation": "Your browser doesn't seem to support one ore more features required by the engine.",
+
     "invalid_canvas": "Invalid canvas reference",
     "unsupported_webgpu": "Your browser doesn't seem to support WebGPU",
     "disabled_webgpu": "Your browser seems to support WebGPU but it appears disabled",

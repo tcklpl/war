@@ -4,6 +4,7 @@ import { WebGPUUnsupportedError } from "../errors/engine/initialization/webgpu_u
 import { WarGame } from "../game/war_game";
 import { useTranslation } from "react-i18next";
 import { useGame } from "../hooks/use_game";
+import { useCrash } from "../hooks/use_crash";
 
 const WarCanvas: React.FC = () => {
 
@@ -11,11 +12,15 @@ const WarCanvas: React.FC = () => {
     const glRef = useRef<HTMLCanvasElement>(null);
     const { t } = useTranslation([ "engine" ]);
     const { setGameInstance } = useGame();
+    const { setEngineInitializationCrash } = useCrash();
 
     useEffect(() => {
         getContext().then(() => {
             const gameInstance = WarGame.initialize();
             setGameInstance(gameInstance);
+        })
+        .catch((error: Error) => {
+            setEngineInitializationCrash(error);
         });
 
         // to run when unmounting the component
@@ -26,6 +31,7 @@ const WarCanvas: React.FC = () => {
     }, [ setGameInstance ]);
 
     const getContext = async () => {
+        
         if (!ref.current || !glRef.current) throw new InvalidCanvasError(t("engine:invalid_canvas"));
         globalThis.gameCanvas = ref.current;
 
@@ -48,7 +54,7 @@ const WarCanvas: React.FC = () => {
         globalThis.device = device;
 
         const gpuCtx = gameCanvas.getContext("webgpu");
-        if (!gpuCtx) throw new WebGPUUnsupportedError(t("engine:unsupported_webgl2"));
+        if (!gpuCtx) throw new WebGPUUnsupportedError(t("engine:unsupported_webgpu"));
         globalThis.gpuCtx = gpuCtx;
 
         const presentantionFormat = navigator.gpu.getPreferredCanvasFormat();
