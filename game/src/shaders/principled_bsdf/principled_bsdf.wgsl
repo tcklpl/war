@@ -68,7 +68,8 @@ struct VSOutput {
 // Outputs from the fragment shader
 struct FSOutput {
     @location(0) hdr_color: vec4f,
-    @location(1) normal: vec4f
+    @location(1) normal: vec4f,
+    @location(2) specular: vec2f
 };
 
 fn multiplyNTBModel(v: vec3f) -> vec3f {
@@ -136,6 +137,7 @@ struct MaterialInputs {
     roughness: f32,
     reflectance: f32,
     ao: f32,
+    ior: f32,
 
     clearCoat: f32,
     clearCoatRoughness: f32
@@ -158,6 +160,17 @@ struct Light {
     attenuation: f32,
     L: vec3f,
     NoL: f32
+}
+
+/*
+    --------------------------------------------------------------------------------------------------
+    Util Functions
+    --------------------------------------------------------------------------------------------------
+*/
+
+fn IORtoF0(ior: f32) -> f32 {
+    var division = (ior - 1.0) / (ior + 1.0);
+    return division * division;
 }
 
 /*
@@ -188,11 +201,11 @@ struct DirectionalLights {
 
 // TODO: Scene Info - Punctual Lights
 
-// Scene Info - IBL
-@group(3) @binding(1) var iblSampler: sampler;
-@group(3) @binding(2) var iblIrradiance: texture_cube<f32>;
-@group(3) @binding(3) var iblPrefiltered: texture_cube<f32>;
-@group(3) @binding(4) var iblLUT: texture_2d<f32>;
+// Scene Info - IBL - THIS WAS MOVED TO THE ENVINROMENT SHADER
+// @group(3) @binding(1) var iblSampler: sampler;
+// @group(3) @binding(2) var iblIrradiance: texture_cube<f32>;
+// @group(3) @binding(3) var iblPrefiltered: texture_cube<f32>;
+// @group(3) @binding(4) var iblLUT: texture_2d<f32>;
 
 /*
     --------------------------------------------------------------------------------------------------
@@ -260,11 +273,6 @@ fn V_Kelemen(LoH: f32) -> f32 {
 
 fn F_Schlick_F0vec3f_F90_VoH(f0: vec3f, f90: f32, VoH: f32) -> vec3f {
     return f0 + (f90 - f0) * pow(1.0 - VoH, 5.0);
-}
-
-fn F_Schlick_F0vec3f_VoH(F0: vec3f, VoH: f32) -> vec3f {
-    var f = pow(1.0 - VoH, 5.0);
-    return f + F0 * (1.0 - f);
 }
 
 fn F_Schlick_F0f32_F90_VoH(f0: f32, f90: f32, VoH: f32) -> f32 {
@@ -449,32 +457,6 @@ fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors) -> vec3f {
 
 /*
     --------------------------------------------------------------------------------------------------
-    Image-Based Lighting
-    --------------------------------------------------------------------------------------------------
-*/
-
-fn evaluateIBL(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec3f {
-    
-    var color = vec3f(0.0);
-
-    var kS = F_Schlick_Roughness(pixel.f0, pixel.roughness, cv.NoV);
-    var kD = 1.0 - kS;
-
-    var irradiance = textureSample(iblIrradiance, iblSampler, cv.N).rgb;
-    var diffuse = irradiance * pixel.diffuse;
-
-    var MAX_REFLECTION_LOD = 4.0;
-    var prefilteredColor = textureSampleLevel(iblPrefiltered, iblSampler, cv.V_reflected_N, pixel.roughness * MAX_REFLECTION_LOD).rgb;
-    var brdf = textureSample(iblLUT, iblSampler, vec2f(cv.NoV, pixel.roughness)).rg;
-    var specular = prefilteredColor * (kS * brdf.x + brdf.y);
-
-    var ambient = (kD * diffuse + specular) * mat.ao;
-
-    return ambient;
-}
-
-/*
-    --------------------------------------------------------------------------------------------------
     Pixel Params and Remapping
     --------------------------------------------------------------------------------------------------
 */
@@ -482,8 +464,7 @@ fn evaluateIBL(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec3
 fn getMaterialParams(mat: MaterialInputs, pixel: ptr<function, PixelInfo>) {
 
     (*pixel).diffuse = (1.0 - mat.metallic) * mat.albedo.rgb;
-    // TODO: get F0 from ior
-    (*pixel).f0 = 0.16 * mat.reflectance * mat.reflectance * (1.0 - mat.metallic) + mat.albedo.rgb * mat.metallic;
+    (*pixel).f0 = vec3f(IORtoF0(mat.ior));
     (*pixel).roughness = mat.roughness * mat.roughness;
 
 }
@@ -513,20 +494,19 @@ fn getPixelParams(mat: MaterialInputs) -> PixelInfo {
     --------------------------------------------------------------------------------------------------
 */
 
-fn evaluateLights(mat: MaterialInputs, cv: CommonVectors) -> vec4f {
-    var pixel = getPixelParams(mat);
+fn evaluateLights(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec4f {
 
     var color = vec3f(0.0);
 
-    color += evaluateIBL(mat, pixel, cv);
+    // IBL was delegated to the environment shader
     color += evaluateDirectionalLights(pixel, cv);
     // TODO: Punctual Lights (point and spot)
 
     return vec4f(color, 1.0);
 }
 
-fn evaluateMaterial(mat: MaterialInputs, cv: CommonVectors) -> vec4f {
-    return evaluateLights(mat, cv);
+fn evaluateMaterial(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec4f {
+    return evaluateLights(mat, pixel, cv);
 }
 
 
@@ -545,6 +525,7 @@ fn fragment(v: VSOutput) -> FSOutput {
     var reflectance = 1.0;
     var clearCoat = 0.0;
     var clearCoatPerceptualRoughness  = 0.0;
+    var ior = 1.3;
 
     var cv = CommonVectors(
         normal,                                 // N
@@ -560,11 +541,14 @@ fn fragment(v: VSOutput) -> FSOutput {
         roughness,
         reflectance,
         ao,
+        ior,
         clearCoat,
         clearCoatPerceptualRoughness
     );
 
-    var color = evaluateMaterial(mat, cv);
+    var pixel = getPixelParams(mat);
+
+    var color = evaluateMaterial(mat, pixel, cv);
 
     // reconstruct the normal matrix (transpose of inverse of model * view)
     var normalMatrix = mat3x3f(v.normal_matrix_0, v.normal_matrix_1, v.normal_matrix_2);
@@ -572,9 +556,12 @@ fn fragment(v: VSOutput) -> FSOutput {
     // as all the lighting calculation is done in model-space
     var normalConversion = (vsUniqueUniforms.model_inverse * vec4f(normal, 0.0)).xyz;
 
+    var kS = F_Schlick_Roughness(pixel.f0, pixel.roughness, cv.NoV).r;
+
     var output: FSOutput;
     output.hdr_color = color;
     output.normal = vec4f((normalMatrix * normalConversion) * 0.5 + 0.5, 1.0); // map normals from [-1, 1] to [0, 1] to save in a rgba8 texture
+    output.specular = vec2f(kS, pixel.roughness); // specular and roughness to the environment shader
 
     return output;
 }

@@ -1,5 +1,6 @@
 import { PrincipledBSDFShader } from "../../../../shaders/principled_bsdf/principled_bsdf_shader";
 import { Shader } from "../../../../shaders/shader";
+import { SceneInfoBindGroupOptions } from "../../../data/scene/scene_info_bind_group_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
 import { RenderStage } from "./render_stage";
@@ -12,6 +13,14 @@ export class RenderStageSolidGeometry implements RenderStage {
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
+    private _sceneBindGroupOptions: SceneInfoBindGroupOptions = {
+        layoutIndex: PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO,
+        directionalLights: true,
+        sampler: false,
+        skyboxConvoluted: false,
+        skyboxPrefiltered: false,
+        brdfLUT: false
+    };
 
     async initialize(resources: RenderInitializationResources) {
 
@@ -69,8 +78,9 @@ export class RenderStageSolidGeometry implements RenderStage {
                 module: this._principledShader.module,
                 entryPoint: 'fragment',
                 targets: [
-                    { format: hdrTextureFormat },
-                    { format: 'rgba8unorm' as GPUTextureFormat },
+                    { format: hdrTextureFormat },                   // hdr buffer
+                    { format: 'rgba8unorm' as GPUTextureFormat },   // view-space normal buffer
+                    { format: 'rg16float' as GPUTextureFormat }     // specular and roughness
                 ]
             },
             primitive: {
@@ -97,6 +107,13 @@ export class RenderStageSolidGeometry implements RenderStage {
                     storeOp: 'store'
                 },
                 // Normal Buffer Output
+                {
+                    // view: undefined, Assigned later
+                    clearValue: { r: 0, g: 0, b: 0, a: 0 },
+                    loadOp: 'clear',
+                    storeOp: 'store'
+                },
+                // Specular Buffer Output
                 {
                     // view: undefined, Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 0 },
@@ -136,12 +153,13 @@ export class RenderStageSolidGeometry implements RenderStage {
         this.setDepthTexture(pool.depthTextureView);
         this.setColorAttachment(0, pool.hdrTextureView);
         this.setColorAttachment(1, pool.normalTextureView);
+        this.setColorAttachment(2, pool.specularTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
             rpe.setPipeline(this._pipelineCCW);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCCW);
-            const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCCW, PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO);
+            const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCCW, this._sceneBindGroupOptions);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
             pool.scene.entitiesPerWindingOrder.ccw.forEach(e => e.draw(rpe, this._pipelineCCW));
         }
@@ -149,7 +167,7 @@ export class RenderStageSolidGeometry implements RenderStage {
         if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
             rpe.setPipeline(this._pipelineCW);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCW);
-            const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCW, PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO);
+            const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCW, this._sceneBindGroupOptions);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
             pool.scene.entitiesPerWindingOrder.cw.forEach(e => e.draw(rpe, this._pipelineCW));
         }
