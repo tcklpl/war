@@ -2,6 +2,7 @@ import { BufferUtils } from "../../../utils/buffer_utils";
 import { DirectionalLight } from "../lights/directional_light";
 import { Light } from "../lights/light";
 import { Skybox } from "../skybox/skybox";
+import { SceneInfoBindGroupOptions } from "./scene_info_bind_group_options";
 
 export class SceneInfo {
 
@@ -9,7 +10,7 @@ export class SceneInfo {
     private _skybox: Skybox;
 
     private _directionalLightBuffer = BufferUtils.createEmptyBuffer(DirectionalLight.byteSize * 2 + 16, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
-    private _pipelineBindGroups = new Map<GPURenderPipeline, {bg: GPUBindGroup, index: number}>();
+    private _pipelineBindGroups = new Map<GPURenderPipeline, {bg: GPUBindGroup, opt: SceneInfoBindGroupOptions}>();
 
     constructor(lights: Light[], skybox: Skybox) {
         this._lights = lights;
@@ -27,7 +28,7 @@ export class SceneInfo {
         directionalLights.forEach((l, i) => l.writeToBuffer(this._directionalLightBuffer, i, 16));
     }
 
-    private createBindGroup(pipeline: GPURenderPipeline, index: number) {
+    private createBindGroup(pipeline: GPURenderPipeline, opt: SceneInfoBindGroupOptions) {
         /*
             Binding Description
             0       Directional light buffer
@@ -38,22 +39,22 @@ export class SceneInfo {
         */
         return device.createBindGroup({
             label: `Scene info bind group`,
-            layout: pipeline.getBindGroupLayout(index),
+            layout: pipeline.getBindGroupLayout(opt.layoutIndex),
             entries: [
-                { binding: 0, resource: { buffer: this._directionalLightBuffer } },
-                { binding: 1, resource: this._skybox.sampler },
-                { binding: 2, resource: this._skybox.convolutedSkybox.createView({ dimension: 'cube' }) },
-                { binding: 3, resource: this._skybox.prefilteredSkybox.createView({ dimension: 'cube' }) },
-                { binding: 4, resource: game.engine.brdfLUT.createView() }
+                ...(opt.directionalLights ?     [{ binding: 0, resource: { buffer: this._directionalLightBuffer } }] : []),
+                ...(opt.sampler ?               [{ binding: 1, resource: this._skybox.sampler }] : []),
+                ...(opt.skyboxConvoluted ?      [{ binding: 2, resource: this._skybox.convolutedSkybox.createView({ dimension: 'cube' }) }] : []),
+                ...(opt.skyboxPrefiltered ?     [{ binding: 3, resource: this._skybox.prefilteredSkybox.createView({ dimension: 'cube' }) }] : []),
+                ...(opt.brdfLUT ?               [{ binding: 4, resource: game.engine.brdfLUT.createView()}] : [])
             ]
         });
     }
 
-    getBindGroup(pipeline: GPURenderPipeline, index: number) {
+    getBindGroup(pipeline: GPURenderPipeline, opt: SceneInfoBindGroupOptions) {
         const result = this._pipelineBindGroups.get(pipeline);
         if (result) return result.bg;
-        const newBindGroup = this.createBindGroup(pipeline, index);
-        this._pipelineBindGroups.set(pipeline, { bg: newBindGroup, index: index });
+        const newBindGroup = this.createBindGroup(pipeline, opt);
+        this._pipelineBindGroups.set(pipeline, { bg: newBindGroup, opt: opt });
         return newBindGroup;
     }
 
@@ -63,7 +64,7 @@ export class SceneInfo {
      */
     updateBindGroups() {
         this._pipelineBindGroups.forEach((v, k) => {
-            this._pipelineBindGroups.set(k, {bg: this.createBindGroup(k, v.index), index: v.index});
+            this._pipelineBindGroups.set(k, {bg: this.createBindGroup(k, v.opt), opt: v.opt});
         });
     }
 
