@@ -28,7 +28,7 @@ const FailedToStartEngineScreen: React.FC = () => {
                             </Typography>
 
                             <Typography style={{ opacity: 0.5 }}>
-                                {t("engine:disabled_webgpu")}
+                                { engineInitializationCrash.message }
                             </Typography>
                         </Stack>
                     </Stack>
