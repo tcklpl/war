@@ -7,6 +7,8 @@ import { RenderProjection } from "./render_projection";
 
 export class RenderResourcePool {
 
+    private _hdrTextureFormat: GPUTextureFormat = 'rgba16float';
+
     private _commandEncoder!: GPUCommandEncoder;
     private _scene!: Scene;
     private _projectionMatrix!: Mat4;
@@ -38,20 +40,20 @@ export class RenderResourcePool {
         // buffer has 2 mat4 (view and projection) and 1 vec3 (camera position)
         const viewProjByteSize = Mat4.byteSize * 3 + Vec3.byteSize;
         this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+
+        // prefer rg11b10ufloat if the device supports it, as it uses 32 bits per pixel instead of 64 with rgba16float
+        const canRenderToRG11B10 = device.features.has("rg11b10ufloat-renderable");
+        if (canRenderToRG11B10) this._hdrTextureFormat = 'rg11b10ufloat';
     }
 
     resizeBuffers(resolution: Resolution) {
 
-        this._depthTexture?.destroy();
-        this._hdrTexture?.destroy();
-        this._bloomMips?.destroy();
-        this._normalTexture?.destroy();
-        this._ssaoTextureNoisy?.destroy();
-        this._ssaoTextureBlurred?.destroy();
+        this.free();
 
         const ssaoTextureSize = resolution.half;
 
         this._depthTexture = device.createTexture({
+            label: 'render pool: depth texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'depth24plus',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
@@ -59,20 +61,23 @@ export class RenderResourcePool {
         this._depthTextureView = this._depthTexture.createView();
 
         this._hdrTexture = device.createTexture({
+            label: 'render pool: hdr texture',
             size: [resolution.full.x, resolution.full.y],
-            format: 'rgba16float',
+            format: this._hdrTextureFormat,
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this._hdrTextureView = this._hdrTexture.createView();
 
         this._bloomMips = device.createTexture({
+            label: 'render pool: bloom mips',
             size: [resolution.half.x, resolution.half.y],
-            format: 'rgba16float',
+            format: this._hdrTextureFormat,
             mipLevelCount: this._bloomMipsLength,
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
 
         this._normalTexture = device.createTexture({
+            label: 'render pool: normal texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rgba8unorm',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
@@ -80,7 +85,7 @@ export class RenderResourcePool {
         this._normalTextureView = this._normalTexture.createView();
 
         this._ssaoTextureNoisy = device.createTexture({
-            label: 'render pool: ssao texture noisy',
+            label: 'render pool: ssao noisy texture',
             size: [ssaoTextureSize.x, ssaoTextureSize.y],
             format: 'r16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
@@ -88,6 +93,7 @@ export class RenderResourcePool {
         this._ssaoTextureViewNoisy = this._ssaoTextureNoisy.createView();
 
         this._ssaoTextureBlurred = device.createTexture({
+            label: 'render pool: ssao blurred texture',
             size: [ssaoTextureSize.x, ssaoTextureSize.y],
             format: 'r16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
@@ -117,12 +123,18 @@ export class RenderResourcePool {
     free() {
         this._depthTexture?.destroy();
         this._hdrTexture?.destroy();
-        this._viewProjBuffer?.destroy();
+        this._bloomMips?.destroy();
         this._normalTexture?.destroy();
+        this._ssaoTextureNoisy?.destroy();
+        this._ssaoTextureBlurred?.destroy();
     }
 
     get hasTextures() {
         return !!this._hdrTexture && !!this._depthTexture;
+    }
+
+    get hdrTextureFormat() {
+        return this._hdrTextureFormat;
     }
 
     get depthTextureView() {

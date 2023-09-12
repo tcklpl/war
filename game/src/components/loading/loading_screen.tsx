@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Container, Grid, LinearProgress, Stack, Typography } from "@mui/material"
+import { Box, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import './loading_screen.scss';
 import { useTranslation } from "react-i18next";
