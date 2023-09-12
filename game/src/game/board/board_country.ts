@@ -20,7 +20,7 @@ export class BoardCountry extends BoardCountryBase {
     }
 
     onMouseHover(): void {
-        console.log(this.name);
+        // console.log(this.name);
     }
 
 }
