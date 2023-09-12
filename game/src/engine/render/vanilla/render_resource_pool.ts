@@ -33,6 +33,9 @@ export class RenderResourcePool {
     private _ssaoTextureBlurred!: GPUTexture;
     private _ssaoTextureViewBlurred!: GPUTextureView;
 
+    private _specularTexture!: GPUTexture;
+    private _specularTextureView!: GPUTextureView;
+
     private _canvasTextureView!: GPUTextureView;
     private _viewProjBuffer!: GPUBuffer;
 
@@ -100,6 +103,14 @@ export class RenderResourcePool {
         });
         this._ssaoTextureViewBlurred = this._ssaoTextureBlurred.createView();
 
+        this._specularTexture = device.createTexture({
+            label: 'render pool: specular texture',
+            size: [resolution.full.x, resolution.full.y],
+            format: 'rg16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
+        this._specularTextureView = this._specularTexture.createView();
+
     }
 
     prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection) {
@@ -127,6 +138,7 @@ export class RenderResourcePool {
         this._normalTexture?.destroy();
         this._ssaoTextureNoisy?.destroy();
         this._ssaoTextureBlurred?.destroy();
+        this._specularTexture?.destroy();
     }
 
     get hasTextures() {
@@ -199,6 +211,14 @@ export class RenderResourcePool {
 
     get ssaoTextureViewBlurred() {
         return this._ssaoTextureViewBlurred;
+    }
+
+    get specularTexture() {
+        return this._specularTexture;
+    }
+
+    get specularTextureView() {
+        return this._specularTextureView;
     }
 
     get projectionMatrix() {
