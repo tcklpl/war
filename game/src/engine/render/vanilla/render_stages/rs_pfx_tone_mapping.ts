@@ -65,8 +65,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: pool.hdrTextureView },
-                { binding: 2, resource: pool.bloomMips.createView() },
-                { binding: 3, resource: pool.ssaoTextureViewBlurred }
+                { binding: 2, resource: pool.bloomMips.createView() }
             ]
         });
     }
