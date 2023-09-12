@@ -32,6 +32,7 @@ Depth Map | Required | Renders the solid geometry into a depth texture | Solid g
 Solid Geometry | Required | Renders the solid geometry using a PBR shader and the depth map from the previous step (setting depth as 'equals') | Depth map, Solid geometry, Material info (per primitive) and Scene info (skybox, lights etc.) | HDR Color map, Normal map
 Skybox | Required | Renders the scene's skybox | Depth map, Scene's skybox | HDR Color map
 SSAO | Optional | Calculates SSAO | Depth map, Normal map, Random noise map | SSAO (r16f) textures: noisy and blurred
+Environment | Required | Calculates IBL for the scene and merges SSAO and SSR (TODO) | Depth map, Normal map, SSAO Blurred texture | HDR Color map (blend add)
 Bloom | Optional | Calculates bloom from the HDR color map | HDR Color map | Bloom texture
-PFX and Tone Mapping | Required | Applies post effects (TODO) and tone maps the scene to the final color | HDR Color map, SSAO blurred texture, Bloom texture | Screen color
+PFX and Tone Mapping | Required | Applies post effects (TODO) and tone maps the scene to the final color | HDR Color map, Bloom texture | Screen color
 Picking | Required | Renders 1x1 pixel below the mouse to know if the user is hovering any interactable object | Solid geometry | 1x1 `r32uint` texture
