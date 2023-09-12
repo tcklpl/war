@@ -32,13 +32,13 @@ export class RenderStageBloom implements RenderStage {
             this._upsampleShader = new BloomUpsampleShader('bloom upsample shader', () => r());
         });
 
-        this._downsamplePipeline = await this.createBloomPipeline(this._downsampleShader);
-        this._upsamplePipeline = await this.createBloomPipeline(this._upsampleShader);
+        this._downsamplePipeline = await this.createBloomPipeline(this._downsampleShader, resources.hdrTextureFormat);
+        this._upsamplePipeline = await this.createBloomPipeline(this._upsampleShader, resources.hdrTextureFormat);
 
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 
-    private createBloomPipeline(shader: Shader) {
+    private createBloomPipeline(shader: Shader, hdrTextureFormat: GPUTextureFormat) {
         return device.createRenderPipelineAsync({
             label: `rs bloom pipeline`,
             layout: 'auto',
@@ -51,7 +51,7 @@ export class RenderStageBloom implements RenderStage {
                 module: shader.module,
                 entryPoint: 'fragment',
                 targets: [
-                    { format: 'rgba16float' as GPUTextureFormat }
+                    { format: hdrTextureFormat }
                 ]
             },
             primitive: {

@@ -19,15 +19,15 @@ export class RenderStageSolidGeometry implements RenderStage {
             this._principledShader = new PrincipledBSDFShader('rs principled bsdf', () => r());
         });
 
-        this._pipelineCW = await this.createPipeline('cw');
-        this._pipelineCCW = await this.createPipeline('ccw');
+        this._pipelineCW = await this.createPipeline('cw', resources.hdrTextureFormat);
+        this._pipelineCCW = await this.createPipeline('ccw', resources.hdrTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
         this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.viewProjBuffer);
         this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.viewProjBuffer);
 
     }
 
-    private createPipeline(windingOrder: 'cw' | 'ccw') {
+    private createPipeline(windingOrder: 'cw' | 'ccw', hdrTextureFormat: GPUTextureFormat) {
         return device.createRenderPipelineAsync({
             label: `rs solid geometry pipeline`,
             layout: 'auto',
@@ -69,7 +69,7 @@ export class RenderStageSolidGeometry implements RenderStage {
                 module: this._principledShader.module,
                 entryPoint: 'fragment',
                 targets: [
-                    { format: 'rgba16float' as GPUTextureFormat },
+                    { format: hdrTextureFormat },
                     { format: 'rgba8unorm' as GPUTextureFormat },
                 ]
             },

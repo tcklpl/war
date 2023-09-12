@@ -34,7 +34,15 @@ const WarCanvas: React.FC = () => {
         const adapter = await navigator.gpu?.requestAdapter();
         if (!adapter) throw new WebGPUUnsupportedError(t("engine:disabled_webgpu"));
 
-        const device = await adapter?.requestDevice();
+        // check if we can render to a rg11b10ufloat texture. If it's possible it'll be preferred, as is uses 32 bits per pixel,
+        // compared from 64 from a rgba16f texture.
+        const canRenderToRG11B10 = adapter.features.has("rg11b10ufloat-renderable");
+
+        const device = await adapter?.requestDevice({
+            requiredFeatures: [
+                ...(canRenderToRG11B10 ? ["rg11b10ufloat-renderable" as GPUFeatureName] : [])
+            ]
+        });
         if (!device) throw new WebGPUUnsupportedError(t("engine:unsupported_webgpu"));
 
         globalThis.device = device;

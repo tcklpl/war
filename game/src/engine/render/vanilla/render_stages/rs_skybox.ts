@@ -16,12 +16,12 @@ export class RenderStageSkybox implements RenderStage {
             this._shader = new SkyboxShader('rs skybox shader', () => r());
         });
 
-        this._pipeline = await this.createPipeline();
+        this._pipeline = await this.createPipeline(resources.hdrTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
         this._viewProjBindGroup = this.createViewProjBindGroup(resources.viewProjBuffer);
     }
 
-    private createPipeline() {
+    private createPipeline(hdrTextureFormat: GPUTextureFormat) {
         return device.createRenderPipelineAsync({
             label: `rs skybox pipeline`,
             layout: 'auto',
@@ -34,7 +34,7 @@ export class RenderStageSkybox implements RenderStage {
                 module: this._shader.module,
                 entryPoint: 'fragment',
                 targets: [
-                    { format: 'rgba16float' as GPUTextureFormat }
+                    { format: hdrTextureFormat }
                 ]
             },
             primitive: {

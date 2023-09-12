@@ -21,7 +21,8 @@ export class VanillaRenderer extends Renderer {
         await this._renderPipeline.initialize({
             canvasPreferredTextureFormat: this._presentationFormat,
             viewProjBuffer: this._renderResourcePool.viewProjBuffer,
-            pickingBuffer: this._pickingBuffer
+            pickingBuffer: this._pickingBuffer,
+            hdrTextureFormat: this._renderResourcePool.hdrTextureFormat
         });
     }
 
