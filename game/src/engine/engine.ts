@@ -62,6 +62,9 @@ export class Engine {
             this._lastFullSecondTime = time;
             Time.FPS = this._framesRenderedSinceLastSecond;
             this._framesRenderedSinceLastSecond = 0;
+            this._frameListeners.forEach(fl => {
+                if (fl.onEachSecond) fl.onEachSecond();
+            });
         }
 
         if (this._shouldRender) {
