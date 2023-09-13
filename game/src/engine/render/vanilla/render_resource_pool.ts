@@ -18,8 +18,11 @@ export class RenderResourcePool {
     private _depthTexture!: GPUTexture;
     private _depthTextureView!: GPUTextureView;
 
-    private _hdrTexture!: GPUTexture;
-    private _hdrTextureView!: GPUTextureView;
+    private _hdrTexture0!: GPUTexture;
+    private _hdrTexture0View!: GPUTextureView;
+    private _hdrTexture1!: GPUTexture;
+    private _hdrTexture1View!: GPUTextureView;
+    private _currentHDRTexture = 0;
 
     private _bloomMips!: GPUTexture;
     private _bloomMipsLength = 7;
@@ -49,6 +52,15 @@ export class RenderResourcePool {
         if (canRenderToRG11B10) this._hdrTextureFormat = 'rg11b10ufloat';
     }
 
+    private createHDRTexture(resolution: Resolution, label: string) {
+        return device.createTexture({
+            label: label,
+            size: [resolution.full.x, resolution.full.y],
+            format: this._hdrTextureFormat,
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
+    }
+
     resizeBuffers(resolution: Resolution) {
 
         this.free();
@@ -63,13 +75,11 @@ export class RenderResourcePool {
         });
         this._depthTextureView = this._depthTexture.createView();
 
-        this._hdrTexture = device.createTexture({
-            label: 'render pool: hdr texture',
-            size: [resolution.full.x, resolution.full.y],
-            format: this._hdrTextureFormat,
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
-        this._hdrTextureView = this._hdrTexture.createView();
+        this._hdrTexture0 = this.createHDRTexture(resolution, 'render pool: hdr texture 0');
+        this._hdrTexture0View = this._hdrTexture0.createView();
+
+        this._hdrTexture1 = this.createHDRTexture(resolution, 'render pool: hdr texture 1');
+        this._hdrTexture1View = this._hdrTexture1.createView();
 
         this._bloomMips = device.createTexture({
             label: 'render pool: bloom mips',
@@ -129,11 +139,15 @@ export class RenderResourcePool {
         device.queue.writeBuffer(this._viewProjBuffer, 1 * Mat4.byteSize, camera.cameraMatrix.asF32Array);
         device.queue.writeBuffer(this._viewProjBuffer, 2 * Mat4.byteSize, this.projectionMatrix.asF32Array);
         device.queue.writeBuffer(this._viewProjBuffer, 3 * Mat4.byteSize, camera.position.asF32Array);
+
+        // switch HDR textures (to also store the previous frame)
+        this._currentHDRTexture = (this._currentHDRTexture + 1) % 2;
     }
 
     free() {
         this._depthTexture?.destroy();
-        this._hdrTexture?.destroy();
+        this._hdrTexture0?.destroy();
+        this._hdrTexture1?.destroy();
         this._bloomMips?.destroy();
         this._normalTexture?.destroy();
         this._ssaoTextureNoisy?.destroy();
@@ -142,7 +156,7 @@ export class RenderResourcePool {
     }
 
     get hasTextures() {
-        return !!this._hdrTexture && !!this._depthTexture;
+        return !!this._depthTexture;
     }
 
     get hdrTextureFormat() {
@@ -154,7 +168,11 @@ export class RenderResourcePool {
     }
 
     get hdrTextureView() {
-        return this._hdrTextureView;
+        return this._currentHDRTexture === 0 ? this._hdrTexture0View : this._hdrTexture1View;
+    }
+
+    get previousFrameHDRTextureView() {
+        return this._currentHDRTexture === 1 ? this._hdrTexture0View : this._hdrTexture1View;
     }
 
     get canvasTextureView() {
