@@ -48,13 +48,31 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
 @group(0) @binding(1) var sampler_linear: sampler;
 @group(0) @binding(2) var current_frame: texture_2d<f32>;
 @group(0) @binding(3) var previous_frame: texture_2d<f32>;
+@group(0) @binding(4) var velocity_buffer: texture_2d<f32>;
 
 
 @fragment
 fn fragment(v: VSOutput) -> @location(0) vec4f {
 
+    var velocitySamplePos = v.uv;
+    var velocity = textureSample(velocity_buffer, sampler_nearest, velocitySamplePos).xy;
+    var previousPixelPos = v.uv - velocity;
+
     var currentColor = textureSample(current_frame, sampler_nearest, v.uv);
-    var previousColor = textureSample(previous_frame, sampler_linear, v.uv);
+    var previousColor = textureSample(previous_frame, sampler_linear, previousPixelPos);
+
+    // apply champing on the previous color to prevent ghosting
+    var texelSize = 1.0 / vec2f(textureDimensions(current_frame));
+    var nearColor0 = textureSample(current_frame, sampler_nearest, v.uv + (texelSize * vec2f( 1.0, 0.0)));
+    var nearColor1 = textureSample(current_frame, sampler_nearest, v.uv + (texelSize * vec2f( 0.0, 1.0)));
+    var nearColor2 = textureSample(current_frame, sampler_nearest, v.uv + (texelSize * vec2f(-1.0, 0.0)));
+    var nearColor3 = textureSample(current_frame, sampler_nearest, v.uv + (texelSize * vec2f( 0.0,-1.0)));
+
+    var boxMin = min(currentColor, min(nearColor0, min(nearColor1, min(nearColor2, nearColor3))));
+    var boxMax = max(currentColor, max(nearColor0, max(nearColor1, max(nearColor2, nearColor3))));
+
+    previousColor = clamp(previousColor, boxMin, boxMax);
+
     
     var color = mix(currentColor, previousColor, MODULATION_FACTOR);
 
