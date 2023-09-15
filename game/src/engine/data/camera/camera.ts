@@ -26,7 +26,7 @@ export abstract class Camera {
         this._cameraMatrix = m;
         this._viewMatrix = m.inverse();
 
-        this.updatePreviousFrameMatrices();
+        if (!this._previousCameraMatrix) this.updatePreviousFrameMatrices();
     }
 
     private updatePreviousFrameMatrices() {
