@@ -16,7 +16,7 @@ struct VSCommonUniforms {
     projection: mat4x4f,
     previous_projection: mat4x4f,
     camera_position: vec3f,
-    jitter: vec2f
+    jitter: vec2f,
 };
 @group(0) @binding(0) var<uniform> vsCommonUniforms: VSCommonUniforms;
 
@@ -46,23 +46,36 @@ fn vertex(@location(0) position: vec3f) -> VSOutput {
     var viewPos  = vsCommonUniforms.camera * worldPos;
     var pos = vsCommonUniforms.projection * viewPos;
 
-    pos += vec4f(vsCommonUniforms.jitter, 0.0, 0.0) * pos.w;
+    var pos_jittered = pos + vec4f(vsCommonUniforms.jitter, 0.0, 0.0) * pos.w;
 
     var prevWorldPos = vsUniqueUniforms.previous_model * vec4f(position, 1.0);
     var prevViewPos  = vsCommonUniforms.previous_camera * prevWorldPos;
     var prevPos = vsCommonUniforms.previous_projection * prevViewPos;
 
     var output: VSOutput;
-    output.position = pos;
+    output.position = pos_jittered;
     output.prev_position = prevPos;
     output.cur_position = pos;
 
     return output;
 }
 
+fn calculateVelocity(newPos: vec4f, oldPos: vec4f) -> vec2f {
+    var oldP = oldPos;
+    oldP /= oldP.w;
+    oldP = (oldP + 1.0) / 2.0;
+    oldP.y = 1.0 - oldP.y;
+
+    var newP = newPos;
+    newP /= newP.w;
+    newP = (newP + 1.0) / 2.0;
+    newP.y = 1.0 - newP.y;
+
+    return (newP - oldP).xy;
+}
+
 @fragment
 fn fragment(v: VSOutput) -> @location(0) vec2f {
-    var a = (v.cur_position.xy / v.cur_position.w) * 0.5 + 0.5;
-    var b = (v.prev_position.xy / v.prev_position.w) * 0.5 + 0.5;
-    return (a - b);
+    var velocity = calculateVelocity(v.cur_position, v.prev_position);
+    return velocity;
 }
