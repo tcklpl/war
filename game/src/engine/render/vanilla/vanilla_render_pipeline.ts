@@ -11,6 +11,7 @@ import { RenderStageBloom } from "./render_stages/rs_bloom";
 import { RenderStageSSAO } from "./render_stages/rs_ssao";
 import { RenderStagePicking } from "./render_stages/rs_picking";
 import { RenderStageEnvironment } from "./render_stages/rs_environment";
+import { RenderStageTAA } from "./render_stages/rs_taa";
 
 export class VanillaRenderPipeline {
 
@@ -18,6 +19,7 @@ export class VanillaRenderPipeline {
     private _rsLights = new RenderStageLights();
     private _rsSolidGeometry = new RenderStageSolidGeometry();
     private _rsSkybox = new RenderStageSkybox();
+    private _rsTAA = new RenderStageTAA();
     private _rsSSAO = new RenderStageSSAO();
     private _rsEnvironment = new RenderStageEnvironment();
     private _rsBloom = new RenderStageBloom();
@@ -35,6 +37,7 @@ export class VanillaRenderPipeline {
             this._rsSkybox,
             this._rsSSAO,
             this._rsEnvironment,
+            this._rsTAA,
             this._rsBloom,
             this._rs_pfx_tonemap,
             this._rsPicking
