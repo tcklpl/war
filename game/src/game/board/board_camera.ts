@@ -65,10 +65,10 @@ export class BoardCamera extends BoardCameraBase {
         this.position = Vec3.clamp(this._lBound, this._hBound, this.position);
 
         this._camTarget = this.position.clone();
-        this._camTarget.x += this._tDeltaX;
+        // this._camTarget.x += this._tDeltaX;
         this._camTarget.y -= 5;
-        this._camTarget.z += this._tDeltaZ;
-        // this.target = this._camTarget;
+        // this._camTarget.z += this._tDeltaZ;
+        this.target = this._camTarget;
         
         this.generateCameraMatrix();
     }
