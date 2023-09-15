@@ -33,6 +33,7 @@ Solid Geometry | Required | Renders the solid geometry using a PBR shader and th
 Skybox | Required | Renders the scene's skybox | Depth map, Scene's skybox | HDR Color map
 SSAO | Optional | Calculates SSAO | Depth map, Normal map, Random noise map | SSAO (r16f) textures: noisy and blurred
 Environment | Required | Calculates IBL for the scene and merges SSAO and SSR (TODO) | Depth map, Normal map, SSAO Blurred texture | HDR Color map (blend add)
+Temporal Anti-Aliasing (TAA) | Required | Resolves TAA on a jittered render pass | Current frame, Last frame, Velocity buffer | HDR Antialiased texture
 Bloom | Optional | Calculates bloom from the HDR color map | HDR Color map | Bloom texture
-PFX and Tone Mapping | Required | Applies post effects (TODO) and tone maps the scene to the final color | HDR Color map, Bloom texture | Screen color
+PFX and Tone Mapping | Required | Applies post effects (TODO) and tone maps the scene to the final color | HDR Antialiased texture, Bloom texture | Screen color
 Picking | Required | Renders 1x1 pixel below the mouse to know if the user is hovering any interactable object | Solid geometry | 1x1 `r32uint` texture
