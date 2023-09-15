@@ -1,8 +1,9 @@
 import { identifiable } from "../traits/identifiable";
+import { FrameListenerMatrixTransformative } from "./frame_listener_matrix_transformative";
 import { MatrixTransformative } from "./matrix_transformative";
 
 
-const EntityBase = identifiable(MatrixTransformative);
+const EntityBase = identifiable(FrameListenerMatrixTransformative);
 
 export class EmptyEntity extends EntityBase {
 

@@ -21,4 +21,15 @@ export class MathUtils {
         return a + factor * (b - a);
     }
 
+    static haltonSequence(base: number, index: number) {
+        let result = 0;
+        let f = 1;
+        while (index > 0) {
+            f /= base;
+            result += f * (index % base);
+            index = Math.floor(index / base);
+        }
+        return result;
+    }
+
 }

@@ -4,6 +4,7 @@ import { RenderResourcePool } from "./render_resource_pool";
 import { Vec2 } from "../../data/vec/vec2";
 import { RenderProjection } from "./render_projection";
 import { BufferUtils } from "../../../utils/buffer_utils";
+import { MathUtils } from "../../../utils/math_utils";
 
 export class VanillaRenderer extends Renderer {
 
@@ -13,7 +14,12 @@ export class VanillaRenderer extends Renderer {
     private _renderResourcePool = new RenderResourcePool();
     private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
 
+    private _jitterOffsetCount = 16;
+    private _jitterOffsets: Vec2[] = [];
+    private _currentJitter = 0;
+
     async initialize() {
+        this._renderProjection.initialize();
         this._presentationFormat = navigator.gpu.getPreferredCanvasFormat();
         this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
 
@@ -24,6 +30,19 @@ export class VanillaRenderer extends Renderer {
             pickingBuffer: this._pickingBuffer,
             hdrTextureFormat: this._renderResourcePool.hdrTextureFormat
         });
+        this.buildJitterOffsets(this._renderProjection.resolution.full);
+    }
+
+    private buildJitterOffsets(resolution: Vec2) {
+        const offsets: Vec2[] = [];
+        for (let i = 0; i < this._jitterOffsetCount; i++) {
+            const offset = new Vec2(MathUtils.haltonSequence(2, i), MathUtils.haltonSequence(3, i));
+            offset.x = ((offset.x - 0.5) / resolution.x) * 2;
+            offset.y = ((offset.y - 0.5) / resolution.y) * 2;
+            offsets.push(offset);
+        }
+
+        this._jitterOffsets = offsets;
     }
 
     private assertCanvasResolution() {
@@ -37,6 +56,7 @@ export class VanillaRenderer extends Renderer {
         gameCanvas.height = height;
         this._renderProjection.updateResolution(new Vec2(width, height));
         this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
+        this.buildJitterOffsets(this._renderProjection.resolution.full);
     }
 
     private async updatePicking() {
@@ -59,9 +79,12 @@ export class VanillaRenderer extends Renderer {
             return;
         }
 
+        this._currentJitter = (this._currentJitter + 1) % this._jitterOffsetCount;
+        const frameJitter = this._jitterOffsets[this._currentJitter];
+
         this.assertCanvasResolution(); 
         const commandEncoder = device.createCommandEncoder();
-        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._renderProjection);
+        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._renderProjection, frameJitter);
         this._renderPipeline.render(this._renderResourcePool);
         device.queue.submit([commandEncoder.finish()]);
 

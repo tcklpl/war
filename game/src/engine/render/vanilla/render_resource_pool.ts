@@ -1,6 +1,8 @@
+import { BufferOutOfBoundsError } from "../../../errors/engine/buffer_oob";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
+import { Vec2 } from "../../data/vec/vec2";
 import { Vec3 } from "../../data/vec/vec3";
 import { Resolution } from "../../resolution";
 import { RenderProjection } from "./render_projection";
@@ -18,8 +20,16 @@ export class RenderResourcePool {
     private _depthTexture!: GPUTexture;
     private _depthTextureView!: GPUTextureView;
 
-    private _hdrTexture!: GPUTexture;
-    private _hdrTextureView!: GPUTextureView;
+    private _velocityTexture!: GPUTexture;
+    private _velocityTextureView!: GPUTextureView;
+
+    private _hdrTexture0!: GPUTexture;
+    private _hdrTexture0View!: GPUTextureView;
+    private _hdrTexture1!: GPUTexture;
+    private _hdrTexture1View!: GPUTextureView;
+    private _hdrTexture2!: GPUTexture;
+    private _hdrTexture2View!: GPUTextureView;
+    private _currentHDRTexture = 0;
 
     private _bloomMips!: GPUTexture;
     private _bloomMipsLength = 7;
@@ -40,13 +50,22 @@ export class RenderResourcePool {
     private _viewProjBuffer!: GPUBuffer;
 
     constructor() {
-        // buffer has 2 mat4 (view and projection) and 1 vec3 (camera position)
-        const viewProjByteSize = Mat4.byteSize * 3 + Vec3.byteSize;
+        // buffer has 5 mat4s and 1 vec3 (camera position)
+        const viewProjByteSize = Mat4.byteSize * 5 + Vec3.byteSize + Vec2.byteSize;
         this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
 
         // prefer rg11b10ufloat if the device supports it, as it uses 32 bits per pixel instead of 64 with rgba16float
         const canRenderToRG11B10 = device.features.has("rg11b10ufloat-renderable");
         if (canRenderToRG11B10) this._hdrTextureFormat = 'rg11b10ufloat';
+    }
+
+    private createHDRTexture(resolution: Resolution, label: string) {
+        return device.createTexture({
+            label: label,
+            size: [resolution.full.x, resolution.full.y],
+            format: this._hdrTextureFormat,
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
     }
 
     resizeBuffers(resolution: Resolution) {
@@ -63,13 +82,22 @@ export class RenderResourcePool {
         });
         this._depthTextureView = this._depthTexture.createView();
 
-        this._hdrTexture = device.createTexture({
-            label: 'render pool: hdr texture',
+        this._velocityTexture = device.createTexture({
+            label: 'render pool: velocity texture',
             size: [resolution.full.x, resolution.full.y],
-            format: this._hdrTextureFormat,
+            format: 'rg16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._hdrTextureView = this._hdrTexture.createView();
+        this._velocityTextureView = this._velocityTexture.createView();
+
+        this._hdrTexture0 = this.createHDRTexture(resolution, 'render pool: hdr texture 0');
+        this._hdrTexture0View = this._hdrTexture0.createView();
+
+        this._hdrTexture1 = this.createHDRTexture(resolution, 'render pool: hdr texture 1');
+        this._hdrTexture1View = this._hdrTexture1.createView();
+
+        this._hdrTexture2 = this.createHDRTexture(resolution, 'render pool: hdr texture 2');
+        this._hdrTexture2View = this._hdrTexture2.createView();
 
         this._bloomMips = device.createTexture({
             label: 'render pool: bloom mips',
@@ -113,7 +141,7 @@ export class RenderResourcePool {
 
     }
 
-    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection) {
+    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection, jitter: Vec2) {
         this._scene = scene;
         this._commandEncoder = commandEncoder;
         this._canvasTextureView = gpuCtx.getCurrentTexture().createView();
@@ -127,13 +155,21 @@ export class RenderResourcePool {
         // write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
         device.queue.writeBuffer(this._viewProjBuffer, 0, camera.viewMatrix.asF32Array);
         device.queue.writeBuffer(this._viewProjBuffer, 1 * Mat4.byteSize, camera.cameraMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 2 * Mat4.byteSize, this.projectionMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 3 * Mat4.byteSize, camera.position.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 2 * Mat4.byteSize, camera.previousFrameViewMatrix.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 3 * Mat4.byteSize, this.projectionMatrix.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 4 * Mat4.byteSize, this._renderProjection.previousFrameProjectionMatrix.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 5 * Mat4.byteSize, camera.position.asF32Array);
+        device.queue.writeBuffer(this._viewProjBuffer, 5 * Mat4.byteSize + Vec3.byteSize + 4, jitter.asF32Array);
+
+        // switch HDR textures (to also store the previous frame)
+        this._currentHDRTexture = (this._currentHDRTexture + 2) % 3;
     }
 
     free() {
         this._depthTexture?.destroy();
-        this._hdrTexture?.destroy();
+        this._velocityTexture?.destroy();
+        this._hdrTexture0?.destroy();
+        this._hdrTexture1?.destroy();
         this._bloomMips?.destroy();
         this._normalTexture?.destroy();
         this._ssaoTextureNoisy?.destroy();
@@ -142,7 +178,7 @@ export class RenderResourcePool {
     }
 
     get hasTextures() {
-        return !!this._hdrTexture && !!this._depthTexture;
+        return !!this._depthTexture;
     }
 
     get hdrTextureFormat() {
@@ -153,8 +189,47 @@ export class RenderResourcePool {
         return this._depthTextureView;
     }
 
+    get velocityTextureView() {
+        return this._velocityTextureView;
+    }
+
     get hdrTextureView() {
-        return this._hdrTextureView;
+        switch (this._currentHDRTexture) {
+            case 0:
+                return this._hdrTexture0View;
+            case 1:
+                return this._hdrTexture1View;
+            case 2:
+                return this._hdrTexture2View;
+            default:
+                throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
+        }
+    }
+
+    get previousFrameHDRTextureView() {
+        switch (this._currentHDRTexture) {
+            case 0:
+                return this._hdrTexture2View;
+            case 1:
+                return this._hdrTexture0View;
+            case 2:
+                return this._hdrTexture1View;
+            default:
+                throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
+        }
+    }
+
+    get antialiasedTextureView() {
+        switch (this._currentHDRTexture) {
+            case 0:
+                return this._hdrTexture1View;
+            case 1:
+                return this._hdrTexture2View;
+            case 2:
+                return this._hdrTexture0View;
+            default:
+                throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
+        }
     }
 
     get canvasTextureView() {

@@ -195,7 +195,7 @@ export class RenderStageSSAO implements RenderStage {
                 { binding: 0, resource: { buffer: this._ssaoOptionsBuffer }},
                 { binding: 1, resource: { buffer: this._kernelBuffer }}
             ]
-        })
+        });
     }
 
     private createSSAOTexturesBindGroup(pool: RenderResourcePool) {

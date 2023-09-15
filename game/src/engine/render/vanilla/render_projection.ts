@@ -13,8 +13,17 @@ export class RenderProjection {
     private _projectionMatrix!: Mat4;
     private _inverseProjectionMatrix!: Mat4;
 
+    private _previousFrameProjectionMatrix!: Mat4;
+    private _previousFrameInverseProjectionMatrix!: Mat4;
+
     constructor() {
         this.buildProjectionMatrices();
+    }
+
+    initialize() {
+        game.engine.registerFrameListener({
+            onEachFrame: delta => this.updatePreviousFrameMatrices()
+        });
     }
 
     private buildProjectionMatrices() {
@@ -25,11 +34,17 @@ export class RenderProjection {
             this._far
         );
         this._inverseProjectionMatrix = this._projectionMatrix.inverse();
+        this.updatePreviousFrameMatrices();
     }
 
     updateResolution(fullSize: Vec2) {
         this._resolution.full = fullSize;
         this.buildProjectionMatrices();    
+    }
+
+    updatePreviousFrameMatrices() {
+        this._previousFrameProjectionMatrix = this._projectionMatrix;
+        this._previousFrameInverseProjectionMatrix = this._inverseProjectionMatrix;
     }
 
     get near() {
@@ -69,6 +84,14 @@ export class RenderProjection {
 
     get inverseProjectionMatrix() {
         return this._inverseProjectionMatrix;
+    }
+
+    get previousFrameProjectionMatrix() {
+        return this._previousFrameProjectionMatrix;
+    }
+
+    get previousFrameInverseProjectionMatrix() {
+        return this._previousFrameInverseProjectionMatrix;
     }
 
 }

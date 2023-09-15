@@ -1,5 +1,5 @@
 import React from "react"
-import './crash_screen.scss';
+import './crash_screen.sass';
 
 const CrashScreen: React.FC = () => {
 

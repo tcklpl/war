@@ -64,7 +64,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
             layout: this._pipeline.getBindGroupLayout(PFXTonemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
-                { binding: 1, resource: pool.hdrTextureView },
+                { binding: 1, resource: pool.antialiasedTextureView },
                 { binding: 2, resource: pool.bloomMips.createView() }
             ]
         });

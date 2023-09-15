@@ -16,8 +16,11 @@ const MAX_DIRECTIONAL_LIGHTS = 2;
 struct VSCommonUniforms {
     camera: mat4x4f,
     camera_inverse: mat4x4f,
+    previous_camera: mat4x4f,
     projection: mat4x4f,
-    camera_position: vec3f
+    previous_projection: mat4x4f,
+    camera_position: vec3f,
+    jitter: vec2f
 };
 @group(0) @binding(0) var<uniform> vsCommonUniforms: VSCommonUniforms;
 
@@ -27,6 +30,7 @@ struct VSCommonUniforms {
 struct VSUniqueUniforms {
     model: mat4x4f,
     model_inverse: mat4x4f,
+    previous_model: mat4x4f,
     id: u32
 };
 @group(1) @binding(0) var<uniform> vsUniqueUniforms: VSUniqueUniforms;
@@ -83,9 +87,13 @@ fn vertex(v: VSInput) -> VSOutput {
     output.uv = v.uv;
     var worldPos = vsUniqueUniforms.model * vec4f(v.position, 1.0);
     var viewPos  = vsCommonUniforms.camera * worldPos;
+    var pos      = vsCommonUniforms.projection * viewPos;
+
+    pos += vec4f(vsCommonUniforms.jitter, 0.0, 0.0) * pos.w;
+
     output.model_position = vec3f(worldPos.xyz);
     output.view_position = viewPos.xyz;
-    output.position = vsCommonUniforms.projection * viewPos;
+    output.position = pos;
 
     var N = multiplyNTBModel(v.normal);
     var T = multiplyNTBModel(v.tangent.xyz);
