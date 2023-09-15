@@ -20,7 +20,7 @@ export class MatrixTransformative {
 
     private _modelMatrix = Mat4.identity();
     private _modelMatrixInverse = Mat4.identity();
-    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize + 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(3 * Mat4.byteSize + 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
 
     private _windingOrder: 'cw' | 'ccw' = 'ccw';
 

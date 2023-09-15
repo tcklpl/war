@@ -2,10 +2,11 @@ import { PrincipledBSDFShader } from "../../../shaders/principled_bsdf/principle
 import { Mat4 } from "../mat/mat4";
 import { Mesh } from "../meshes/mesh";
 import { identifiable } from "../traits/identifiable";
+import { FrameListenerMatrixTransformative } from "./frame_listener_matrix_transformative";
 import { MatrixTransformative } from "./matrix_transformative";
 
 
-const EntityBase = identifiable(MatrixTransformative);
+const EntityBase = identifiable(FrameListenerMatrixTransformative);
 
 export class Entity extends EntityBase {
 
@@ -21,7 +22,7 @@ export class Entity extends EntityBase {
         this._name = data.name;
         this._mesh = data.mesh;
         // write id to buffer
-        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 2 * Mat4.byteSize, this.idUint32);
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize, this.idUint32);
     }
     
     getBindGroup(pipeline: GPURenderPipeline) {
