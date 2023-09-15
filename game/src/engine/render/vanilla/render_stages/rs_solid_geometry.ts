@@ -1,5 +1,6 @@
 import { PrincipledBSDFShader } from "../../../../shaders/principled_bsdf/principled_bsdf_shader";
 import { Shader } from "../../../../shaders/shader";
+import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
 import { SceneInfoBindGroupOptions } from "../../../data/scene/scene_info_bind_group_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
@@ -13,6 +14,7 @@ export class RenderStageSolidGeometry implements RenderStage {
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
+    private _meshDrawOptions = new PrimitiveDrawOptions().includeAll();
     private _sceneBindGroupOptions: SceneInfoBindGroupOptions = {
         layoutIndex: PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO,
         directionalLights: true,
@@ -161,7 +163,7 @@ export class RenderStageSolidGeometry implements RenderStage {
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCCW);
             const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCCW, this._sceneBindGroupOptions);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
-            pool.scene.entitiesPerWindingOrder.ccw.forEach(e => e.draw(rpe, this._pipelineCCW));
+            pool.scene.entitiesPerWindingOrder.ccw.forEach(e => e.draw(rpe, this._pipelineCCW, this._meshDrawOptions));
         }
 
         if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
@@ -169,7 +171,7 @@ export class RenderStageSolidGeometry implements RenderStage {
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCW);
             const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCW, this._sceneBindGroupOptions);
             rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
-            pool.scene.entitiesPerWindingOrder.cw.forEach(e => e.draw(rpe, this._pipelineCW));
+            pool.scene.entitiesPerWindingOrder.cw.forEach(e => e.draw(rpe, this._pipelineCW, this._meshDrawOptions));
         }
 
         rpe.end();

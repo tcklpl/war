@@ -1,4 +1,5 @@
 import { Primitive } from "./primitive";
+import { PrimitiveDrawOptions } from "./primitive_draw_options";
 
 export class Mesh {
 
@@ -14,25 +15,7 @@ export class Mesh {
         return this._name;
     }
 
-    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options = {
-        position: {
-            use: true,
-            index: 0
-        },
-        uv: {
-            use: true,
-            index: 1
-        },
-        normal: {
-            use: true,
-            index: 2
-        },
-        tangent: {
-            use: true,
-            index: 3
-        },
-        useMaterial: true
-    }) {
+    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options: PrimitiveDrawOptions) {
         this._primitives.forEach(p => p.draw(passEncoder, pipeline, options));
     }
 

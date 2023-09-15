@@ -2,6 +2,7 @@ import { PickingShader } from "../../../../shaders/picking/picking_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
 import { MathUtils } from "../../../../utils/math_utils";
 import { Mat4 } from "../../../data/mat/mat4";
+import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
 import { Vec2 } from "../../../data/vec/vec2";
 import { Resolution } from "../../../resolution";
 import { RenderInitializationResources } from "../render_initialization_resources";
@@ -16,30 +17,12 @@ export class RenderStagePicking implements RenderStage {
     private _pickingProjectionMatrix!: Mat4;
     private _pickingPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
+    private _meshDrawOptions = new PrimitiveDrawOptions().includePosition(0);
 
     private _viewProjBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
     private _viewProjBindGroup!: GPUBindGroup;
 
     private _pickingBuffer!: GPUBuffer; // this is just a reference, the buffer is inside vanilla_renderer
-    private _meshDrawOptions = {
-        position: {
-            use: true,
-            index: 0,
-        },
-        uv: {
-            use: false,
-            index: 1
-        },
-        normal: {
-            use: false,
-            index: 2
-        },
-        tangent: {
-            use: false,
-            index: 3
-        },
-        useMaterial: false
-    };
 
     async initialize(resources: RenderInitializationResources) {
         
