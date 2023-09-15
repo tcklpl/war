@@ -20,6 +20,7 @@ const WarCanvas: React.FC = () => {
             setGameInstance(gameInstance);
         })
         .catch((error: Error) => {
+            console.error(error);
             setEngineInitializationCrash(error);
         });
 
