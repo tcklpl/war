@@ -12,7 +12,11 @@
 struct VSCommonUniforms {
     camera: mat4x4f,
     camera_inverse: mat4x4f,
-    projection: mat4x4f
+    previous_camera: mat4x4f,
+    projection: mat4x4f,
+    previous_projection: mat4x4f,
+    camera_position: vec3f,
+    jitter: vec2f
 };
 @group(0) @binding(0) var<uniform> vsCommonUniforms: VSCommonUniforms;
 

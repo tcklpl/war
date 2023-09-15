@@ -15,7 +15,8 @@ struct VSCommonUniforms {
     previous_camera: mat4x4f,
     projection: mat4x4f,
     previous_projection: mat4x4f,
-    camera_position: vec3f
+    camera_position: vec3f,
+    jitter: vec2f
 };
 @group(0) @binding(0) var<uniform> vsCommonUniforms: VSCommonUniforms;
 
@@ -38,6 +39,9 @@ fn vertex(@location(0) position: vec3f) -> @builtin(position) vec4f {
     var worldPos = vsUniqueUniforms.model * vec4f(position, 1.0);
     var viewPos  = vsCommonUniforms.camera * worldPos;
     var pos = vsCommonUniforms.projection * viewPos;
+
+    pos += vec4f(vsCommonUniforms.jitter, 0.0, 0.0) * pos.w;
+
     return pos;
 }
 
