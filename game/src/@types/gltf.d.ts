@@ -4,6 +4,9 @@ declare module 'gltf' {
     type GLTFAccessorValidTypes = 'VEC2' | 'VEC3' | 'VEC4' | 'SCALAR';
     type GLTFCameraTypes = 'perspective' | 'orthographic';
 
+    type GLTFAnimationSamplerInterpolation = "STEP" | "LINEAR" | "CUBICSPLINE";
+    type GLTFAnimationChannelTargetPath = "translation" | "rotation" | "scale";
+
     type KHR_lights_punctual_Types = 'directional' | 'point' | 'spot';
 
     type GLBChunkJSONType = 0x4E4F534A;
@@ -128,7 +131,7 @@ declare module 'gltf' {
                      * 
                      * For the "scale" property, the values are the scaling factors along the X, Y, and Z axes.
                      */
-                    path: "translation" | "rotation" | "scale"
+                    path: GLTFAnimationChannelTargetPath;
                 }
             }[];
             
@@ -148,7 +151,7 @@ declare module 'gltf' {
                  * 
                  * Defaults to LINEAR
                  */
-                interpolation?: "STEP" | "LINEAR" | "CUBICSPLINE";
+                interpolation?: GLTFAnimationSamplerInterpolation;
 
                 /**
                  * The index of an accessor, containing keyframe output values.
@@ -202,7 +205,7 @@ declare module 'gltf' {
             buffer: number;
             byteLength: number;
             byteOffset: number;
-            target: number;
+            target?: number;
         }[];
 
         buffers: {
