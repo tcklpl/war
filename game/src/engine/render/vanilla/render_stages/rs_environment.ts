@@ -2,6 +2,7 @@ import { EnvironmentShader } from "../../../../shaders/environment/environment_s
 import { SSAOShader } from "../../../../shaders/ssao/ssao_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
 import { Mat4 } from "../../../data/mat/mat4";
+import { SceneInfoBindGroupOptions } from "../../../data/scene/scene_info_bind_group_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
 import { RenderStage } from "./render_stage";
@@ -11,10 +12,15 @@ export class RenderStageEnvironment implements RenderStage {
     private _shader!: SSAOShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
-    private _sampler = device.createSampler();
+    private _sampler = device.createSampler({
+        minFilter: 'linear',
+        magFilter: 'linear',
+        mipmapFilter: 'linear'
+    });
 
     private _variablesBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
     private _variablesBindGroup!: GPUBindGroup;
+    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(EnvironmentShader.BINDING_GROUPS.SCENE).includeConvolutedSkybox(0).includePrefilteredSkybox(1).includeBrdfLUT(2);
 
     async initialize(resources: RenderInitializationResources) {
 
@@ -120,14 +126,7 @@ export class RenderStageEnvironment implements RenderStage {
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pipeline);
-        rpe.setBindGroup(EnvironmentShader.BINDING_GROUPS.SCENE, pool.scene.info.getBindGroup(this._pipeline, {
-            layoutIndex: EnvironmentShader.BINDING_GROUPS.SCENE,
-            directionalLights: false,
-            sampler: true,
-            skyboxConvoluted: true,
-            skyboxPrefiltered: true,
-            brdfLUT: true
-        }));
+        rpe.setBindGroup(EnvironmentShader.BINDING_GROUPS.SCENE, pool.scene.info.getBindGroup(this._pipeline, this._sceneBindGroupOptions));
         rpe.setBindGroup(EnvironmentShader.BINDING_GROUPS.TEXTURES, texturesBindGroup);
         rpe.setBindGroup(EnvironmentShader.BINDING_GROUPS.VARIABLES, this._variablesBindGroup);
         rpe.draw(6);

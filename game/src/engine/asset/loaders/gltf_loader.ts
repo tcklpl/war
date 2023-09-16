@@ -13,6 +13,10 @@ import { GLTFFile } from "../../data/gltf/gltf_file";
 import { GLTFCamera } from "../../data/gltf/gltf_camera";
 import { UnsupportedGLTFFeatureError } from "../../../errors/engine/gltf/unsupported_gltf_feature";
 import { GLTFLight } from "../../data/gltf/gltf_light";
+import { GLTFAnimationSampler } from "../../data/gltf/gltf_animation_sampler";
+import { GLTFAnimationChannel } from "../../data/gltf/gltf_animation_channel";
+import { GLTFAnimationChannelTarget } from "../../data/gltf/gltf_animation_channel_target";
+import { GLTFAnimation } from "../../data/gltf/gltf_animation";
 
 /**
  * GLTF Loader
@@ -25,7 +29,7 @@ import { GLTFLight } from "../../data/gltf/gltf_light";
  *  [X] Lights
  *  [X] Cameras
  *  [ ] Images
- *  [ ] Animations
+ *  [X] Animations
  *  [ ] Skins
  * 
  *  [X] .gltf Support
@@ -57,7 +61,7 @@ export class GLTFLoader {
         for (let i = 0; i < gltfSave.buffers.length; i++) {
             const buf = gltfSave.buffers[i];
 
-            let data: Uint8Array;
+            let data: ArrayBuffer;
             // JSON files will have an base64 buffer
             if (buf.uri) {
                 data = await FetchUtils.fetchByteBuffer(buf.uri);
@@ -65,7 +69,7 @@ export class GLTFLoader {
             // GLB Files will supply the buffer by the second function argument
             else {
                 if (!binaryBuffers || i >= binaryBuffers.length) throw new BadGLTFFileError(`Buffer of index '${i}' cannot be found on supplied list of length '${binaryBuffers?.length}'`);
-                data = new Uint8Array(binaryBuffers[i]);
+                data = binaryBuffers[i];
             }
             
             buffers.push(new GLTFBuffer(data));
@@ -229,6 +233,54 @@ export class GLTFLoader {
 
             // unknown node
             throw new BadGLTFFileError(`Unrecognized node:\n\n${node}`);
+        }
+
+        // animations
+        const animations: GLTFAnimation[] = [];
+        for (const animation of gltfSave.animations ?? []) {
+            const name = animation.name ?? "Untitled animation";
+
+            const samplers: GLTFAnimationSampler[] = [];
+            for (const sampler of animation.samplers) {
+                if (sampler.input < 0 || sampler.input >= accessors.length)
+                    throw new BadGLTFFileError(`Invalid animation accessor input index '${sampler.input}' for accessors[] of length '${accessors.length}'`);
+                if (sampler.output < 0 || sampler.output >= accessors.length)
+                    throw new BadGLTFFileError(`Invalid animation accessor output index '${sampler.output}' for accessors[] of length '${accessors.length}'`);
+                
+                samplers.push(new GLTFAnimationSampler(
+                    accessors[sampler.input],
+                    accessors[sampler.output],
+                    sampler.interpolation ?? "LINEAR"
+                ));
+            }
+
+            const channels: GLTFAnimationChannel[] = [];
+            for (const channel of animation.channels) {
+                if (channel.sampler < 0 || channel.sampler >= samplers.length)
+                    throw new BadGLTFFileError(`Invalid animation channel sampler index '${channel.sampler}' for samplers[] of length '${samplers.length}'`);
+                if (channel.target.node < 0 || channel.target.node >= nodes.length)
+                    throw new BadGLTFFileError(`Invalid animation channel target node index '${channel.target.node}' for nodes[] of length '${nodes.length}'`);
+
+                channels.push(new GLTFAnimationChannel(
+                    samplers[channel.sampler],
+                    new GLTFAnimationChannelTarget(
+                        nodes[channel.target.node],
+                        channel.target.path
+                    )
+                ));
+            }
+
+            const finalAnimation = new GLTFAnimation(
+                name,
+                samplers,
+                channels
+            );
+
+            // update the node to include the animation
+            const affectedNodes = new Set(channels.map(c => c.target.node)); // Set excludes repeated values
+            affectedNodes.forEach(node => node.registerAnimation(finalAnimation));
+
+            animations.push(finalAnimation);
         }
 
         // scenes

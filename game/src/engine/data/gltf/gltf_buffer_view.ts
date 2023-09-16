@@ -1,3 +1,4 @@
+import { Constructor } from "typeUtils";
 import { BadGLTFFileError } from "../../../errors/engine/gltf/bad_gltf_file";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { GLTFBuffer } from "./gltf_buffer";
@@ -8,12 +9,12 @@ export class GLTFBufferView {
     private _buffer: GLTFBuffer;
     private _length: number;
     private _offset: number;
-    private _target: number; // gl.ARRAY_BUFFER or gl.ELEMENT_ARRAY_BUFFER
+    private _target?: number; // gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER or undefined
 
-    constructor(buffer: GLTFBuffer, length: number, offset: number, target: number) {
+    constructor(buffer: GLTFBuffer, length: number, offset: number, target?: number) {
 
         const validTargetTypes: number[] = [gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER];
-        if (!validTargetTypes.includes(target)) {
+        if (!!target && !validTargetTypes.includes(target)) {
             throw new BadGLTFFileError(`Invalid buffer view target type: ${target}`);
         }
 
@@ -39,10 +40,23 @@ export class GLTFBufferView {
         return this._target;
     }
 
+    getSlicedBufferData() {
+        return this._buffer.data.slice(this._offset, this._offset + this._length);
+    }
+
     buildBuffer() {
-        const slice = this._buffer.data.slice(this._offset, this._offset + this._length);
-        const bufferUsage = (this._target === gl.ARRAY_BUFFER ? GPUBufferUsage.VERTEX : GPUBufferUsage.INDEX) | GPUBufferUsage.COPY_DST;
-        const buffer = BufferUtils.createBuffer(slice, bufferUsage);
+        const slice = this.getSlicedBufferData();
+        const bufferUsage = () => {
+            switch (this._target) {
+                case gl.ARRAY_BUFFER:
+                    return GPUBufferUsage.VERTEX;
+                case gl.ELEMENT_ARRAY_BUFFER:
+                    return GPUBufferUsage.INDEX;
+                default:
+                    throw new TypeError(`Trying to build buffer for non-mesh buffer view`);
+            }
+        };
+        const buffer = BufferUtils.createBuffer(new Uint8Array(slice), bufferUsage() | GPUBufferUsage.COPY_DST);
         return buffer;
     }
 

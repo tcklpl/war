@@ -1,5 +1,6 @@
 import { BindDeletedMeshPrimitiveError } from "../../../errors/engine/data/bind_deleted_mesh_primitive";
 import { Material } from "../material/material";
+import { PrimitiveDrawOptions } from "./primitive_draw_options";
 
 type PrimitiveBuffers = {
     positions: GPUBuffer;
@@ -22,25 +23,7 @@ export class Primitive {
         this._material = material;
     }
 
-    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options = {
-        position: {
-            use: true,
-            index: 0
-        },
-        uv: {
-            use: true,
-            index: 1
-        },
-        normal: {
-            use: true,
-            index: 2
-        },
-        tangent: {
-            use: true,
-            index: 3
-        },
-        useMaterial: true
-    }) {
+    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options: PrimitiveDrawOptions) {
         if (!this._available) throw new BindDeletedMeshPrimitiveError();
         
         if (options.useMaterial) this._material.bind(passEncoder, pipeline);

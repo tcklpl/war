@@ -1,4 +1,5 @@
 import { DepthAndVelocityShader } from "../../../../shaders/depth/depth_and_velocity_shader";
+import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
 import { RenderStage } from "./render_stage";
@@ -11,25 +12,7 @@ export class RenderStageDepthMap implements RenderStage {
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
-    private _meshDrawOptions = {
-        position: {
-            use: true,
-            index: 0,
-        },
-        uv: {
-            use: false,
-            index: 1
-        },
-        normal: {
-            use: false,
-            index: 2
-        },
-        tangent: {
-            use: false,
-            index: 3
-        },
-        useMaterial: false
-    };
+    private _meshDrawOptions = new PrimitiveDrawOptions().includePosition(0);
 
     async initialize(resources: RenderInitializationResources) {
 

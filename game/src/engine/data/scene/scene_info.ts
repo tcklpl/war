@@ -41,11 +41,11 @@ export class SceneInfo {
             label: `Scene info bind group`,
             layout: pipeline.getBindGroupLayout(opt.layoutIndex),
             entries: [
-                ...(opt.directionalLights ?     [{ binding: 0, resource: { buffer: this._directionalLightBuffer } }] : []),
-                ...(opt.sampler ?               [{ binding: 1, resource: this._skybox.sampler }] : []),
-                ...(opt.skyboxConvoluted ?      [{ binding: 2, resource: this._skybox.convolutedSkybox.createView({ dimension: 'cube' }) }] : []),
-                ...(opt.skyboxPrefiltered ?     [{ binding: 3, resource: this._skybox.prefilteredSkybox.createView({ dimension: 'cube' }) }] : []),
-                ...(opt.brdfLUT ?               [{ binding: 4, resource: game.engine.brdfLUT.createView()}] : [])
+                ...(opt.directionalLights.use ?     [{ binding: opt.directionalLights.index, resource: { buffer: this._directionalLightBuffer } }] : []),
+                ...(opt.skybox.use ?                [{ binding: opt.skybox.index, resource: this._skybox.skybox.createView({ dimension: 'cube' }) }] : []),
+                ...(opt.convolutedSkybox.use ?      [{ binding: opt.convolutedSkybox.index, resource: this._skybox.convolutedSkybox.createView({ dimension: 'cube' }) }] : []),
+                ...(opt.prefilteredSkybox.use ?     [{ binding: opt.prefilteredSkybox.index, resource: this._skybox.prefilteredSkybox.createView({ dimension: 'cube' }) }] : []),
+                ...(opt.brdfLUT.use ?               [{ binding: opt.brdfLUT.index, resource: game.engine.brdfLUT.createView()}] : [])
             ]
         });
     }

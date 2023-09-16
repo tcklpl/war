@@ -1,9 +1,9 @@
 
 export class GLTFBuffer {
 
-    private _data: Uint8Array;
+    private _data: ArrayBuffer;
 
-    constructor(data: Uint8Array) {
+    constructor(data: ArrayBuffer) {
         this._data = data;
     }
 

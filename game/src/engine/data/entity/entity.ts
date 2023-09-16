@@ -1,6 +1,7 @@
 import { PrincipledBSDFShader } from "../../../shaders/principled_bsdf/principled_bsdf_shader";
 import { Mat4 } from "../mat/mat4";
 import { Mesh } from "../meshes/mesh";
+import { PrimitiveDrawOptions } from "../meshes/primitive_draw_options";
 import { identifiable } from "../traits/identifiable";
 import { FrameListenerMatrixTransformative } from "./frame_listener_matrix_transformative";
 import { MatrixTransformative } from "./matrix_transformative";
@@ -40,25 +41,7 @@ export class Entity extends EntityBase {
         return newBindGroup;
     }
 
-    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options = {
-        position: {
-            use: true,
-            index: 0
-        },
-        uv: {
-            use: true,
-            index: 1
-        },
-        normal: {
-            use: true,
-            index: 2
-        },
-        tangent: {
-            use: true,
-            index: 3
-        },
-        useMaterial: true
-    }) {
+    draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options: PrimitiveDrawOptions) {
         passEncoder.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_MODEL, this.getBindGroup(pipeline));
         this._mesh.draw(passEncoder, pipeline, options);
     }
