@@ -15,14 +15,7 @@ export class RenderStageSolidGeometry implements RenderStage {
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
     private _meshDrawOptions = new PrimitiveDrawOptions().includeAll();
-    private _sceneBindGroupOptions: SceneInfoBindGroupOptions = {
-        layoutIndex: PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO,
-        directionalLights: true,
-        sampler: false,
-        skyboxConvoluted: false,
-        skyboxPrefiltered: false,
-        brdfLUT: false
-    };
+    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO).includeDirectionalLights(0);
 
     async initialize(resources: RenderInitializationResources) {
 

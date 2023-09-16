@@ -52,10 +52,9 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
 @group(0) @binding(4) var ssao_texture: texture_2d<f32>;
 
 // scene info
-@group(1) @binding(1) var iblSampler: sampler;
-@group(1) @binding(2) var iblIrradiance: texture_cube<f32>;
-@group(1) @binding(3) var iblPrefiltered: texture_cube<f32>;
-@group(1) @binding(4) var iblLUT: texture_2d<f32>;
+@group(1) @binding(0) var iblIrradiance: texture_cube<f32>;
+@group(1) @binding(1) var iblPrefiltered: texture_cube<f32>;
+@group(1) @binding(2) var iblLUT: texture_2d<f32>;
 
 struct EnviromentVariables {
     proj: mat4x4f,
@@ -102,13 +101,13 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var kD = 1.0 - kS;
 
     // diffuse irradiance
-    var irradiance = textureSample(iblIrradiance, iblSampler, normal).rgb;
+    var irradiance = textureSample(iblIrradiance, env_sampler, normal).rgb;
     var diffuse = irradiance;
 
     // specular irradiance
     var MAX_REFLECTION_LOD = 4.0;
-    var prefilteredColor = textureSampleLevel(iblPrefiltered, iblSampler, V_reflected_N, roughness * MAX_REFLECTION_LOD).rgb;
-    var brdf = textureSample(iblLUT, iblSampler, vec2f(NoV, roughness)).rg;
+    var prefilteredColor = textureSampleLevel(iblPrefiltered, env_sampler, V_reflected_N, roughness * MAX_REFLECTION_LOD).rgb;
+    var brdf = textureSample(iblLUT, env_sampler, vec2f(NoV, roughness)).rg;
     var specular = prefilteredColor * (kS * brdf.x + brdf.y);
 
     var ambient = (kD * diffuse + specular) * ao;
