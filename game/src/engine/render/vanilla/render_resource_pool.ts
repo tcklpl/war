@@ -5,6 +5,7 @@ import { Scene } from "../../data/scene/scene";
 import { Vec2 } from "../../data/vec/vec2";
 import { Vec3 } from "../../data/vec/vec3";
 import { Resolution } from "../../resolution";
+import { RenderPostEffects } from "./render_post_effects";
 import { RenderProjection } from "./render_projection";
 
 export class RenderResourcePool {
@@ -16,6 +17,7 @@ export class RenderResourcePool {
     private _projectionMatrix!: Mat4;
     private _inverseProjectionMatrix!: Mat4;
     private _renderProjection!: RenderProjection;
+    private _renderPostEffects!: RenderPostEffects;
 
     private _depthTexture!: GPUTexture;
     private _depthTextureView!: GPUTextureView;
@@ -141,13 +143,14 @@ export class RenderResourcePool {
 
     }
 
-    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection, jitter: Vec2) {
+    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection, postEffets: RenderPostEffects, jitter: Vec2) {
         this._scene = scene;
         this._commandEncoder = commandEncoder;
         this._canvasTextureView = gpuCtx.getCurrentTexture().createView();
         this._projectionMatrix = projection.projectionMatrix;
         this._inverseProjectionMatrix = projection.inverseProjectionMatrix;
         this._renderProjection = projection;
+        this._renderPostEffects = postEffets;
 
         const camera = scene.activeCamera;
         if (!camera) return;
@@ -250,6 +253,10 @@ export class RenderResourcePool {
 
     get renderProjection() {
         return this._renderProjection;
+    }
+
+    get renderPostEffects() {
+        return this._renderPostEffects;
     }
 
     get resolution() {

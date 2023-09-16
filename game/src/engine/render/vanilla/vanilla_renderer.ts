@@ -5,11 +5,13 @@ import { Vec2 } from "../../data/vec/vec2";
 import { RenderProjection } from "./render_projection";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { MathUtils } from "../../../utils/math_utils";
+import { RenderPostEffects } from "./render_post_effects";
 
 export class VanillaRenderer extends Renderer {
 
     private _presentationFormat!: GPUTextureFormat;
     private _renderProjection = new RenderProjection();
+    private _renderPostEffects = new RenderPostEffects();
     private _renderPipeline = new VanillaRenderPipeline();
     private _renderResourcePool = new RenderResourcePool();
     private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
@@ -84,7 +86,7 @@ export class VanillaRenderer extends Renderer {
 
         this.assertCanvasResolution(); 
         const commandEncoder = device.createCommandEncoder();
-        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._renderProjection, frameJitter);
+        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._renderProjection, this._renderPostEffects, frameJitter);
         this._renderPipeline.render(this._renderResourcePool);
         device.queue.submit([commandEncoder.finish()]);
 

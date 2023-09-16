@@ -6,16 +6,6 @@ import { RenderStage } from "./render_stage";
 
 export class RenderStagePFXToneMapping implements RenderStage {
 
-    private _exposure = 1;
-    private _gamma = 2.2;
-
-    private _useVignette = false;
-    private _useChromaticAberration = false;
-
-    private _vignetteStrength = 0.1;
-    private _vignetteSize = 20;
-    private _chromaticAberrationAmount = 3;
-
     private _shader!: PFXTonemapShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
@@ -97,11 +87,6 @@ export class RenderStagePFXToneMapping implements RenderStage {
         });
     }
 
-    private updateOptionsBuffer() {
-        device.queue.writeBuffer(this._optionsBuffer, 0, new Uint32Array([this._useVignette ? 1 : 0, this._useChromaticAberration ? 1 : 0]));
-        device.queue.writeBuffer(this._optionsBuffer, 8, new Float32Array([this._gamma, this._exposure, this._vignetteStrength, this._vignetteSize, this._chromaticAberrationAmount]));
-    }
-
     private setColorTexture(colorTex: GPUTextureView) {
         (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = colorTex;
     }
@@ -109,7 +94,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
     render(pool: RenderResourcePool) {
         
         pool.commandEncoder.pushDebugGroup('PFX and Tonemapper');
-        this.updateOptionsBuffer();
+        pool.renderPostEffects.writeToBuffer(this._optionsBuffer);
         this.updateBindGroup(pool);
         this.setColorTexture(pool.canvasTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
