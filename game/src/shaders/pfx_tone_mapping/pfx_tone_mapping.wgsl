@@ -88,7 +88,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
         var vignetteUV = v.uv; 
         vignetteUV *= 1.0 - v.uv.yx;
         var vignette = vignetteUV.x * vignetteUV.y * opt.vignette_size;
-        vignette = pow(vignette, opt.vignette_strength);
+        vignette = saturate(pow(vignette, opt.vignette_strength));
         mapped *= vignette;
     }
 
