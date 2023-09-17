@@ -7,21 +7,26 @@ import { GLTFLoader } from "./loaders/gltf_loader";
 import { GLTFFile } from "../data/gltf/gltf_file";
 import { BadGLTFFileError } from "../../errors/engine/gltf/bad_gltf_file";
 import { IMGAsset } from "./IMGAsset";
+import { HDRLoader } from "./loaders/hdr_loader";
+import { HDRAsset } from "./HDRAsset";
 
 type AssetIndex = typeof assetIndex;
 type GLTFAssetName = keyof AssetIndex["gltf"];
 type IMGAssetName = keyof AssetIndex["img"];
+type HDRAssetName = keyof AssetIndex["hdr"];
 type AddressableAsset = { url: string };
 
 export class AssetManager extends Manager<Asset> {
 
     private loaders = {
-        gltf: new GLTFLoader()
+        gltf: new GLTFLoader(),
+        hdr: new HDRLoader()
     }
 
     async loadAssets(onAssetLoadCallback?: () => void) {
         await this.loadGLTFAssets(onAssetLoadCallback);
         await this.loadIMGAssets(onAssetLoadCallback);
+        await this.loadHDRAssets(onAssetLoadCallback);
     }
 
     private async fetchAssetFile(name: string, asset: AddressableAsset) {
@@ -56,9 +61,9 @@ export class AssetManager extends Manager<Asset> {
     }
 
     private async loadIMGAssets(onAssetLoadCallback?: () => void) {
-        const hdrAssets = Object.keys(assetIndex.img);
+        const imgAssets = Object.keys(assetIndex.img);
 
-        for (let k of hdrAssets) {
+        for (let k of imgAssets) {
             const assetInfo = assetIndex.img[k as IMGAssetName];
             const assetFile = await this.fetchAssetFile(k, assetInfo);
             const assetBlob = await assetFile.blob();
@@ -67,7 +72,20 @@ export class AssetManager extends Manager<Asset> {
         }
     }
 
-    assertGetAsset(name: GLTFAssetName | IMGAssetName) {
+    private async loadHDRAssets(onAssetLoadCallback?: () => void) {
+        const hdrAssets = Object.keys(assetIndex.hdr);
+
+        for (let k of hdrAssets) {
+            const assetInfo = assetIndex.hdr[k as HDRAssetName];
+            const assetFile = await this.fetchAssetFile(k, assetInfo);
+            const assetArrayBuffer = await assetFile.arrayBuffer();
+            const data = this.loaders.hdr.decodeRGBE(new DataView(assetArrayBuffer))
+            this.register(new HDRAsset(k, assetInfo.url, data));
+            if (onAssetLoadCallback) onAssetLoadCallback();
+        }
+    }
+
+    assertGetAsset(name: GLTFAssetName | IMGAssetName | HDRAssetName) {
         const temp = this.all.find(a => a.name === name);
         if (!temp) throw new MissingAssetError(name);
         return temp;
@@ -77,8 +95,12 @@ export class AssetManager extends Manager<Asset> {
         return this.assertGetAsset(name) as GLTFAsset;
     }
 
-    getHDRAsset(name: IMGAssetName) {
+    getIMGAsset(name: IMGAssetName) {
         return this.assertGetAsset(name) as IMGAsset;
+    }
+
+    getHDRAsset(name: HDRAssetName) {
+        return this.assertGetAsset(name) as HDRAsset;
     }
 
     get assetCount() {

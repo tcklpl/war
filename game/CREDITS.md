@@ -34,3 +34,5 @@ en | [tcklpl](https://github.com/tcklpl)
 
 - KhronosGroup's glTF 2.0 [Specification](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/README.md) and [Tutorial](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/README.md). This project heavily uses glTF files and I wrote the glTF importer based on these pages.
 
+- [io-rgbe by David Lenaerts](https://github.com/DerSchmale/io-rgbe/): I'm using my adapted version of his loader to decode .hdr RGBE files. The list of changes and the MIT license note can be found on the file [hdr_loader.ts](./src/engine/asset/loaders/hdr_loader.ts).
+
