@@ -1,5 +1,7 @@
 # War Game
 
+[Trello Page](https://trello.com/b/qBpWkPcw/war)
+
 This is the browser version of a class-based war2-inspired game made using NodeJS, Typescript and WebGPU.
 
 # Compiling
