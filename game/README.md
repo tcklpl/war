@@ -18,7 +18,7 @@ Lights | glTF 2 | Currently only directional lights are supported, point and spo
 Materials | glTF 2 | Materials are basically Blender's Principled BSDFs, textures are still TODO
 Scenes | glTF 2 | 
 Animations | TODO (will be glTF 2) | TODO
-Images / Skyboxes / Cubemaps | Browser-loadable images | Preferably AVIF, as it supports HDR, has a small file size and is [pretty well supported](https://caniuse.com/avif).
+Images / Skyboxes / Cubemaps | Browser-loadable images or .hdr RGBE | Preferably RGBE
 
 > The main asset type used is and will be glTF 2, as it can easily contain a lot of stuff like meshes, cameras, lights etc. That otherwise would each require a separate file and loader. And some logic on top of that to attach materials to meshes and so on, using glTF files is just easier.
 
