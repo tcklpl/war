@@ -1,3 +1,4 @@
+import { HDRImageData } from "../engine/asset/loaders/hdr_loader";
 import { Vec4 } from "../engine/data/vec/vec4";
 
 export class TextureUtils {
@@ -24,7 +25,7 @@ export class TextureUtils {
         return tex;
     }
 
-    static async createRGBA16fFromHDRBitmap(data: ImageBitmap, width: number, height: number) {
+    static async createRGBA16fFromBitmap(data: ImageBitmap, width: number, height: number) {
 
         const tex = device.createTexture({
             size: [width, height],
@@ -36,6 +37,27 @@ export class TextureUtils {
             { source: data },
             { texture: tex, colorSpace: 'display-p3' },
             { width: width, height: height }
+        );
+
+        await device.queue.onSubmittedWorkDone();
+
+        return tex;
+
+    }
+
+    static async createRGBA32fFromRGBEData(data: HDRImageData) {
+
+        const tex = device.createTexture({
+            size: [data.width, data.height],
+            format: 'rgba32float',
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
+        });
+
+        device.queue.writeTexture(
+            { texture: tex },
+            data.data.buffer,
+            { bytesPerRow: data.width * 16 },
+            { width: data.width, height: data.height }
         );
 
         await device.queue.onSubmittedWorkDone();
