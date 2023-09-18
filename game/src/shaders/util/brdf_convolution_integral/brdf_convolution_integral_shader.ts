@@ -1,11 +1,9 @@
-import { Shader } from "../shader";
-import shaderSource from "./ssao.wgsl";
+import { Shader } from "../../shader";
+import shaderSource from "./brdf_convolution_integral.wgsl";
 
-export class SSAOShader extends Shader {
+export class BRDFConvolutionIntegralShader extends Shader {
 
     static BINDING_GROUPS = {
-        TEXTURES: 0,
-        OPT_KERNEL: 1
     }
 
     constructor(name: string, cb: () => void) {

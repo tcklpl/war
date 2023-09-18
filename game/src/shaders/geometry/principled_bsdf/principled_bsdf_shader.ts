@@ -1,13 +1,13 @@
-import { Shader } from "../shader";
+import { Shader } from "../../shader";
 import shaderSource from './principled_bsdf.wgsl';
 
 export class PrincipledBSDFShader extends Shader {
 
-    static UNIFORM_BINDING_GROUPS = {
-        VERTEX_VIEWPROJ: 0,
-        VERTEX_MODEL: 1,
-        FRAGMENT_MATERIAL: 2,
-        FRAGMENT_SCENE_INFO: 3
+    static BINDING_GROUPS = {
+        VIEWPROJ: 0,
+        MODEL: 1,
+        MATERIAL: 2,
+        SCENE_INFO: 3
     }
 
     constructor(name: string, cb: () => void) {

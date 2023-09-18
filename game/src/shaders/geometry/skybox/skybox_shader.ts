@@ -1,11 +1,11 @@
-import { Shader } from '../shader';
-import shaderSource from './depth_and_velocity.wgsl';
+import { Shader } from "../../shader";
+import shaderSource from "./skybox.wgsl";
 
-export class DepthAndVelocityShader extends Shader {
+export class SkyboxShader extends Shader {
 
     static BINDING_GROUPS = {
         VIEWPROJ: 0,
-        MODEL: 1
+        TEXTURE: 1
     }
 
     constructor(name: string, cb: () => void) {

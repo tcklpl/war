@@ -1,12 +1,11 @@
-import { Shader } from "../shader";
-import shaderSource from "./environment.wgsl";
+import { Shader } from "../../shader";
+import shaderSource from "./ssao.wgsl";
 
-export class EnvironmentShader extends Shader {
+export class SSAOShader extends Shader {
 
     static BINDING_GROUPS = {
         TEXTURES: 0,
-        SCENE: 1,
-        VARIABLES: 2
+        OPT_KERNEL: 1
     }
 
     constructor(name: string, cb: () => void) {

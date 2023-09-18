@@ -1,10 +1,11 @@
-import { Shader } from '../shader';
-import shaderSource from './taa.wgsl';
+import { Shader } from "../../shader";
+import shaderSource from './picking.wgsl';
 
-export class TAAShader extends Shader {
+export class PickingShader extends Shader {
 
     static BINDING_GROUPS = {
-        TEXTURES: 0
+        VIEWPROJ: 0,
+        ENTITY: 1
     }
 
     constructor(name: string, cb: () => void) {

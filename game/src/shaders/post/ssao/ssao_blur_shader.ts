@@ -1,11 +1,10 @@
-import { Shader } from "../shader";
-import shaderSource from './picking.wgsl';
+import { Shader } from "../../shader";
+import shaderSource from "./ssao_blur.wgsl";
 
-export class PickingShader extends Shader {
+export class SSAOBlurShader extends Shader {
 
     static BINDING_GROUPS = {
-        VIEWPROJ: 0,
-        ENTITY: 1
+        TEXTURES: 0
     }
 
     constructor(name: string, cb: () => void) {

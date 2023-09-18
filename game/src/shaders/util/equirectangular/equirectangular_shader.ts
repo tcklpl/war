@@ -1,11 +1,11 @@
-import { Shader } from "../shader";
+import { Shader } from "../../shader";
 import shaderSource from "./equirectangular.wgsl";
 
 export class EquirectangularShader extends Shader {
 
-    static UNIFORM_BINDING_GROUPS = {
-        VERTEX_VIEWPROJ: 0,
-        FRAGMENT_TEXTURE: 1
+    static BINDING_GROUPS = {
+        VIEWPROJ: 0,
+        TEXTURE: 1
     }
 
     constructor(name: string, cb: () => void) {

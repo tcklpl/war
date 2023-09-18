@@ -1,4 +1,4 @@
-import { Shader } from "../shader";
+import { Shader } from "../../shader";
 import shaderSource from "./pfx_tone_mapping.wgsl";
 
 export class PFXTonemapShader extends Shader {

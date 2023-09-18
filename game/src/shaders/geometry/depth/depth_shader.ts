@@ -1,11 +1,11 @@
-import { Shader } from '../shader';
+import { Shader } from "../../shader";
 import shaderSource from './depth.wgsl';
 
 export class DepthShader extends Shader {
 
-    static UNIFORM_BINDING_GROUPS = {
-        VERTEX_VIEWPROJ: 0,
-        VERTEX_MODEL: 1
+    static BINDING_GROUPS = {
+        VIEWPROJ: 0,
+        MODEL: 1
     }
 
     constructor(name: string, cb: () => void) {

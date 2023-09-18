@@ -1,10 +1,10 @@
-import { Shader } from "../shader";
-import shaderSource from "./ssao_blur.wgsl";
+import { Shader } from "../../shader";
+import shaderSource from "./bloom_downsample.wgsl";
 
-export class SSAOBlurShader extends Shader {
+export class BloomDownsampleShader extends Shader {
 
     static BINDING_GROUPS = {
-        TEXTURES: 0
+        TEXTURE: 0
     }
 
     constructor(name: string, cb: () => void) {
