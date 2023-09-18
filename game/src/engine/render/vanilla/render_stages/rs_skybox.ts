@@ -91,7 +91,7 @@ export class RenderStageSkybox implements RenderStage {
         
         pool.commandEncoder.pushDebugGroup('Skybox Renderer');
         this.setDepthTexture(pool.depthTextureView);
-        this.setColorTexture(pool.hdrTextureView);
+        this.setColorTexture(pool.hdrBufferChain.current.view);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pipeline);

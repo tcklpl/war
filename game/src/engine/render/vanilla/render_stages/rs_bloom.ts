@@ -93,7 +93,7 @@ export class RenderStageBloom implements RenderStage {
 
         for (let i = 0; i < pool.bloomMipsLength; i++) {
 
-            const sourceTexture = i === 0 ? pool.hdrTextureView : pool.bloomMips.texture.createView({
+            const sourceTexture = i === 0 ? pool.hdrBufferChain.current.view : pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
                 baseMipLevel: i - 1
             });

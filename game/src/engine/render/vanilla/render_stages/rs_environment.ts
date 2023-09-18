@@ -124,7 +124,7 @@ export class RenderStageEnvironment implements RenderStage {
         
         const texturesBindGroup = this.createTexturesBindGroup(pool);
         this.updateVariablesBuffer(pool);
-        this.setRenderTexture(pool.hdrTextureView);
+        this.setRenderTexture(pool.hdrBufferChain.current.view);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pipeline);

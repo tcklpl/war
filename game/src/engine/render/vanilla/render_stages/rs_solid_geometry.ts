@@ -146,7 +146,7 @@ export class RenderStageSolidGeometry implements RenderStage {
 
         pool.commandEncoder.pushDebugGroup('Solid Geometry Renderer');
         this.setDepthTexture(pool.depthTextureView);
-        this.setColorAttachment(0, pool.hdrTextureView);
+        this.setColorAttachment(0, pool.hdrBufferChain.current.view);
         this.setColorAttachment(1, pool.normalTextureView);
         this.setColorAttachment(2, pool.specularTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);

@@ -2,6 +2,7 @@ import { BufferOutOfBoundsError } from "../../../errors/engine/buffer_oob";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
+import { RenderHDRBufferChain } from "../../data/texture/render_hdr_buffer_chain";
 import { Texture } from "../../data/texture/texture";
 import { Vec2 } from "../../data/vec/vec2";
 import { Vec3 } from "../../data/vec/vec3";
@@ -23,10 +24,7 @@ export class RenderResourcePool {
     private _depthTexture = new Texture();
     private _velocityTexture = new Texture();
 
-    private _hdrTexture0 = new Texture();
-    private _hdrTexture1 = new Texture();
-    private _hdrTexture2 = new Texture();
-    private _currentHDRTexture = 0;
+    private _hdrBufferChain!: RenderHDRBufferChain;
 
     private _bloomMips = new Texture();
     private _bloomMipsLength = 7;
@@ -47,15 +45,8 @@ export class RenderResourcePool {
         // prefer rg11b10ufloat if the device supports it, as it uses 32 bits per pixel instead of 64 with rgba16float
         const canRenderToRG11B10 = device.features.has("rg11b10ufloat-renderable");
         if (canRenderToRG11B10) this._hdrTextureFormat = 'rg11b10ufloat';
-    }
 
-    private createHDRTexture(resolution: Resolution, label: string) {
-        return device.createTexture({
-            label: label,
-            size: [resolution.full.x, resolution.full.y],
-            format: this._hdrTextureFormat,
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
+        this._hdrBufferChain = new RenderHDRBufferChain(this._hdrTextureFormat);
     }
 
     resizeBuffers(resolution: Resolution) {
@@ -78,9 +69,7 @@ export class RenderResourcePool {
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
 
-        this._hdrTexture0.texture = this.createHDRTexture(resolution, 'render pool: hdr texture 0');
-        this._hdrTexture1.texture = this.createHDRTexture(resolution, 'render pool: hdr texture 1');
-        this._hdrTexture2.texture = this.createHDRTexture(resolution, 'render pool: hdr texture 2');
+        this._hdrBufferChain.resize(resolution.full);
 
         this._bloomMips.texture = device.createTexture({
             label: 'render pool: bloom mips',
@@ -142,14 +131,13 @@ export class RenderResourcePool {
         device.queue.writeBuffer(this._viewProjBuffer, 5 * Mat4.byteSize + Vec3.byteSize + 4, jitter.asF32Array);
 
         // switch HDR textures (to also store the previous frame)
-        this._currentHDRTexture = (this._currentHDRTexture + 2) % 3;
+        this._hdrBufferChain.swapCurrentAndPrevious();
     }
 
     private freeTextures() {
         this._depthTexture.free();
         this._velocityTexture.free();
-        this._hdrTexture0.free();
-        this._hdrTexture1.free();
+        this._hdrBufferChain.free();
         this._bloomMips.free();
         this._normalTexture.free();
         this._ssaoTextureNoisy.free();
@@ -178,43 +166,8 @@ export class RenderResourcePool {
         return this._velocityTexture.view;
     }
 
-    get hdrTextureView() {
-        switch (this._currentHDRTexture) {
-            case 0:
-                return this._hdrTexture0.view;
-            case 1:
-                return this._hdrTexture1.view;
-            case 2:
-                return this._hdrTexture2.view;
-            default:
-                throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
-        }
-    }
-
-    get previousFrameHDRTextureView() {
-        switch (this._currentHDRTexture) {
-            case 0:
-                return this._hdrTexture2.view;
-            case 1:
-                return this._hdrTexture0.view;
-            case 2:
-                return this._hdrTexture1.view;
-            default:
-                throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
-        }
-    }
-
-    get antialiasedTextureView() {
-        switch (this._currentHDRTexture) {
-            case 0:
-                return this._hdrTexture1.view;
-            case 1:
-                return this._hdrTexture2.view;
-            case 2:
-                return this._hdrTexture0.view;
-            default:
-                throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
-        }
+    get hdrBufferChain() {
+        return this._hdrBufferChain;
     }
 
     get canvasTextureView() {
