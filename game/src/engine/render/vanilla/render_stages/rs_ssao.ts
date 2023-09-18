@@ -218,7 +218,7 @@ export class RenderStageSSAO implements RenderStage {
             layout: this._ssaoBlurPipeline.getBindGroupLayout(SSAOBlurShader.BINDING_GROUPS.TEXTURES),
             entries: [
                 { binding: 0, resource: this._samplerClamp },
-                { binding: 1, resource: pool.ssaoTextureNoisy.createView() },
+                { binding: 1, resource: pool.ssaoTextureNoisy.texture.createView() },
             ]
         })
     }
@@ -269,7 +269,7 @@ export class RenderStageSSAO implements RenderStage {
         
         const texturesBindGroup = this.createSSAOBlurBindGroup(pool);
         
-        this.setSSAOBlurRenderTexture(pool.ssaoTextureBlurred);
+        this.setSSAOBlurRenderTexture(pool.ssaoTextureBlurred.texture);
         const rpe = pool.commandEncoder.beginRenderPass(this._ssaoBlurRenderPassDescriptor);
 
         rpe.setPipeline(this._ssaoBlurPipeline);

@@ -2,6 +2,7 @@ import { BufferOutOfBoundsError } from "../../../errors/engine/buffer_oob";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
+import { Texture } from "../../data/texture/texture";
 import { Vec2 } from "../../data/vec/vec2";
 import { Vec3 } from "../../data/vec/vec3";
 import { Resolution } from "../../resolution";
@@ -19,34 +20,21 @@ export class RenderResourcePool {
     private _renderProjection!: RenderProjection;
     private _renderPostEffects!: RenderPostEffects;
 
-    private _depthTexture!: GPUTexture;
-    private _depthTextureView!: GPUTextureView;
+    private _depthTexture = new Texture();
+    private _velocityTexture = new Texture();
 
-    private _velocityTexture!: GPUTexture;
-    private _velocityTextureView!: GPUTextureView;
-
-    private _hdrTexture0!: GPUTexture;
-    private _hdrTexture0View!: GPUTextureView;
-    private _hdrTexture1!: GPUTexture;
-    private _hdrTexture1View!: GPUTextureView;
-    private _hdrTexture2!: GPUTexture;
-    private _hdrTexture2View!: GPUTextureView;
+    private _hdrTexture0 = new Texture();
+    private _hdrTexture1 = new Texture();
+    private _hdrTexture2 = new Texture();
     private _currentHDRTexture = 0;
 
-    private _bloomMips!: GPUTexture;
+    private _bloomMips = new Texture();
     private _bloomMipsLength = 7;
 
-    private _normalTexture!: GPUTexture;
-    private _normalTextureView!: GPUTextureView;
-
-    private _ssaoTextureNoisy!: GPUTexture;
-    private _ssaoTextureViewNoisy!: GPUTextureView;
-
-    private _ssaoTextureBlurred!: GPUTexture;
-    private _ssaoTextureViewBlurred!: GPUTextureView;
-
-    private _specularTexture!: GPUTexture;
-    private _specularTextureView!: GPUTextureView;
+    private _normalTexture = new Texture();
+    private _ssaoTextureNoisy = new Texture();
+    private _ssaoTextureBlurred = new Texture();
+    private _specularTexture = new Texture();
 
     private _canvasTextureView!: GPUTextureView;
     private _viewProjBuffer!: GPUBuffer;
@@ -72,36 +60,29 @@ export class RenderResourcePool {
 
     resizeBuffers(resolution: Resolution) {
 
-        this.free();
+        this.freeTextures();
 
         const ssaoTextureSize = resolution.half;
 
-        this._depthTexture = device.createTexture({
+        this._depthTexture.texture = device.createTexture({
             label: 'render pool: depth texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'depth24plus',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._depthTextureView = this._depthTexture.createView();
 
-        this._velocityTexture = device.createTexture({
+        this._velocityTexture.texture = device.createTexture({
             label: 'render pool: velocity texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rg16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._velocityTextureView = this._velocityTexture.createView();
 
-        this._hdrTexture0 = this.createHDRTexture(resolution, 'render pool: hdr texture 0');
-        this._hdrTexture0View = this._hdrTexture0.createView();
+        this._hdrTexture0.texture = this.createHDRTexture(resolution, 'render pool: hdr texture 0');
+        this._hdrTexture1.texture = this.createHDRTexture(resolution, 'render pool: hdr texture 1');
+        this._hdrTexture2.texture = this.createHDRTexture(resolution, 'render pool: hdr texture 2');
 
-        this._hdrTexture1 = this.createHDRTexture(resolution, 'render pool: hdr texture 1');
-        this._hdrTexture1View = this._hdrTexture1.createView();
-
-        this._hdrTexture2 = this.createHDRTexture(resolution, 'render pool: hdr texture 2');
-        this._hdrTexture2View = this._hdrTexture2.createView();
-
-        this._bloomMips = device.createTexture({
+        this._bloomMips.texture = device.createTexture({
             label: 'render pool: bloom mips',
             size: [resolution.half.x, resolution.half.y],
             format: this._hdrTextureFormat,
@@ -109,37 +90,33 @@ export class RenderResourcePool {
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
 
-        this._normalTexture = device.createTexture({
+        this._normalTexture.texture = device.createTexture({
             label: 'render pool: normal texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rgba8unorm',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._normalTextureView = this._normalTexture.createView();
 
-        this._ssaoTextureNoisy = device.createTexture({
+        this._ssaoTextureNoisy.texture = device.createTexture({
             label: 'render pool: ssao noisy texture',
             size: [ssaoTextureSize.x, ssaoTextureSize.y],
             format: 'r16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._ssaoTextureViewNoisy = this._ssaoTextureNoisy.createView();
 
-        this._ssaoTextureBlurred = device.createTexture({
+        this._ssaoTextureBlurred.texture = device.createTexture({
             label: 'render pool: ssao blurred texture',
             size: [ssaoTextureSize.x, ssaoTextureSize.y],
             format: 'r16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._ssaoTextureViewBlurred = this._ssaoTextureBlurred.createView();
 
-        this._specularTexture = device.createTexture({
+        this._specularTexture.texture = device.createTexture({
             label: 'render pool: specular texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rg16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
-        this._specularTextureView = this._specularTexture.createView();
 
     }
 
@@ -168,16 +145,21 @@ export class RenderResourcePool {
         this._currentHDRTexture = (this._currentHDRTexture + 2) % 3;
     }
 
+    private freeTextures() {
+        this._depthTexture.free();
+        this._velocityTexture.free();
+        this._hdrTexture0.free();
+        this._hdrTexture1.free();
+        this._bloomMips.free();
+        this._normalTexture.free();
+        this._ssaoTextureNoisy.free();
+        this._ssaoTextureBlurred.free();
+        this._specularTexture.free();
+    }
+
     free() {
-        this._depthTexture?.destroy();
-        this._velocityTexture?.destroy();
-        this._hdrTexture0?.destroy();
-        this._hdrTexture1?.destroy();
-        this._bloomMips?.destroy();
-        this._normalTexture?.destroy();
-        this._ssaoTextureNoisy?.destroy();
-        this._ssaoTextureBlurred?.destroy();
-        this._specularTexture?.destroy();
+        this.freeTextures();
+        this._viewProjBuffer?.destroy();
     }
 
     get hasTextures() {
@@ -189,21 +171,21 @@ export class RenderResourcePool {
     }
 
     get depthTextureView() {
-        return this._depthTextureView;
+        return this._depthTexture.view;
     }
 
     get velocityTextureView() {
-        return this._velocityTextureView;
+        return this._velocityTexture.view;
     }
 
     get hdrTextureView() {
         switch (this._currentHDRTexture) {
             case 0:
-                return this._hdrTexture0View;
+                return this._hdrTexture0.view;
             case 1:
-                return this._hdrTexture1View;
+                return this._hdrTexture1.view;
             case 2:
-                return this._hdrTexture2View;
+                return this._hdrTexture2.view;
             default:
                 throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
         }
@@ -212,11 +194,11 @@ export class RenderResourcePool {
     get previousFrameHDRTextureView() {
         switch (this._currentHDRTexture) {
             case 0:
-                return this._hdrTexture2View;
+                return this._hdrTexture2.view;
             case 1:
-                return this._hdrTexture0View;
+                return this._hdrTexture0.view;
             case 2:
-                return this._hdrTexture1View;
+                return this._hdrTexture1.view;
             default:
                 throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
         }
@@ -225,11 +207,11 @@ export class RenderResourcePool {
     get antialiasedTextureView() {
         switch (this._currentHDRTexture) {
             case 0:
-                return this._hdrTexture1View;
+                return this._hdrTexture1.view;
             case 1:
-                return this._hdrTexture2View;
+                return this._hdrTexture2.view;
             case 2:
-                return this._hdrTexture0View;
+                return this._hdrTexture0.view;
             default:
                 throw new BufferOutOfBoundsError(`Invalid current HDR texture index: ${this._currentHDRTexture}`);
         }
@@ -276,7 +258,7 @@ export class RenderResourcePool {
     }
 
     get normalTextureView() {
-        return this._normalTextureView;
+        return this._normalTexture.view;
     }
 
     get ssaoTextureNoisy() {
@@ -284,7 +266,7 @@ export class RenderResourcePool {
     }
 
     get ssaoTextureViewNoisy() {
-        return this._ssaoTextureViewNoisy;
+        return this._ssaoTextureNoisy.view;
     }
 
     get ssaoTextureBlurred() {
@@ -292,7 +274,7 @@ export class RenderResourcePool {
     }
 
     get ssaoTextureViewBlurred() {
-        return this._ssaoTextureViewBlurred;
+        return this._ssaoTextureBlurred.view;
     }
 
     get specularTexture() {
@@ -300,7 +282,7 @@ export class RenderResourcePool {
     }
 
     get specularTextureView() {
-        return this._specularTextureView;
+        return this._specularTexture.view;
     }
 
     get projectionMatrix() {
