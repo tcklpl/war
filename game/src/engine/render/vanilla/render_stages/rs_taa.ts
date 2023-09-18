@@ -1,4 +1,4 @@
-import { TAAShader } from "../../../../shaders/taa/taa_shader";
+import { TAAShader } from "../../../../shaders/post/taa/taa_shader";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
 import { RenderStage } from "./render_stage";

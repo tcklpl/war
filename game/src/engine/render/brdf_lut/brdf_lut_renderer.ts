@@ -1,4 +1,4 @@
-import { BRDFConvolutionIntegralShader } from "../../../shaders/brdf_convolution_integral/brdf_convolution_integral_shader";
+import { BRDFConvolutionIntegralShader } from "../../../shaders/util/brdf_convolution_integral/brdf_convolution_integral_shader";
 
 export class BRDFLUTRenderer {
 

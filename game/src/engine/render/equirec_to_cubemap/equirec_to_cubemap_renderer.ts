@@ -1,5 +1,5 @@
 import { BadResolutionError } from "../../../errors/engine/data/bad_resolution";
-import { EquirectangularShader } from "../../../shaders/equirectangular/equirectangular_shader";
+import { EquirectangularShader } from "../../../shaders/util/equirectangular/equirectangular_shader";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { MathUtils } from "../../../utils/math_utils";
 import { Mat4 } from "../../data/mat/mat4";
@@ -117,7 +117,7 @@ export class EquirectangularToCubemapRenderer {
     private createMatrixBindGroup(pipeline: GPURenderPipeline) {
         return device.createBindGroup({
             label: 'equirec to cubemap matrix bindgroup',
-            layout: pipeline.getBindGroupLayout(EquirectangularShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ),
+            layout: pipeline.getBindGroupLayout(EquirectangularShader.BINDING_GROUPS.VIEWPROJ),
             entries: [
                 { binding: 0, resource: { buffer: this._uniformBuffer }}
             ]
@@ -144,7 +144,7 @@ export class EquirectangularToCubemapRenderer {
         // create bindgroup to hold the supplied texture
         const texBindGroup = device.createBindGroup({
             label: 'equirec to cubemap conversion texture bindgroup',
-            layout: pipeline.getBindGroupLayout(EquirectangularShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
+            layout: pipeline.getBindGroupLayout(EquirectangularShader.BINDING_GROUPS.TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: equirecImage.createView() },
@@ -171,8 +171,8 @@ export class EquirectangularToCubemapRenderer {
             passEncoder.setPipeline(pipeline);
 
             // bind uniforms
-            passEncoder.setBindGroup(EquirectangularShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, matrixBindGroup);
-            passEncoder.setBindGroup(EquirectangularShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, texBindGroup);
+            passEncoder.setBindGroup(EquirectangularShader.BINDING_GROUPS.VIEWPROJ, matrixBindGroup);
+            passEncoder.setBindGroup(EquirectangularShader.BINDING_GROUPS.TEXTURE, texBindGroup);
 
             // draw to texture
             // will draw 36 vertices, no data needs to be supplied as the vertices are hard coded into the shader

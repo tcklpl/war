@@ -1,4 +1,4 @@
-import { PrincipledBSDFShader } from "../../../shaders/principled_bsdf/principled_bsdf_shader";
+import { PrincipledBSDFShader } from "../../../shaders/geometry/principled_bsdf/principled_bsdf_shader";
 
 export abstract class Material {
 
@@ -19,7 +19,7 @@ export abstract class Material {
     abstract getBindGroup(pipeline: GPURenderPipeline): GPUBindGroup;
 
     bind(passEncoder: GPURenderPassEncoder, currentPipeline: GPURenderPipeline) {
-        passEncoder.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_MATERIAL, this.getBindGroup(currentPipeline));
+        passEncoder.setBindGroup(PrincipledBSDFShader.BINDING_GROUPS.MATERIAL, this.getBindGroup(currentPipeline));
     }
 
     abstract free(): void;

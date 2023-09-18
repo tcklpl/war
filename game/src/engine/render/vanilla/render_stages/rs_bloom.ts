@@ -1,5 +1,5 @@
-import { BloomDownsampleShader } from "../../../../shaders/bloom/bloom_downsample_shader";
-import { BloomUpsampleShader } from "../../../../shaders/bloom/bloom_upsample_shader";
+import { BloomDownsampleShader } from "../../../../shaders/post/bloom/bloom_downsample_shader";
+import { BloomUpsampleShader } from "../../../../shaders/post/bloom/bloom_upsample_shader";
 import { Shader } from "../../../../shaders/shader";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
@@ -105,7 +105,7 @@ export class RenderStageBloom implements RenderStage {
 
             this.setRenderTexture(targetMip);
             const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);            
-            const layoutIndex = BloomDownsampleShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE;
+            const layoutIndex = BloomDownsampleShader.BINDING_GROUPS.TEXTURE;
 
             rpe.setPipeline(this._downsamplePipeline);
             rpe.setBindGroup(layoutIndex, this.createBindGroup(this._downsamplePipeline, layoutIndex, sourceTexture));
@@ -131,7 +131,7 @@ export class RenderStageBloom implements RenderStage {
 
             this.setRenderTexture(targetMip);
             const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
-            const layoutIndex = BloomUpsampleShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE;
+            const layoutIndex = BloomUpsampleShader.BINDING_GROUPS.TEXTURE;
 
             rpe.setPipeline(this._upsamplePipeline);
             rpe.setBindGroup(layoutIndex, this.createBindGroup(this._upsamplePipeline, layoutIndex, sourceTexture));

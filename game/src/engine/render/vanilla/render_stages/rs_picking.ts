@@ -1,4 +1,4 @@
-import { PickingShader } from "../../../../shaders/picking/picking_shader";
+import { PickingShader } from "../../../../shaders/geometry/picking/picking_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
 import { MathUtils } from "../../../../utils/math_utils";
 import { Mat4 } from "../../../data/mat/mat4";

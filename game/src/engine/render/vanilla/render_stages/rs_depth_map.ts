@@ -1,4 +1,4 @@
-import { DepthAndVelocityShader } from "../../../../shaders/depth/depth_and_velocity_shader";
+import { DepthAndVelocityShader } from "../../../../shaders/geometry/depth/depth_and_velocity_shader";
 import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";

@@ -1,4 +1,4 @@
-import { SkyboxShader } from "../../../../shaders/skybox/skybox_shader";
+import { SkyboxShader } from "../../../../shaders/geometry/skybox/skybox_shader";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
 import { RenderStage } from "./render_stage";
@@ -70,7 +70,7 @@ export class RenderStageSkybox implements RenderStage {
     private createViewProjBindGroup(buffer: GPUBuffer) {
         return device.createBindGroup({
             label: 'PBR ViewProj',
-            layout: this._pipeline.getBindGroupLayout(SkyboxShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ),
+            layout: this._pipeline.getBindGroupLayout(SkyboxShader.BINDING_GROUPS.VIEWPROJ),
             entries: [
                 { binding: 0, resource: { buffer: buffer }}
             ]
@@ -95,8 +95,8 @@ export class RenderStageSkybox implements RenderStage {
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pipeline);
-        rpe.setBindGroup(SkyboxShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroup);
-        rpe.setBindGroup(SkyboxShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, pool.scene.activeSkybox.getBindGroup(this._pipeline).skybox);
+        rpe.setBindGroup(SkyboxShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroup);
+        rpe.setBindGroup(SkyboxShader.BINDING_GROUPS.TEXTURE, pool.scene.activeSkybox.getBindGroup(this._pipeline).skybox);
         rpe.draw(36);
         rpe.end();
         pool.commandEncoder.popDebugGroup();

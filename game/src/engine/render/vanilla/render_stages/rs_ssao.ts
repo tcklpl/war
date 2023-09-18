@@ -1,6 +1,6 @@
+import { SSAOBlurShader } from "../../../../shaders/post/ssao/ssao_blur_shader";
+import { SSAOShader } from "../../../../shaders/post/ssao/ssao_shader";
 import { Shader } from "../../../../shaders/shader";
-import { SSAOBlurShader } from "../../../../shaders/ssao/ssao_blur_shader";
-import { SSAOShader } from "../../../../shaders/ssao/ssao_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
 import { MathUtils } from "../../../../utils/math_utils";
 import { Mat4 } from "../../../data/mat/mat4";

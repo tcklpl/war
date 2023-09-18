@@ -1,4 +1,4 @@
-import { PFXTonemapShader } from "../../../../shaders/pfx_tone_mapping/pfx_tone_mapping_shader";
+import { PFXTonemapShader } from "../../../../shaders/post/pfx_tone_mapping/pfx_tone_mapping_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";

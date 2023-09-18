@@ -1,5 +1,4 @@
-import { EnvironmentShader } from "../../../../shaders/environment/environment_shader";
-import { SSAOShader } from "../../../../shaders/ssao/ssao_shader";
+import { EnvironmentShader } from "../../../../shaders/post/environment/environment_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
 import { Camera } from "../../../data/camera/camera";
 import { Mat4 } from "../../../data/mat/mat4";
@@ -10,7 +9,7 @@ import { RenderStage } from "./render_stage";
 
 export class RenderStageEnvironment implements RenderStage {
 
-    private _shader!: SSAOShader;
+    private _shader!: EnvironmentShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _sampler = device.createSampler({

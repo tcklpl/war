@@ -1,4 +1,4 @@
-import { SkyboxShader } from "../../../shaders/skybox/skybox_shader";
+import { SkyboxShader } from "../../../shaders/geometry/skybox/skybox_shader";
 
 export abstract class Skybox {
 
@@ -21,7 +21,7 @@ export abstract class Skybox {
 
         const skyboxBindGroup = device.createBindGroup({
             label: `Skybox bind group`,
-            layout: pipeline.getBindGroupLayout(SkyboxShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
+            layout: pipeline.getBindGroupLayout(SkyboxShader.BINDING_GROUPS.TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: this._skybox.createView({ dimension: 'cube' }) }
@@ -30,7 +30,7 @@ export abstract class Skybox {
 
         const convolutedSkyboxBindGroup = device.createBindGroup({
             label: `Skybox bind group`,
-            layout: pipeline.getBindGroupLayout(SkyboxShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
+            layout: pipeline.getBindGroupLayout(SkyboxShader.BINDING_GROUPS.TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: this._convoluted_skybox.createView({ dimension: 'cube' }) }
