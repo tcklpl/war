@@ -3,6 +3,7 @@ import { BufferUtils } from "../../../../utils/buffer_utils";
 import { MathUtils } from "../../../../utils/math_utils";
 import { Mat4 } from "../../../data/mat/mat4";
 import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
+import { Texture } from "../../../data/texture/texture";
 import { Vec2 } from "../../../data/vec/vec2";
 import { Resolution } from "../../../resolution";
 import { RenderInitializationResources } from "../render_initialization_resources";
@@ -12,8 +13,7 @@ import { RenderStage } from "./render_stage";
 export class RenderStagePicking implements RenderStage {
 
     private _shader!: PickingShader;
-    private _pickingTexture!: GPUTexture;
-    private _pickingTextureView!: GPUTextureView;
+    private _pickingTexture = new Texture();
     private _pickingProjectionMatrix!: Mat4;
     private _pickingPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
@@ -30,12 +30,11 @@ export class RenderStagePicking implements RenderStage {
             this._shader = new PickingShader('picking shader', () => r());
         });
 
-        this._pickingTexture = device.createTexture({
+        this._pickingTexture.texture = device.createTexture({
             size: [1, 1],
             format: 'r32uint',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC
         });
-        this._pickingTextureView = this._pickingTexture.createView();
 
         this._pickingPipeline = await this.createPickingPipeline();
         this._renderPassDescriptor = this.createRenderPassDescriptor();
@@ -139,7 +138,7 @@ export class RenderStagePicking implements RenderStage {
         this.updatePickingProjectionMatrix(pool.resolution, game.engine.managers.io.mouse.position, pool.renderProjection.fovY, pool.renderProjection.near, pool.renderProjection.far);
         this.updateViewProjBuffer(camera.viewMatrix);
 
-        this.setColorAttachment(this._pickingTextureView);
+        this.setColorAttachment(this._pickingTexture.view);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pickingPipeline);
@@ -148,7 +147,7 @@ export class RenderStagePicking implements RenderStage {
 
         rpe.end();
         pool.commandEncoder.copyTextureToBuffer(
-            { texture: this._pickingTexture }, 
+            { texture: this._pickingTexture.texture }, 
             { buffer: this._pickingBuffer }, 
             { width: 1, height: 1 }
         );
@@ -157,7 +156,7 @@ export class RenderStagePicking implements RenderStage {
     }
 
     free() {
-        this._pickingTexture?.destroy();
+        this._pickingTexture.free();
         this._viewProjBuffer?.destroy();
     }
 
