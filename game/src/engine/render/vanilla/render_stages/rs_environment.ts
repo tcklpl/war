@@ -1,6 +1,7 @@
 import { EnvironmentShader } from "../../../../shaders/environment/environment_shader";
 import { SSAOShader } from "../../../../shaders/ssao/ssao_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
+import { Camera } from "../../../data/camera/camera";
 import { Mat4 } from "../../../data/mat/mat4";
 import { SceneInfoBindGroupOptions } from "../../../data/scene/scene_info_bind_group_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
@@ -18,7 +19,7 @@ export class RenderStageEnvironment implements RenderStage {
         mipmapFilter: 'linear'
     });
 
-    private _variablesBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _variablesBuffer = BufferUtils.createEmptyBuffer(3 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
     private _variablesBindGroup!: GPUBindGroup;
     private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(EnvironmentShader.BINDING_GROUPS.SCENE).includeConvolutedSkybox(0).includePrefilteredSkybox(1).includeBrdfLUT(2);
 
@@ -114,6 +115,7 @@ export class RenderStageEnvironment implements RenderStage {
     private updateVariablesBuffer(pool: RenderResourcePool) {
         device.queue.writeBuffer(this._variablesBuffer, 0, pool.projectionMatrix.asF32Array);
         device.queue.writeBuffer(this._variablesBuffer, Mat4.byteSize, pool.inverseProjectionMatrix.asF32Array);
+        device.queue.writeBuffer(this._variablesBuffer, 2 * Mat4.byteSize, (pool.scene.activeCamera as Camera).cameraMatrix.asF32Array);
     }
 
     render(pool: RenderResourcePool) {

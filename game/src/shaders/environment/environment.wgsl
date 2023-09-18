@@ -58,7 +58,8 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
 
 struct EnviromentVariables {
     proj: mat4x4f,
-    proj_inverse: mat4x4f
+    proj_inverse: mat4x4f,
+    view_inverse: mat4x4f
 };
 @group(2) @binding(0) var<uniform> env: EnviromentVariables;
 
@@ -87,6 +88,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     // get normal from the texture
     var normalTexel = textureSample(normal_texture, env_sampler, v.uv);
     var normal = normalize(normalTexel.xyz * 2.0 - 1.0); // map normals from [0, 1] to [-1, 1] as they came from a rgba8 texture
+    var model_normal = normalize(env.view_inverse * vec4f(normal, 0.0)).xyz;
 
     // get ambient occlusion
     var ao = textureSample(ssao_texture, env_sampler, v.uv).r;
@@ -101,7 +103,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var kD = 1.0 - kS;
 
     // diffuse irradiance
-    var irradiance = textureSample(iblIrradiance, env_sampler, normal).rgb;
+    var irradiance = textureSample(iblIrradiance, env_sampler, model_normal).rgb;
     var diffuse = irradiance;
 
     // specular irradiance
