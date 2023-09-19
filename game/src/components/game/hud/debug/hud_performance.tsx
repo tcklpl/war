@@ -12,7 +12,7 @@ const HUDPerformance: React.FC = () => {
     const { gameInstance } = useGame();
     const [ fps, setFps ] = useState(0);
     const [ fpsColor, setFpsColor ] = useState<HUDPerformanceColor>(HUDPerformanceColor.WHITE);
-    const [ fpsHistory, setFpsHistory ] = useState<number[]>([]);
+    const [ fpsHistory, setFpsHistory ] = useState<number[]>(Array.apply(0, Array(60)).map(x => x) as number[]);
 
     useEffect(() => {
         if (!gameInstance) return;
