@@ -5,12 +5,16 @@ import LoadingScreen from "../loading/loading_screen";
 import FailedToStartEngineScreen from "../error/failed_to_start_engine/failed_to_start_engine_screen";
 import { CrashProvider } from "../../hooks/use_crash";
 import HUDPerformance from "./hud/debug/hud_performance";
+import HUDAlert from "./hud/alert/hud_alert";
+import { AlertProvider } from "../../hooks/use_alert";
 
 const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
     return (
         <GameProvider>
             <CrashProvider>
-                { children }
+                <AlertProvider>
+                    { children }
+                </AlertProvider>
             </CrashProvider>
         </GameProvider>
     )
@@ -23,6 +27,7 @@ const WarGameComponent: React.FC = () => {
             <Hooks>
                 <FailedToStartEngineScreen/>
                 <LoadingScreen/>
+                <HUDAlert/>
                 <HUDPerformance/>
                 <WarCanvas/>
             </Hooks>
