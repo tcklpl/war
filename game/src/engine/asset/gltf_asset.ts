@@ -1,5 +1,5 @@
 import { GLTFFile } from "../data/gltf/gltf_file";
-import { Asset } from "./Asset";
+import { Asset } from "./asset";
 
 export class GLTFAsset extends Asset {
 

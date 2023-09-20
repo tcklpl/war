@@ -1,4 +1,4 @@
-import { AssetManager } from "./asset/AssetManager";
+import { AssetManager } from "./asset/asset_manager";
 import { CameraManager } from "./data/camera/camera_manager";
 import { LightManager } from "./data/lights/light_manager";
 import { MaterialManager } from "./data/material/material_manager";

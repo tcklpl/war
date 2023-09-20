@@ -1,4 +1,4 @@
-import { Asset } from "./Asset";
+import { Asset } from "./asset";
 
 export class IMGAsset extends Asset {
 

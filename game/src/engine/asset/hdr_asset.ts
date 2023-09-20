@@ -1,4 +1,4 @@
-import { Asset } from "./Asset";
+import { Asset } from "./asset";
 import { HDRImageData } from "./loaders/hdr_loader";
 
 export class HDRAsset extends Asset {
