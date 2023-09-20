@@ -23,7 +23,7 @@ export class GameLoader {
     }
 
     private async initializeEngine() {
-        await game.engine.initializeRenderers();
+        await game.engine.initialize();
     }
 
     private async loadAssets() {

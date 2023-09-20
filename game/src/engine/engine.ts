@@ -5,6 +5,7 @@ import { MaterialManager } from "./data/material/material_manager";
 import { MeshManager } from "./data/meshes/mesh_manager";
 import { SceneManager } from "./data/scene/scene_manager";
 import { IFrameListener } from "./data/traits/frame_listener";
+import { IDBWarConnection } from "./idb_war_connection";
 import { IdentifierPool } from "./identifier_pool";
 import { GameIO } from "./io/io";
 import { BRDFLUTRenderer } from "./render/brdf_lut/brdf_lut_renderer";
@@ -21,6 +22,7 @@ export class Engine {
     private _shouldRender: boolean = false;
 
     private _idPool = new IdentifierPool();
+    private _db = new IDBWarConnection();
 
     private _managers = {
         io: new GameIO(),
@@ -82,7 +84,16 @@ export class Engine {
         this._shouldRender = false;
     }
 
-    async initializeRenderers() {
+    async initialize() {
+        await this.initializeDB();
+        await this.initializeRenderers();
+    }
+
+    private async initializeDB() {
+        await this._db.openConnection();
+    }
+
+    private async initializeRenderers() {
         await this.utilRenderers.equirecToCubemap.initialize();
         await this.utilRenderers.cubemapConvolution.initialize();
         await this.utilRenderers.cubemapPrefilter.initialize();
@@ -103,6 +114,8 @@ export class Engine {
     free() {
         // prevent rendering while we destroy the whole engine
         this.pauseRender();
+
+        this._db.closeConnection();
 
         // assets don't need any memory freeing
         // cameras also don't need any memory freeing
