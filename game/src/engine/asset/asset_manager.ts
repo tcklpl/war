@@ -7,8 +7,13 @@ import { GLTFLoader } from "./loaders/gltf_loader";
 import { GLTFFile } from "../data/gltf/gltf_file";
 import { BadGLTFFileError } from "../../errors/engine/gltf/bad_gltf_file";
 import { IMGAsset } from "./img_asset";
-import { HDRLoader } from "./loaders/hdr_loader";
+import { HDRImageData, HDRLoader } from "./loaders/hdr_loader";
 import { HDRAsset } from "./hdr_asset";
+import { AssetCache } from "./cache/asset_cache";
+import { IDBConnector } from "../idb/idb_connector";
+import { CachedAssetKey } from "./cache/cached_asset_key";
+import { AssetType } from "./cache/asset_type";
+import { HDRCachedAsset } from "./cache/hdr_cached_asset";
 
 type AssetIndex = typeof assetIndex;
 type GLTFAssetName = keyof AssetIndex["gltf"];
@@ -21,6 +26,12 @@ export class AssetManager extends Manager<Asset> {
     private loaders = {
         gltf: new GLTFLoader(),
         hdr: new HDRLoader()
+    }
+
+    private _cache!: AssetCache;
+
+    async initializeDB(connection: IDBConnector) {
+        this._cache = new AssetCache(connection);
     }
 
     async loadAssets(onAssetLoadCallback?: () => void) {
@@ -77,10 +88,30 @@ export class AssetManager extends Manager<Asset> {
 
         for (let k of hdrAssets) {
             const assetInfo = assetIndex.hdr[k as HDRAssetName];
-            const assetFile = await this.fetchAssetFile(k, assetInfo);
-            const assetArrayBuffer = await assetFile.arrayBuffer();
-            const data = this.loaders.hdr.decodeRGBE(new DataView(assetArrayBuffer))
-            this.register(new HDRAsset(k, assetInfo.url, data));
+
+            // try to get asset from the cache
+            const assetKey = new CachedAssetKey(AssetType.HDR, k);
+            const cacheHit = await this._cache.getAsset(assetKey);
+
+            // cache miss
+            if (!cacheHit) {
+                // fetch and decode the asset
+                const assetFile = await this.fetchAssetFile(k, assetInfo);
+                const assetArrayBuffer = await assetFile.arrayBuffer();
+                const data = this.loaders.hdr.decodeRGBE(new DataView(assetArrayBuffer));
+                const asset = new HDRAsset(k, assetInfo.url, data);
+
+                // try to cache it
+                await this._cache.putAsset(new HDRCachedAsset(assetKey, asset.data));
+                this.register(asset);
+            }
+            // asset is in cache
+            else {
+                const cachedData = cacheHit.data as HDRImageData;
+                const asset = new HDRAsset(k, assetInfo.url, cachedData);
+                this.register(asset);
+            }
+
             if (onAssetLoadCallback) onAssetLoadCallback();
         }
     }

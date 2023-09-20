@@ -91,6 +91,7 @@ export class Engine {
 
     private async initializeDB() {
         await this._db.openConnection();
+        await this._managers.asset.initializeDB(this._db);
     }
 
     private async initializeRenderers() {
