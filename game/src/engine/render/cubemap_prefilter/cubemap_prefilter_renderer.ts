@@ -1,5 +1,5 @@
 import { BadResolutionError } from "../../../errors/engine/data/bad_resolution";
-import { PrefilterCubemapShader } from "../../../shaders/cubemap_prefiltering/prefilter_cubemap_shader";
+import { PrefilterCubemapShader } from "../../../shaders/util/cubemap_prefiltering/prefilter_cubemap_shader";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { MathUtils } from "../../../utils/math_utils";
 import { Mat4 } from "../../data/mat/mat4";
@@ -89,7 +89,7 @@ export class CubemapPrefilterRenderer {
     private createMatrixBindGroup() {
         return device.createBindGroup({
             label: 'cubemap convolution matrix bindgroup',
-            layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ),
+            layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.BINDING_GROUPS.VIEWPROJ),
             entries: [
                 { binding: 0, resource: { buffer: this._uniformBuffer }}
             ]
@@ -117,7 +117,7 @@ export class CubemapPrefilterRenderer {
         // create bindgroup to hold the supplied texture
         const texBindGroup = device.createBindGroup({
             label: 'cubemap convolution texture bindgroup',
-            layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE),
+            layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.BINDING_GROUPS.TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: cubemap.createView({ dimension: 'cube' }) },
@@ -153,8 +153,8 @@ export class CubemapPrefilterRenderer {
                 passEncoder.setPipeline(this._pipeline);
 
                 // bind uniforms
-                passEncoder.setBindGroup(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._matrixBindGroup);
-                passEncoder.setBindGroup(PrefilterCubemapShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE, texBindGroup);
+                passEncoder.setBindGroup(PrefilterCubemapShader.BINDING_GROUPS.VIEWPROJ, this._matrixBindGroup);
+                passEncoder.setBindGroup(PrefilterCubemapShader.BINDING_GROUPS.TEXTURE, texBindGroup);
 
                 // draw to texture
                 // will draw 36 vertices, no data needs to be supplied as the vertices are hard coded into the shader

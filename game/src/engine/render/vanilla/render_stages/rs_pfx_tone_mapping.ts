@@ -1,4 +1,4 @@
-import { PFXTonemapShader } from "../../../../shaders/pfx_tone_mapping/pfx_tone_mapping_shader";
+import { PFXTonemapShader } from "../../../../shaders/post/pfx_tone_mapping/pfx_tone_mapping_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
@@ -71,8 +71,8 @@ export class RenderStagePFXToneMapping implements RenderStage {
             layout: this._pipeline.getBindGroupLayout(PFXTonemapShader.BINDING_GROUPS.TEXTURES),
             entries: [
                 { binding: 0, resource: this._sampler },
-                { binding: 1, resource: pool.antialiasedTextureView },
-                { binding: 2, resource: pool.bloomMips.createView() }
+                { binding: 1, resource: pool.hdrBufferChain.current.view },
+                { binding: 2, resource: pool.bloomMips.texture.createView() }
             ]
         });
     }

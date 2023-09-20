@@ -1,4 +1,4 @@
-import { PrincipledBSDFShader } from "../../../shaders/principled_bsdf/principled_bsdf_shader";
+import { PrincipledBSDFShader } from "../../../shaders/geometry/principled_bsdf/principled_bsdf_shader";
 import { Mat4 } from "../mat/mat4";
 import { Mesh } from "../meshes/mesh";
 import { PrimitiveDrawOptions } from "../meshes/primitive_draw_options";
@@ -32,7 +32,7 @@ export class Entity extends EntityBase {
 
         const newBindGroup = device.createBindGroup({
             label: `Entity '${this._name}' model matrix`,
-            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_MODEL),
+            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.BINDING_GROUPS.MODEL),
             entries: [
                 { binding: 0, resource: { buffer: this.modelMatrixUniformBuffer }}
             ]
@@ -42,7 +42,7 @@ export class Entity extends EntityBase {
     }
 
     draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options: PrimitiveDrawOptions) {
-        passEncoder.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_MODEL, this.getBindGroup(pipeline));
+        passEncoder.setBindGroup(PrincipledBSDFShader.BINDING_GROUPS.MODEL, this.getBindGroup(pipeline));
         this._mesh.draw(passEncoder, pipeline, options);
     }
 

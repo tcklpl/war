@@ -1,4 +1,4 @@
-import { PrincipledBSDFShader } from "../../../shaders/principled_bsdf/principled_bsdf_shader";
+import { PrincipledBSDFShader } from "../../../shaders/geometry/principled_bsdf/principled_bsdf_shader";
 import { TextureUtils } from "../../../utils/texture_utils";
 import { Vec4 } from "../vec/vec4";
 import { Material } from "./material";
@@ -55,7 +55,7 @@ export class PBRMaterial extends Material {
 
         const newBindGroup = device.createBindGroup({
             label: `PBR Material '${this.name}' bind group`,
-            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_MATERIAL),
+            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.BINDING_GROUPS.MATERIAL),
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: this._albedo.createView() },

@@ -1,4 +1,4 @@
-import { TAAShader } from "../../../../shaders/taa/taa_shader";
+import { TAAShader } from "../../../../shaders/post/taa/taa_shader";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
 import { RenderStage } from "./render_stage";
@@ -71,8 +71,8 @@ export class RenderStageTAA implements RenderStage {
             entries: [
                 { binding: 0, resource: this._samplerNearest },
                 { binding: 1, resource: this._samplerLinear },
-                { binding: 2, resource: pool.hdrTextureView },
-                { binding: 3, resource: pool.previousFrameHDRTextureView },
+                { binding: 2, resource: pool.hdrBufferChain.current.view },
+                { binding: 3, resource: pool.hdrBufferChain.previous.view },
                 { binding: 4, resource: pool.velocityTextureView }
             ]
         });
@@ -87,7 +87,7 @@ export class RenderStageTAA implements RenderStage {
         pool.commandEncoder.pushDebugGroup('TAA Renderer');
         const bindGroup = this.createBindGroup(pool);
 
-        this.setRenderTexture(pool.antialiasedTextureView);
+        this.setRenderTexture(pool.hdrBufferChain.available.view);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._taaPipeline);
@@ -95,6 +95,9 @@ export class RenderStageTAA implements RenderStage {
         rpe.draw(6);
         rpe.end();
 
+        // update the hdr chain to notify the next render stages to use the antialiased texture as input
+        pool.hdrBufferChain.swapCurrentBuffers();
+        
         pool.commandEncoder.popDebugGroup();
     }
 

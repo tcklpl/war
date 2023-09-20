@@ -1,6 +1,6 @@
-import { EnvironmentShader } from "../../../../shaders/environment/environment_shader";
-import { SSAOShader } from "../../../../shaders/ssao/ssao_shader";
+import { EnvironmentShader } from "../../../../shaders/post/environment/environment_shader";
 import { BufferUtils } from "../../../../utils/buffer_utils";
+import { Camera } from "../../../data/camera/camera";
 import { Mat4 } from "../../../data/mat/mat4";
 import { SceneInfoBindGroupOptions } from "../../../data/scene/scene_info_bind_group_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
@@ -9,7 +9,7 @@ import { RenderStage } from "./render_stage";
 
 export class RenderStageEnvironment implements RenderStage {
 
-    private _shader!: SSAOShader;
+    private _shader!: EnvironmentShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _sampler = device.createSampler({
@@ -18,7 +18,7 @@ export class RenderStageEnvironment implements RenderStage {
         mipmapFilter: 'linear'
     });
 
-    private _variablesBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _variablesBuffer = BufferUtils.createEmptyBuffer(3 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
     private _variablesBindGroup!: GPUBindGroup;
     private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(EnvironmentShader.BINDING_GROUPS.SCENE).includeConvolutedSkybox(0).includePrefilteredSkybox(1).includeBrdfLUT(2);
 
@@ -114,6 +114,7 @@ export class RenderStageEnvironment implements RenderStage {
     private updateVariablesBuffer(pool: RenderResourcePool) {
         device.queue.writeBuffer(this._variablesBuffer, 0, pool.projectionMatrix.asF32Array);
         device.queue.writeBuffer(this._variablesBuffer, Mat4.byteSize, pool.inverseProjectionMatrix.asF32Array);
+        device.queue.writeBuffer(this._variablesBuffer, 2 * Mat4.byteSize, (pool.scene.activeCamera as Camera).cameraMatrix.asF32Array);
     }
 
     render(pool: RenderResourcePool) {
@@ -122,7 +123,7 @@ export class RenderStageEnvironment implements RenderStage {
         
         const texturesBindGroup = this.createTexturesBindGroup(pool);
         this.updateVariablesBuffer(pool);
-        this.setRenderTexture(pool.hdrTextureView);
+        this.setRenderTexture(pool.hdrBufferChain.current.view);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         rpe.setPipeline(this._pipeline);

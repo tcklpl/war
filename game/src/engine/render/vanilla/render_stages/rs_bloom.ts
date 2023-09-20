@@ -1,5 +1,5 @@
-import { BloomDownsampleShader } from "../../../../shaders/bloom/bloom_downsample_shader";
-import { BloomUpsampleShader } from "../../../../shaders/bloom/bloom_upsample_shader";
+import { BloomDownsampleShader } from "../../../../shaders/post/bloom/bloom_downsample_shader";
+import { BloomUpsampleShader } from "../../../../shaders/post/bloom/bloom_upsample_shader";
 import { Shader } from "../../../../shaders/shader";
 import { RenderInitializationResources } from "../render_initialization_resources";
 import { RenderResourcePool } from "../render_resource_pool";
@@ -93,19 +93,19 @@ export class RenderStageBloom implements RenderStage {
 
         for (let i = 0; i < pool.bloomMipsLength; i++) {
 
-            const sourceTexture = i === 0 ? pool.hdrTextureView : pool.bloomMips.createView({
+            const sourceTexture = i === 0 ? pool.hdrBufferChain.current.view : pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
                 baseMipLevel: i - 1
             });
 
-            const targetMip = pool.bloomMips.createView({
+            const targetMip = pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
                 baseMipLevel: i
             });
 
             this.setRenderTexture(targetMip);
             const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);            
-            const layoutIndex = BloomDownsampleShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE;
+            const layoutIndex = BloomDownsampleShader.BINDING_GROUPS.TEXTURE;
 
             rpe.setPipeline(this._downsamplePipeline);
             rpe.setBindGroup(layoutIndex, this.createBindGroup(this._downsamplePipeline, layoutIndex, sourceTexture));
@@ -119,19 +119,19 @@ export class RenderStageBloom implements RenderStage {
         
         for (let i = pool.bloomMipsLength - 1; i > 0; i--) {
 
-            const sourceTexture = pool.bloomMips.createView({
+            const sourceTexture = pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
                 baseMipLevel: i
             });
 
-            const targetMip = pool.bloomMips.createView({
+            const targetMip = pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
                 baseMipLevel: i - 1
             });
 
             this.setRenderTexture(targetMip);
             const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
-            const layoutIndex = BloomUpsampleShader.UNIFORM_BINDING_GROUPS.FRAGMENT_TEXTURE;
+            const layoutIndex = BloomUpsampleShader.BINDING_GROUPS.TEXTURE;
 
             rpe.setPipeline(this._upsamplePipeline);
             rpe.setBindGroup(layoutIndex, this.createBindGroup(this._upsamplePipeline, layoutIndex, sourceTexture));

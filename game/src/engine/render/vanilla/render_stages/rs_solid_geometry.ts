@@ -1,5 +1,4 @@
-import { PrincipledBSDFShader } from "../../../../shaders/principled_bsdf/principled_bsdf_shader";
-import { Shader } from "../../../../shaders/shader";
+import { PrincipledBSDFShader } from "../../../../shaders/geometry/principled_bsdf/principled_bsdf_shader";
 import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
 import { SceneInfoBindGroupOptions } from "../../../data/scene/scene_info_bind_group_options";
 import { RenderInitializationResources } from "../render_initialization_resources";
@@ -8,14 +7,14 @@ import { RenderStage } from "./render_stage";
 
 export class RenderStageSolidGeometry implements RenderStage {
 
-    private _principledShader!: Shader;
+    private _principledShader!: PrincipledBSDFShader;
     private _pipelineCW!: GPURenderPipeline;
     private _pipelineCCW!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
     private _meshDrawOptions = new PrimitiveDrawOptions().includeAll();
-    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO).includeDirectionalLights(0);
+    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO).includeDirectionalLights(0);
 
     async initialize(resources: RenderInitializationResources) {
 
@@ -127,7 +126,7 @@ export class RenderStageSolidGeometry implements RenderStage {
         const pipeline = windingOrder === 'ccw' ? this._pipelineCCW : this._pipelineCW;
         return device.createBindGroup({
             label: 'PBR ViewProj',
-            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ),
+            layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.BINDING_GROUPS.VIEWPROJ),
             entries: [
                 { binding: 0, resource: { buffer: buffer }}
             ]
@@ -146,24 +145,24 @@ export class RenderStageSolidGeometry implements RenderStage {
 
         pool.commandEncoder.pushDebugGroup('Solid Geometry Renderer');
         this.setDepthTexture(pool.depthTextureView);
-        this.setColorAttachment(0, pool.hdrTextureView);
+        this.setColorAttachment(0, pool.hdrBufferChain.current.view);
         this.setColorAttachment(1, pool.normalTextureView);
         this.setColorAttachment(2, pool.specularTextureView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
             rpe.setPipeline(this._pipelineCCW);
-            rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCCW);
+            rpe.setBindGroup(PrincipledBSDFShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCCW);
             const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCCW, this._sceneBindGroupOptions);
-            rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
+            rpe.setBindGroup(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO, sceneInfoBindGroup);
             pool.scene.entitiesPerWindingOrder.ccw.forEach(e => e.draw(rpe, this._pipelineCCW, this._meshDrawOptions));
         }
 
         if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
             rpe.setPipeline(this._pipelineCW);
-            rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.VERTEX_VIEWPROJ, this._viewProjBindGroupCW);
+            rpe.setBindGroup(PrincipledBSDFShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCW);
             const sceneInfoBindGroup = pool.scene.info.getBindGroup(this._pipelineCW, this._sceneBindGroupOptions);
-            rpe.setBindGroup(PrincipledBSDFShader.UNIFORM_BINDING_GROUPS.FRAGMENT_SCENE_INFO, sceneInfoBindGroup);
+            rpe.setBindGroup(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO, sceneInfoBindGroup);
             pool.scene.entitiesPerWindingOrder.cw.forEach(e => e.draw(rpe, this._pipelineCW, this._meshDrawOptions));
         }
 
