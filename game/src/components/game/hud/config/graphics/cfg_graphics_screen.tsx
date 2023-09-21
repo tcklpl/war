@@ -33,6 +33,14 @@ const CfgGraphicsScreen: React.FC = () => {
                             <TableCell align="right"><Switch/></TableCell>
                         </TableRow>
 
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:graphics_post_effects_taa"), content: t("config:graphics_post_effects_taa_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:graphics_post_effects_taa") }</Typography></TableCell>
+                            <TableCell align="right"><Switch/></TableCell>
+                        </TableRow>
+
                     </TableBody>
                 </Table>
                 
