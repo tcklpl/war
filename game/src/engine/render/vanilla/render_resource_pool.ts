@@ -1,4 +1,3 @@
-import { BufferOutOfBoundsError } from "../../../errors/engine/buffer_oob";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
