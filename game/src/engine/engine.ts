@@ -143,6 +143,10 @@ export class Engine {
         return this._managers;
     }
 
+    get db() {
+        return this._db;
+    }
+
     get renderer() {
         return this._renderer;
     }

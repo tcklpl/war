@@ -1,4 +1,6 @@
 {
+    "no_idb": "IndexedDB failed to initialize on your browser, this may be due to you being on a private window or your browser straight up not supporting it. Any changes you make on this screen WILL NOT BE PERSISTED.",
+
     "display": "Display",
     "display_performance": "Performance",
     "display_performance_show_stats": "Show Performance Stats",
