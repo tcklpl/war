@@ -1,19 +1,58 @@
 import React, { useState } from "react"
-import { Grid, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
+import { Grid, MenuItem, Select, SelectChangeEvent, Stack, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 const CfgDisplayScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const [currentTooltip, setCurrentTooltip] = useState<{title: string, content: string} | undefined>();
     const { t } = useTranslation(["config"]);
+
+    const [theme, setTheme] = React.useState('dark');
+
+    const handleThemeChange = (event: SelectChangeEvent) => {
+        setTheme(event.target.value as string);
+    };
     
     return (
         <Grid container style={{ backgroundColor: palette.background.default }} className="cfg-display-screen">
 
             <Grid item xs={8}>
-                <Typography variant="h5">{ t("config:display_performance") }</Typography>
+
+                <Typography variant="h5">{ t("config:visual") }</Typography>
+                <Table>
+                    <TableBody>
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:visual_theme"), content: t("config:visual_theme_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:visual_theme") }</Typography></TableCell>
+                            <TableCell align="right">
+                                <Select value={theme} onChange={handleThemeChange}>
+
+                                    <MenuItem value={'dark'}>
+                                        <Stack direction={'row'}>
+                                            <DarkModeIcon style={{marginRight: '0.5em'}}/> 
+                                            { t("config:visual_theme_dark") }
+                                        </Stack>
+                                    </MenuItem>
+
+                                    <MenuItem value={'light'}>
+                                        <Stack direction={'row'}>
+                                            <LightModeIcon style={{marginRight: '0.5em'}}/> 
+                                            { t("config:visual_theme_light") }
+                                        </Stack>
+                                    </MenuItem>
+                                </Select>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+
+                <Typography variant="h5" style={{marginTop: '1em'}}>{ t("config:display_performance") }</Typography>
                 <Table>
                     <TableBody>
                         <TableRow 
