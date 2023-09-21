@@ -7,6 +7,7 @@ import { CrashProvider } from "../../hooks/use_crash";
 import HUDPerformance from "./hud/debug/hud_performance";
 import HUDAlert from "./hud/alert/hud_alert";
 import { AlertProvider } from "../../hooks/use_alert";
+import PauseScreen from "./hud/pause_screen/pause_screen";
 
 const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
     return (
@@ -27,6 +28,7 @@ const WarGameComponent: React.FC = () => {
             <Hooks>
                 <FailedToStartEngineScreen/>
                 <LoadingScreen/>
+                <PauseScreen/>
                 <HUDAlert/>
                 <HUDPerformance/>
                 <WarCanvas/>
