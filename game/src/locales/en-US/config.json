@@ -1,0 +1,13 @@
+{
+    "display": "Display",
+    "display_performance": "Performance",
+    "display_performance_show_stats": "Show Performance Stats",
+    "display_performance_show_stats_desc": "Displays performance stats on the top-right corner of the screen. Current stats: FPS",
+
+    "graphics": "Graphics",
+    "graphics_post_effects": "Post Effects",
+    "graphics_post_effects_ssao": "SSAO",
+    "graphics_post_effects_ssao_desc": "Screen Space Ambient Occlusion: Darkens objects close to each other or faces at close angles, emulating how light would be occluded.",
+    "graphics_post_effects_bloom": "Bloom",
+    "graphics_post_effects_bloom_desc": "Blurs really bright spots, emulating how light would interact with a camera."
+}
