@@ -1,21 +1,29 @@
-import React, { useState } from "react"
-import { Grid, MenuItem, Select, SelectChangeEvent, Stack, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react"
+import { Grid, MenuItem, Select, Stack, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { useConfig } from "../../../../../hooks/use_config";
 
 const CfgDisplayScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const [currentTooltip, setCurrentTooltip] = useState<{title: string, content: string} | undefined>();
     const { t } = useTranslation(["config"]);
+    const { displayConfig, setDisplayConfig } = useConfig();
 
-    const [theme, setTheme] = React.useState('dark');
+    const [theme, setTheme] = useState(displayConfig.theme);
+    const [showPerformance, setShowPerformance] = useState(displayConfig.showPerformance);
 
-    const handleThemeChange = (event: SelectChangeEvent) => {
-        setTheme(event.target.value as string);
-    };
+    useEffect(() => {
+        // save the config when this screen is closed
+        return () => {
+            displayConfig.theme = theme;
+            displayConfig.showPerformance = showPerformance;
+            setDisplayConfig(displayConfig);
+        }
+    }, [showPerformance, theme, displayConfig, setDisplayConfig]);
     
     return (
         <Grid container style={{ backgroundColor: palette.background.default }} className="cfg-display-screen">
@@ -31,7 +39,9 @@ const CfgDisplayScreen: React.FC = () => {
                         >
                             <TableCell><Typography variant="body1">{ t("config:visual_theme") }</Typography></TableCell>
                             <TableCell align="right">
-                                <Select value={theme} onChange={handleThemeChange}>
+                                <Select value={theme} onChange={e => {
+                                    setTheme(e.target.value as string);
+                                }}>
 
                                     <MenuItem value={'dark'}>
                                         <Stack direction={'row'}>
@@ -60,7 +70,11 @@ const CfgDisplayScreen: React.FC = () => {
                             onMouseLeave={() => setCurrentTooltip(undefined)}
                         >
                             <TableCell><Typography variant="body1">{ t("config:display_performance_show_stats") }</Typography></TableCell>
-                            <TableCell align="right"><Switch/></TableCell>
+                            <TableCell align="right">
+                                <Switch checked={showPerformance} onChange={e => {
+                                    setShowPerformance(e.target.checked);
+                                }}/>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
