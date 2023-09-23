@@ -6,10 +6,13 @@ import SixtyFpsSelectIcon from '@mui/icons-material/SixtyFpsSelect';
 import "./debug_huds.sass";
 import { HUDPerformanceColor } from "./hud_performance_colors";
 import { LineChart, Line, YAxis, ReferenceLine } from 'recharts';
+import { useConfig } from "../../../../hooks/use_config";
 
 const HUDPerformance: React.FC = () => {
 
     const { gameInstance } = useGame();
+    const { displayConfig: display } = useConfig();
+
     const [ fps, setFps ] = useState(0);
     const [ fpsColor, setFpsColor ] = useState<HUDPerformanceColor>(HUDPerformanceColor.WHITE);
     const [ fpsHistory, setFpsHistory ] = useState<number[]>(Array.apply(0, Array(60)).map(x => x) as number[]);
@@ -39,7 +42,7 @@ const HUDPerformance: React.FC = () => {
         }
     }, [fps, fpsHistory]);
 
-    return !!gameInstance ? (
+    return !!gameInstance && display.showPerformance ? (
         <Card className="hud-debug-performance">
             <CardHeader title="Performance" avatar={<SixtyFpsSelectIcon/>} />
             <CardContent>
