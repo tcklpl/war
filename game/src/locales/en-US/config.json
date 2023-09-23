@@ -10,7 +10,7 @@
     "display": "Display",
     "display_performance": "Performance",
     "display_performance_show_stats": "Show Performance Stats",
-    "display_performance_show_stats_desc": "Displays performance stats on the top-right corner of the screen. Current stats: FPS",
+    "display_performance_show_stats_desc": "Displays performance stats on the top-right corner of the screen. \n\nCurrent stats: FPS",
 
     "graphics": "Graphics",
     "graphics_post_effects": "Post Effects",
@@ -19,5 +19,11 @@
     "graphics_post_effects_bloom": "Bloom",
     "graphics_post_effects_bloom_desc": "Blurs really bright spots, emulating how light would interact with a camera.",
     "graphics_post_effects_taa": "TAA",
-    "graphics_post_effects_taa_desc": "Temporal Anti Aliasing: Softens aliased and pixelated edges, making the final render smoother."
+    "graphics_post_effects_taa_desc": "Temporal Anti Aliasing: Softens aliased and pixelated edges, making the final render smoother.",
+
+    "game": "Game",
+    "game_loading": "Loading",
+    "game_loading_cache_assets": "Cache Loaded Assets",
+    "game_loading_cache_assets_desc": "Stores loaded assets locally, speeding up the loading process at the expense of some storage. \n\nCurrent storage being used: <USAGE>. Please note that this usage may also include other things your browser saves about this website.",
+    "game_loading_cache_assets_desc_failed_to_calculate_usage": "Failed to calculate storage usage"
 }
