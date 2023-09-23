@@ -44,6 +44,10 @@ export class IDBController<T> {
         });
     }
 
+    async getOneAs<C extends T>(key: any) {
+        return await this.getOne(key) as C;
+    }
+
     getAll() {
         return new Promise<T[]>((resolve, reject) => {
             const transaction = this.createTransaction('readonly');
