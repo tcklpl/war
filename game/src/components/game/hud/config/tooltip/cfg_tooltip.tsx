@@ -7,7 +7,7 @@ const CfgTooltip: React.FC<{currentTooltip?: {title: string, content: string}}> 
     return (
         <Stack spacing={2} className="cfg-tooltip">
             <Typography variant="h6" className="cfg-tooltip-title">{currentTooltip?.title}</Typography>
-            <Typography variant="body1">{currentTooltip?.content}</Typography>
+            <Typography variant="body1" className="cfg-tooltip-body">{currentTooltip?.content}</Typography>
         </Stack>
     );
 }
