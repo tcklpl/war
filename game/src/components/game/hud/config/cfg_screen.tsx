@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from "react"
+import React, { ReactNode, useEffect, useState } from "react"
 import { Alert, Box, Stack, ToggleButton, ToggleButtonGroup, useTheme } from "@mui/material";
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import MonitorIcon from '@mui/icons-material/Monitor';
@@ -18,20 +18,16 @@ const CfgScreen: React.FC = () => {
     const [currentConfigScreen, setCurrentConfigScreen] = useState<ReactNode>();
     const { t } = useTranslation(["config"]);
     const { gameInstance } = useGame();
-    const { saveConfig: save } = useConfig();
-
-    const [updateConfig, setUpdateConfig] = useState(false);
-
-    const notifyPageUpdate = useCallback((hasUpdated: boolean) => {
-        setUpdateConfig(updateConfig || hasUpdated);
-    }, [updateConfig, setUpdateConfig]);
+    const { saveConfig } = useConfig();
 
     useEffect(() => {
         // save config when the tab is closed
         return () => {
-            save();
+            // unmount the child component first to make sure that it saves its config
+            setCurrentConfigScreen(() => undefined);
+            saveConfig();
         }
-    }, [save]);
+    }, [saveConfig, setCurrentConfigScreen]);
     
     return (
         <Box style={{ backgroundColor: palette.background.default }} className="cfg-screen" sx={{ flexDirection: 'column' }}>

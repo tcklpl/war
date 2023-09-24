@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useLayoutEffect, useState } from "react"
 import { Grid, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
@@ -22,7 +22,8 @@ const CfgGameScreen: React.FC = () => {
         fetchUsage();
     }, []);
 
-    useEffect(() => {
+    // useLayoutEffect instead of useEffect to run this before unmounting the parent cfg_screen
+    useLayoutEffect(() => {
         // save the config when this screen is closed
         return () => {
             gameConfig.cacheAssets = cacheAssets;
