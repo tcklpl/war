@@ -43,7 +43,10 @@ export class RenderStagePFXToneMapping implements RenderStage {
                 entryPoint: 'fragment',
                 targets: [
                     { format: format }
-                ]
+                ],
+                constants: {
+                    bloom_strength: game.engine.config.graphics.useBloom ? 0.04 : 0
+                }
             },
             primitive: {
                 topology: 'triangle-list',

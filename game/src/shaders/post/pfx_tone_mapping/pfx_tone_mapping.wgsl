@@ -6,7 +6,7 @@
     --------------------------------------------------------------------------------------------------
 */
 
-const BLOOM_STRENGTH = 0.04;
+override bloom_strength: f32;
 
 /*
     Values sent from the vertex shader to the fragment shader
@@ -77,7 +77,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     }
 
     // Apply Bloom
-    var mixedColor = mix(hdrColor, bloomColor, BLOOM_STRENGTH);
+    var mixedColor = mix(hdrColor, bloomColor, bloom_strength);
 
     // Tone Mapping
     var mapped = vec3f(1.0) - exp(-mixedColor * opt.exposure);

@@ -39,7 +39,7 @@ export class VanillaRenderPipeline {
             ...(graphicsConfig.useSSAO ? [this._rsSSAO]: []),
             this._rsEnvironment,
             ...(graphicsConfig.useTAA ? [this._rsTAA] : []),
-            this._rsBloom,
+            ...(graphicsConfig.useBloom ? [this._rsBloom] : []),
             this._rs_pfx_tonemap,
             this._rsPicking
         ];
