@@ -93,10 +93,10 @@ export class Engine {
 
     private async initializeDB() {
         await this._db.openConnection();
-        await this._managers.asset.initializeDB(this._db);
         this._config = new ConfigManager(this._db);
         await this._config.loadConfig();
         await this._config.saveConfig();
+        await this._managers.asset.initializeDB(this._db);
     }
 
     private async initializeRenderers() {
