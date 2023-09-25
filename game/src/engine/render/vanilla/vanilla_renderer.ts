@@ -16,6 +16,7 @@ export class VanillaRenderer extends Renderer {
     private _renderResourcePool = new RenderResourcePool();
     private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
 
+    // Jitter offsets - Needed for TAA, should be an array of zeroes if TAA is disabled
     private _jitterOffsetCount = 16;
     private _jitterOffsets: Vec2[] = [];
     private _currentJitter = 0;
@@ -25,7 +26,7 @@ export class VanillaRenderer extends Renderer {
         this._presentationFormat = navigator.gpu.getPreferredCanvasFormat();
         this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
 
-        this._renderPipeline.buildPipeline();
+        this._renderPipeline.buildPipeline(game.engine.config.graphics);
         await this._renderPipeline.initialize({
             canvasPreferredTextureFormat: this._presentationFormat,
             viewProjBuffer: this._renderResourcePool.viewProjBuffer,
@@ -35,13 +36,25 @@ export class VanillaRenderer extends Renderer {
         this.buildJitterOffsets(this._renderProjection.resolution.full);
     }
 
+    /**
+     * Jitter offsets used by TAA (Temporal Anti-Aliasing) to smooth pixelated edges.
+     * Should be initialized to an array of zeroes if TAA is disabled.
+     * 
+     * @param resolution Screen resolution, needed to make sure all jitter offsets are less than 1px.
+     */
     private buildJitterOffsets(resolution: Vec2) {
-        const offsets: Vec2[] = [];
-        for (let i = 0; i < this._jitterOffsetCount; i++) {
-            const offset = new Vec2(MathUtils.haltonSequence(2, i), MathUtils.haltonSequence(3, i));
-            offset.x = ((offset.x - 0.5) / resolution.x) * 2;
-            offset.y = ((offset.y - 0.5) / resolution.y) * 2;
-            offsets.push(offset);
+
+        let offsets: Vec2[] = [];
+
+        if (game.engine.config.graphics.useTAA) {
+            for (let i = 0; i < this._jitterOffsetCount; i++) {
+                const offset = new Vec2(MathUtils.haltonSequence(2, i), MathUtils.haltonSequence(3, i));
+                offset.x = ((offset.x - 0.5) / resolution.x) * 2;
+                offset.y = ((offset.y - 0.5) / resolution.y) * 2;
+                offsets.push(offset);
+            }
+        } else {
+            offsets = Array(this._jitterOffsetCount).fill(Vec2.fromValue(0));
         }
 
         this._jitterOffsets = offsets;

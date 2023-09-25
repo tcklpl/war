@@ -12,6 +12,7 @@ import { RenderStageSSAO } from "./render_stages/rs_ssao";
 import { RenderStagePicking } from "./render_stages/rs_picking";
 import { RenderStageEnvironment } from "./render_stages/rs_environment";
 import { RenderStageTAA } from "./render_stages/rs_taa";
+import { ConfigGraphics } from "../../config/cfg_graphics";
 
 export class VanillaRenderPipeline {
 
@@ -29,7 +30,7 @@ export class VanillaRenderPipeline {
 
     private _currentPipeline: RenderStage[] = [];
 
-    buildPipeline() {
+    buildPipeline(graphicsConfig: ConfigGraphics) {
         this._currentPipeline = [
             this._rsDepthPass,
             this._rsLights,
@@ -37,7 +38,7 @@ export class VanillaRenderPipeline {
             this._rsSkybox,
             this._rsSSAO,
             this._rsEnvironment,
-            this._rsTAA,
+            ...(graphicsConfig.useTAA ? [this._rsTAA] : []),
             this._rsBloom,
             this._rs_pfx_tonemap,
             this._rsPicking
