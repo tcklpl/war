@@ -68,6 +68,16 @@ export class IDBController<T> {
         });
     }
 
+    count() {
+        return new Promise<number>((resolve, reject) => {
+            const transaction = this.createTransaction('readonly');
+            if (!transaction) return resolve(0);
+            const request = transaction.count();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject();
+        });
+    }
+
     deleteKey(key: any) {
         return new Promise<void>((resolve, reject) => {
             const transaction = this.createTransaction('readwrite');
