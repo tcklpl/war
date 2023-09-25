@@ -39,7 +39,7 @@ export class RenderResourcePool {
     constructor() {
         // buffer has 5 mat4s and 1 vec3 (camera position)
         const viewProjByteSize = Mat4.byteSize * 5 + Vec3.byteSize + Vec2.byteSize;
-        this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+        this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST, 'Render Resource Pool: ViewProj Buffer');
 
         // prefer rg11b10ufloat if the device supports it, as it uses 32 bits per pixel instead of 64 with rgba16float
         const canRenderToRG11B10 = device.features.has("rg11b10ufloat-renderable");

@@ -27,13 +27,14 @@ export class BufferUtils {
         return buffer;
     }
 
-    static createEmptyBuffer(size: number, usage: number) {
+    static createEmptyBuffer(size: number, usage: number, label?: string) {
 
         device.pushErrorScope('out-of-memory');
 
         size = Math.ceil(size / 16) * 16;
 
         const buffer = device.createBuffer({
+            label: label,
             size: size,
             usage: usage
         });
