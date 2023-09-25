@@ -145,4 +145,8 @@ export class AssetManager extends Manager<Asset> {
         , 0);
     }
 
+    async getCachedAssetCount() {
+        return await this._cache.count();
+    }
+
 }
