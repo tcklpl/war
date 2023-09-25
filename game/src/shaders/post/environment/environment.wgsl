@@ -6,6 +6,8 @@
     --------------------------------------------------------------------------------------------------
 */
 
+override use_ssao: bool;
+
 /*
     Values sent from the vertex shader to the fragment shader
 */
@@ -91,7 +93,10 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var model_normal = normalize(env.view_inverse * vec4f(normal, 0.0)).xyz;
 
     // get ambient occlusion
-    var ao = textureSample(ssao_texture, env_sampler, v.uv).r;
+    var ao = 1.0;
+    if (use_ssao) {
+        ao = textureSample(ssao_texture, env_sampler, v.uv).r;
+    }
 
     var V_reflected_N = reflect(-V, normal);
     var NoV = saturate(dot(normal, V));

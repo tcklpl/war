@@ -36,7 +36,7 @@ export class VanillaRenderPipeline {
             this._rsLights,
             this._rsSolidGeometry,
             this._rsSkybox,
-            this._rsSSAO,
+            ...(graphicsConfig.useSSAO ? [this._rsSSAO]: []),
             this._rsEnvironment,
             ...(graphicsConfig.useTAA ? [this._rsTAA] : []),
             this._rsBloom,
