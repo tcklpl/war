@@ -12,12 +12,17 @@ const CfgGameScreen: React.FC = () => {
     const { gameConfig, setGameConfig } = useConfig();
 
     const [usedStorage, setUsedStorage] = useState(-1);
+    const [usedStorageAssetCount, setUsedStorageAssetCount] = useState(-1);
+
     const [cacheAssets, setCacheAssets] = useState(gameConfig.cacheAssets);
 
     useEffect(() => {
         const fetchUsage = async () => {
             const usage = await navigator.storage.estimate();
             setUsedStorage(usage.usage ?? -1);
+
+            const assetNumber = await game.engine.managers.asset.getCachedAssetCount();
+            setUsedStorageAssetCount(assetNumber ?? -1);
         }
         fetchUsage();
     }, []);
@@ -53,7 +58,10 @@ const CfgGameScreen: React.FC = () => {
                         <TableRow 
                             onMouseEnter={() => setCurrentTooltip({ 
                                 title: t("config:game_loading_cache_assets"), 
-                                content: t("config:game_loading_cache_assets_desc").replace('<USAGE>', usedStorage !== -1 ? `${convertBytesToName(usedStorage)}` : t("config:game_loading_cache_assets_desc_failed_to_calculate_usage"))
+                                content: t("config:game_loading_cache_assets_desc")
+                                    .replace('<USAGE>', usedStorage !== -1 ? `${convertBytesToName(usedStorage)}` : t("config:game_loading_cache_assets_desc_failed_to_calculate_usage"))
+                                    .replace('<ASSET_NO>', usedStorageAssetCount !== -1 ? `${usedStorageAssetCount}` : t("config:game_loading_cache_assets_desc_failed_to_calculate_usage"))
+                                    .replace('<ASSET_PLURAL>', usedStorageAssetCount > 1 ? t("config:game_loading_cache_assets_desc_asset_plural") : t("config:game_loading_cache_assets_desc_asset_singular"))
                             })}
                             onMouseLeave={() => setCurrentTooltip(undefined)}
                         >

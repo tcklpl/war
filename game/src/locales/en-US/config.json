@@ -24,6 +24,8 @@
     "game": "Game",
     "game_loading": "Loading",
     "game_loading_cache_assets": "Cache Loaded Assets",
-    "game_loading_cache_assets_desc": "Stores loaded assets locally, speeding up the loading process at the expense of some storage. \n\nCurrent storage being used: <USAGE>. Please note that this usage may also include other things your browser saves about this website.",
+    "game_loading_cache_assets_desc": "Stores loaded assets locally, speeding up the loading process at the expense of some storage. \n\nCurrent storage being used: <USAGE> by <ASSET_NO> <ASSET_PLURAL>. \n\nPlease note that this usage may also include the game's configuration and other things your browser saves about this website.",
+    "game_loading_cache_assets_desc_asset_singular": "asset",
+    "game_loading_cache_assets_desc_asset_plural": "assets",
     "game_loading_cache_assets_desc_failed_to_calculate_usage": "Failed to calculate storage usage"
 }
