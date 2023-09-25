@@ -23,6 +23,7 @@ const LoadingScreen: React.FC = () => {
         
         // update the loading screen based on the loading state
         gameInstance.loader.onLoadStageChange(ls => {
+            if (ls !== LoadStage.COMPLETE) setLoading(true);
             setLoadingStageMessage(getLoadingStageMessage(ls));
 
             if (ls === LoadStage.COMPLETE) setLoading(false);
