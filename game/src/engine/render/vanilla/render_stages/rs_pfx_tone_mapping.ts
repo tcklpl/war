@@ -45,7 +45,8 @@ export class RenderStagePFXToneMapping implements RenderStage {
                     { format: format }
                 ],
                 constants: {
-                    bloom_strength: game.engine.config.graphics.useBloom ? 0.04 : 0
+                    bloom_strength: game.engine.config.graphics.useBloom ? 0.04 : 0,
+                    motion_blur_amount: Math.max(0, game.engine.config.graphics.motionBlurAmount)
                 }
             },
             primitive: {
@@ -75,7 +76,8 @@ export class RenderStagePFXToneMapping implements RenderStage {
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: pool.hdrBufferChain.current.view },
-                { binding: 2, resource: pool.bloomMips.texture.createView() }
+                { binding: 2, resource: pool.bloomMips.texture.createView() },
+                { binding: 3, resource: pool.velocityTextureView }
             ]
         });
     }
