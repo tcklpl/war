@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react"
-import { Grid, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
+import { Grid, Slider, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
 import { useConfig } from "../../../../../hooks/use_config";
@@ -14,6 +14,7 @@ const CfgGraphicsScreen: React.FC = () => {
     const [useSSAO, setUseSSAO] = useState(graphicsConfig.useSSAO);
     const [useBloom, setUseBloom] = useState(graphicsConfig.useBloom);
     const [useTAA, setUseTAA] = useState(graphicsConfig.useTAA);
+    const [motionBlurAmount, setMotionBlurAmount] = useState(graphicsConfig.motionBlurAmount);
 
     // useLayoutEffect instead of useEffect to run this before unmounting the parent cfg_screen
     useLayoutEffect(() => {
@@ -22,8 +23,9 @@ const CfgGraphicsScreen: React.FC = () => {
             graphicsConfig.useSSAO = useSSAO;
             graphicsConfig.useBloom = useBloom;
             graphicsConfig.useTAA = useTAA;
+            graphicsConfig.motionBlurAmount = motionBlurAmount;
         }
-    }, [useSSAO, useBloom, useTAA, graphicsConfig]);
+    }, [useSSAO, useBloom, useTAA, motionBlurAmount, graphicsConfig]);
 
     
     return (
@@ -67,6 +69,25 @@ const CfgGraphicsScreen: React.FC = () => {
                                 <Switch checked={useTAA} onChange={e => {
                                     setUseTAA(e.target.checked);
                                 }}/>
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:graphics_post_effects_motion_blur"), content: t("config:graphics_post_effects_motion_blur_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:graphics_post_effects_motion_blur") }</Typography></TableCell>
+                            <TableCell align="right">
+                                <Grid container alignItems="center">
+                                    <Grid item xs>
+                                        <Slider size="small" min={0} max={1} step={0.01} value={motionBlurAmount} onChange={(e, val) => {
+                                            setMotionBlurAmount(val as number);
+                                        }}/>
+                                    </Grid>
+                                    <Grid item paddingLeft={1}>
+                                        <Typography variant="body1" width="4em">{(motionBlurAmount * 100).toFixed(0)}%</Typography>
+                                    </Grid>
+                                </Grid>
                             </TableCell>
                         </TableRow>
 
