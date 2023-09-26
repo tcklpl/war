@@ -10,12 +10,13 @@ import { useGame } from "../../../../hooks/use_game";
 import CfgGameScreen from "./game/cfg_game_screen";
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import { useConfig } from "../../../../hooks/use_config";
+import CfgScreenDefaultBackground from "./cfg_default_background";
 
 const CfgScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const [alignment, setAlignment] = React.useState('');
-    const [currentConfigScreen, setCurrentConfigScreen] = useState<ReactNode>();
+    const [currentConfigScreen, setCurrentConfigScreen] = useState<ReactNode>(<CfgScreenDefaultBackground/>);
     const { t } = useTranslation(["config"]);
     const { gameInstance } = useGame();
     const { saveConfig } = useConfig();
@@ -23,14 +24,12 @@ const CfgScreen: React.FC = () => {
     useEffect(() => {
         // save config when the tab is closed
         return () => {
-            // unmount the child component first to make sure that it saves its config
-            setCurrentConfigScreen(() => undefined);
             saveConfig();
         }
     }, [saveConfig, setCurrentConfigScreen]);
     
     return (
-        <Box style={{ backgroundColor: palette.background.default }} className="cfg-screen" sx={{ flexDirection: 'column' }}>
+        <Box style={{ backgroundColor: palette.background.default }} className="cfg-screen" sx={{ flexDirection: 'column', display: 'flex' }}>
 
             <Box className="cfg-screen-header">
                 <Stack spacing={2}>
