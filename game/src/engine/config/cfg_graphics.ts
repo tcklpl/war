@@ -5,4 +5,5 @@ export class ConfigGraphics implements ConfigPage {
     useSSAO: boolean = true;
     useBloom: boolean = true;
     useTAA: boolean = true;
+    motionBlurAmount: number = 1.0;
 }
