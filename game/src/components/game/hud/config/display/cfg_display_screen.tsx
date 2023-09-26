@@ -14,17 +14,18 @@ const CfgDisplayScreen: React.FC = () => {
     const { displayConfig, setDisplayConfig } = useConfig();
 
     const [theme, setTheme] = useState(displayConfig.theme);
+    const [language, setLanguage] = useState(displayConfig.language);
     const [showPerformance, setShowPerformance] = useState(displayConfig.showPerformance);
 
     // useLayoutEffect instead of useEffect to run this before unmounting the parent cfg_screen
     useLayoutEffect(() => {
         // save the config when this screen is closed
         return () => {
+            displayConfig.language = language;
             displayConfig.theme = theme;
             displayConfig.showPerformance = showPerformance;
-            setDisplayConfig(displayConfig);
         }
-    }, [showPerformance, theme, displayConfig, setDisplayConfig]);
+    }, [showPerformance, language, theme, displayConfig]);
     
     return (
         <Grid container style={{ backgroundColor: palette.background.default }} className="cfg-display-screen">
@@ -34,6 +35,25 @@ const CfgDisplayScreen: React.FC = () => {
                 <Typography variant="h5">{ t("config:visual") }</Typography>
                 <Table>
                     <TableBody>
+
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:visual_language"), content: t("config:visual_language_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:visual_language") }</Typography></TableCell>
+                            <TableCell align="right">
+                                <Select value={language} onChange={e => {
+                                    setLanguage(e.target.value as string);
+                                }}>
+
+                                    <MenuItem value={'en-US'}>
+                                        { t("config:visual_language_en-US") }
+                                    </MenuItem>
+
+                                </Select>
+                            </TableCell>
+                        </TableRow>
+
                         <TableRow 
                             onMouseEnter={() => setCurrentTooltip({ title: t("config:visual_theme"), content: t("config:visual_theme_desc")})}
                             onMouseLeave={() => setCurrentTooltip(undefined)}
@@ -41,7 +61,11 @@ const CfgDisplayScreen: React.FC = () => {
                             <TableCell><Typography variant="body1">{ t("config:visual_theme") }</Typography></TableCell>
                             <TableCell align="right">
                                 <Select value={theme} onChange={e => {
+                                    // theme changes should be applied instantly
                                     setTheme(e.target.value as string);
+                                    const newConfig = {...displayConfig};
+                                    newConfig.theme = e.target.value;
+                                    setDisplayConfig(newConfig);
                                 }}>
 
                                     <MenuItem value={'dark'}>
