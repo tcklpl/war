@@ -1,9 +1,15 @@
 {
     "no_idb": "IndexedDB failed to initialize on your browser, this may be due to you being on a private window or your browser straight up not supporting it. Any changes you make on this screen WILL NOT BE PERSISTED.",
 
+    "default_screen_header": "Settings Screen",
+    "default_screen_body": "Visual changes (like theme and language) will be applied instantly.\nGraphical or Game-related changes will be applied when you close the pause menu.",
+
     "visual": "Visual",
     "visual_theme": "Theme",
-    "visual_theme_desc": "Changes the pages theme.",
+    "visual_language": "Language",
+    "visual_language_desc": "Changes the interface's Language.",
+    "visual_language_en-US": "English (US)",
+    "visual_theme_desc": "Changes the page's theme.",
     "visual_theme_dark": "Dark",
     "visual_theme_light": "Light",
 
