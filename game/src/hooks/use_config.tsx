@@ -55,23 +55,23 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
         return true;
     }
 
-    const configHasChanged = useCallback(() => {
+    const shouldRenitializeGame = useCallback(() => {
         if (!gameInstance) return false;
 
         let hasChanged = false;
-        hasChanged = hasChanged || !compareObjects(gameInstance.engine.config.display, displayConfig);
+        // display config changes should not reinitialize the whole game, only graphical or game
         hasChanged = hasChanged || !compareObjects(gameInstance.engine.config.graphics, graphicsConfig);
         hasChanged = hasChanged || !compareObjects(gameInstance.engine.config.game, gameConfig);
 
         return hasChanged;
 
-    }, [displayConfig, graphicsConfig, gameConfig, gameInstance]);
+    }, [graphicsConfig, gameConfig, gameInstance]);
 
     const saveConfig = useCallback(() => {
         if (!gameInstance) return;
 
         // see if the user has actually changed anything
-        const shouldReinitializeRenderer = configHasChanged();
+        const shouldReinitializeGame = shouldRenitializeGame();
 
         // update engine config copying the local config objects
         gameInstance.engine.config.display = {...displayConfig};
@@ -85,11 +85,11 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
             const game = WarGame.initialize();
             setGameInstance(game);
         }
-        if (shouldReinitializeRenderer) {
+        if (shouldReinitializeGame) {
             reinitializeGame();
         }
 
-    }, [displayConfig, graphicsConfig, gameConfig, gameInstance, setGameInstance, configHasChanged]);
+    }, [displayConfig, graphicsConfig, gameConfig, gameInstance, setGameInstance, shouldRenitializeGame]);
 
     return (
         <ConfigContext.Provider value={{ displayConfig, setDisplayConfig, graphicsConfig, setGraphicsConfig, gameConfig, setGameConfig, saveConfig }}>
