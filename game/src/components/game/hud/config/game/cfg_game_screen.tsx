@@ -9,7 +9,7 @@ const CfgGameScreen: React.FC = () => {
     const { palette } = useTheme();
     const [currentTooltip, setCurrentTooltip] = useState<{title: string, content: string} | undefined>();
     const { t } = useTranslation(["config"]);
-    const { gameConfig, setGameConfig } = useConfig();
+    const { gameConfig } = useConfig();
 
     const [usedStorage, setUsedStorage] = useState(-1);
     const [usedStorageAssetCount, setUsedStorageAssetCount] = useState(-1);
@@ -32,9 +32,8 @@ const CfgGameScreen: React.FC = () => {
         // save the config when this screen is closed
         return () => {
             gameConfig.cacheAssets = cacheAssets;
-            setGameConfig(gameConfig);
         }
-    }, [cacheAssets, gameConfig, setGameConfig]);
+    }, [cacheAssets, gameConfig]);
 
     const convertBytesToName = (bytes: number) => {
         const units = ['bytes', 'KiB', 'MiB', 'GiB'];

@@ -9,7 +9,7 @@ const CfgGraphicsScreen: React.FC = () => {
     const { palette } = useTheme();
     const [currentTooltip, setCurrentTooltip] = useState<{title: string, content: string} | undefined>();
     const { t } = useTranslation(["config"]);
-    const { graphicsConfig, setGraphicsConfig } = useConfig();
+    const { graphicsConfig } = useConfig();
 
     const [useSSAO, setUseSSAO] = useState(graphicsConfig.useSSAO);
     const [useBloom, setUseBloom] = useState(graphicsConfig.useBloom);
@@ -22,9 +22,8 @@ const CfgGraphicsScreen: React.FC = () => {
             graphicsConfig.useSSAO = useSSAO;
             graphicsConfig.useBloom = useBloom;
             graphicsConfig.useTAA = useTAA;
-            setGraphicsConfig(graphicsConfig);
         }
-    }, [useSSAO, useBloom, useTAA, graphicsConfig, setGraphicsConfig]);
+    }, [useSSAO, useBloom, useTAA, graphicsConfig]);
 
     
     return (
