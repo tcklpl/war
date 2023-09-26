@@ -61,7 +61,10 @@ export class RenderStageEnvironment implements RenderStage {
                             }
                         }
                     } as GPUColorTargetState
-                ]
+                ],
+                constants: {
+                    use_ssao: game.engine.config.graphics.useSSAO ? 1 : 0
+                }
             },
             primitive: {
                 topology: 'triangle-list',

@@ -2,17 +2,32 @@ import ReactDOM from 'react-dom/client';
 import './i18next';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import themeDefaultDark from './style/themes/default_dark';
+import { GameProvider } from './hooks/use_game';
+import { ConfigProvider } from './hooks/use_config';
+import { CrashProvider } from './hooks/use_crash';
+import { AlertProvider } from './hooks/use_alert';
+
+const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
+    return (
+        <GameProvider>
+            <ConfigProvider>
+                <CrashProvider>
+                    <AlertProvider>
+                        { children }
+                    </AlertProvider>
+                </CrashProvider>
+            </ConfigProvider>
+        </GameProvider>
+    )
+}
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <ThemeProvider theme={themeDefaultDark}>
-        <CssBaseline />
-        <App />
-    </ThemeProvider>
+    <Hooks>
+        <App/>
+    </Hooks>
 );
 
 // If you want to start measuring performance in your app, pass a function

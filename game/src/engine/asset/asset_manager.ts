@@ -32,6 +32,11 @@ export class AssetManager extends Manager<Asset> {
 
     async initializeDB(connection: IDBConnector) {
         this._cache = new AssetCache(connection);
+
+        // clear the cache if the user doesn't want to cache assets
+        if (!game.engine.config.game.cacheAssets) {
+            this._cache.clear();
+        }
     }
 
     async loadAssets(onAssetLoadCallback?: () => void) {
@@ -102,7 +107,7 @@ export class AssetManager extends Manager<Asset> {
                 const asset = new HDRAsset(k, assetInfo.url, data);
 
                 // try to cache it
-                await this._cache.putAsset(new HDRCachedAsset(assetKey, asset.data));
+                if (game.engine.config.game.cacheAssets) await this._cache.putAsset(new HDRCachedAsset(assetKey, asset.data));
                 this.register(asset);
             }
             // asset is in cache
@@ -138,6 +143,10 @@ export class AssetManager extends Manager<Asset> {
         return Object.keys(assetIndex).reduce((prev, cur) => 
             prev += Object.keys(assetIndex[cur as keyof AssetIndex]).length
         , 0);
+    }
+
+    async getCachedAssetCount() {
+        return await this._cache.count();
     }
 
 }

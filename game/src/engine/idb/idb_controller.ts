@@ -44,6 +44,10 @@ export class IDBController<T> {
         });
     }
 
+    async getOneAs<C extends T>(key: any) {
+        return await this.getOne(key) as C;
+    }
+
     getAll() {
         return new Promise<T[]>((resolve, reject) => {
             const transaction = this.createTransaction('readonly');
@@ -59,6 +63,16 @@ export class IDBController<T> {
             const transaction = this.createTransaction('readonly');
             if (!transaction) return resolve([]);
             const request = transaction.getAllKeys();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject();
+        });
+    }
+
+    count() {
+        return new Promise<number>((resolve, reject) => {
+            const transaction = this.createTransaction('readonly');
+            if (!transaction) return resolve(0);
+            const request = transaction.count();
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject();
         });

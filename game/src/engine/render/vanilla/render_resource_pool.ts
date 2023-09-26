@@ -1,4 +1,3 @@
-import { BufferOutOfBoundsError } from "../../../errors/engine/buffer_oob";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
@@ -40,7 +39,7 @@ export class RenderResourcePool {
     constructor() {
         // buffer has 5 mat4s and 1 vec3 (camera position)
         const viewProjByteSize = Mat4.byteSize * 5 + Vec3.byteSize + Vec2.byteSize;
-        this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+        this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST, 'Render Resource Pool: ViewProj Buffer');
 
         // prefer rg11b10ufloat if the device supports it, as it uses 32 bits per pixel instead of 64 with rgba16float
         const canRenderToRG11B10 = device.features.has("rg11b10ufloat-renderable");
@@ -50,11 +49,14 @@ export class RenderResourcePool {
     }
 
     resizeBuffers(resolution: Resolution) {
-
         this.freeTextures();
+        this.resizeCommonBuffers(resolution);
+        this._hdrBufferChain.resize(resolution.full);
+        this.resizeSSAOBuffers(resolution);
+        this.resizeBloomBuffers(resolution);
+    }
 
-        const ssaoTextureSize = resolution.half;
-
+    private resizeCommonBuffers(resolution: Resolution) {
         this._depthTexture.texture = device.createTexture({
             label: 'render pool: depth texture',
             size: [resolution.full.x, resolution.full.y],
@@ -69,34 +71,10 @@ export class RenderResourcePool {
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
 
-        this._hdrBufferChain.resize(resolution.full);
-
-        this._bloomMips.texture = device.createTexture({
-            label: 'render pool: bloom mips',
-            size: [resolution.half.x, resolution.half.y],
-            format: this._hdrTextureFormat,
-            mipLevelCount: this._bloomMipsLength,
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
-
         this._normalTexture.texture = device.createTexture({
             label: 'render pool: normal texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rgba8unorm',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
-
-        this._ssaoTextureNoisy.texture = device.createTexture({
-            label: 'render pool: ssao noisy texture',
-            size: [ssaoTextureSize.x, ssaoTextureSize.y],
-            format: 'r16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
-
-        this._ssaoTextureBlurred.texture = device.createTexture({
-            label: 'render pool: ssao blurred texture',
-            size: [ssaoTextureSize.x, ssaoTextureSize.y],
-            format: 'r16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
 
@@ -106,7 +84,62 @@ export class RenderResourcePool {
             format: 'rg16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
+    }
 
+    private resizeSSAOBuffers(resolution: Resolution) {
+        const ssaoTextureSize = resolution.half;
+        const useSSAO = game.engine.config.graphics.useSSAO;
+
+        this._ssaoTextureNoisy.texture = useSSAO ? 
+        // if SSAO is enabled
+        device.createTexture({
+            label: 'render pool: ssao noisy texture',
+            size: [ssaoTextureSize.x, ssaoTextureSize.y],
+            format: 'r16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        }) :
+        // if SSAO is disabled
+        device.createTexture({
+            label: 'render pool: ssao noisy texture',
+            size: [1, 1],
+            format: 'r16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
+
+        this._ssaoTextureBlurred.texture = useSSAO ? 
+        // if SSAO is enabled
+        device.createTexture({
+            label: 'render pool: ssao blurred texture',
+            size: [ssaoTextureSize.x, ssaoTextureSize.y],
+            format: 'r16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        }) :
+        // if SSAO is disabled
+        device.createTexture({
+            label: 'render pool: ssao blurred texture',
+            size: [1, 1],
+            format: 'r16float',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
+    }
+
+    private resizeBloomBuffers(resolution: Resolution) {
+        this._bloomMips.texture = game.engine.config.graphics.useBloom ? 
+        // if bloom is enabled
+        device.createTexture({
+            label: 'render pool: bloom mips',
+            size: [resolution.half.x, resolution.half.y],
+            format: this._hdrTextureFormat,
+            mipLevelCount: this._bloomMipsLength,
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        }) : 
+        // if bloom is disabled
+        device.createTexture({
+            label: 'render pool: bloom mips',
+            size: [1, 1],
+            format: this._hdrTextureFormat,
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+        });
     }
 
     prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection, postEffets: RenderPostEffects, jitter: Vec2) {

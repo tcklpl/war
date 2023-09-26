@@ -1,4 +1,5 @@
 import { AssetManager } from "./asset/asset_manager";
+import { ConfigManager } from "./config/cfg_manager";
 import { CameraManager } from "./data/camera/camera_manager";
 import { LightManager } from "./data/lights/light_manager";
 import { MaterialManager } from "./data/material/material_manager";
@@ -23,6 +24,7 @@ export class Engine {
 
     private _idPool = new IdentifierPool();
     private _db = new IDBWarConnection();
+    private _config!: ConfigManager;
 
     private _managers = {
         io: new GameIO(),
@@ -91,6 +93,9 @@ export class Engine {
 
     private async initializeDB() {
         await this._db.openConnection();
+        this._config = new ConfigManager(this._db);
+        await this._config.loadConfig();
+        await this._config.saveConfig();
         await this._managers.asset.initializeDB(this._db);
     }
 
@@ -141,6 +146,14 @@ export class Engine {
 
     get managers() {
         return this._managers;
+    }
+
+    get db() {
+        return this._db;
+    }
+
+    get config() {
+        return this._config;
     }
 
     get renderer() {
