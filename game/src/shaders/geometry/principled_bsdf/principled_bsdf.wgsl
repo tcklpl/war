@@ -139,6 +139,10 @@ struct CommonVectors {
     Geometry_N: vec3f
 }
 
+struct CommonPositions {
+    model_pos: vec3f
+}
+
 struct MaterialInputs {
     albedo: vec3f,
     metallic: f32,
@@ -195,17 +199,23 @@ fn IORtoF0(ior: f32) -> f32 {
 @group(2) @binding(4) var matRoughness: texture_2d<f32>;
 @group(2) @binding(5) var matAO: texture_2d<f32>;
 
+// Scene Info - Shadow map atlas
+@group(3) @binding(0) var sceneSampler: sampler;
+@group(3) @binding(1) var sceneShadowAtlas: texture_depth_2d;
+
 // Scene Info - Directional lights (like the sun)
 struct DirectionalLightInfo {
     color: vec3f,
     direction: vec3f,
-    intensity: f32
+    intensity: f32,
+    uv: vec4f,
+    view_proj: mat4x4f
 };
 struct DirectionalLights {
     count: u32,
     lights: array<DirectionalLightInfo, MAX_DIRECTIONAL_LIGHTS>
 };
-@group(3) @binding(0) var<uniform> directionalLights: DirectionalLights;
+@group(3) @binding(2) var<uniform> directionalLights: DirectionalLights;
 
 // TODO: Scene Info - Punctual Lights
 
@@ -428,6 +438,49 @@ fn surfaceShading(pixel: PixelInfo, light: Light, cv: CommonVectors, occlusion: 
     --------------------------------------------------------------------------------------------------
 */
 
+fn evaluateShadowMappingFromAtlas(cv: CommonVectors, L: vec3f, model_pos: vec3f, uv_min: vec2f, uv_max: vec2f, view_proj: mat4x4f) -> f32 {
+    // get light projection from model position
+    var fragPosLightSpace = view_proj * vec4f(model_pos, 1.0);
+    // perspective divide
+    var projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0, 1] range
+    var projUV = projCoords.xyz * 0.5 + 0.5;
+    projUV.y = 1.0 - projUV.y;
+    // remap to shadow atlas region
+    var uvDiff = uv_max - uv_min;
+    var uvOffset = projUV.xy * uvDiff;
+    var atlasUV = uv_min + uvOffset;
+
+    // depth of the current fragment from light's perspective
+    var currentDepth = projCoords.z;
+
+    // calculate bias (based on slope)
+    var bias = max(0.05 * (1.0 - dot(cv.N, L)), 0.005);
+    var biasModifier = 0.5;
+    bias *= biasModifier;
+    // bias *= 1.0 / (20.0 * biasModifier);
+
+    // PCF
+    var shadow = 0.0;
+    var texelSize = 1.0 / vec2f(textureDimensions(sceneShadowAtlas));
+    for (var x = -1; x <= 1; x++) {
+        for (var y = -1; y <= 1; y++) {
+            var offset = vec2f(f32(x), f32(y)) * texelSize;
+            var pcfDepth = textureSample(sceneShadowAtlas, sceneSampler, atlasUV.xy + offset);
+            shadow += select(0.0, 1.0, (currentDepth - bias) > pcfDepth);
+        }
+    }
+    shadow /= 9.0;
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    // this cannot be done early because wgsl doesn't allow texture sampling in a non-uniform control flow.
+    if (currentDepth < 0.0 || currentDepth > 1.0) {
+        shadow = 0.0;
+    }
+
+    return shadow;
+}
+
 fn directionalLightAsDiscAreaLight(cv: CommonVectors, direction: vec3f) -> vec3f {
     var LoR = dot(direction, cv.V_reflected_N);
     var d = direction.x;
@@ -440,14 +493,29 @@ fn directionalLightAsDiscAreaLight(cv: CommonVectors, direction: vec3f) -> vec3f
     // }
 }
 
-fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors) -> vec3f {
+fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors, cp: CommonPositions) -> vec3f {
 
     var color = vec3f(0.0);
     for (var i = 0u; i < directionalLights.count; i++) {
 
         var L = normalize(-directionalLights.lights[i].direction);
         var intensity = log2(directionalLights.lights[i].intensity); // idk
-        var visibility = 1.0; // shadow mapping
+
+        // Shadow mapping
+        var visibility = 1.0;
+        // if the shadow map is not present all values in the vec4f will be -1.0.
+        // I'll only check the first one because no valid UV would be < 0
+        if (directionalLights.lights[i].uv.x != -1.0) {
+            var shadow = evaluateShadowMappingFromAtlas(
+                cv,
+                L,
+                cp.model_pos,
+                directionalLights.lights[i].uv.xy,
+                directionalLights.lights[i].uv.zw,
+                directionalLights.lights[i].view_proj
+            );
+            visibility = 1.0 - shadow;
+        }
 
         // TODO: actually load light intensity
         var light = Light(
@@ -502,19 +570,19 @@ fn getPixelParams(mat: MaterialInputs) -> PixelInfo {
     --------------------------------------------------------------------------------------------------
 */
 
-fn evaluateLights(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec4f {
+fn evaluateLights(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors, cp: CommonPositions) -> vec4f {
 
     var color = vec3f(0.0);
 
     // IBL was delegated to the environment shader
-    color += evaluateDirectionalLights(pixel, cv);
+    color += evaluateDirectionalLights(pixel, cv, cp);
     // TODO: Punctual Lights (point and spot)
 
     return vec4f(color, 1.0);
 }
 
-fn evaluateMaterial(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors) -> vec4f {
-    return evaluateLights(mat, pixel, cv);
+fn evaluateMaterial(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors, cp: CommonPositions) -> vec4f {
+    return evaluateLights(mat, pixel, cv, cp);
 }
 
 
@@ -543,6 +611,10 @@ fn fragment(v: VSOutput) -> FSOutput {
         v.model_normal                          // Geometry_N
     );
 
+    var cp = CommonPositions(
+        v.model_position.xyz                    // model position
+    );
+
     var mat = MaterialInputs(
         albedo,
         metallic,
@@ -556,7 +628,7 @@ fn fragment(v: VSOutput) -> FSOutput {
 
     var pixel = getPixelParams(mat);
 
-    var color = evaluateMaterial(mat, pixel, cv);
+    var color = evaluateMaterial(mat, pixel, cv, cp);
 
     // reconstruct the normal matrix (transpose of inverse of model * view)
     var normalMatrix = mat3x3f(v.normal_matrix_0, v.normal_matrix_1, v.normal_matrix_2);
