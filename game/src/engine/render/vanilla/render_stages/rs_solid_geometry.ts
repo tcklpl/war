@@ -14,13 +14,25 @@ export class RenderStageSolidGeometry implements RenderStage {
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
     private _meshDrawOptions = new PrimitiveDrawOptions().includeAll();
-    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO).includeDirectionalLights(0);
+    private _sceneBindGroupOptions!: SceneInfoBindGroupOptions;
+
+    private _shadowMapSampler = device.createSampler({
+        addressModeU: 'repeat',
+        addressModeV: 'repeat'
+    });
 
     async initialize(resources: RenderInitializationResources) {
 
         await new Promise<void>(r => {
             this._principledShader = new PrincipledBSDFShader('rs principled bsdf', () => r());
         });
+
+        this._sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO)
+        .includeDirectionalLights(2)
+        .includeExtras([
+            { binding: 0, resource: this._shadowMapSampler },
+            { binding: 1, resource: resources.shadowMapAtlas.texture.view }
+        ]);
 
         this._pipelineCW = await this.createPipeline('cw', resources.hdrTextureFormat);
         this._pipelineCCW = await this.createPipeline('ccw', resources.hdrTextureFormat);
