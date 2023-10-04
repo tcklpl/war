@@ -1,3 +1,4 @@
+import { ShadowMapAtlas } from "../../data/atlas/shadow_map_atlas";
 
 export interface RenderInitializationResources {
 
@@ -5,5 +6,6 @@ export interface RenderInitializationResources {
     canvasPreferredTextureFormat: GPUTextureFormat;
     pickingBuffer: GPUBuffer;
     hdrTextureFormat: GPUTextureFormat;
+    shadowMapAtlas: ShadowMapAtlas;
 
 }
