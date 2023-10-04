@@ -1,5 +1,6 @@
 import { BadMatrixLengthError } from "../../../errors/engine/data/bad_matrix_length";
 import { Vec3 } from "../vec/vec3";
+import { Vec4 } from "../vec/vec4";
 
 export class Mat4 {
 
@@ -14,7 +15,7 @@ export class Mat4 {
         return 4 * 4 * 4;
     }
 
-    multiplyBy(other: Mat4) {
+    multiplyByMat4(other: Mat4) {
         const a00 = this.values[0 * 4 + 0];
         const a01 = this.values[0 * 4 + 1];
         const a02 = this.values[0 * 4 + 2];
@@ -66,6 +67,32 @@ export class Mat4 {
             b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
         ];
         return this;
+    }
+
+    multiplyByVec4(v: Vec4) {
+        const a00 = this.values[0 * 4 + 0];
+        const a01 = this.values[0 * 4 + 1];
+        const a02 = this.values[0 * 4 + 2];
+        const a03 = this.values[0 * 4 + 3];
+        const a10 = this.values[1 * 4 + 0];
+        const a11 = this.values[1 * 4 + 1];
+        const a12 = this.values[1 * 4 + 2];
+        const a13 = this.values[1 * 4 + 3];
+        const a20 = this.values[2 * 4 + 0];
+        const a21 = this.values[2 * 4 + 1];
+        const a22 = this.values[2 * 4 + 2];
+        const a23 = this.values[2 * 4 + 3];
+        const a30 = this.values[3 * 4 + 0];
+        const a31 = this.values[3 * 4 + 1];
+        const a32 = this.values[3 * 4 + 2];
+        const a33 = this.values[3 * 4 + 3];
+        
+        return new Vec4(
+            (a00 * v.x) + (a01 * v.y) + (a02 * v.z) + (a03 * v.w),
+            (a10 * v.x) + (a11 * v.y) + (a12 * v.z) + (a13 * v.w),
+            (a20 * v.x) + (a21 * v.y) + (a22 * v.z) + (a23 * v.w),
+            (a30 * v.x) + (a31 * v.y) + (a32 * v.z) + (a33 * v.w)
+        );
     }
 
     duplicate() {
@@ -251,10 +278,10 @@ export class Mat4 {
 
     static ortho(left: number, right: number, bottom: number, top: number, near: number, far: number) {
         return new Mat4([
-            2 / (right - left), 0, 0, 0,
-            0, 2 / (top - bottom), 0, 0,
-            0, 0, 1 / (near - far), 0,
-            (right + left) / (left - right), (top + bottom) / (bottom - top), near / (near - far), 1
+            2 / (right - left)              , 0                                 , 0                     , 0,
+            0                               , 2 / (top - bottom)                , 0                     , 0,
+            0                               , 0                                 , 1 / (near - far)      , 0,
+            (right + left) / (left - right) , (top + bottom) / (bottom - top)   , near / (near - far)   , 1
         ]);
     }
 
@@ -265,10 +292,10 @@ export class Mat4 {
         const dz = (near - far);
 
         return new Mat4([
-            2 * near / dx, 0, 0, 0,
-            0, 2 * near / dy, 0, 0,
-            (left + right) / dx, (top + bottom) / dy, far / dz, -1,
-            0, 0, near * far / dz, 0
+            2 * near / dx       , 0                     , 0                 , 0,
+            0                   , 2 * near / dy         , 0                 , 0,
+            (left + right) / dx , (top + bottom) / dy   , far / dz          , -1,
+            0                   , 0                     , near * far / dz   , 0
         ]);
     }
 

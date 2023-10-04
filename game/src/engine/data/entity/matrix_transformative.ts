@@ -26,12 +26,12 @@ export class MatrixTransformative {
 
     private buildModelMatrix() {
         this._modelMatrix = Mat4.identity();
-        this._modelMatrix.multiplyBy(this._translationMatrix);
-        this._modelMatrix.multiplyBy(this._rotationMatrix);
-        this._modelMatrix.multiplyBy(this._scaleMatrix);
+        this._modelMatrix.multiplyByMat4(this._translationMatrix);
+        this._modelMatrix.multiplyByMat4(this._rotationMatrix);
+        this._modelMatrix.multiplyByMat4(this._scaleMatrix);
 
         if (this._parent) {
-            this._modelMatrix = this._parent.modelMatrix.duplicate().multiplyBy(this._modelMatrix);
+            this._modelMatrix = this._parent.modelMatrix.duplicate().multiplyByMat4(this._modelMatrix);
         }
 
         this._modelMatrixInverse = this._modelMatrix.inverse();
