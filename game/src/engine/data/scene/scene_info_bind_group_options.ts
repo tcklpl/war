@@ -14,6 +14,8 @@ export class SceneInfoBindGroupOptions {
 
     private _brdfLUT: SceneInfoBindGroupOption = { use: false, index: -1 };
 
+    private _extras: GPUBindGroupEntry[] = [];
+
     constructor (private _layoutIndex: number) { }
 
     includeDirectionalLights(index: number) {
@@ -41,6 +43,11 @@ export class SceneInfoBindGroupOptions {
         return this;
     }
 
+    includeExtras(extras: GPUBindGroupEntry[]) {
+        this._extras = extras;
+        return this;
+    }
+
     get layoutIndex() {
         return this._layoutIndex;
     }
@@ -63,6 +70,10 @@ export class SceneInfoBindGroupOptions {
 
     get brdfLUT() {
         return this._brdfLUT;
+    }
+
+    get extras() {
+        return this._extras;
     }
 
 }
