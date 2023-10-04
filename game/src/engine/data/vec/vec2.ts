@@ -31,6 +31,16 @@ export class Vec2 extends Vector {
         return this.x === other.x && this.y === other.y;
     }
 
+    clone() {
+        return new Vec2(this.x, this.y);
+    }
+
+    add(v: Vec2) {
+        this.x += v.x;
+        this.y += v.y;
+        return this;
+    }
+
     // -----------------[ STATIC UTILS ]-----------------
 
     static subtract(a: Vec2, b: Vec2): Vec2 {
