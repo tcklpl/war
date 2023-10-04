@@ -21,4 +21,14 @@ export abstract class Vector  {
         return this;
     }
 
+    divideByFactor(factor: number) {
+        this._values = this._values.map(x => x / factor);
+        return this;
+    }
+
+    multiplyByFactor(factor: number) {
+        this._values = this._values.map(x => x * factor);
+        return this;
+    }
+
 }

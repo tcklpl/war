@@ -47,24 +47,10 @@ export class Vec3 extends Vector {
         return this;
     }
 
-    divide(factor: number) {
-        this.x /= factor;
-        this.y /= factor;
-        this.z /= factor;
-        return this;
-    }
-
     multiplyByVec3(other: Vec3) {
         this.x *= other.x;
         this.y *= other.y;
         this.z *= other.z;
-        return this;
-    }
-
-    multiplyByFactor(f: number) {
-        this.x *= f;
-        this.y *= f;
-        this.z *= f;
         return this;
     }
 
@@ -159,7 +145,7 @@ export class Vec3 extends Vector {
 
     static centroid(v: Vec3[]): Vec3 {
         let accumulated = v.reduce((accumulated, current) => Vec3.add(accumulated, current), Vec3.zero);
-        accumulated.divide(v.length);
+        accumulated.divideByFactor(v.length);
         return accumulated;
     }
 
