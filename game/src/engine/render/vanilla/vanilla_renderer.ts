@@ -24,6 +24,7 @@ export class VanillaRenderer extends Renderer {
     async initialize() {
         this._renderProjection.initialize();
         this._presentationFormat = navigator.gpu.getPreferredCanvasFormat();
+        await this._renderResourcePool.initialize();
         this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
 
         this._renderPipeline.buildPipeline(game.engine.config.graphics);
@@ -31,7 +32,8 @@ export class VanillaRenderer extends Renderer {
             canvasPreferredTextureFormat: this._presentationFormat,
             viewProjBuffer: this._renderResourcePool.viewProjBuffer,
             pickingBuffer: this._pickingBuffer,
-            hdrTextureFormat: this._renderResourcePool.hdrTextureFormat
+            hdrTextureFormat: this._renderResourcePool.hdrTextureFormat,
+            shadowMapAtlas: this._renderResourcePool.shadowMapAtlas
         });
         this.buildJitterOffsets(this._renderProjection.resolution.full);
     }

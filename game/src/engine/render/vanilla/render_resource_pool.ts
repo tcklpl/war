@@ -1,4 +1,5 @@
 import { BufferUtils } from "../../../utils/buffer_utils";
+import { ShadowMapAtlas } from "../../data/atlas/shadow_map_atlas";
 import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
 import { RenderHDRBufferChain } from "../../data/texture/render_hdr_buffer_chain";
@@ -19,6 +20,7 @@ export class RenderResourcePool {
     private _inverseProjectionMatrix!: Mat4;
     private _renderProjection!: RenderProjection;
     private _renderPostEffects!: RenderPostEffects;
+    private _jitter!: Vec2;
 
     private _depthTexture = new Texture();
     private _velocityTexture = new Texture();
@@ -36,6 +38,8 @@ export class RenderResourcePool {
     private _canvasTextureView!: GPUTextureView;
     private _viewProjBuffer!: GPUBuffer;
 
+    private _shadowMapAtlas!: ShadowMapAtlas;
+
     constructor() {
         // buffer has 5 mat4s and 1 vec3 (camera position)
         const viewProjByteSize = Mat4.byteSize * 5 + Vec3.byteSize + Vec2.byteSize;
@@ -46,6 +50,20 @@ export class RenderResourcePool {
         if (canRenderToRG11B10) this._hdrTextureFormat = 'rg11b10ufloat';
 
         this._hdrBufferChain = new RenderHDRBufferChain(this._hdrTextureFormat);
+    }
+
+    async initialize() {
+        /*
+            Shadow map resolution will be 1x1 if shadows are off, otherwise:
+
+            Very Low (1)     512 x  512 (2^ 9)
+            Low (2)         1024 x 1024 (2^10)
+            Medium (3)      2048 x 2048 (2^11)
+            High (4)        4096 x 4096 (2^12)
+        */
+        const cfgShadowMapQuality = game.engine.config.graphics.shadowMapQuality;
+        const shadowMapResolution = cfgShadowMapQuality === 0 ? 1 : 2**(8 + cfgShadowMapQuality);
+        this._shadowMapAtlas = new ShadowMapAtlas(shadowMapResolution);
     }
 
     resizeBuffers(resolution: Resolution) {
@@ -150,6 +168,7 @@ export class RenderResourcePool {
         this._inverseProjectionMatrix = projection.inverseProjectionMatrix;
         this._renderProjection = projection;
         this._renderPostEffects = postEffets;
+        this._jitter = jitter;
 
         const camera = scene.activeCamera;
         if (!camera) return;
@@ -181,6 +200,7 @@ export class RenderResourcePool {
     free() {
         this.freeTextures();
         this._viewProjBuffer?.destroy();
+        this._shadowMapAtlas.free();
     }
 
     get hasTextures() {
@@ -279,4 +299,11 @@ export class RenderResourcePool {
         return this._inverseProjectionMatrix;
     }
 
+    get shadowMapAtlas() {
+        return this._shadowMapAtlas;
+    }
+
+    get jitter() {
+        return this._jitter;
+    }
 }
