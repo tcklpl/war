@@ -12,6 +12,23 @@ export class Texture {
         this._tex?.destroy();
     }
 
+    async generateBitmaps() {
+        if (!this._tex) {
+            console.warn(`Trying to generate bitmaps for a texture that isn't yet created`);
+            return;
+        }
+        if (this._tex.depthOrArrayLayers !== 1 && this._tex.depthOrArrayLayers !== 6) {
+            console.warn(`Trying to generate bitmaps for a texture with ${this._tex?.depthOrArrayLayers} layers. Only 1 and 6 are supported`);
+            return;
+        }
+        if (this._tex.depthOrArrayLayers === 1) {
+            await game.engine.utilRenderers.mipmap.generateMipMaps2D(this._tex);
+        }
+        else if (this._tex.depthOrArrayLayers === 6) {
+            await game.engine.utilRenderers.mipmap.generateMipMapsCube(this._tex);
+        }
+    }
+
     get view() {
         if (!this._view) throw new MissingTextureError(`Trying to get texture view before it was set`);
         return this._view;
