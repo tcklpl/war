@@ -1,12 +1,13 @@
 import { TextureUtils } from "../../../utils/texture_utils";
+import { Texture } from "../texture/texture";
 import { Skybox } from "./skybox";
 
 export class BlackSkybox extends Skybox {
 
     async initialize() {
-        this.skybox = TextureUtils.createBlackSkybox();
-        this.convolutedSkybox = this.skybox;
-        this.prefilteredSkybox = this.skybox;
+        const blackSkyboxTexture = new Texture(TextureUtils.createBlackSkybox());
+        this.setSkyboxCubemap(blackSkyboxTexture);
+        blackSkyboxTexture.free();
     }
     
 }
