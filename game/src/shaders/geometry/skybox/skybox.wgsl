@@ -92,7 +92,7 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
 fn fragment(v: VSOutput) -> @location(0) vec4f {
 
     var uv = v.localPos.xyz - vec3f(0.5);
-    var color = textureSample(mapTexture, mapSampler, uv).rgb;
+    var color = textureSampleLevel(mapTexture, mapSampler, uv, 0.0).rgb;
     
     return vec4f(color, 1.0);
     
