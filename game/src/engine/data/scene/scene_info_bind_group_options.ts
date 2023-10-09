@@ -9,7 +9,6 @@ export class SceneInfoBindGroupOptions {
     private _directionalLights: SceneInfoBindGroupOption = { use: false, index: -1 };
     
     private _skybox: SceneInfoBindGroupOption = { use: false, index: -1 };
-    private _convolutedSkybox: SceneInfoBindGroupOption = { use: false, index: -1 };
     private _prefilteredSkybox: SceneInfoBindGroupOption = { use: false, index: -1 };
 
     private _brdfLUT: SceneInfoBindGroupOption = { use: false, index: -1 };
@@ -25,11 +24,6 @@ export class SceneInfoBindGroupOptions {
 
     includeSkybox(index: number) {
         this._skybox = { use: true, index };
-        return this;
-    }
-
-    includeConvolutedSkybox(index: number) {
-        this._convolutedSkybox = { use: true, index };
         return this;
     }
 
@@ -58,10 +52,6 @@ export class SceneInfoBindGroupOptions {
 
     get skybox() {
         return this._skybox;
-    }
-
-    get convolutedSkybox() {
-        return this._convolutedSkybox;
     }
 
     get prefilteredSkybox() {
