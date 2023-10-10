@@ -6,7 +6,7 @@ export class BlackSkybox extends Skybox {
 
     async initialize() {
         const blackSkyboxTexture = new Texture(TextureUtils.createBlackSkybox());
-        this.setSkyboxCubemap(blackSkyboxTexture);
+        await this.prefilterSkybox(blackSkyboxTexture);
         blackSkyboxTexture.free();
     }
     
