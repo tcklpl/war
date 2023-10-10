@@ -4,6 +4,12 @@
     "default_screen_header": "Settings Screen",
     "default_screen_body": "Visual changes (like theme and language) will be applied instantly.\nGraphical or Game-related changes will be applied when you close the pause menu.",
 
+    "generic_off": "Off",
+    "generic_very_low": "Very Low",
+    "generic_low": "Low",
+    "generic_medium": "Medium",
+    "generic_high": "High",
+
     "visual": "Visual",
     "visual_theme": "Theme",
     "visual_language": "Language",
@@ -19,6 +25,9 @@
     "display_performance_show_stats_desc": "Displays performance stats on the top-right corner of the screen. \n\nCurrent stats: FPS",
 
     "graphics": "Graphics",
+    "graphics_rendering": "Rendering",
+    "graphics_rendering_shadows": "Shadows",
+    "graphics_rendering_shadows_desc": "Shadow map resolution, setting to Off disables shadows.",
     "graphics_post_effects": "Post Effects",
     "graphics_post_effects_ssao": "SSAO",
     "graphics_post_effects_ssao_desc": "Screen Space Ambient Occlusion: Darkens objects close to each other or faces at close angles, emulating how light would be occluded.",
