@@ -6,6 +6,7 @@
     --------------------------------------------------------------------------------------------------
 */
 
+const MAX_REFLECTION_LOD = 5.0;
 override use_ssao: bool;
 
 /*
@@ -54,9 +55,8 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
 @group(0) @binding(4) var ssao_texture: texture_2d<f32>;
 
 // scene info
-@group(1) @binding(0) var iblIrradiance: texture_cube<f32>;
-@group(1) @binding(1) var iblPrefiltered: texture_cube<f32>;
-@group(1) @binding(2) var iblLUT: texture_2d<f32>;
+@group(1) @binding(0) var iblPrefiltered: texture_cube<f32>;
+@group(1) @binding(1) var iblLUT: texture_2d<f32>;
 
 struct EnviromentVariables {
     proj: mat4x4f,
@@ -86,6 +86,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var fragPos = VSPositionFromDepth(v.uv);
     // get view vector from the position, as it is in view-space
     var V = normalize(-fragPos);
+    V = normalize(env.view_inverse * vec4f(V, 0.0)).xyz;
 
     // get normal from the texture
     var normalTexel = textureSample(normal_texture, env_sampler, v.uv);
@@ -98,21 +99,21 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
         ao = textureSample(ssao_texture, env_sampler, v.uv).r;
     }
 
-    var V_reflected_N = reflect(-V, normal);
-    var NoV = saturate(dot(normal, V));
+    var V_reflected_N = reflect(-V, model_normal);
+    var NoV = saturate(dot(model_normal, V));
 
     // get specular (kS) from the texture
     var specularTexel = textureSample(specular_texture, env_sampler, v.uv);
-    var roughness = specularTexel.g;
+    var roughness = saturate(specularTexel.g);
     var kS = specularTexel.r;
     var kD = 1.0 - kS;
 
     // diffuse irradiance
-    var irradiance = textureSample(iblIrradiance, env_sampler, model_normal).rgb;
+    // we're going to use the last prefiltered MIP to calculate the diffuse factor
+    var irradiance = textureSampleLevel(iblPrefiltered, env_sampler, model_normal, MAX_REFLECTION_LOD).rgb;
     var diffuse = irradiance;
 
     // specular irradiance
-    var MAX_REFLECTION_LOD = 4.0;
     var prefilteredColor = textureSampleLevel(iblPrefiltered, env_sampler, V_reflected_N, roughness * MAX_REFLECTION_LOD).rgb;
     var brdf = textureSample(iblLUT, env_sampler, vec2f(NoV, roughness)).rg;
     var specular = prefilteredColor * (kS * brdf.x + brdf.y);

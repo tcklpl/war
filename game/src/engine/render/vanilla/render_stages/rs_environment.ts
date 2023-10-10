@@ -20,7 +20,7 @@ export class RenderStageEnvironment implements RenderStage {
 
     private _variablesBuffer = BufferUtils.createEmptyBuffer(3 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
     private _variablesBindGroup!: GPUBindGroup;
-    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(EnvironmentShader.BINDING_GROUPS.SCENE).includeConvolutedSkybox(0).includePrefilteredSkybox(1).includeBrdfLUT(2);
+    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(EnvironmentShader.BINDING_GROUPS.SCENE).includePrefilteredSkybox(0).includeBrdfLUT(1);
 
     async initialize(resources: RenderInitializationResources) {
 
