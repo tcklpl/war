@@ -173,16 +173,13 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
             var D = D_GGX(N, H, options.roughness);
             var NoH = max(dot(N, H), 0.0);
             var HoV = max(dot(H, V), 0.0);
-            var pdf = D * NoH / (4.0 * HoV) + 0.0001;
+            var pdf = (D * NoH / (4.0 * HoV)) + 0.0001;
 
             var resolution = options.cubemapResolution;
             var saTexel = 4.0 * PI / (6.0 * resolution * resolution);
             var saSample = 1.0 / (f32(SAMPLE_COUNT) * pdf + 0.0001);
 
-            var mipLevel = 0.0;
-            if (options.roughness != 0.0) {
-                mipLevel = 0.5 * log2(saSample / saTexel);
-            }
+            var mipLevel = select(0.0, 0.5 * log2(saSample / saTexel), options.roughness != 0.0);
 
             prefilteredColor += textureSampleLevel(mapTexture, mapSampler, L, mipLevel).rgb * NoL;
             totalWeight += NoL;
