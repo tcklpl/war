@@ -8,6 +8,7 @@
 
 override bloom_strength: f32;
 override motion_blur_amount: f32;
+override use_film_grain: bool;
 
 /*
     Values sent from the vertex shader to the fragment shader
@@ -99,6 +100,13 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     // Tone Mapping
     var mapped = vec3f(1.0) - exp(-mixedColor * opt.exposure);
     mapped = pow(mapped, vec3f(1.0 / opt.gamma));
+
+    // Film Grain
+    if (use_film_grain) {
+        var mdf = 0.03;
+        var noise = fract(sin(dot(v.uv, vec2(12.9898,78.233) * 2.0)) * 43758.5453);
+        mapped -= noise * mdf;
+    }
 
     // Vignette
     if (opt.use_vignette == 1u) {
