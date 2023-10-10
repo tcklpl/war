@@ -6,7 +6,6 @@ import { GLTFAsset } from "./gltf_asset";
 import { GLTFLoader } from "./loaders/gltf_loader";
 import { GLTFFile } from "../data/gltf/gltf_file";
 import { BadGLTFFileError } from "../../errors/engine/gltf/bad_gltf_file";
-import { IMGAsset } from "./img_asset";
 import { HDRImageData, HDRLoader } from "./loaders/hdr_loader";
 import { HDRAsset } from "./hdr_asset";
 import { AssetCache } from "./cache/asset_cache";
@@ -17,7 +16,6 @@ import { HDRCachedAsset } from "./cache/hdr_cached_asset";
 
 type AssetIndex = typeof assetIndex;
 type GLTFAssetName = keyof AssetIndex["gltf"];
-type IMGAssetName = keyof AssetIndex["img"];
 type HDRAssetName = keyof AssetIndex["hdr"];
 type AddressableAsset = { url: string };
 
@@ -41,7 +39,6 @@ export class AssetManager extends Manager<Asset> {
 
     async loadAssets(onAssetLoadCallback?: () => void) {
         await this.loadGLTFAssets(onAssetLoadCallback);
-        await this.loadIMGAssets(onAssetLoadCallback);
         await this.loadHDRAssets(onAssetLoadCallback);
     }
 
@@ -72,18 +69,6 @@ export class AssetManager extends Manager<Asset> {
             } else throw new BadGLTFFileError(`GLTF With unsupported filename extension (not .gltf or .glb)`);
             
             this.register(new GLTFAsset(k, assetInfo.url, asset));
-            if (onAssetLoadCallback) onAssetLoadCallback();
-        }
-    }
-
-    private async loadIMGAssets(onAssetLoadCallback?: () => void) {
-        const imgAssets = Object.keys(assetIndex.img);
-
-        for (let k of imgAssets) {
-            const assetInfo = assetIndex.img[k as IMGAssetName];
-            const assetFile = await this.fetchAssetFile(k, assetInfo);
-            const assetBlob = await assetFile.blob();
-            this.register(new IMGAsset(k, assetInfo.url, assetBlob));
             if (onAssetLoadCallback) onAssetLoadCallback();
         }
     }
@@ -121,7 +106,7 @@ export class AssetManager extends Manager<Asset> {
         }
     }
 
-    assertGetAsset(name: GLTFAssetName | IMGAssetName | HDRAssetName) {
+    assertGetAsset(name: GLTFAssetName | HDRAssetName) {
         const temp = this.all.find(a => a.name === name);
         if (!temp) throw new MissingAssetError(name);
         return temp;
@@ -129,10 +114,6 @@ export class AssetManager extends Manager<Asset> {
     
     getGLTFAsset(name: GLTFAssetName) {
         return this.assertGetAsset(name) as GLTFAsset;
-    }
-
-    getIMGAsset(name: IMGAssetName) {
-        return this.assertGetAsset(name) as IMGAsset;
     }
 
     getHDRAsset(name: HDRAssetName) {
