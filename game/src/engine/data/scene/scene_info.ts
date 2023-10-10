@@ -42,7 +42,7 @@ export class SceneInfo {
             layout: pipeline.getBindGroupLayout(opt.layoutIndex),
             entries: [
                 ...(opt.directionalLights.use ?     [{ binding: opt.directionalLights.index, resource: { buffer: this._directionalLightBuffer } }] : []),
-                ...(opt.skybox.use ?                [{ binding: opt.skybox.index, resource: this._skybox.skybox.texture.createView({ dimension: 'cube' }) }] : []),
+                ...(opt.skybox.use ?                [{ binding: opt.skybox.index, resource: this._skybox.prefilteredSkybox.texture.createView({ dimension: 'cube' }) }] : []),
                 ...(opt.prefilteredSkybox.use ?     [{ binding: opt.prefilteredSkybox.index, resource: this._skybox.prefilteredSkybox.texture.createView({ dimension: 'cube' }) }] : []),
                 ...(opt.brdfLUT.use ?               [{ binding: opt.brdfLUT.index, resource: game.engine.brdfLUT.createView()}] : []),
                 ...opt.extras
