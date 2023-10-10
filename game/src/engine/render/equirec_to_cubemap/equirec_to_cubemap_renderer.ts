@@ -124,9 +124,12 @@ export class EquirectangularToCubemapRenderer {
         });
     }
 
-    async renderEquirectangularMapToCubemap(equirecImage: GPUTexture, texType: 'rgba16float' | 'rgba32float', cubemapResolution = 512) {
-        if (cubemapResolution <= 0 || cubemapResolution > device.limits.maxTextureDimension3D) {
-            throw new BadResolutionError(`Trying to render an equirectangular texture to a cubemap of resolution ${cubemapResolution}, should be between [1, ${device.limits.maxTextureDimension3D}]`);
+    async renderEquirectangularMapToCubemap(equirecImage: GPUTexture, options: {
+        cubemapResolution: number,
+        mipCount: number
+    }) {
+        if (options.cubemapResolution <= 0 || options.cubemapResolution > device.limits.maxTextureDimension3D) {
+            throw new BadResolutionError(`Trying to render an equirectangular texture to a cubemap of resolution ${options.cubemapResolution}, should be between [1, ${device.limits.maxTextureDimension3D}]`);
         }
 
         // create destination 3d texture
@@ -134,12 +137,18 @@ export class EquirectangularToCubemapRenderer {
             label: 'final cubemap texture',
             format: 'rgba16float',
             dimension: '2d',
-            size: [cubemapResolution, cubemapResolution, 6],
+            size: [options.cubemapResolution, options.cubemapResolution, 6],
+            mipLevelCount: options.mipCount,
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT
         });
 
-        const pipeline = texType === 'rgba16float' ? this._pipeline16f : this._pipeline32f;
-        const matrixBindGroup = texType === 'rgba16float' ? this._matrixBindGroup16f : this._matrixBindGroup32f;
+        /*
+            Select which pipeline and bind group are going to be used.
+            We cannot use the same one as 'rgba32float' is an 'unfilterable-float' texture and its layout has to be
+            explicitly defined, whereas we can just use 'auto' for filterable textures.
+        */
+        const pipeline = equirecImage.format === 'rgba32float' ? this._pipeline32f : this._pipeline16f;
+        const matrixBindGroup = equirecImage.format === 'rgba32float' ? this._matrixBindGroup32f : this._matrixBindGroup16f;
 
         // create bindgroup to hold the supplied texture
         const texBindGroup = device.createBindGroup({
@@ -163,7 +172,9 @@ export class EquirectangularToCubemapRenderer {
 
             (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = finalCubemap.createView({
                 arrayLayerCount: 1,
-                baseArrayLayer: i
+                baseArrayLayer: i,
+                baseMipLevel: 0,
+                mipLevelCount: 1
             });
 
             const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
