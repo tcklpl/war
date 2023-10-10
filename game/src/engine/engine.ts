@@ -10,7 +10,6 @@ import { IDBWarConnection } from "./idb_war_connection";
 import { IdentifierPool } from "./identifier_pool";
 import { GameIO } from "./io/io";
 import { BRDFLUTRenderer } from "./render/brdf_lut/brdf_lut_renderer";
-import { CubemapConvolutionRenderer } from "./render/cubemap_convolution/cubemap_convolution_renderer";
 import { CubemapPrefilterRenderer } from "./render/cubemap_prefilter/cubemap_prefilter_renderer";
 import { EquirectangularToCubemapRenderer } from "./render/equirec_to_cubemap/equirec_to_cubemap_renderer";
 import { MipmapRenderer } from "./render/mipmap/mipmap_renderer";
@@ -39,7 +38,6 @@ export class Engine {
 
     private _utilRenderers = {
         equirecToCubemap: new EquirectangularToCubemapRenderer(),
-        cubemapConvolution: new CubemapConvolutionRenderer(),
         cubemapPrefilter: new CubemapPrefilterRenderer(),
         BRDF_LUT: new BRDFLUTRenderer(),
         mipmap: new MipmapRenderer()
@@ -103,7 +101,6 @@ export class Engine {
 
     private async initializeRenderers() {
         await this.utilRenderers.equirecToCubemap.initialize();
-        await this.utilRenderers.cubemapConvolution.initialize();
         await this.utilRenderers.cubemapPrefilter.initialize();
         await this.utilRenderers.BRDF_LUT.initialize();
         await this.utilRenderers.mipmap.initialize();
@@ -134,7 +131,6 @@ export class Engine {
         this._managers.scene.freeScenes();
 
         this.utilRenderers.equirecToCubemap.free();
-        this.utilRenderers.cubemapConvolution.free();
         this.utilRenderers.cubemapPrefilter.free();
         this.utilRenderers.BRDF_LUT.free();
         this.utilRenderers.mipmap.free();
