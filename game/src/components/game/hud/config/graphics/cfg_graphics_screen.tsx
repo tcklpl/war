@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react"
-import { Grid, Slider, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
+import { Grid, MenuItem, Select, Slider, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
 import { useConfig } from "../../../../../hooks/use_config";
@@ -11,6 +11,8 @@ const CfgGraphicsScreen: React.FC = () => {
     const { t } = useTranslation(["config"]);
     const { graphicsConfig } = useConfig();
 
+    const [shadowQuality, setShadowQuality] = useState(graphicsConfig.shadowMapQuality);
+
     const [useSSAO, setUseSSAO] = useState(graphicsConfig.useSSAO);
     const [useBloom, setUseBloom] = useState(graphicsConfig.useBloom);
     const [useTAA, setUseTAA] = useState(graphicsConfig.useTAA);
@@ -20,19 +22,45 @@ const CfgGraphicsScreen: React.FC = () => {
     useLayoutEffect(() => {
         // save the config when this screen is closed
         return () => {
+            graphicsConfig.shadowMapQuality = shadowQuality;
+
             graphicsConfig.useSSAO = useSSAO;
             graphicsConfig.useBloom = useBloom;
             graphicsConfig.useTAA = useTAA;
             graphicsConfig.motionBlurAmount = motionBlurAmount;
         }
-    }, [useSSAO, useBloom, useTAA, motionBlurAmount, graphicsConfig]);
+    }, [shadowQuality, useSSAO, useBloom, useTAA, motionBlurAmount, graphicsConfig]);
 
     
     return (
         <Grid container style={{ backgroundColor: palette.background.default }} className="cfg-display-screen">
 
             <Grid item xs={8}>
-                <Typography variant="h5">{ t("config:graphics_post_effects") }</Typography>
+
+                <Typography variant="h5">{ t("config:graphics_rendering") }</Typography>
+                <Table>
+                    <TableBody>
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:graphics_rendering_shadows"), content: t("config:graphics_rendering_shadows_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:graphics_rendering_shadows") }</Typography></TableCell>
+                            <TableCell align="right">
+                                <Select value={shadowQuality} onChange={e => {
+                                    setShadowQuality(e.target.value as number);
+                                }}>
+                                    <MenuItem value={0}>{t("config:generic_off")}</MenuItem>
+                                    <MenuItem value={1}>{t("config:generic_very_low")}</MenuItem>
+                                    <MenuItem value={2}>{t("config:generic_low")}</MenuItem>
+                                    <MenuItem value={3}>{t("config:generic_medium")}</MenuItem>
+                                    <MenuItem value={4}>{t("config:generic_high")}</MenuItem>
+                                </Select>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+
+                <Typography variant="h5" style={{marginTop: '1em'}}>{ t("config:graphics_post_effects") }</Typography>
                 <Table>
                     <TableBody>
 
