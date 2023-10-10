@@ -6,7 +6,6 @@ import { Camera } from "../../../data/camera/camera";
 import { DirectionalLight } from "../../../data/lights/directional_light";
 import { Mat4 } from "../../../data/mat/mat4";
 import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
-import { Vec2 } from "../../../data/vec/vec2";
 import { Vec3 } from "../../../data/vec/vec3";
 import { Vec4 } from "../../../data/vec/vec4";
 import { RenderInitializationResources } from "../render_initialization_resources";
@@ -24,7 +23,7 @@ export class RenderStageLights implements RenderStage {
     private _primitiveDrawOptions = new PrimitiveDrawOptions().includePosition(0);
     private _viewProjBindGroup!: GPUBindGroup;
 
-    private _shadowCommonBuffer = BufferUtils.createEmptyBuffer(Mat4.byteSize + Vec2.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST, 'shadow map common buffer');
+    private _shadowCommonBuffer = BufferUtils.createEmptyBuffer(Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST, 'shadow map common buffer');
 
     async initialize(resources: RenderInitializationResources) {
         
@@ -162,8 +161,6 @@ export class RenderStageLights implements RenderStage {
         // get corners and center of the view frustum
         const camera = pool.scene.activeCamera as Camera;
         
-
-        device.queue.writeBuffer(this._shadowCommonBuffer, Mat4.byteSize, pool.jitter.asF32Array);
         this.setDepthTexture(pool.shadowMapAtlas.texture.view);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
         rpe.setPipeline(this._depthPipeline);
