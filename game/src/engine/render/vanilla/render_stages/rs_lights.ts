@@ -166,18 +166,25 @@ export class RenderStageLights implements RenderStage {
         rpe.setPipeline(this._depthPipeline);
         rpe.setBindGroup(DepthShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroup);
 
-        // render shadow maps
         for (const light of pool.scene.lights) {
             
-            // make sure all shadow-casting lights have their spot on the shadow map
-            if (light.properties.castsShadows && !light.shadowAtlasMappedRegion) {
-                // try to get a region on the shadow map for the light
-                light.shadowAtlasMappedRegion = pool.shadowMapAtlas.requestMappedRegion({
-                    preferredSize: light.properties.shadowMapSize,
-                    canShrink: light.properties.shadowMapCanShrink
-                }) ?? undefined;
+            // if shadows are enabled
+            if (game.engine.config.graphics.shadowMapQuality > 0) {
+                // make sure all shadow-casting lights have their spot on the shadow map
+                if (light.properties.castsShadows && !light.shadowAtlasMappedRegion) {
+                    // try to get a region on the shadow map for the light
+                    light.shadowAtlasMappedRegion = pool.shadowMapAtlas.requestMappedRegion({
+                        preferredSize: light.properties.shadowMapSize,
+                        canShrink: light.properties.shadowMapCanShrink
+                    }) ?? undefined;
+                }
+            }
+            // just remove any residual mapped region if shadows are disabled
+            else {
+                light.shadowAtlasMappedRegion = undefined;
             }
 
+            // Render shadow maps
             // this time we only check "shadowAtlasMappedRegion" because "castsShadows" doesn't necessarily mean that
             // the light has a spot on the shadow map.
             if (light.shadowAtlasMappedRegion) {
