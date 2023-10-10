@@ -69,7 +69,6 @@ export class CubemapPrefilterRenderer {
             colorAttachments: [
                 {
                     // view: Assigned later
-                    // resolveTarget: Assigned Later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'clear',
                     storeOp: 'store'
@@ -82,7 +81,8 @@ export class CubemapPrefilterRenderer {
         return device.createSampler({
             label: 'cubemap convolution sampler',
             magFilter: 'linear',
-            minFilter: 'linear'
+            minFilter: 'linear',
+            mipmapFilter: 'linear'
         });
     }
 
@@ -106,7 +106,7 @@ export class CubemapPrefilterRenderer {
 
         // create destination 3d texture
         const renderTarget = device.createTexture({
-            label: 'final convoluted cubemap texture',
+            label: 'final prefiltered cubemap texture',
             format: 'rgba16float',
             dimension: '2d',
             mipLevelCount: mipLevels,
@@ -116,7 +116,7 @@ export class CubemapPrefilterRenderer {
 
         // create bindgroup to hold the supplied texture
         const texBindGroup = device.createBindGroup({
-            label: 'cubemap convolution texture bindgroup',
+            label: 'cubemap prefiltered texture bindgroup',
             layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.BINDING_GROUPS.TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
