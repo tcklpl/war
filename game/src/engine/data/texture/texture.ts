@@ -17,16 +17,7 @@ export class Texture {
             console.warn(`Trying to generate bitmaps for a texture that isn't yet created`);
             return;
         }
-        if (this._tex.depthOrArrayLayers !== 1 && this._tex.depthOrArrayLayers !== 6) {
-            console.warn(`Trying to generate bitmaps for a texture with ${this._tex?.depthOrArrayLayers} layers. Only 1 and 6 are supported`);
-            return;
-        }
-        if (this._tex.depthOrArrayLayers === 1) {
-            await game.engine.utilRenderers.mipmap.generateMipMaps2D(this._tex);
-        }
-        else if (this._tex.depthOrArrayLayers === 6) {
-            await game.engine.utilRenderers.mipmap.generateMipMapsCube(this._tex);
-        }
+        await game.engine.utilRenderers.mipmap.generateMipMaps(this._tex);
     }
 
     get view() {

@@ -1,11 +1,10 @@
 import { Shader } from "../../shader";
-import shaderSource from "./cube_mipmap.wgsl";
+import shaderSource from "./mipmap.wgsl";
 
-export class MipmapCubeShader extends Shader {
+export class Mipmap2DShader extends Shader {
 
     static BINDING_GROUPS = {
-        VIEWPROJ: 0,
-        TEXTURE: 1
+        TEXTURE: 0
     }
 
     constructor(name: string, cb: () => void) {
