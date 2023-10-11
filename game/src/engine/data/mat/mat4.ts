@@ -308,7 +308,7 @@ export class Mat4 {
      * @returns The aim matrix
      */
     static aim(pos: Vec3, target: Vec3, up: Vec3) {
-        const zAxis = Vec3.subtract(target, pos).normalize();
+        const zAxis = target.subtract(pos).normalize();
         const xAxis = Vec3.cross(up, zAxis).normalize();
         const yAxis = Vec3.cross(zAxis, xAxis).normalize();
 
@@ -321,7 +321,7 @@ export class Mat4 {
     }
 
     static cameraAim(pos: Vec3, target: Vec3, up: Vec3) {
-        const zAxis = Vec3.subtract(pos, target).normalize();
+        const zAxis = pos.subtract(target).normalize();
         const xAxis = Vec3.cross(up, zAxis).normalize();
         const yAxis = Vec3.cross(zAxis, xAxis).normalize();
 
@@ -334,7 +334,7 @@ export class Mat4 {
     }
 
     static lookAt(pos: Vec3, target: Vec3, up: Vec3): Mat4 {
-        let zAxis = Vec3.subtract(pos, target).normalize();
+        let zAxis = pos.subtract(target).normalize();
         let xAxis = Vec3.cross(up, zAxis).normalize();
         let yAxis = Vec3.cross(zAxis, xAxis).normalize();
 

@@ -80,12 +80,12 @@ export class RenderStageSSAO implements RenderStage {
                 Math.random()
             ).normalize();
             
-            sample.multiplyByFactor(Math.random());
+            sample.multiplyFactor(Math.random());
             
             // Get more samples closer to the origin
             let scale = i / this._kernelSize;
             scale = MathUtils.lerp(0.1, 1.0, scale * scale);
-            sample.multiplyByFactor(scale);
+            sample.multiplyFactor(scale);
 
             this._kernel.push(sample);
         }

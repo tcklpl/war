@@ -109,27 +109,22 @@ export class RenderStageLights implements RenderStage {
         const frustumCenter = Vec4.centroid(frustumCorners);
 
         // create a light view matrix from the light's direction and the view frustum center
-        const lightDir = light.rotation.asDirectionVector.clone().normalize();
+        const lightDir = light.rotation.asDirectionVector.normalize();
         const lightView = Mat4.lookAt(
-            Vec3.add(frustumCenter.xyz, lightDir),
+            frustumCenter.xyz.add(lightDir),
             frustumCenter.xyz,
             new Vec3(0, 1, 0)
         );
         
         // get the min and max of the view frustum coordinates in light space to make the projection matrix
-        const minCorner = Vec3.fromValue(Infinity);
-        const maxCorner = Vec3.fromValue(-Infinity);
+        let minCorner = Vec3.fromValue(Infinity);
+        let maxCorner = Vec3.fromValue(-Infinity);
 
         for (const corner of frustumCorners) {
             const trf = lightView.multiplyByVec4(corner);
 
-            minCorner.x = Math.min(minCorner.x, trf.x);
-            minCorner.y = Math.min(minCorner.y, trf.y);
-            minCorner.z = Math.min(minCorner.z, trf.z);
-
-            maxCorner.x = Math.max(maxCorner.x, trf.x);
-            maxCorner.y = Math.max(maxCorner.y, trf.y);
-            maxCorner.z = Math.max(maxCorner.z, trf.z);
+            minCorner = minCorner.min(trf);
+            maxCorner = maxCorner.max(trf);
         }
 
         // multiply the Z to also include geometry behind the camera

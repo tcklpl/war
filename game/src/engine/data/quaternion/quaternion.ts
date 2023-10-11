@@ -149,7 +149,7 @@ export class Quaternion {
 
     static lookAt(source: Vec3, dest: Vec3, front: Vec3, up: Vec3) {
 
-        const toVector = Vec3.subtract(dest, source).normalize();
+        const toVector = dest.subtract(source).normalize();
 
         let rotAxis = Vec3.cross(front, toVector).normalize();
         if (rotAxis.squaredNorm() === 0) {

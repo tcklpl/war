@@ -58,15 +58,16 @@ export class BoardCamera extends BoardCameraBase {
     
     onEachFrame(deltaTime: number): void {
         if (this._deltaX === 0 && this._deltaY === 0 && this._deltaZ === 0) return;
-        this.position.x += this._deltaX * this._moveSpeed * deltaTime;
-        this.position.y += this._deltaY * this._moveSpeed * deltaTime;
-        this.position.z += this._deltaZ * this._moveSpeed * deltaTime;
+        this.position = this.position.add(new Vec3(
+            this._deltaX * this._moveSpeed * deltaTime,
+            this._deltaY * this._moveSpeed * deltaTime,
+            this._deltaZ * this._moveSpeed * deltaTime
+        ));
 
-        this.position = Vec3.clamp(this._lBound, this._hBound, this.position);
+        this.position = this.position.clamp(this._lBound, this._hBound);
 
-        this._camTarget = this.position.clone();
+        this._camTarget = this.position.add(new Vec3(0, -5, 0));
         // this._camTarget.x += this._tDeltaX;
-        this._camTarget.y -= 5;
         // this._camTarget.z += this._tDeltaZ;
         this.target = this._camTarget;
         
