@@ -19,4 +19,5 @@ export class ConfigGraphics implements ConfigPage {
     useBloom: boolean = true;
     useTAA: boolean = true;
     motionBlurAmount: number = 1.0;
+    useFilmGrain: boolean = true;
 }

@@ -46,7 +46,8 @@ export class RenderStagePFXToneMapping implements RenderStage {
                 ],
                 constants: {
                     bloom_strength: game.engine.config.graphics.useBloom ? 0.04 : 0,
-                    motion_blur_amount: Math.max(0, game.engine.config.graphics.motionBlurAmount)
+                    motion_blur_amount: Math.max(0, game.engine.config.graphics.motionBlurAmount),
+                    use_film_grain: game.engine.config.graphics.useFilmGrain ? 1 : 0
                 }
             },
             primitive: {

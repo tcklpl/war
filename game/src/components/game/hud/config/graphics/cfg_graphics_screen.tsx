@@ -17,6 +17,7 @@ const CfgGraphicsScreen: React.FC = () => {
     const [useBloom, setUseBloom] = useState(graphicsConfig.useBloom);
     const [useTAA, setUseTAA] = useState(graphicsConfig.useTAA);
     const [motionBlurAmount, setMotionBlurAmount] = useState(graphicsConfig.motionBlurAmount);
+    const [useFilmGrain, setUseFilmGrain] = useState(graphicsConfig.useFilmGrain);
 
     // useLayoutEffect instead of useEffect to run this before unmounting the parent cfg_screen
     useLayoutEffect(() => {
@@ -28,8 +29,9 @@ const CfgGraphicsScreen: React.FC = () => {
             graphicsConfig.useBloom = useBloom;
             graphicsConfig.useTAA = useTAA;
             graphicsConfig.motionBlurAmount = motionBlurAmount;
+            graphicsConfig.useFilmGrain = useFilmGrain;
         }
-    }, [shadowQuality, useSSAO, useBloom, useTAA, motionBlurAmount, graphicsConfig]);
+    }, [shadowQuality, useSSAO, useBloom, useTAA, motionBlurAmount, useFilmGrain, graphicsConfig]);
 
     
     return (
@@ -116,6 +118,18 @@ const CfgGraphicsScreen: React.FC = () => {
                                         <Typography variant="body1" width="4em">{(motionBlurAmount * 100).toFixed(0)}%</Typography>
                                     </Grid>
                                 </Grid>
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:graphics_post_effects_film_grain"), content: t("config:graphics_post_effects_film_grain_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:graphics_post_effects_film_grain") }</Typography></TableCell>
+                            <TableCell align="right">
+                                <Switch checked={useFilmGrain} onChange={e => {
+                                    setUseFilmGrain(e.target.checked);
+                                }}/>
                             </TableCell>
                         </TableRow>
 
