@@ -37,6 +37,8 @@
     "graphics_post_effects_taa_desc": "Temporal Anti Aliasing: Softens aliased and pixelated edges, making the final render smoother.",
     "graphics_post_effects_motion_blur": "Motion Blur",
     "graphics_post_effects_motion_blur_desc": "Blurs the image on the direction of movement.\n\nSetting to 0% disables the effect.",
+    "graphics_post_effects_film_grain": "Film Grain",
+    "graphics_post_effects_film_grain_desc": "Adds a bit of noise to the final render.",
 
     "game": "Game",
     "game_loading": "Loading",
