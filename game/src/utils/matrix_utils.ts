@@ -5,7 +5,7 @@ export class MatrixUtils {
 
     static getFrustumCornersWorldSpace(projection: Mat4, view: Mat4) {
 
-        const inv = projection.duplicate().multiplyByMat4(view).inverse();
+        const inv = projection.multiply(view).inverse();
         const corners: Vec4[] = [];
 
         for (let x = 0; x < 2; x++) {

@@ -142,7 +142,7 @@ export class RenderStageLights implements RenderStage {
 
         // finally create the light's projection matrix
         const lightProjection = Mat4.ortho(minCorner.x, maxCorner.x, minCorner.y, maxCorner.y, minCorner.z, maxCorner.z);
-        const lightViewProj = lightProjection.duplicate().multiplyByMat4(lightView);
+        const lightViewProj = lightProjection.multiply(lightView);
         return lightViewProj;
     }
 
