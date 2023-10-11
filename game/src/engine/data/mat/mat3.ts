@@ -18,7 +18,7 @@ export class Mat3 {
         return new Float32Array(this.values);
     }
 
-    get asMat4() {
+    toMat4() {
         return new Mat4([
             this.values[0 * 3 + 0],
             this.values[0 * 3 + 1],

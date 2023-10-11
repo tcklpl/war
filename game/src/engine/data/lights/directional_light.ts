@@ -36,7 +36,7 @@ export class DirectionalLight extends Light {
             ▓: vec4f
         */
         device.queue.writeBuffer(buf, offset, this.properties.color.asF32Array);
-        device.queue.writeBuffer(buf, offset + Vec3.byteSize + 4, this.rotation.asDirectionVector.multiplyByFactor(-1).normalize().asF32Array);
+        device.queue.writeBuffer(buf, offset + Vec3.byteSize + 4, this.rotation.asDirectionVector.multiplyFactor(-1).normalize().asF32Array);
         device.queue.writeBuffer(buf, offset + Vec3.byteSize * 2 + 4, new Float32Array([this.properties.intensity]));
         const shadowMapUV = [
             this.shadowAtlasMappedRegion?.uvLowerCorner.x ?? -1,

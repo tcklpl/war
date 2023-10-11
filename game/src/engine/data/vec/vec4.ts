@@ -1,63 +1,108 @@
 import { BadVectorLengthError } from "../../../errors/engine/data/bad_vector_length";
+import { MathUtils } from "../../../utils/math_utils";
 import { Vec3 } from "./vec3";
-import { Vector } from "./vector";
 
-export class Vec4 extends Vector {
+export class Vec4 extends Vec3 {
 
-    constructor(x: number, y: number, z: number, w: number) {
-        super([x, y, z, w]);
+    constructor(x: number, y: number, z: number, public w: number) {
+        super(x, y, z);
     }
 
     static get byteSize() {
         return 4 * 4;
     }
 
-    get x() {
-        return this._values[0];
+    get values() {
+        return [this.x, this.y, this.z, this.w];
+    }
+    
+    equals(other: Vec4) {
+        return this.x === other.x && this.y === other.y && this.z === other.z && this.w === other.w;
     }
 
-    get y() {
-        return this._values[1];
+    add(v: Vec4) {
+        return new Vec4(
+            this.x + v.x,
+            this.y + v.y,
+            this.z + v.z,
+            this.w + v.w
+        );
     }
 
-    get z() {
-        return this._values[2];
+    subtract(v: Vec4) {
+        return new Vec4(
+            this.x - v.x,
+            this.y - v.y,
+            this.z - v.z,
+            this.w - v.w
+        );
     }
 
-    get w() {
-        return this._values[3];
+    clamp(min: Vec4, max: Vec4) {
+        return new Vec4(
+            MathUtils.clamp(min.x, max.x, this.x),
+            MathUtils.clamp(min.y, max.y, this.y),
+            MathUtils.clamp(min.z, max.z, this.z),
+            MathUtils.clamp(min.w, max.w, this.w)
+        );
     }
 
-    set x(val: number) {
-        this._values[0] = val;
+    clampFactor(min: number, max: number) {
+        return new Vec4(
+            MathUtils.clamp(min, max, this.x),
+            MathUtils.clamp(min, max, this.y),
+            MathUtils.clamp(min, max, this.z),
+            MathUtils.clamp(min, max, this.w)
+        );
     }
 
-    set y(val: number) {
-        this._values[1] = val;
+    multiplyFactor(factor: number) {
+        return new Vec4(
+            this.x * factor,
+            this.y * factor,
+            this.z * factor,
+            this.w * factor
+        );
     }
 
-    set z(val: number) {
-        this._values[2] = val;
+    divideFactor(factor: number) {
+        return new Vec4(
+            this.x / factor,
+            this.y / factor,
+            this.z / factor,
+            this.w / factor
+        );
     }
 
-    set w(val: number) {
-        this._values[3] = val;
+    min(v: Vec4) {
+        return new Vec4(
+            Math.min(this.x, v.x),
+            Math.min(this.y, v.y),
+            Math.min(this.z, v.z),
+            Math.min(this.w, v.w)
+        );
     }
 
-    get xyz() {
-        return new Vec3(this.x, this.y, this.z);
+    max(v: Vec4) {
+        return new Vec4(
+            Math.max(this.x, v.x),
+            Math.max(this.y, v.y),
+            Math.max(this.z, v.z),
+            Math.max(this.w, v.w)
+        );
+    }
+
+    // -----------------[ SWIZZLES ]-----------------
+
+    get xyzw() {
+        return new Vec4(this.x, this.y, this.z, this.w);
+    }
+
+    get wxyz() {
+        return new Vec4(this.w, this.x, this.y, this.z);
     }
 
     // -----------------[ STATIC UTILS ]-----------------
-
-    static fromId(id: number): Vec4 {
-        return new Vec4(
-            ((id >>  0) & 0xFF) / 0xFF,
-            ((id >>  8) & 0xFF) / 0xFF,
-            ((id >> 16) & 0xFF) / 0xFF,
-            ((id >> 24) & 0xFF) / 0xFF
-        );
-    }
 
     static fromValue(v: number) {
         return new Vec4(v, v, v, v);
@@ -68,36 +113,7 @@ export class Vec4 extends Vector {
         return new Vec4(a[0], a[1], a[2], a[3]);
     }
 
-    static min(v: Vec4[]) {
-        return v.reduce((prev, cur) => {
-            prev.x = Math.min(cur.x);
-            prev.y = Math.min(cur.y);
-            prev.z = Math.min(cur.z);
-            prev.w = Math.min(cur.w);
-            return prev;
-        }, Vec4.fromValue(0));
-    }
-
-    static max(v: Vec4[]) {
-        return v.reduce((prev, cur) => {
-            prev.x = Math.max(cur.x);
-            prev.y = Math.max(cur.y);
-            prev.z = Math.max(cur.z);
-            prev.w = Math.max(cur.w);
-            return prev;
-        }, Vec4.fromValue(0));
-    }
-
-    static add(a: Vec4, b: Vec4) {
-        return new Vec4(
-            a.x + b.x,
-            a.y + b.y,
-            a.z + b.z,
-            a.w + b.w
-        );
-    }
-
     static centroid(v: Vec4[]) {
-        return v.reduce((accumulated, current) => Vec4.add(accumulated, current), Vec4.fromValue(0)).divideByFactor(v.length);
+        return v.reduce((accumulated, current) => accumulated.add(current), Vec4.fromValue(0)).divideFactor(v.length);
     }
 }

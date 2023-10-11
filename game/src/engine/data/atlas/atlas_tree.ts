@@ -50,15 +50,15 @@ export class AtlasTree {
             | 2 | 3 |
             +---+---+
         */
-        const child0 = this.buildTree(position.clone().add(new Vec2(0 * childSize, 0 * childSize)), depth + 1);
-        const child1 = this.buildTree(position.clone().add(new Vec2(1 * childSize, 0 * childSize)), depth + 1);
-        const child2 = this.buildTree(position.clone().add(new Vec2(0 * childSize, 1 * childSize)), depth + 1);
-        const child3 = this.buildTree(position.clone().add(new Vec2(1 * childSize, 1 * childSize)), depth + 1);
+        const child0 = this.buildTree(position.add(new Vec2(0 * childSize, 0 * childSize)), depth + 1);
+        const child1 = this.buildTree(position.add(new Vec2(1 * childSize, 0 * childSize)), depth + 1);
+        const child2 = this.buildTree(position.add(new Vec2(0 * childSize, 1 * childSize)), depth + 1);
+        const child3 = this.buildTree(position.add(new Vec2(1 * childSize, 1 * childSize)), depth + 1);
 
         // we only need to check 1 child because they are going to be undefined based on depth
         const isLeaf = child0 === undefined;
         const children = isLeaf ? [] : [child0, child1, child2, child3] as AtlasTreeNode[];
-        const node = new AtlasTreeNode(position.clone(), depth, children);
+        const node = new AtlasTreeNode(position.xy, depth, children);
         return node;
     }
 

@@ -1,61 +1,86 @@
 import { MathUtils } from "../../../utils/math_utils";
-import { Vector } from "./vector";
 
-export class Vec2 extends Vector {
+export class Vec2 {
 
-    constructor(x: number, y: number) {
-        super([x, y]);
-    }
+    constructor(public x: number, public y: number) { }
 
     static get byteSize() {
         return 4 * 2;
     }
 
-    get x() {
-        return this._values[0];
+    get values() {
+        return [this.x, this.y];
     }
 
-    get y() {
-        return this._values[1];
-    }
-
-    set x(val: number) {
-        this._values[0] = val;
-    }
-
-    set y(val: number) {
-        this._values[1] = val;
+    get asF32Array() {
+        return new Float32Array(this.values);
     }
 
     equals(other: Vec2) {
         return this.x === other.x && this.y === other.y;
     }
 
-    clone() {
+    add(v: Vec2) {
+        return new Vec2(
+            this.x + v.x,
+            this.y + v.y
+        );
+    }
+
+    subtract(v: Vec2) {
+        return new Vec2(
+            this.x - v.x,
+            this.y - v.y
+        );
+    }
+
+    clamp(min: Vec2, max: Vec2) {
+        return new Vec2(
+            MathUtils.clamp(min.x, max.x, this.x),
+            MathUtils.clamp(min.y, max.y, this.y)
+        );
+    }
+
+    clampFactor(min: number, max: number) {
+        return new Vec2(
+            MathUtils.clamp(min, max, this.x),
+            MathUtils.clamp(min, max, this.y)
+        );
+    }
+
+    multiplyFactor(factor: number) {
+        return new Vec2(
+            this.x * factor,
+            this.y * factor
+        );
+    }
+
+    divideFactor(factor: number) {
+        return new Vec2(
+            this.x / factor,
+            this.y / factor
+        );
+    }
+
+    min(v: Vec2) {
+        return new Vec2(
+            Math.min(this.x, v.x),
+            Math.min(this.y, v.y)
+        );
+    }
+
+    max(v: Vec2) {
+        return new Vec2(
+            Math.max(this.x, v.x),
+            Math.max(this.y, v.y)
+        );
+    }
+
+    get xy() {
         return new Vec2(this.x, this.y);
     }
 
-    add(v: Vec2) {
-        this.x += v.x;
-        this.y += v.y;
-        return this;
-    }
-
     // -----------------[ STATIC UTILS ]-----------------
-
-    static subtract(a: Vec2, b: Vec2): Vec2 {
-        return new Vec2(
-            a.x - b.x,
-            a.y - b.y
-        );
-    }
-
-    static clamp(min: Vec2, max: Vec2, value: Vec2) {
-        return new Vec2(
-            MathUtils.clamp(min.x, max.x, value.x),
-            MathUtils.clamp(min.y, max.y, value.y)
-        );
-    }
 
     static fromValue(val: number) {
         return new Vec2(val, val);

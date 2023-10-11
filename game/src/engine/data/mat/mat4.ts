@@ -15,7 +15,11 @@ export class Mat4 {
         return 4 * 4 * 4;
     }
 
-    multiplyByMat4(other: Mat4) {
+    get asF32Array() {
+        return new Float32Array(this.values);
+    }
+
+    multiply(other: Mat4) {
         const a00 = this.values[0 * 4 + 0];
         const a01 = this.values[0 * 4 + 1];
         const a02 = this.values[0 * 4 + 2];
@@ -48,7 +52,7 @@ export class Mat4 {
         const b31 = other.values[3 * 4 + 1];
         const b32 = other.values[3 * 4 + 2];
         const b33 = other.values[3 * 4 + 3];
-        this.values = [
+        return new Mat4([
             b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
             b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
             b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
@@ -65,8 +69,7 @@ export class Mat4 {
             b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
             b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
             b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
-        ];
-        return this;
+        ]);
     }
 
     multiplyByVec4(v: Vec4) {
@@ -95,7 +98,7 @@ export class Mat4 {
         );
     }
 
-    duplicate() {
+    clone() {
         return new Mat4(this.values.map(x => x));
     }
 
@@ -191,10 +194,6 @@ export class Mat4 {
             d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
                 (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
         ]);
-    }
-
-    get asF32Array() {
-        return new Float32Array(this.values);
     }
 
     get determinant() {
@@ -308,7 +307,7 @@ export class Mat4 {
      * @returns The aim matrix
      */
     static aim(pos: Vec3, target: Vec3, up: Vec3) {
-        const zAxis = Vec3.subtract(target, pos).normalize();
+        const zAxis = target.subtract(pos).normalize();
         const xAxis = Vec3.cross(up, zAxis).normalize();
         const yAxis = Vec3.cross(zAxis, xAxis).normalize();
 
@@ -321,7 +320,7 @@ export class Mat4 {
     }
 
     static cameraAim(pos: Vec3, target: Vec3, up: Vec3) {
-        const zAxis = Vec3.subtract(pos, target).normalize();
+        const zAxis = pos.subtract(target).normalize();
         const xAxis = Vec3.cross(up, zAxis).normalize();
         const yAxis = Vec3.cross(zAxis, xAxis).normalize();
 
@@ -334,7 +333,7 @@ export class Mat4 {
     }
 
     static lookAt(pos: Vec3, target: Vec3, up: Vec3): Mat4 {
-        let zAxis = Vec3.subtract(pos, target).normalize();
+        let zAxis = pos.subtract(target).normalize();
         let xAxis = Vec3.cross(up, zAxis).normalize();
         let yAxis = Vec3.cross(zAxis, xAxis).normalize();
 

@@ -25,13 +25,13 @@ export class MatrixTransformative {
     private _windingOrder: 'cw' | 'ccw' = 'ccw';
 
     private buildModelMatrix() {
-        this._modelMatrix = Mat4.identity();
-        this._modelMatrix.multiplyByMat4(this._translationMatrix);
-        this._modelMatrix.multiplyByMat4(this._rotationMatrix);
-        this._modelMatrix.multiplyByMat4(this._scaleMatrix);
+        this._modelMatrix = Mat4.identity()
+            .multiply(this._translationMatrix)
+            .multiply(this._rotationMatrix)
+            .multiply(this._scaleMatrix);
 
         if (this._parent) {
-            this._modelMatrix = this._parent.modelMatrix.duplicate().multiplyByMat4(this._modelMatrix);
+            this._modelMatrix = this._parent.modelMatrix.multiply(this._modelMatrix);
         }
 
         this._modelMatrixInverse = this._modelMatrix.inverse();
