@@ -21,6 +21,8 @@ struct VSCommonUniforms {
 struct VSUniqueUniforms {
     model: mat4x4f,
     model_inverse: mat4x4f,
+    previous_model: mat4x4f,
+    overlay: vec4f,
     id: u32
 };
 @group(1) @binding(0) var<uniform> vsUniqueUniforms: VSUniqueUniforms;

@@ -3,6 +3,7 @@ import { MathUtils } from "../../../utils/math_utils";
 import { Mat4 } from "../mat/mat4";
 import { Quaternion } from "../quaternion/quaternion";
 import { Vec3 } from "../vec/vec3";
+import { Vec4 } from "../vec/vec4";
 
 
 export class MatrixTransformative {
@@ -20,7 +21,7 @@ export class MatrixTransformative {
 
     private _modelMatrix = Mat4.identity();
     private _modelMatrixInverse = Mat4.identity();
-    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(3 * Mat4.byteSize + 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(3 * Mat4.byteSize + Vec4.byteSize + 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
 
     private _windingOrder: 'cw' | 'ccw' = 'ccw';
 
