@@ -1,3 +1,4 @@
+import { Float16Array } from "@petamoriken/float16";
 import { HDRImageData } from "../engine/asset/loaders/hdr_loader";
 import { Vec4 } from "../engine/data/vec/vec4";
 
@@ -19,6 +20,24 @@ export class TextureUtils {
             { texture: tex },
             new Uint8Array(v.values.map(x => Math.round(x * 255))),
             { bytesPerRow: 4, rowsPerImage: 1 },
+            { width: 1, height: 1 }
+        );
+
+        return tex;
+    }
+
+    static create1pxR16Texture(v: number) {
+
+        const tex = device.createTexture({
+            size: [1, 1],
+            format: 'r16float',
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST
+        });
+
+        device.queue.writeTexture(
+            { texture: tex },
+            new Float16Array(v).buffer,
+            { bytesPerRow: 2, rowsPerImage: 1 },
             { width: 1, height: 1 }
         );
 
