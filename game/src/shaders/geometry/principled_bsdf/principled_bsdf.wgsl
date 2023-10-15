@@ -147,7 +147,6 @@ struct MaterialInputs {
     albedo: vec3f,
     metallic: f32,
     roughness: f32,
-    reflectance: f32,
     ao: f32,
     ior: f32,
 
@@ -194,10 +193,10 @@ fn IORtoF0(ior: f32) -> f32 {
 // Material
 @group(2) @binding(0) var matSampler: sampler;
 @group(2) @binding(1) var matAlbedo: texture_2d<f32>;
-@group(2) @binding(2) var matNormal: texture_2d<f32>;
-@group(2) @binding(3) var matMetallic: texture_2d<f32>;
-@group(2) @binding(4) var matRoughness: texture_2d<f32>;
-@group(2) @binding(5) var matAO: texture_2d<f32>;
+@group(2) @binding(2) var matNormalAO: texture_2d<f32>;
+@group(2) @binding(3) var matProps1: texture_2d<f32>;
+@group(2) @binding(4) var matProps2: texture_2d<f32>;
+
 
 // Scene Info - Shadow map atlas
 @group(3) @binding(0) var sceneSampler: sampler;
@@ -219,11 +218,6 @@ struct DirectionalLights {
 
 // TODO: Scene Info - Punctual Lights
 
-// Scene Info - IBL - THIS WAS MOVED TO THE ENVINROMENT SHADER
-// @group(3) @binding(1) var iblSampler: sampler;
-// @group(3) @binding(2) var iblIrradiance: texture_cube<f32>;
-// @group(3) @binding(3) var iblPrefiltered: texture_cube<f32>;
-// @group(3) @binding(4) var iblLUT: texture_2d<f32>;
 
 /*
     --------------------------------------------------------------------------------------------------
@@ -231,8 +225,7 @@ struct DirectionalLights {
     --------------------------------------------------------------------------------------------------
 */
 
-fn calculateNormal(uv: vec2f, normal: vec3f, tangent: vec3f, bitangent: vec3f) -> vec3f {
-    var normalSample = textureSample(matNormal, matSampler, uv);
+fn calculateNormal(uv: vec2f, normalSample: vec3f, normal: vec3f, tangent: vec3f, bitangent: vec3f) -> vec3f {
     var rawNormal = normalize(normalSample.rgb * 2.0 - 1.0);
     var tbn = mat3x3(
         tangent,
@@ -589,19 +582,52 @@ fn evaluateMaterial(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors, cp
 @fragment
 fn fragment(v: VSOutput) -> FSOutput {
 
-    // getting parameters
-    var normal = calculateNormal(v.uv, v.model_normal, v.model_tangent, v.model_bitangent);
-    var viewVector = normalize(vsCommonUniforms.camera_position - v.model_position.xyz);
+    /*
+        Material Information:
 
-    var albedo = pow(textureSample(matAlbedo, matSampler, v.uv).rgb, vec3f(2.2));
-    var metallic = textureSample(matMetallic, matSampler, v.uv).r;
-    var roughness = textureSample(matRoughness, matSampler, v.uv).r;
-    var ao = textureSample(matAO, matSampler, v.uv).r;
-    // TODO: actually load these from a texture
-    var reflectance = 1.0;
+        Texture Name    Format          Separation          Data Explanation
+        -------------------------------------------------------------------------------
+        Albedo          rgba16float     [r, g, b, a]¹       1: Material HDR color.
+
+        Normal          rgba8unorm      [r, g, b]¹ [a]²     1: Normal vector;
+                                                            2: AO.
+
+        Props 1         rgba8unorm      [r]¹ [g]² [b]³ [a]⁴ 1: Metallic;
+                                                            2: Roughness;
+                                                            3: Transmission;
+                                                            4: Transmission Roughness;
+
+        Props 2         r16float        [r]¹                1: IOR
+
+    */
+    // albedo
+    var albedoSample = textureSample(matAlbedo, matSampler, v.uv);
+    var albedo = pow(albedoSample.rgb, vec3f(2.2));
+    var alpha = albedoSample.a;
+
+    // normal and AO
+    var normalAOSample = textureSample(matNormalAO, matSampler, v.uv);
+    var normalMapVector = normalAOSample.xyz;
+    var ao = normalAOSample.a;
+
+    // props 1
+    var props1Sample = textureSample(matProps1, matSampler, v.uv);
+    var metallic = props1Sample.r;
+    var roughness = props1Sample.g;
+    var transmission = props1Sample.b;
+    var transmissionRoughness = props1Sample.a;
+
+    // props 2
+    var props2Sample = textureSample(matProps2, matSampler, v.uv);
+    var ior = props2Sample.r;
+
+    // unused props, maybe use if in the future?
     var clearCoat = 0.0;
-    var clearCoatPerceptualRoughness  = 0.0;
-    var ior = 1.3;
+    var clearCoatPerceptualRoughness = 0.0;
+
+    // getting parameters
+    var normal = calculateNormal(v.uv, normalMapVector, v.model_normal, v.model_tangent, v.model_bitangent);
+    var viewVector = normalize(vsCommonUniforms.camera_position - v.model_position.xyz);
 
     var cv = CommonVectors(
         normal,                                 // N
@@ -619,7 +645,6 @@ fn fragment(v: VSOutput) -> FSOutput {
         albedo,
         metallic,
         roughness,
-        reflectance,
         ao,
         ior,
         clearCoat,

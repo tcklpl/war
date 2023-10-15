@@ -120,6 +120,7 @@ export class Scene {
 
     free() {
         this.info.free();
+        this._skyboxes.forEach(s => s.free());
     }
 
 }

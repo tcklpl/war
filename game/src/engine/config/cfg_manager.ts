@@ -31,7 +31,7 @@ export class ConfigManager extends IDBController<ConfigPage> {
     }
 
     /**
-     * Asserts that the loaded config has all fields in the reference one.
+     * Asserts that the loaded config has all the fields present in the the reference one.
      * This prevents crashes when loading a config from an older version.
      * 
      * @param reference The default config values.

@@ -32,7 +32,7 @@ export class CubemapPrefilterRenderer {
             this._convolutionShader = new PrefilterCubemapShader('cubemap prefilter shader', () => r());
         });
 
-        this._pipeline = this.createPipeline();
+        this._pipeline = await this.createPipeline();
         this._sampler = this.createSampler();
         this._renderPassDescriptor = this.createRenderPassDescriptor();
 
@@ -43,7 +43,7 @@ export class CubemapPrefilterRenderer {
     }
 
     private createPipeline() {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: 'cubemap convolution pipeline',
             layout: 'auto',
             vertex: {

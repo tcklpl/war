@@ -16,12 +16,12 @@ export class MipmapRenderer {
         await new Promise<void>(r => {
             this._mipShader = new Mipmap2DShader('mipmap shader', () => r());
         });
-        this._mipPipeline = this.createPipeline();
+        this._mipPipeline = await this.createPipeline();
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 
     private createPipeline() {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: 'mipmap pipeline',
             layout: 'auto',
             vertex: {

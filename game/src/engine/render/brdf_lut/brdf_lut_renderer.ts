@@ -12,13 +12,13 @@ export class BRDFLUTRenderer {
             this._lutShader = new BRDFConvolutionIntegralShader('BRDF LUT shader', () => r());
         });
 
-        this._pipeline = this.createPipeline();
+        this._pipeline = await this.createPipeline();
         this._renderPassDescriptor = this.createRenderPassDescriptor();
 
     }
 
     private createPipeline() {
-        return device.createRenderPipeline({
+        return device.createRenderPipelineAsync({
             label: 'BRDF LUT pipeline',
             layout: 'auto',
             vertex: {

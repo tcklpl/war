@@ -14,6 +14,7 @@ import { CubemapPrefilterRenderer } from "./render/cubemap_prefilter/cubemap_pre
 import { EquirectangularToCubemapRenderer } from "./render/equirec_to_cubemap/equirec_to_cubemap_renderer";
 import { MipmapRenderer } from "./render/mipmap/mipmap_renderer";
 import { Renderer } from "./render/renderer";
+import { TexturePackingRenderer } from "./render/texture_packing/texture_packing_renderer";
 import { VanillaRenderer } from "./render/vanilla/vanilla_renderer";
 import { Time } from "./time";
 
@@ -40,7 +41,8 @@ export class Engine {
         equirecToCubemap: new EquirectangularToCubemapRenderer(),
         cubemapPrefilter: new CubemapPrefilterRenderer(),
         BRDF_LUT: new BRDFLUTRenderer(),
-        mipmap: new MipmapRenderer()
+        mipmap: new MipmapRenderer(),
+        packing: new TexturePackingRenderer()
     };
 
     private _frameListeners: IFrameListener[] = [];
@@ -104,6 +106,7 @@ export class Engine {
         await this.utilRenderers.cubemapPrefilter.initialize();
         await this.utilRenderers.BRDF_LUT.initialize();
         await this.utilRenderers.mipmap.initialize();
+        await this.utilRenderers.packing.initialize();
         await this._renderer.initialize();
 
         this._brdfLUT = await this.utilRenderers.BRDF_LUT.renderLUT();
@@ -134,6 +137,7 @@ export class Engine {
         this.utilRenderers.cubemapPrefilter.free();
         this.utilRenderers.BRDF_LUT.free();
         this.utilRenderers.mipmap.free();
+        this.utilRenderers.packing.free();
 
         this._brdfLUT?.destroy();
 
