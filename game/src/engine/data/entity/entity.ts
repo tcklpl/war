@@ -1,8 +1,11 @@
 import { PrincipledBSDFShader } from "../../../shaders/geometry/principled_bsdf/principled_bsdf_shader";
+import { MathUtils } from "../../../utils/math_utils";
 import { Mat4 } from "../mat/mat4";
 import { Mesh } from "../meshes/mesh";
 import { PrimitiveDrawOptions } from "../meshes/primitive_draw_options";
 import { identifiable } from "../traits/identifiable";
+import { Vec3 } from "../vec/vec3";
+import { Vec4 } from "../vec/vec4";
 import { FrameListenerMatrixTransformative } from "./frame_listener_matrix_transformative";
 import { MatrixTransformative } from "./matrix_transformative";
 
@@ -15,6 +18,9 @@ export class Entity extends EntityBase {
 
     private _name: string;
     private _mesh: Mesh;
+
+    private _overlayColor = Vec3.fromValue(0);
+    private _overlayIntensity = 0;
     
     private _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
 
@@ -23,7 +29,7 @@ export class Entity extends EntityBase {
         this._name = data.name;
         this._mesh = data.mesh;
         // write id to buffer
-        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize, this.idUint32);
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize + Vec4.byteSize, this.idUint32);
     }
     
     getBindGroup(pipeline: GPURenderPipeline) {
@@ -66,6 +72,25 @@ export class Entity extends EntityBase {
 
     get name() {
         return this._name;
+    }
+
+    get overlayColor() {
+        return this._overlayColor;
+    }
+
+    get overlayIntensity() {
+        return this._overlayIntensity;
+    }
+
+    set overlayColor(color: Vec3) {
+        this._overlayColor = color;
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize, this._overlayColor.asF32Array);
+    }
+
+    set overlayIntensity(intensity: number) {
+        const clampedIntensity = MathUtils.clamp(0, 1, intensity);
+        this._overlayIntensity = clampedIntensity;
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize + Vec3.byteSize, new Float32Array([this._overlayIntensity]));
     }
 
 }

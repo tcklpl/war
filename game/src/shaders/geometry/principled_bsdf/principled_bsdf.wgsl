@@ -31,6 +31,7 @@ struct VSUniqueUniforms {
     model: mat4x4f,
     model_inverse: mat4x4f,
     previous_model: mat4x4f,
+    overlay: vec4f,
     id: u32
 };
 @group(1) @binding(0) var<uniform> vsUniqueUniforms: VSUniqueUniforms;
@@ -604,6 +605,11 @@ fn fragment(v: VSOutput) -> FSOutput {
     var albedoSample = textureSample(matAlbedo, matSampler, v.uv);
     var albedo = pow(albedoSample.rgb, vec3f(2.2));
     var alpha = albedoSample.a;
+
+    // overlay
+    var overlayColor = vsUniqueUniforms.overlay.rgb;
+    var overlayIntensity = vsUniqueUniforms.overlay.a;
+    albedo = mix(albedo, overlayColor, overlayIntensity);
 
     // normal and AO
     var normalAOSample = textureSample(matNormalAO, matSampler, v.uv);
