@@ -1,5 +1,6 @@
 import { Entity } from "../../engine/data/entity/entity";
 import { interactable } from "../../engine/data/traits/interactable";
+import { Vec3 } from "../../engine/data/vec/vec3";
 import { MissingAssetError } from "../../errors/engine/asset/missing_asset";
 
 const BoardCountryBase = interactable(Entity);
@@ -20,7 +21,12 @@ export class BoardCountry extends BoardCountryBase {
     }
 
     onMouseHover(): void {
-        // console.log(this.name);
+        this.overlayIntensity = 1;
+        this.overlayColor = new Vec3(20, 0, 0);
+    }
+
+    onMouseLeave(): void {
+        this.overlayIntensity = 0;
     }
 
 }
