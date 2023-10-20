@@ -22,5 +22,13 @@
         Leaving password as an empty string will make the server not require any password.
     */
     name: "My Server",
-    password: ""
+    password: "",
+
+    /*
+        [ SECONDARY ]
+        How long the token generated on login will be valid. This is important in case a player disconnects for some reason
+        and tries to rejoin shortly after. They'll be able to go straight back to the game without trigerring a re-authentication
+        as long as their token is still valid.
+    */
+    client_auth_token_expiration: "12h"
 }
