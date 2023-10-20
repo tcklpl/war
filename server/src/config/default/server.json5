@@ -1,0 +1,26 @@
+{
+    /*
+        GLOBAL SERVER CONFIG
+
+        Configure this file to setup your server.
+        Each config group is labeled as either IMPORTANT or SECONDARY:
+        [ IMPORTANT ]   You probably want to take a look at this lines as you'll likely change them.
+        [ SECONDARY ]   These are configs that you'll probably not need to change, as they are auto-generated or already sane ones.
+    */
+
+    /*
+        [ IMPORTANT ]
+        Server connection info, how your server will listen to incoming requests.
+        You may want to change the default port if it's already in use in your machine.
+    */
+    host: "localhost",
+    port: 36875,
+    
+    /*
+        [ IMPORTANT ]
+        Server Name and Password that will be required when connecting to the server.
+        Leaving password as an empty string will make the server not require any password.
+    */
+    name: "My Server",
+    password: ""
+}
