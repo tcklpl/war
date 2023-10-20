@@ -3,9 +3,9 @@ import { generateKeyPairSync } from "crypto";
 
 export class CryptoUtils {
 
-    static generateRSAKeys() {
+    static generateRSAKeys(length: number) {
         return generateKeyPairSync("rsa", {
-            modulusLength: 2048,
+            modulusLength: length,
             publicKeyEncoding: {
                 type: "spki",
                 format: "pem"

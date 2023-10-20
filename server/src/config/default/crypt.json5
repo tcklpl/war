@@ -1,0 +1,20 @@
+{
+    /*
+        CRYPTOGRAPHY AND HASHING CONFIG
+
+        Configure this file to setup your server.
+        Each config group is labeled as either IMPORTANT or SECONDARY:
+        [ IMPORTANT ]   You probably want to take a look at this lines as you'll likely change them.
+        [ SECONDARY ]   These are configs that you'll probably not need to change, as they are auto-generated or already sane ones.
+    */
+
+    /*
+        [ SECONDARY ]
+        RSA key and hashing configuration.
+        If you change any of these values, you'll also need to delete the 'public.key' and 'private.key' files.
+        The next time the server starts without those files, new ones will be generated based on this config.
+    */
+    rsa_key_length: 1024,
+    rsa_algorithm: "RS256"
+    
+}
