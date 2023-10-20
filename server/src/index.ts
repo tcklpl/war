@@ -1,2 +1,4 @@
+import { WarServer } from "./war_server";
 
-console.log("TODO");
+const server = new WarServer();
+server.initialize();
