@@ -1,5 +1,11 @@
 {
-    "ts-node": {
-      "swc": true
-    }
+  "compilerOptions": {
+    "esModuleInterop": true
+  },
+  "ts-node": {
+    "swc": true
+  },
+  "references": [
+    { "path": "../protocol" }
+  ]
 }
