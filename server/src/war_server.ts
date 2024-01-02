@@ -8,7 +8,7 @@ export class WarServer {
     private _configManager = new ConfigManager();
     private _cryptManager = new CryptManager(this._configManager);
 
-    private _expressServer = new ExpressServer(this._configManager);
+    private _expressServer = new ExpressServer(this._configManager, this._cryptManager);
     
     async initialize() {
         svlog.log(`Initializing server`);

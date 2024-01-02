@@ -2,13 +2,14 @@ import { ConfigManager } from "../config/config_manager";
 import express from 'express';
 import { CfgServer } from "../config/default/cfg_server";
 import { ExpressRoutes } from "./routes/routes";
+import { CryptManager } from "../crypt/crypt_manager";
 
 export class ExpressServer {
 
-    constructor (private _configManager: ConfigManager) {}
+    constructor (private _configManager: ConfigManager, private _cryptManager: CryptManager) {}
     
     private _app: express.Application;
-    private _routes = new ExpressRoutes(this._configManager);
+    private _routes = new ExpressRoutes(this._configManager, this._cryptManager);
 
     private startServer() {
         this._app = express();
