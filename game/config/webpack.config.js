@@ -699,6 +699,7 @@ module.exports = function (webpackEnv) {
                 tsBuildInfoFile: paths.appTsBuildInfoFile,
               },
             },
+            build: true,
             context: paths.appPath,
             diagnosticOptions: {
               syntactic: true,
