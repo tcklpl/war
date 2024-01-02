@@ -1,4 +1,3 @@
-import { Constructor } from "typeUtils";
 import { BadGLTFFileError } from "../../../errors/engine/gltf/bad_gltf_file";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { GLTFBuffer } from "./gltf_buffer";

@@ -14,10 +14,10 @@ export class CachedAsset {
     }
 
     get cachedAssetInterface() {
-        return <CachedAssetIDBInterface> {
+        return {
             name: this.name,
             data: this._data
-        }
+        } as CachedAssetIDBInterface
     }
 
 }
