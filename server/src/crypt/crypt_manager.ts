@@ -44,4 +44,12 @@ export class CryptManager {
         this.loadKeys();
     }
 
+    get publicKey() {
+        return this._publicKey;
+    }
+
+    get privateKey() {
+        return this._privateKey;
+    }
+
 }
