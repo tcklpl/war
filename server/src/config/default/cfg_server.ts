@@ -12,5 +12,10 @@ export class CfgServer extends Config {
 
     name: string;
     password: string;
+    description: string;
+
+    max_players: number;
+
+    client_auth_token_expiration: string;
 
 }
