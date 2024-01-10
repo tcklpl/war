@@ -120,11 +120,12 @@ export class Engine {
         this._frameListeners.push(l);
     }
 
-    free() {
+    async free() {
         // prevent rendering while we destroy the whole engine
         this.pauseRender();
 
-        this._db.closeConnection();
+        // TODO: Fix DB closing timing
+        // await this._db.closeConnection();
 
         // assets don't need any memory freeing
         // cameras also don't need any memory freeing

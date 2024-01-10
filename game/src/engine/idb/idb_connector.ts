@@ -41,7 +41,11 @@ export class IDBConnector {
     }
 
     closeConnection() {
-        this._db?.close();
+        return new Promise<void>((res, rej) => {
+            if (!this.db) return rej();
+            this.db.onclose = () => res();
+            this.db.close();
+        });
     }
 
     get isSupported() {
