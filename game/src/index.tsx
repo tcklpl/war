@@ -6,16 +6,19 @@ import { GameProvider } from './hooks/use_game';
 import { ConfigProvider } from './hooks/use_config';
 import { CrashProvider } from './hooks/use_crash';
 import { AlertProvider } from './hooks/use_alert';
+import { GameSessionProvider } from './hooks/use_game_session';
 
 const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
     return (
         <GameProvider>
             <ConfigProvider>
-                <CrashProvider>
-                    <AlertProvider>
-                        { children }
-                    </AlertProvider>
-                </CrashProvider>
+                <GameSessionProvider>
+                    <CrashProvider>
+                        <AlertProvider>
+                            { children }
+                        </AlertProvider>
+                    </CrashProvider>
+                </GameSessionProvider>
             </ConfigProvider>
         </GameProvider>
     )
