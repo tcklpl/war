@@ -1,0 +1,33 @@
+{
+    "server_list": "Server List",
+
+    "add_server": "Add Server",
+    "edit_server": "Edit Server",
+    "save_server": "Save Server",
+    "add_server_desc": "Enter the name and address for the server. If the port is omitted the default one will be automatically inserted.",
+    "refresh": "Refresh",
+
+    "add_server_error_no_name": "Please enter a name for the server",
+    "add_server_error_no_address": "Please enter an address for the server",
+    "add_server_error_name_already_exists": "This server name already exists, please enter a different name",
+    "add_server_error_address_already_exists": "This server address already exists, please enter a different address",
+
+    "connect": "Connect to Server",
+    "connecting": "Connecting to Server...",
+    "fetching_data": "Fetching server data...",
+    "failed_to_connect": "Connection Failed",
+    "close": "Close",
+
+    "requires_password": "This server requires a password to connect",
+    "no_password": "This server doesn't require a password to connect",
+
+    "password_prompt_title": "Enter the password",
+    "password_prompt_desc": "This server requires a password to join, enter the password on the prompt below",
+    "password_prompt_error_no_password": "This server requires a password, please fill the field above",
+
+    "error_wrong_password": "Wrong Password",
+    "error_wrong_password_desc": "The server refused to connect with the supplied password. Check if you typed it correctly.",
+
+    "error_failed_to_fetch_data": "Failed to fetch server data",
+    "error_failed_to_fetch_data_desc": "The server didn't respond or rejected the game info request. Check the server address."
+}
