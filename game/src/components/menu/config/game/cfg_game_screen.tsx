@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react"
 import { Grid, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
-import { useConfig } from "../../../../../hooks/use_config";
+import { useConfig } from "../../../../hooks/use_config";
 
 const CfgGameScreen: React.FC = () => {
 

@@ -6,11 +6,11 @@ import CfgDisplayScreen from "../config/display/cfg_display_screen";
 import "./cfg_screen.sass";
 import { useTranslation } from "react-i18next";
 import CfgGraphicsScreen from "./graphics/cfg_graphics_screen";
-import { useGame } from "../../../../hooks/use_game";
 import CfgGameScreen from "./game/cfg_game_screen";
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import { useConfig } from "../../../../hooks/use_config";
 import CfgScreenDefaultBackground from "./cfg_default_background";
+import { useGame } from "../../../hooks/use_game";
+import { useConfig } from "../../../hooks/use_config";
 
 const CfgScreen: React.FC = () => {
 

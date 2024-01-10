@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from "react"
 import { Grid, MenuItem, Select, Slider, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
-import { useConfig } from "../../../../../hooks/use_config";
+import { useConfig } from "../../../../hooks/use_config";
 
 const CfgGraphicsScreen: React.FC = () => {
 

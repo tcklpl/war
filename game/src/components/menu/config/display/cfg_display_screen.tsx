@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { useConfig } from "../../../../../hooks/use_config";
+import { useConfig } from "../../../../hooks/use_config";
 
 const CfgDisplayScreen: React.FC = () => {
 
