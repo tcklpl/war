@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { InvalidCanvasError } from "../errors/engine/initialization/invalid_canvas";
 import { WebGPUUnsupportedError } from "../errors/engine/initialization/webgpu_unsupported";
 import { WarGame } from "../game/war_game";
@@ -14,25 +14,7 @@ const WarCanvas: React.FC = () => {
     const { setGameInstance } = useGame();
     const { setEngineInitializationCrash } = useCrash();
 
-    useEffect(() => {
-        getContext().then(() => {
-            const gameInstance = WarGame.initialize();
-            setGameInstance(gameInstance);
-        })
-        .catch((error: Error) => {
-            console.error(error);
-            setEngineInitializationCrash(error);
-        });
-
-        // to run when unmounting the component
-        return () => {
-            game.kill();
-            setGameInstance(undefined);
-        }
-    }, [ setGameInstance ]);
-
-    const getContext = async () => {
-        
+    const getContext = useCallback(async () => {
         if (!ref.current || !glRef.current) throw new InvalidCanvasError(t("engine:invalid_canvas"));
         globalThis.gameCanvas = ref.current;
 
@@ -70,7 +52,25 @@ const WarCanvas: React.FC = () => {
         const glCtx = glRef.current.getContext("webgl2");
         if (!glCtx) throw new WebGPUUnsupportedError(t("engine:unsupported_webgl2"));
         globalThis.gl = glCtx;
-    }
+
+    }, [ t ]);
+
+    useEffect(() => {
+        getContext().then(() => {
+            const gameInstance = WarGame.initialize();
+            setGameInstance(gameInstance);
+        })
+        .catch((error: Error) => {
+            console.error(error);
+            setEngineInitializationCrash(error);
+        });
+
+        // to run when unmounting the component
+        return () => {
+            game.kill();
+            setGameInstance(undefined);
+        }
+    }, [ setGameInstance, setEngineInitializationCrash, getContext ]);
 
     return (
         <>
