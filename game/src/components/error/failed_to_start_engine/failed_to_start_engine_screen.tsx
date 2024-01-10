@@ -16,7 +16,7 @@ const FailedToStartEngineScreen: React.FC = () => {
                 <Grid container direction="column" justifyContent="center" alignItems="center" height="100%">
 
                     <Stack spacing={10} alignItems="center" direction="row">
-                        <img src={logo} />
+                        <img src={logo} alt="" />
 
                         <Stack spacing={2} justifyContent="start" direction="column">
                             <Typography variant="h4">
