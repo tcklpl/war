@@ -15,6 +15,7 @@ export class CryptManager {
 
     private _publicKey!: string;
     private _privateKey!: string;
+    private _algo!: 'RS256' | 'RS384' | 'RS512';
 
     private checkIfKeyFilesExist() {
         return fs.existsSync(this._publicKeyFile) && fs.existsSync(this._privateKeyFile);
@@ -40,8 +41,16 @@ export class CryptManager {
         svlog.log(`Keys are loaded`);
     }
 
+    private validateAlgo() {
+        const algo = this._configManager.getConfig(CfgCrypt).rsa_algorithm;
+        const validAlgos = ['RS256', 'RS384', 'RS512'];
+        if (!validAlgos.find(x => x === algo)) throw new Error(`Unknown crypt algo "${algo}", should be one of [${validAlgos.join(", ")}]`);
+        this._algo = algo as 'RS256' | 'RS384' | 'RS512';
+    }
+
     async initialize() {
         this.loadKeys();
+        this.validateAlgo();
     }
 
     get publicKey() {
@@ -50,6 +59,10 @@ export class CryptManager {
 
     get privateKey() {
         return this._privateKey;
+    }
+
+    get algorithm() {
+        return this._algo;
     }
 
 }
