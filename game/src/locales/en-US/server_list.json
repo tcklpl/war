@@ -28,6 +28,12 @@
     "error_wrong_password": "Wrong Password",
     "error_wrong_password_desc": "The server refused to connect with the supplied password. Check if you typed it correctly.",
 
+    "error_unavailable_username": "Username is Taken",
+    "error_unavailable_username_desc": "This server does already have a player logged in using your username.",
+
+    "error_unknown": "Unknown Connection Error",
+    "error_unknown_desc": "Some unknown error ocurred while trying to connect to the server.",
+
     "error_failed_to_fetch_data": "Failed to fetch server data",
     "error_failed_to_fetch_data_desc": "The server didn't respond or rejected the game info request. Check the server address."
 }
