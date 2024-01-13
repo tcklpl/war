@@ -12,8 +12,7 @@ export class RouteServerInfo extends ExpressRoute {
                 hasPassword: serverConfig.password !== "",
                 description: serverConfig.description,
                 playerLimit: serverConfig.max_players,
-                // TODO: Implement player count
-                playerCount: 0
+                playerCount: this._gameServer.loggedPlayers.length
             });
         });
     }

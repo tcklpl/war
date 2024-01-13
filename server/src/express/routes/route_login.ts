@@ -1,5 +1,5 @@
 import { Joi, celebrate } from "celebrate";
-import { cl_LoginRequest, sv_LoginResponseOK, sv_ServerInfo } from "../../../../protocol";
+import { cl_LoginRequest, sv_LoginResponseOK } from "../../../../protocol";
 import { CfgServer } from "../../config/default/cfg_server";
 import { ExpressRoute } from "./route";
 
@@ -14,13 +14,25 @@ export class RouteLogin extends ExpressRoute {
             }).required()
         }), (req, res) => {
 
+            // validate password
             const request = req.body as cl_LoginRequest;
             if (serverConfig.password !== "" && request.password !== serverConfig.password) {
                 return res.sendStatus(403);
             }
 
-            res.status(200).json(<sv_LoginResponseOK> {
-                token: "test token"
+            // validate username
+            if (!this._gameServer.isUsernameAvailable(request.username)) {
+                return res.sendStatus(409);
+            }
+
+            // all ok, signing token
+            const token = this._cryptManager.signTokenBody({
+                username: request.username,
+                ip: req.ip
+            });
+
+            return res.status(200).json(<sv_LoginResponseOK> {
+                token
             });
         });
     }
