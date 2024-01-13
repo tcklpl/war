@@ -8,7 +8,8 @@ export class CfgServer extends Config {
     readonly DEFAULT_PATH = path.join(__dirname, "server.json5");
 
     host: string;
-    port: number;
+    rest_port: number;
+    socket_port: number;
 
     name: string;
     password: string;
