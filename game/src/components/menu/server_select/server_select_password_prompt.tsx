@@ -35,9 +35,7 @@ const ServerSelectPasswordPrompt: React.FC<{
     }, [t, password, setOpen, onPasswordSet]);
 
     return (
-        <Dialog open={open} onClose={() => {
-            setOpen(false);
-        }}>
+        <Dialog open={open}>
             <DialogTitle>{ t("server_list:password_prompt_title") }</DialogTitle>
             <DialogContent>
                 <Stack spacing={1}>
