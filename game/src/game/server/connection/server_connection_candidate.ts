@@ -1,5 +1,10 @@
-import { sv_ServerInfo } from "../../../../../protocol";
+import { ClientToServerPackets, ServerToClientPackets, cl_LoginRequest, sv_LoginResponseOK, sv_ServerInfo } from "../../../../../protocol";
+import { UnknownConnectionError } from "../../../errors/game/connection/unknown_connection_error";
+import { UsernameNotAvailableError } from "../../../errors/game/connection/username_not_available";
+import { WrongPasswordError } from "../../../errors/game/connection/wrong_password";
 import { ServerListSelectInfo } from "../server_list_select_info";
+import { Socket, io } from "socket.io-client";
+import { ServerConnection } from "./server_connection";
 
 type ServerConnectionCandidateStatus = 'loading' | 'pinging' | 'error' | 'ready' | 'connecting';
 
@@ -50,8 +55,54 @@ export class ServerConnectionCandidate {
         this._pingAbortController?.abort();
     }
 
-    async connect(password?: string) {
+    async connect(username: string, password?: string) {
+
+        const loginResult = await fetch(`${this._listInfo.address}login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username,
+                password
+            } as cl_LoginRequest)
+        });
         
+        if (!loginResult.ok) {
+
+            if (loginResult.status === 403) throw new WrongPasswordError();
+            if (loginResult.status === 409) throw new UsernameNotAvailableError();
+            throw new UnknownConnectionError();
+
+        }
+
+        const response = await loginResult.json() as sv_LoginResponseOK;
+        const socketURI = new URL(this._listInfo.address);
+        socketURI.port = "36876";
+
+        const socket: Socket<ServerToClientPackets, ClientToServerPackets> = io(socketURI.toString(), {
+            auth: {
+                token: response.token
+            }
+        });
+        await this.waitForServerConnection(socket);
+        
+        const connection = new ServerConnection(socket, response.token);
+        return connection;
+
+    }
+
+    private waitForServerConnection(socket: Socket) {
+        return new Promise<void>((res, rej) => {
+
+            socket.on("connect",() => {
+                return res();
+            });
+
+            socket.on("connect_error", () => {
+                return rej();
+            });
+        });
     }
     
     get status() {
