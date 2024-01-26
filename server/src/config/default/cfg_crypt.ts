@@ -7,7 +7,7 @@ export class CfgCrypt extends Config {
     readonly PATH = "crypt.json5";
     readonly DEFAULT_PATH = path.join(__dirname, "crypt.json5");
 
-    rsa_key_length: number;
-    rsa_algorithm: string;
+    rsa_key_length!: number;
+    rsa_algorithm!: string;
 
 }

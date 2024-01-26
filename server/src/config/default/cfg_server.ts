@@ -7,16 +7,17 @@ export class CfgServer extends Config {
     readonly PATH = "server.json5";
     readonly DEFAULT_PATH = path.join(__dirname, "server.json5");
 
-    host: string;
-    rest_port: number;
-    socket_port: number;
+    host!: string;
+    rest_port!: number;
+    socket_port!: number;
 
-    name: string;
-    password: string;
-    description: string;
+    name!: string;
+    password!: string;
+    description!: string;
 
-    max_players: number;
+    max_players!: number;
+    max_game_rooms!: number;
 
-    client_auth_token_expiration: string;
+    client_auth_token_expiration!: string;
 
 }

@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true
   },
   "ts-node": {
     "swc": true
   },
   "references": [
     { "path": "../protocol" }
+  ],
+  "include": [
+    "src"
   ]
 }
