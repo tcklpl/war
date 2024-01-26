@@ -4,4 +4,5 @@ export class ConfigSession implements ConfigPage {
     page = 'session';
 
     username = "";
+    token = "";
 }
