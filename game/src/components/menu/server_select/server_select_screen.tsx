@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useGame } from "../../../hooks/use_game";
 import { ServerConnectionCandidate } from "../../../game/server/connection/server_connection_candidate";
 import ServerSelectAddServerScreen from "./server_select_add_server";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ServerSelectPasswordPrompt from "./server_select_password_prompt";
 import ServerSelectConnectionInfo from "./server_select_connection_info";
 
@@ -21,6 +21,8 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import PublicIcon from '@mui/icons-material/Public';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useGameSession } from "../../../hooks/use_game_session";
+import { WrongPasswordError } from "../../../errors/game/connection/wrong_password";
+import { UsernameNotAvailableError } from "../../../errors/game/connection/username_not_available";
 
 
 const ServerSelectScreen: React.FC = () => {
@@ -28,7 +30,8 @@ const ServerSelectScreen: React.FC = () => {
     const { palette } = useTheme();
     const { t } = useTranslation(["server_list", "common"]);
     const { gameInstance } = useGame();
-    const { username } = useGameSession();
+    const { username, setToken, saveGameSession } = useGameSession();
+    const navigate = useNavigate();
 
     const [servers, setServers] = useState<ServerConnectionCandidate[]>([]);
     const [selectedServer, setSelectedServer] = useState<ServerConnectionCandidate | undefined>(undefined);
@@ -39,7 +42,7 @@ const ServerSelectScreen: React.FC = () => {
     */
     const updateServerList = useCallback(() => {
         gameInstance?.runWhenReady((async () => {
-            const servers = await gameInstance.serverList.getAllServers();
+            const servers = await gameInstance.state.serverList.getAllServers();
             setServers(servers.map(sv => new ServerConnectionCandidate(sv)));
         }));
     }, [gameInstance]);
@@ -88,9 +91,35 @@ const ServerSelectScreen: React.FC = () => {
         if (!selectedServer || !selectedServer.serverInfo) return;
 
         setServerConMessage(t("server_list:connecting"));
-        await selectedServer.connect(password);
 
-    }, [selectedServer, t]);
+        try {
+            const connection = await selectedServer.connect(username, password);
+            gameInstance?.state.connectToServer(connection);
+            setToken(connection.token);
+            await saveGameSession();
+
+            setServerConInfoOpen(false);
+            navigate("/rooms");
+        } catch (e) {
+            // Tried doing a map with messages, the linter ran out of memory
+            if (e instanceof WrongPasswordError) {
+                setServerConTitle(t("server_list:error_wrong_password"));
+                setServerConMessage(t("server_list:error_wrong_password_desc"));
+            }
+            else if (e instanceof UsernameNotAvailableError) {
+                setServerConTitle(t("server_list:error_unavailable_username"));
+                setServerConMessage(t("server_list:error_unavailable_username_desc"));
+            }
+            else {
+                setServerConTitle(t("server_list:error_unknown"));
+                setServerConMessage(t("server_list:error_unknown_desc"));
+            }
+
+            setServerConCloseable(true);
+
+        }
+
+    }, [selectedServer, t, username, setToken, saveGameSession, navigate, gameInstance?.state]);
 
     /*
         Starts trying to connect to the server, this is triggered wither with a double click on the server or by
@@ -233,7 +262,7 @@ const ServerSelectScreen: React.FC = () => {
 
                                             <Button onClick={async () => {
                                                 sv.cancelPing();
-                                                await gameInstance?.serverList.deleteServer(sv.listInfo.id);
+                                                await gameInstance?.state.serverList.deleteServer(sv.listInfo.id);
                                                 if (selectedServer === sv) setSelectedServer(undefined);
                                                 updateServerList();
                                             }}><DeleteIcon/></Button>

@@ -1,14 +1,13 @@
 import { Engine } from "../engine/engine";
 import { GameBoard } from "./board/board";
+import { GameStateManager } from "./game_state_manager";
 import { GameLoader } from "./loader/game_loader";
-import { ServerList } from "./server/server_list";
 
 export class WarGame {
 
     private _loader = new GameLoader();
     private _engine = new Engine();
-    
-    private _serverList = new ServerList();
+    private _state = new GameStateManager();
 
     private _gameBoard!: GameBoard;
     private _toRunWhenReady: (() => void)[] = [];
@@ -22,7 +21,7 @@ export class WarGame {
 
     async initializeGame() {
 
-        await this._serverList.initializeDB(this._engine.db);
+        await this._state.initialize();
 
         this._gameBoard = new GameBoard();
         await this._gameBoard.initialize();
@@ -57,8 +56,8 @@ export class WarGame {
         return this._engine;
     }
 
-    get serverList() {
-        return this._serverList;
+    get state() {
+        return this._state;
     }
 
 }

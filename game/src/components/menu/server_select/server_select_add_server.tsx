@@ -39,8 +39,8 @@ const ServerSelectAddServerScreen: React.FC<{
             return;
         }
         (async () => {
-            const newServerInfo = await gameInstance.serverList.addServer(name, address);
-            await gameInstance.serverList.updateListPositions();
+            const newServerInfo = await gameInstance.state.serverList.addServer(name, address);
+            await gameInstance.state.serverList.updateListPositions();
             setServers([...servers, new ServerConnectionCandidate(newServerInfo)]);
         })();
     }, [gameInstance, servers, setServers]);
@@ -57,8 +57,8 @@ const ServerSelectAddServerScreen: React.FC<{
         (async () => {
             serverBeingEdited.listInfo.localName = name;
             serverBeingEdited.listInfo.address = address;
-            await gameInstance.serverList.editServer(serverBeingEdited.listInfo);
-            await gameInstance.serverList.updateListPositions();
+            await gameInstance.state.serverList.editServer(serverBeingEdited.listInfo);
+            await gameInstance.state.serverList.updateListPositions();
             setServers([...servers]);
         })();
     }, [gameInstance, servers, setServers, serverBeingEdited]);

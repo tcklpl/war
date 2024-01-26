@@ -32,7 +32,7 @@ export class Mouse {
             });
 
             if (this._mouseStopTimer !== -1) clearTimeout(this._mouseStopTimer);
-            this._mouseStopTimer = setTimeout(() => this.triggerMouseStop(), 50);
+            this._mouseStopTimer = window.setTimeout(() => this.triggerMouseStop(), 50);
         });
 
         // Left click
@@ -56,7 +56,7 @@ export class Mouse {
             });
 
             if (this._scrollStopTimer !== -1) clearTimeout(this._scrollStopTimer);
-            this._scrollStopTimer = setTimeout(() => this.triggerMouseScrollStop(), 300);
+            this._scrollStopTimer = window.setTimeout(() => this.triggerMouseScrollStop(), 300);
         });
     }
 
