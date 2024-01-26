@@ -21,7 +21,7 @@ export class RouteLogin extends ExpressRoute {
             }
 
             // validate username
-            if (!this._gameServer.isUsernameAvailable(request.username)) {
+            if (!this._gameServer.playerManager.isUsernameAvailable(request.username)) {
                 return res.sendStatus(409);
             }
 

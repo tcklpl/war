@@ -5,12 +5,14 @@ import svlog from "../utils/logging_utils";
 import { CryptManager } from "../crypt/crypt_manager";
 import { GameServer } from "../game/game_server";
 import { Player } from "../game/player/player";
+import { GameSocketServer } from "../@types/server_socket";
+import { socketRoutes } from "./routes/socket_routes";
 
 export class SocketServer {
 
     constructor (private _configManager: ConfigManager, private _cryptManager: CryptManager, private _gameServer: GameServer) {}
 
-    private _io: Server;
+    private _io!: GameSocketServer;
 
     private startServer() {
         this._io = new Server({
@@ -38,12 +40,16 @@ export class SocketServer {
         this._io.on("connection", (socket) => {
             const token: string = socket.handshake.auth.token;
             const authTokenBody = this._cryptManager.extractPayload(token);
-            const player = new Player(authTokenBody);
-            this._gameServer.loginPlayer(player);
+            const player = new Player(authTokenBody, socket);
+            this._gameServer.playerManager.loginPlayer(player);
+
+            // register all socket routes
+            socketRoutes(socket, this._gameServer, player);
 
             socket.on("disconnect", () => {
-                this._gameServer.logoffPlayer(player);
+                this._gameServer.playerManager.logoffPlayer(player);
             });
+            
         });
 
 
