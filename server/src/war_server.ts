@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { ConfigManager } from "./config/config_manager";
 import { CryptManager } from "./crypt/crypt_manager";
 import { ExpressServer } from "./express/express_server";
@@ -24,7 +25,7 @@ export class WarServer {
         await this._expressServer.initialize();
         await this._socketServer.initialize();
         const loadTime = Date.now() - startTime;
-        svlog.log(`Server started successfully in ${loadTime}ms`);
+        svlog.log(`Server started ${chalk.green("successfully")} in ${loadTime}ms`);
     }
 
 }
