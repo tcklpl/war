@@ -1,9 +1,9 @@
 
 export interface ClientToServerPackets {
 
-    requireRoomList: () => void;
-    createGameRoom: (name: string) => void;
-    joinGameRoom: (name: string) => void;
-    leaveGameRoom: () => void;
+    requireLobbies: () => void;
+    createLobby: (name: string) => void;
+    joinLobby: (name: string) => void;
+    leaveLobby: () => void;
 
 }

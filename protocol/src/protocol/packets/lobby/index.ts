@@ -1,3 +1,3 @@
 
-export * from './pkt_sv_server_room_list';
-export * from './server_room_list_state';
+export * from './pkt_sv_server_lobbies';
+export * from './lobby_list_state';

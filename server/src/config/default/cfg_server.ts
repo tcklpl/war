@@ -16,7 +16,7 @@ export class CfgServer extends Config {
     description!: string;
 
     max_players!: number;
-    max_game_rooms!: number;
+    max_lobbies!: number;
 
     client_auth_token_expiration!: string;
 

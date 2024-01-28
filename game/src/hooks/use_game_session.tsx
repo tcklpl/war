@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import { useConfig } from "./use_config";
 import { ServerConnection } from "../game/server/connection/server_connection";
 import { useGame } from "./use_game";
-import { ServerRoomListState } from "../../../protocol";
+import { LobbyListState } from "../../../protocol";
 
 interface IGameSessionContext {
     username: string;
@@ -19,7 +19,7 @@ interface IGameSessionContext {
     connection?: ServerConnection;
     setConnection(connection?: ServerConnection): void;
 
-    lobbies?: ServerRoomListState;
+    lobbies?: LobbyListState;
 }
 
 const GameSessionContext = createContext<IGameSessionContext>({} as IGameSessionContext);
@@ -36,7 +36,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     const [connection, setConnection] = useState<ServerConnection>();
 
     // Lobby states
-    const [gameRooms, setGameRooms] = useState<ServerRoomListState | undefined>();
+    const [lobbies, setLobbies] = useState<LobbyListState | undefined>();
 
     /*
         Auto update this hook if anything changes about the connection.
@@ -48,7 +48,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             setConnection(conn?.connection);
             if (!conn) return;
             
-            gameInstance.state.server?.gameRooms.listen(rooms => setGameRooms(rooms));
+            gameInstance.state.server?.lobbies.listen(rooms => setLobbies(rooms));
         });
 
     }, [gameInstance]);
@@ -77,7 +77,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             token, setToken, 
             connection, setConnection,
             saveGameSession,
-            lobbies: gameRooms
+            lobbies
         }}>
             { children }
         </GameSessionContext.Provider>

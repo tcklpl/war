@@ -1,10 +1,8 @@
-import { GameSocket } from "../../../@types/server_socket";
-import { GameServer } from "../../../game/game_server";
-import { Player } from "../../../game/player/player";
-import { socketRoutesLobbyRequireRoomList } from "./req_room_list";
+import { SocketRouteData } from "../socket_route_data";
+import { socketRoutesLobbyRequireLobbies } from "./req_lobbies";
 
-export const socketRoutesLobby = (socket: GameSocket, gameServer: GameServer,  player: Player) => {
+export const socketRoutesLobby = (data: SocketRouteData) => {
 
-    socketRoutesLobbyRequireRoomList(socket, gameServer, player);
+    socketRoutesLobbyRequireLobbies(data);
 
 }

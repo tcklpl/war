@@ -6,17 +6,16 @@ import { useGameSession } from "../../../hooks/use_game_session";
 import PublicIcon from '@mui/icons-material/Public';
 import { useGame } from "../../../hooks/use_game";
 
-const ServerRoomSelectScreen: React.FC = () => {
+const LobbySelectScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const { t } = useTranslation(["server_list", "common"]);
-    const { username } = useGameSession();
+    const { username, lobbies } = useGameSession();
     const { gameInstance } = useGame();
-    const { lobbies } = useGameSession();
 
     useEffect(() => {
         if (!gameInstance) return;
-        gameInstance.state.server?.requestRoomList();
+        gameInstance.state.server?.requestLobbies();
     }, [gameInstance]);
 
     return (
@@ -46,4 +45,4 @@ const ServerRoomSelectScreen: React.FC = () => {
     );
 }
 
-export default ServerRoomSelectScreen;
+export default LobbySelectScreen;

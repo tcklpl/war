@@ -99,7 +99,7 @@ const ServerSelectScreen: React.FC = () => {
             await saveGameSession();
 
             setServerConInfoOpen(false);
-            navigate("/rooms");
+            navigate("/lobbies");
         } catch (e) {
             // Tried doing a map with messages, the linter ran out of memory
             if (e instanceof WrongPasswordError) {

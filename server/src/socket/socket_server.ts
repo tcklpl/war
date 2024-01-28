@@ -44,7 +44,12 @@ export class SocketServer {
             this._gameServer.playerManager.loginPlayer(player);
 
             // register all socket routes
-            socketRoutes(socket, this._gameServer, player);
+            socketRoutes({
+                socket,
+                player,
+                gameServer: this._gameServer,
+                configManager: this._configManager
+            });
 
             socket.on("disconnect", () => {
                 this._gameServer.playerManager.logoffPlayer(player);

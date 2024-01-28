@@ -1,10 +1,8 @@
-import { GameSocket } from "../../@types/server_socket";
-import { GameServer } from "../../game/game_server";
-import { Player } from "../../game/player/player";
 import { socketRoutesLobby } from "./lobby/routes_lobby";
+import { SocketRouteData } from "./socket_route_data";
 
-export const socketRoutes = (socket: GameSocket, gameServer: GameServer, player: Player) => {
+export const socketRoutes = (data: SocketRouteData) => {
 
-    socketRoutesLobby(socket, gameServer, player);
+    socketRoutesLobby(data);
 
 }

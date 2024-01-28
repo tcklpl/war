@@ -10,7 +10,7 @@ export class GameRoomManager {
     private _maxGameRooms: number;
 
     constructor(private _configManager: ConfigManager) {
-        this._maxGameRooms = this._configManager.getConfig(CfgServer).max_game_rooms;
+        this._maxGameRooms = this._configManager.getConfig(CfgServer).max_lobbies;
     }
 
     createRoom(owner: Player, name: string) {

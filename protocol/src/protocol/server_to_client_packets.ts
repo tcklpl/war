@@ -1,8 +1,8 @@
-import { PktSvServerRoomList } from "./packets";
+import { PktSvServerLobbies } from "./packets";
 
 export interface ServerToClientPackets {
 
-    roomList: (roomList: PktSvServerRoomList) => void;
+    lobbies: (lobbies: PktSvServerLobbies) => void;
     
 
 }
