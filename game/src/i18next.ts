@@ -6,6 +6,7 @@ import engine_enUS from './locales/en-US/engine.json';
 import config_enUS from "./locales/en-US/config.json";
 import server_list_enUS from "./locales/en-US/server_list.json";
 import common_enUS from "./locales/en-US/common.json";
+import lobby_list_enUS from "./locales/en-US/lobby_list.json";
 
 export const defaultNS = 'ns1';
 
@@ -16,6 +17,7 @@ export const resources = {
         engine: engine_enUS,
         config: config_enUS,
         server_list: server_list_enUS,
+        lobby_list: lobby_list_enUS,
         common: common_enUS
     }
 };

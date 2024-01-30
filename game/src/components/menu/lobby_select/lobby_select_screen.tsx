@@ -1,17 +1,22 @@
-import { Container, Grid, Stack, Typography, useTheme } from "@mui/material";
-import React, { useEffect } from "react"
+import { Button, Container, Grid, Stack, Typography, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../hooks/use_game_session";
+import './lobby_select.sass';
 
 import PublicIcon from '@mui/icons-material/Public';
 import { useGame } from "../../../hooks/use_game";
+import LobbyCard from "./lobby_card";
+import LobbySelectCreateLobby from "./lobby_select_create_lobby";
 
 const LobbySelectScreen: React.FC = () => {
 
     const { palette } = useTheme();
-    const { t } = useTranslation(["server_list", "common"]);
+    const { t } = useTranslation(["lobby_list", "common"]);
     const { username, lobbies } = useGameSession();
     const { gameInstance } = useGame();
+
+    const [createLobbyOpen, setCreateLobbyOpen] = useState(false);
 
     useEffect(() => {
         if (!gameInstance) return;
@@ -20,24 +25,36 @@ const LobbySelectScreen: React.FC = () => {
 
     return (
         <Container>
-            <Grid container className="server-room-select-screen" style={{ backgroundColor: palette.background.default }} justifyContent="center" alignContent="center">
+            <Grid container className="lobby-select-screen" style={{ backgroundColor: palette.background.default }} justifyContent="center" alignContent="start">
+
+                <LobbySelectCreateLobby open={createLobbyOpen} setOpen={setCreateLobbyOpen} />
             
                 <Stack spacing={5} width="100%">
                     <Grid>
                         <Typography variant="h4">
                             <PublicIcon style={{marginRight: "0.5em", fontSize: "1em", verticalAlign: "middle"}}/>
-                            { t("server_list:server_list") } 2222
+                            { t("lobby_list:lobbies") }
                         </Typography>
                         <Typography variant="caption">
                             { `${t("common:playing_as")} ${username}` }
                         </Typography>
                     </Grid>
 
-                    { !!lobbies ? (
-                        <>Rooms</>
-                    ) : (
-                        <>No rooms</>
-                    )}
+                    <Stack direction="row">
+                        <Button disabled={!lobbies || lobbies.lobbies.length === lobbies.max_lobbies} onClick={() => setCreateLobbyOpen(true)}>{ t("lobby_list:create_lobby") }</Button>
+                    </Stack>
+
+                    <Grid container spacing={{ xs: 2 }}>
+                        { !!lobbies ? (
+                            lobbies.lobbies.map(lobby => (
+                                <Grid item key={lobby.name} xs={4}>
+                                    <LobbyCard lobby={lobby} onJoinAttempt={() => {}}/>
+                                </Grid>
+                            ))
+                        ) : (
+                            <>No rooms</>
+                        )}
+                    </Grid>
 
                 </Stack>
             </Grid>
