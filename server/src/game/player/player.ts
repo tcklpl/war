@@ -8,7 +8,7 @@ export class Player {
     private _username: string;
     private _ip: string;
     private _connection: PlayerConnection;
-    private _status = PlayerStatus.IN_ROOM_LIST;
+    private _status = PlayerStatus.IN_LOBBY_LIST;
 
     constructor(authTokenBody: AuthTokenBody, socket: GameSocket) {
         this._username = authTokenBody.username;

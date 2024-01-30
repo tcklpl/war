@@ -13,7 +13,7 @@ export class GameServer {
 
     async initialize() {
         svlog.log("Game server started");
-        this._lobbyManager = new LobbyManager(this._configManager);
+        this._lobbyManager = new LobbyManager(this._configManager, this);
     }
 
     get playerManager() {

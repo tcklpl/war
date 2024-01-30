@@ -9,6 +9,10 @@ export class Lobby {
         this._players.push(this.owner);
     }
 
+    removePlayer(p: Player) {
+        this._players = this._players.filter(x => x !== p);
+    }
+
     get name() {
         return this._name;
     }
