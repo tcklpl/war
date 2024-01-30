@@ -1,6 +1,6 @@
 import { Player } from "../player/player";
 
-export class GameRoom {
+export class Lobby {
 
     private _players: Player[] = [];
     joinable = true;

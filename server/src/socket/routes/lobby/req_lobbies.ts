@@ -6,7 +6,7 @@ export const socketRoutesLobbyRequireLobbies = (data: SocketRouteData) => {
 
     data.socket.on("requireLobbies", () => {
         
-        const packet = new ServerPacketLobbies(data.gameServer.gameRoomManager, data.configManager.getConfig(CfgServer));
+        const packet = new ServerPacketLobbies(data.gameServer.lobbyManager, data.configManager.getConfig(CfgServer));
         packet.dispatch(data.player);
 
     });
