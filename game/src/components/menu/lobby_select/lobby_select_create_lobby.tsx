@@ -2,6 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import React, { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGame } from "../../../hooks/use_game";
+import { useGameSession } from "../../../hooks/use_game_session";
 
 const LobbySelectCreateLobby: React.FC<{
     open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -12,6 +13,7 @@ const LobbySelectCreateLobby: React.FC<{
 
     const { t } = useTranslation(["lobby_list", "common"]);
     const { gameInstance } = useGame();
+    const { lobbies } = useGameSession();
 
     useEffect(() => {
         setName("");
@@ -33,12 +35,18 @@ const LobbySelectCreateLobby: React.FC<{
                     <DialogContentText>
                         { t("lobby_list:create_lobby_desc") }
                     </DialogContentText>
-                    <TextField id="server-name" label={t("common:name")} onChange={e => setName(e.currentTarget.value)} value={name} />
+                    <TextField 
+                        id="server-name" 
+                        label={t("common:name")} 
+                        onChange={e => setName(e.currentTarget.value)} 
+                        value={name} 
+                        error={lobbies && !!lobbies.lobbies.find(x => x.name === name)}
+                    />
                     <FormControlLabel control={<Switch checked={joinable} onChange={() => setJoinable(!joinable)}/>} label={t("lobby_list:joinable")}></FormControlLabel>
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => createLobby()}>{ t("lobby_list:create_lobby") }</Button>
+                <Button onClick={() => createLobby()} disabled={lobbies && !!lobbies.lobbies.find(x => x.name === name)}>{ t("lobby_list:create_lobby") }</Button>
             </DialogActions>
         </Dialog>
     );
