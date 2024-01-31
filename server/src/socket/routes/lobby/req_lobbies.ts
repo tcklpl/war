@@ -1,5 +1,5 @@
 import { CfgServer } from "../../../config/default/cfg_server";
-import { ServerPacketLobbies } from "../../packet/lobby/svpkt_lobbies";
+import { ServerPacketLobbies } from "../../packet/lobby/lobbies";
 import { SocketRouteData } from "../socket_route_data";
 
 export const socketRoutesLobbyRequireLobbies = (data: SocketRouteData) => {

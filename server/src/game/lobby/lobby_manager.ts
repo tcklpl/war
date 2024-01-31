@@ -2,7 +2,7 @@ import { ConfigManager } from "../../config/config_manager";
 import { CfgServer } from "../../config/default/cfg_server";
 import { OverLimitError } from "../../exceptions/over_limit_error";
 import { UnavailableNameError } from "../../exceptions/unavailable_name_error";
-import { ServerPacketLobbies } from "../../socket/packet/lobby/svpkt_lobbies";
+import { ServerPacketLobbies } from "../../socket/packet/lobby/lobbies";
 import svlog from "../../utils/logging_utils";
 import { GameServer } from "../game_server";
 import { Player } from "../player/player";
