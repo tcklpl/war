@@ -1,11 +1,13 @@
-import { LobbyListState } from "./packets";
+import { LobbyState, LobbyListState } from "./data";
+
+export type LobbyCreationFailReason = "full" | "unavailable name" | "already owner" | "other";
 
 export interface ServerToClientPackets {
 
     lobbies: (lobbies: LobbyListState) => void;
-    failedToCreateLobby: (reason: "full" | "unavailable name" | "already owner") => void;
+    failedToCreateLobby: (reason: LobbyCreationFailReason) => void;
     failedToJoinLobby: () => void;
-    joinedLobby: () => void;
-
+    joinedLobby: (lobby: LobbyState) => void;
+    leftLobby: () => void;
 
 }
