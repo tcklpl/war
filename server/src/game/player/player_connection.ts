@@ -7,7 +7,7 @@ export class PlayerConnection {
     constructor(private _player: Player, private _socket: GameSocket) {}
 
     emitPacket(pkt: ServerPacket) {
-        this._socket.emit(pkt.key, ...pkt.parameters);
+        this._socket.emit(pkt.key, ...pkt.params);
     }
 
     get socket() {

@@ -3,10 +3,14 @@ import { Player } from "../../game/player/player";
 
 export abstract class ServerPacket {
 
+    private _params: Parameters<ServerToClientPackets[typeof this._key]>;
+
     constructor(
         private _key: keyof ServerToClientPackets,
-        private _parameters: Parameters<ServerToClientPackets[typeof _key]>
-    ) {}
+        ...params: Parameters<ServerToClientPackets[typeof _key]>
+    ) {
+        this._params = params;
+    }
 
     dispatch(...targets: Player[]) {
         targets.forEach(t => {
@@ -18,8 +22,8 @@ export abstract class ServerPacket {
         return this._key;
     }
 
-    get parameters() {
-        return this._parameters;
+    get params() {
+        return this._params;
     }
 
 }
