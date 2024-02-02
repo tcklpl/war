@@ -1,6 +1,7 @@
 import { ConfigManager } from "../../config/config_manager";
 import { CfgServer } from "../../config/default/cfg_server";
 import { OverLimitError } from "../../exceptions/over_limit_error";
+import { PlayerAlreadyOwnsALobbyError } from "../../exceptions/player_already_owns_a_lobby_error";
 import { UnavailableNameError } from "../../exceptions/unavailable_name_error";
 import { ServerPacketLobbies } from "../../socket/packet/lobby/lobbies";
 import svlog from "../../utils/logging_utils";
@@ -32,7 +33,7 @@ export class LobbyManager {
         });
     }
 
-    private purgeEmptyLobbies() {
+    purgeEmptyLobbies() {
         const toPurge = this._lobbies.filter(l => l.players.length === 0);
         toPurge.forEach(p => {
             this.removeLobby(p);
@@ -44,7 +45,9 @@ export class LobbyManager {
     createLobby(owner: Player, name: string, joinable: boolean) {
         if (this._lobbies.length >= this._maxLobbies) throw new OverLimitError();
         if (this._lobbies.find(l => l.name === name)) throw new UnavailableNameError();
+        if (this._lobbies.find(l => l.owner === owner)) throw new PlayerAlreadyOwnsALobbyError();
         const lobby = new Lobby(owner, name);
+        owner.joinLobby(lobby);
         lobby.joinable = joinable;
         this._lobbies.push(lobby);
         this.updateLobbyStatusForPlayers();
@@ -54,6 +57,10 @@ export class LobbyManager {
     removeLobby(lobby: Lobby) {
         this._lobbies = this._lobbies.filter(l => l !== lobby);
         this.updateLobbyStatusForPlayers();
+    }
+
+    getLobbyByName(name: string) {
+        return this._lobbies.find(x => x.name === name);
     }
 
     get lobbies() {

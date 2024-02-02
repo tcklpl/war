@@ -16,7 +16,7 @@ export class ServerPacketLobbies extends ServerPacket {
                 joinable: room.joinable
             })
         };
-        super("lobbies", [lobbies]);
+        super("lobbies", lobbies);
     }
 
 }
