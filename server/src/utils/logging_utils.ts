@@ -1,14 +1,19 @@
+import chalk from "chalk";
 
 export default class svlog {
 
+    private static getCurrentTimeString() {
+        const time = new Date();
+        return chalk.gray(time.toTimeString().split(' ')[0]);
+    }
+
     static log(str: string) {
         const time = new Date();
-        console.log(`[${time.toTimeString().split(' ')[0]}] [INFO] ${str}`);
+        console.log(`[${this.getCurrentTimeString()}] [${chalk.gray("INFO")}] ${str}`);
     }
 
     static err(str: string) {
-        const time = new Date();
-        console.error(`[${time.toTimeString().split(' ')[0]}] [ERROR] ${str}`);
+        console.error(`[${this.getCurrentTimeString()}] [${chalk.red("ERROR")}] ${str}`);
     }
 }
 
