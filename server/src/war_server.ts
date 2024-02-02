@@ -5,8 +5,11 @@ import { ExpressServer } from "./express/express_server";
 import { GameServer } from "./game/game_server";
 import { SocketServer } from "./socket/socket_server";
 import svlog from "./utils/logging_utils";
+import { WarServerBanner } from "./banner";
 
 export class WarServer {
+
+    private _banner = new WarServerBanner();
 
     private _configManager = new ConfigManager();
     private _cryptManager = new CryptManager(this._configManager);
@@ -16,6 +19,9 @@ export class WarServer {
     private _socketServer = new SocketServer(this._configManager, this._cryptManager, this._gameServer);
     
     async initialize() {
+
+        console.log(this._banner.greetings);
+
         const startTime = Date.now();
         svlog.log(`Initializing server`);
         await this._configManager.loadConfig();
