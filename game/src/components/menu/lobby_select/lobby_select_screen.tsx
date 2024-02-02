@@ -8,13 +8,15 @@ import PublicIcon from '@mui/icons-material/Public';
 import { useGame } from "../../../hooks/use_game";
 import LobbyCard from "./lobby_card";
 import LobbySelectCreateLobby from "./lobby_select_create_lobby";
+import { useNavigate } from "react-router-dom";
 
 const LobbySelectScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const { t } = useTranslation(["lobby_list", "common"]);
-    const { username, lobbies } = useGameSession();
+    const { username, lobbies, currentLobby } = useGameSession();
     const { gameInstance } = useGame();
+    const navigate = useNavigate();
 
     const [createLobbyOpen, setCreateLobbyOpen] = useState(false);
 
@@ -22,6 +24,10 @@ const LobbySelectScreen: React.FC = () => {
         if (!gameInstance) return;
         gameInstance.state.server?.requestLobbies();
     }, [gameInstance]);
+
+    useEffect(() => {
+        if (currentLobby) navigate("/lobby");
+    }, [currentLobby, navigate]);
 
     return (
         <Container>
@@ -48,7 +54,7 @@ const LobbySelectScreen: React.FC = () => {
                         { !!lobbies ? (
                             lobbies.lobbies.map(lobby => (
                                 <Grid item key={lobby.name} xs={4}>
-                                    <LobbyCard lobby={lobby} onJoinAttempt={() => {}}/>
+                                    <LobbyCard lobby={lobby} onJoinAttempt={() => gameInstance?.state.server?.joinLobby(lobby.name)}/>
                                 </Grid>
                             ))
                         ) : (

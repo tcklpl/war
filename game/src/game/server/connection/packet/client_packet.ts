@@ -1,5 +1,4 @@
 import { ClientToServerPackets } from "../../../../../../protocol";
-import { WarServer } from "../../war_server";
 
 export abstract class ClientPacket {
 
@@ -12,8 +11,9 @@ export abstract class ClientPacket {
         this._params = params;
     }
 
-    dispatch(server: WarServer) {
-        server.connection.emitPacket(this);
+    dispatch() {
+        if (!game.state.server) console.warn(`Trying to dispatch packet with an undefined server state`);
+        game.state.server?.connection.emitPacket(this);
     }
 
     get key() {

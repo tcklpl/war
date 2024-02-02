@@ -3,16 +3,18 @@ import { useGameSession } from "../../../../hooks/use_game_session";
 
 interface GameControlledRouteParams {
     requiresActiveSession?: boolean;
-    redirectPath?: string;
+    requiresActiveLobby?: boolean;
 
+    redirectPath?: string;
     children?: React.ReactNode;
 }
 
-const GameControlledRoute: React.FC<GameControlledRouteParams> = ({ children, requiresActiveSession, redirectPath = '/'}) => {
+const GameControlledRoute: React.FC<GameControlledRouteParams> = ({ children, requiresActiveSession, requiresActiveLobby, redirectPath = '/'}) => {
 
-    const { connection } = useGameSession();
+    const { connection, currentLobby } = useGameSession();
 
     if (requiresActiveSession && !connection) return <Navigate to={redirectPath} replace />;
+    if (requiresActiveLobby && !currentLobby) return <Navigate to={redirectPath} replace />;
 
     return (
         <>{children || <Outlet/>}</>

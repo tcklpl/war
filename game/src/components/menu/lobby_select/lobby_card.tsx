@@ -1,4 +1,4 @@
-import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import React, { useCallback } from "react";
 import { LobbyListStateLobby } from "../../../../../protocol";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ const LobbyCard: React.FC<{
     }, [lobby, onJoinAttempt]);
 
     return (
-        <Card elevation={3} onDoubleClick={() => attemptJoin()}>
+        <Card elevation={3} onDoubleClick={() => attemptJoin()} className="lobby-card">
             <CardContent>
                 <Typography>{lobby.name}</Typography>
                 <Typography color="GrayText">{`${t("lobby_list:owner")}: ${lobby.owner_name}`}</Typography>
