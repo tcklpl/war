@@ -12,7 +12,7 @@ const LobbyCard: React.FC<{
     onJoinAttempt: () => void
 }> = ({ lobby, onJoinAttempt }) => {
 
-    const { t } = useTranslation(["lobby_list"]);
+    const { t } = useTranslation(["lobby"]);
 
     const attemptJoin = useCallback(() => {
         if (!lobby.joinable) return;
@@ -23,11 +23,11 @@ const LobbyCard: React.FC<{
         <Card elevation={3} onDoubleClick={() => attemptJoin()} className="lobby-card">
             <CardContent>
                 <Typography>{lobby.name}</Typography>
-                <Typography color="GrayText">{`${t("lobby_list:owner")}: ${lobby.owner_name}`}</Typography>
-                <Typography color="GrayText">{`${t("lobby_list:players_in_lobby")}: ${lobby.player_count}`}</Typography>
+                <Typography color="GrayText">{`${t("lobby:owner")}: ${lobby.owner_name}`}</Typography>
+                <Typography color="GrayText">{`${t("lobby:players_in_lobby")}: ${lobby.player_count}`}</Typography>
                 <Typography color="GrayText">
                     { lobby.joinable ? <CheckIcon className="lobby-card-icon"/> : <CloseIcon className="lobby-card-icon"/> }
-                    {`${t("lobby_list:joinable")}`}
+                    {`${t("lobby:joinable")}`}
                 </Typography>
             </CardContent>
         </Card>

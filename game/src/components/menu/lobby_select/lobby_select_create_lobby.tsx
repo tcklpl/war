@@ -11,7 +11,7 @@ const LobbySelectCreateLobby: React.FC<{
     const [name, setName] = useState("");
     const [joinable, setJoinable] = useState(true);
 
-    const { t } = useTranslation(["lobby_list", "common"]);
+    const { t } = useTranslation(["lobby", "common"]);
     const { gameInstance } = useGame();
     const { lobbies } = useGameSession();
 
@@ -29,11 +29,11 @@ const LobbySelectCreateLobby: React.FC<{
         <Dialog open={open} onClose={() => {
             setOpen(false);
         }}>
-            <DialogTitle>{ t("lobby_list:create_lobby") }</DialogTitle>
+            <DialogTitle>{ t("lobby:create_lobby") }</DialogTitle>
             <DialogContent>
                 <Stack spacing={1}>
                     <DialogContentText>
-                        { t("lobby_list:create_lobby_desc") }
+                        { t("lobby:create_lobby_desc") }
                     </DialogContentText>
                     <TextField 
                         id="server-name" 
@@ -42,11 +42,11 @@ const LobbySelectCreateLobby: React.FC<{
                         value={name} 
                         error={lobbies && !!lobbies.lobbies.find(x => x.name === name)}
                     />
-                    <FormControlLabel control={<Switch checked={joinable} onChange={() => setJoinable(!joinable)}/>} label={t("lobby_list:joinable")}></FormControlLabel>
+                    <FormControlLabel control={<Switch checked={joinable} onChange={() => setJoinable(!joinable)}/>} label={t("lobby:joinable")}></FormControlLabel>
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => createLobby()} disabled={lobbies && !!lobbies.lobbies.find(x => x.name === name)}>{ t("lobby_list:create_lobby") }</Button>
+                <Button onClick={() => createLobby()} disabled={lobbies && !!lobbies.lobbies.find(x => x.name === name)}>{ t("lobby:create_lobby") }</Button>
             </DialogActions>
         </Dialog>
     );
