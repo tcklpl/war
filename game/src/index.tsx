@@ -7,6 +7,7 @@ import { ConfigProvider } from './hooks/use_config';
 import { CrashProvider } from './hooks/use_crash';
 import { AlertProvider } from './hooks/use_alert';
 import { GameSessionProvider } from './hooks/use_game_session';
+import { ConfirmationProvider } from './hooks/use_confirmation';
 
 const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
     return (
@@ -15,7 +16,9 @@ const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
                 <GameSessionProvider>
                     <CrashProvider>
                         <AlertProvider>
-                            { children }
+                            <ConfirmationProvider>
+                                { children }
+                            </ConfirmationProvider>
                         </AlertProvider>
                     </CrashProvider>
                 </GameSessionProvider>

@@ -6,6 +6,7 @@ import HUDPerformance from "./game/hud/debug/hud_performance";
 import HUDAlert from "./game/hud/alert/hud_alert";
 import PauseScreen from "./game/hud/pause_screen/pause_screen";
 import MenuRouter from "./menu/router/menu_router";
+import HUDConfirmation from "./game/hud/confirmation/hud_confirmation";
 
 
 const WarGameComponent: React.FC = () => {
@@ -17,6 +18,7 @@ const WarGameComponent: React.FC = () => {
             <MenuRouter/>
             <PauseScreen/>
             <HUDAlert/>
+            <HUDConfirmation/>
             <HUDPerformance/>
             <WarCanvas/>
         </>
