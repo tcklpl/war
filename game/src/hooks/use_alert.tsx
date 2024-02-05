@@ -9,6 +9,8 @@ interface IAlertContext {
 export interface IAlertInfo {
     title?: string;
     content: string;
+
+    understoodBtnText?: string;
 }
 
 const AlertContext = createContext<IAlertContext>({} as IAlertContext);

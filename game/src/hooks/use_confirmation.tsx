@@ -14,7 +14,7 @@ export interface ConfirmationRequestInfo {
     cancelBtnText?: string;
 
     onConfirm(): void;
-    onCancel(): void;
+    onCancel?(): void;
 }
 
 const ConfirmationContext = createContext<IConfirmationContext>({} as IConfirmationContext);
