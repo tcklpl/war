@@ -1,4 +1,6 @@
 import { LobbyState, LobbyPlayerState } from "../../../../protocol";
+import { ServerPacketChatMessage } from "../../socket/packet/lobby/chat_message";
+import { ServerPacketUpdateLobbyState } from "../../socket/packet/lobby/update_lobby_state";
 import { Player } from "../player/player";
 
 export class Lobby {
@@ -11,11 +13,19 @@ export class Lobby {
     }
 
     addPlayer(p: Player) {
-        if (!this._players.find(x => x === p)) this._players.push(p);
+        if (!this._players.find(x => x === p)) {
+            this._players.push(p);
+            new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+        }
     }
 
     removePlayer(p: Player) {
         this._players = this._players.filter(x => x !== p);
+        new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+    }
+
+    broadcastChatMessage(sender: Player, msg: string) {
+        new ServerPacketChatMessage(sender, msg).dispatch(...this._players);
     }
 
     get name() {

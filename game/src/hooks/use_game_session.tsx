@@ -2,8 +2,9 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import { useConfig } from "./use_config";
 import { ServerConnection } from "../game/server/connection/server_connection";
 import { useGame } from "./use_game";
-import { LobbyListState } from "../../../protocol";
+import { LobbyListState, LobbyState } from "../../../protocol";
 import { WarGameLobby } from "../game/lobby/war_game_lobby";
+import { LobbyChatMessage } from "../game/lobby/lobby_chat";
 
 interface IGameSessionContext {
     username: string;
@@ -22,6 +23,8 @@ interface IGameSessionContext {
 
     lobbies?: LobbyListState;
     currentLobby?: WarGameLobby;
+    currentLobbyState?: LobbyState;
+    chat: {sender: string, msg: string}[];
 }
 
 const GameSessionContext = createContext<IGameSessionContext>({} as IGameSessionContext);
@@ -40,6 +43,8 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     // Lobby states
     const [lobbies, setLobbies] = useState<LobbyListState | undefined>();
     const [currentLobby, setCurrentLobby] = useState<WarGameLobby | undefined>();
+    const [currentLobbyState, setCurrentLobbyState] = useState<LobbyState | undefined>();
+    const [chat, setChat] = useState<LobbyChatMessage[]>([]);
 
     /*
         Auto update this hook if anything changes about the connection.
@@ -52,7 +57,13 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             if (!conn) return;
             
             gameInstance.state.server?.lobbies.listen(lobbies => setLobbies(lobbies));
-            gameInstance.state.server?.currentLobby.listen(lobby => setCurrentLobby(lobby));
+            gameInstance.state.server?.currentLobby.listen(lobby => {
+                setCurrentLobby(lobby);
+                setCurrentLobbyState(lobby?.state.value);
+                lobby?.state.listen(state => setCurrentLobbyState(state));
+                lobby?.chat.onUpdate(msgs => setChat([...msgs]));
+            });
+            gameInstance.state.server?.currentLobby.value?.state.listen(() => setCurrentLobby(gameInstance.state.server?.currentLobby.value));
         });
 
     }, [gameInstance]);
@@ -82,7 +93,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             connection, setConnection,
             saveGameSession,
             lobbies,
-            currentLobby
+            currentLobby, currentLobbyState, chat
         }}>
             { children }
         </GameSessionContext.Provider>

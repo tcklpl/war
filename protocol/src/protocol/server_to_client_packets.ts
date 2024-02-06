@@ -8,6 +8,8 @@ export interface ServerToClientPackets {
     failedToCreateLobby: (reason: LobbyCreationFailReason) => void;
     failedToJoinLobby: () => void;
     joinedLobby: (lobby: LobbyState) => void;
+    updateLobbyState: (lobby: LobbyState) => void;
     leftLobby: () => void;
+    chatMessage: (sender: string, msg: string) => void;
 
 }

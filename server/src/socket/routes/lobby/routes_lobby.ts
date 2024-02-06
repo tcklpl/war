@@ -1,4 +1,5 @@
 import { SocketRouteData } from "../socket_route_data";
+import { socketRoutesLobbyChatMessage } from "./chat_message";
 import { socketRoutesLobbyCreateLobby } from "./create_lobby";
 import { socketRoutesLobbyJoinLobby } from "./join_lobby";
 import { socketRoutesLobbyLeaveLobby } from "./leave_lobby";
@@ -10,5 +11,6 @@ export const socketRoutesLobby = (data: SocketRouteData) => {
     socketRoutesLobbyCreateLobby(data);
     socketRoutesLobbyLeaveLobby(data);
     socketRoutesLobbyJoinLobby(data);
+    socketRoutesLobbyChatMessage(data);
 
 }
