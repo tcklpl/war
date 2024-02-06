@@ -3,7 +3,7 @@ import "./pause_screen.sass";
 import { Button, Grid, Stack, useTheme } from "@mui/material";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SettingsIcon from '@mui/icons-material/Settings';
-import CfgScreen from "../config/cfg_screen";
+import CfgScreen from "../../../menu/config/cfg_screen";
 
 const PauseScreen: React.FC = () => {
 

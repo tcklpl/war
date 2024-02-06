@@ -5,6 +5,7 @@ import { useGame } from "./use_game";
 import { LoadStage } from "../game/loader/load_stage";
 import { ConfigGame } from "../engine/config/cfg_game";
 import { WarGame } from "../game/war_game";
+import { ConfigSession } from "../engine/config/cfg_session";
 
 interface IConfigContext {
     displayConfig: ConfigDisplay;
@@ -16,16 +17,20 @@ interface IConfigContext {
     gameConfig: ConfigGame;
     setGameConfig(game: ConfigGame): void;
 
-    saveConfig(): void;
+    sessionConfig: ConfigSession;
+    setSessionConfig(session: ConfigSession): void;
+
+    saveConfig(): Promise<void>;
 }
 
 const ConfigContext = createContext<IConfigContext>({} as IConfigContext);
 
 const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) => {
 
-    const [displayConfig, setDisplayConfig] = useState<ConfigDisplay>(new ConfigDisplay());
-    const [graphicsConfig, setGraphicsConfig] = useState<ConfigGraphics>(new ConfigGraphics());
-    const [gameConfig, setGameConfig] = useState<ConfigGame>(new ConfigGame());
+    const [displayConfig, setDisplayConfig] = useState(new ConfigDisplay());
+    const [graphicsConfig, setGraphicsConfig] = useState(new ConfigGraphics());
+    const [gameConfig, setGameConfig] = useState(new ConfigGame());
+    const [sessionConfig, setSessionConfig] = useState(new ConfigSession());
 
     const { gameInstance, setGameInstance } = useGame();
 
@@ -38,6 +43,7 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
                 setDisplayConfig({...gameInstance.engine.config.display});
                 setGraphicsConfig({...gameInstance.engine.config.graphics});
                 setGameConfig({...gameInstance.engine.config.game});
+                setSessionConfig({...gameInstance.engine.config.session});
             }
         });
 
@@ -67,7 +73,7 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
 
     }, [graphicsConfig, gameConfig, gameInstance]);
 
-    const saveConfig = useCallback(() => {
+    const saveConfig = useCallback(async () => {
         if (!gameInstance) return;
 
         // see if the user has actually changed anything
@@ -77,11 +83,12 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
         gameInstance.engine.config.display = {...displayConfig};
         gameInstance.engine.config.graphics = {...graphicsConfig};
         gameInstance.engine.config.game = {...gameConfig};
-        gameInstance.engine.config.saveConfig();
+        gameInstance.engine.config.session = {...sessionConfig};
+        await gameInstance.engine.config.saveConfig();
 
         // only reinitialize the game if needed
         const reinitializeGame = async () => {
-            gameInstance.kill();
+            await gameInstance.kill();
             const game = WarGame.initialize();
             setGameInstance(game);
         }
@@ -89,10 +96,16 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
             reinitializeGame();
         }
 
-    }, [displayConfig, graphicsConfig, gameConfig, gameInstance, setGameInstance, shouldRenitializeGame]);
+    }, [displayConfig, graphicsConfig, gameConfig, gameInstance, sessionConfig, setGameInstance, shouldRenitializeGame]);
 
     return (
-        <ConfigContext.Provider value={{ displayConfig, setDisplayConfig, graphicsConfig, setGraphicsConfig, gameConfig, setGameConfig, saveConfig }}>
+        <ConfigContext.Provider value={{ 
+            displayConfig, setDisplayConfig, 
+            graphicsConfig, setGraphicsConfig, 
+            gameConfig, setGameConfig, 
+            sessionConfig, setSessionConfig, 
+            saveConfig 
+        }}>
             { children }
         </ConfigContext.Provider>
     );

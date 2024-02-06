@@ -14,7 +14,8 @@
         You may want to change the default port if it's already in use in your machine.
     */
     host: "localhost",
-    port: 36875,
+    rest_port: 36875,
+    socket_port: 36876,
     
     /*
         [ IMPORTANT ]
@@ -23,6 +24,14 @@
     */
     name: "My Server",
     password: "",
+    description: "My Server Description",
+
+    /*
+        [ SECONDARY ]
+        Server limits
+    */
+    max_players: 32,
+    max_lobbies: 8,
 
     /*
         [ SECONDARY ]

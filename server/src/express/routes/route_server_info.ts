@@ -9,7 +9,10 @@ export class RouteServerInfo extends ExpressRoute {
         this.router.get('/', (req, res) => {
             res.status(200).json(<sv_ServerInfo> {
                 name: serverConfig.name,
-                hasPassword: serverConfig.password !== ""
+                hasPassword: serverConfig.password !== "",
+                description: serverConfig.description,
+                playerLimit: serverConfig.max_players,
+                playerCount: this._gameServer.playerManager.loggedPlayers.length
             });
         });
     }

@@ -21,9 +21,12 @@
     "jsx": "react-jsx",
     "types": [
       "@webgpu/types"
-    ]
+    ]    
   },
   "include": [
     "src"
+  ],
+  "references": [
+    { "path": "../protocol" }
   ]
 }

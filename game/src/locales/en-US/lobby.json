@@ -1,0 +1,17 @@
+{
+    "lobbies": "Lobbies",
+    "joinable": "Joinable",
+    "owner": "Owner",
+    "players_in_lobby": "Players in lobby",
+
+    "create_lobby": "Create Lobby",
+    "create_lobby_desc": "Create a game lobby. Input the name for the lobby and if it'll be joinable upon creation (you can change everything later).",
+    
+    "loading_lobby_data": "Loading lobby data...",
+    "player_list": "Player List",
+    "leave_lobby": "Leave lobby",
+    "leave_lobby_desc": "Are you sure that you want to leave the lobby?",
+
+    "chat": "Chat",
+    "chat_info_msg": "Please note that no chat messages are stored, don't annotate stuff in chat because it WILL be lost"
+}

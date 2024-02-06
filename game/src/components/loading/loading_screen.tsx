@@ -14,6 +14,21 @@ const LoadingScreen: React.FC = () => {
     const [loadingStageMessage, setLoadingStageMessage] = useState<string>(t("loading:starting"));
 
     useEffect(() => {
+        const getLoadingStageMessage = (ls: LoadStage) => {
+            switch (ls) {
+                case LoadStage.STARTING:
+                    return t("loading:starting");
+                case LoadStage.INITIALIZING_ENGINE:
+                    return t("loading:init_engine");
+                case LoadStage.LOADING_ASSETS:
+                    return t("loading:load_assets");
+                case LoadStage.INITIALIZING_GAME:
+                    return t("loading:init_game");
+                case LoadStage.COMPLETE:
+                    return t("loading:finished");
+            }
+        }
+
         // if the game instance is undefined, this will happen when the canvas is unmounted on hot reload
         if (!gameInstance) {
             setLoading(true);
@@ -28,22 +43,7 @@ const LoadingScreen: React.FC = () => {
 
             if (ls === LoadStage.COMPLETE) setLoading(false);
         });
-    }, [ gameInstance ]);
-
-    const getLoadingStageMessage = (ls: LoadStage) => {
-        switch (ls) {
-            case LoadStage.STARTING:
-                return t("loading:starting");
-            case LoadStage.INITIALIZING_ENGINE:
-                return t("loading:init_engine");
-            case LoadStage.LOADING_ASSETS:
-                return t("loading:load_assets");
-            case LoadStage.INITIALIZING_GAME:
-                return t("loading:init_game");
-            case LoadStage.COMPLETE:
-                return t("loading:finished");
-        }
-    }
+    }, [ gameInstance, t ]);
 
     return isLoading ? (
         <Container maxWidth="sm">
