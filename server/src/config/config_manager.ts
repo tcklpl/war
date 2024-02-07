@@ -1,4 +1,3 @@
-
 import * as fs from "fs";
 import * as path from "path";
 import svlog from "../utils/logging_utils";
@@ -7,13 +6,15 @@ import { CfgServer } from "./default/cfg_server";
 import { Config } from "./config";
 import * as json5 from 'json5';
 import { CfgCrypt } from "./default/cfg_crypt";
+import { CfgGame } from "./default/cfg_game";
 
 export class ConfigManager {
 
     private _configFolder = path.join(process.cwd(), "config");
     private _configs = [
         new CfgServer(),
-        new CfgCrypt()
+        new CfgCrypt(),
+        new CfgGame()
     ];
     private _loadedConfigs: Map<(typeof Config)['name'], Config> = new Map(); 
 
