@@ -16,6 +16,10 @@ export class GameServer {
         this._lobbyManager = new LobbyManager(this._configManager, this);
     }
 
+    async stop() {
+        await this._lobbyManager.stop();
+    }
+
     get playerManager() {
         return this._playerManager;
     }

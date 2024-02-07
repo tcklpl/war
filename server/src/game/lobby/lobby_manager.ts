@@ -20,6 +20,10 @@ export class LobbyManager {
         this.registerEvents();
     }
 
+    async stop() {
+        this._lobbies.forEach(l => l.removeAllPlayers());
+    }
+
     private updateLobbyStatusForPlayers() {
         const lobbyPlayers = this._gameServer.playerManager.getPlayersByStatus(PlayerStatus.IN_LOBBY_LIST);
         new ServerPacketLobbies(this._gameServer.lobbyManager, this._configManager.getConfig(CfgServer)).dispatch(...lobbyPlayers);

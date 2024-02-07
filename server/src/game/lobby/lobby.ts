@@ -24,6 +24,10 @@ export class Lobby {
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
+    removeAllPlayers() {
+        this._players.forEach(p => p.leaveCurrentLobby());
+    }
+
     broadcastChatMessage(sender: Player, msg: string) {
         new ServerPacketChatMessage(sender, msg).dispatch(...this._players);
     }

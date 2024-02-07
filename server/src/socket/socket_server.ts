@@ -64,4 +64,10 @@ export class SocketServer {
         this.startServer();
     }
 
+    stop() {
+        return new Promise<void>((res) => {
+            this._io.close(() => res());
+        });
+    }
+
 }
