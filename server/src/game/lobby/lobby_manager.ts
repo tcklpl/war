@@ -1,4 +1,6 @@
+import { GameConfig } from "../../../../protocol";
 import { ConfigManager } from "../../config/config_manager";
+import { CfgGame } from "../../config/default/cfg_game";
 import { CfgServer } from "../../config/default/cfg_server";
 import { OverLimitError } from "../../exceptions/over_limit_error";
 import { PlayerAlreadyOwnsALobbyError } from "../../exceptions/player_already_owns_a_lobby_error";
@@ -14,9 +16,11 @@ export class LobbyManager {
 
     private _lobbies: Lobby[] = [];
     private _maxLobbies: number;
+    private readonly _defaultGameConfig: GameConfig;
 
     constructor(private _configManager: ConfigManager, private _gameServer: GameServer) {
         this._maxLobbies = this._configManager.getConfig(CfgServer).max_lobbies;
+        this._defaultGameConfig = _configManager.getConfig(CfgGame).default_game_config;
         this.registerEvents();
     }
 
@@ -50,7 +54,8 @@ export class LobbyManager {
         if (this._lobbies.length >= this._maxLobbies) throw new OverLimitError();
         if (this._lobbies.find(l => l.name === name)) throw new UnavailableNameError();
         if (this._lobbies.find(l => l.owner === owner)) throw new PlayerAlreadyOwnsALobbyError();
-        const lobby = new Lobby(owner, name);
+
+        const lobby = new Lobby(owner, name, {...this._defaultGameConfig});
         owner.joinLobby(lobby);
         lobby.joinable = joinable;
         this._lobbies.push(lobby);

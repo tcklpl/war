@@ -13,5 +13,9 @@
     "leave_lobby_desc": "Are you sure that you want to leave the lobby?",
 
     "chat": "Chat",
-    "chat_info_msg": "Please note that no chat messages are stored, don't annotate stuff in chat because it WILL be lost"
+    "chat_info_msg": "Please note that no chat messages are stored, don't annotate stuff in chat because it WILL be lost",
+
+    "lobby_owner": "Lobby Owner",
+    "transfer_lobby_ownership": "Transfer Lobby Ownership",
+    "kick_player": "Kick player"
 }

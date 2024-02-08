@@ -2,8 +2,10 @@ import { SocketRouteData } from "../socket_route_data";
 import { socketRoutesLobbyChatMessage } from "./chat_message";
 import { socketRoutesLobbyCreateLobby } from "./create_lobby";
 import { socketRoutesLobbyJoinLobby } from "./join_lobby";
+import { socketRoutesLobbyKickPlayer } from "./kick_player";
 import { socketRoutesLobbyLeaveLobby } from "./leave_lobby";
 import { socketRoutesLobbyRequireLobbies } from "./req_lobbies";
+import { socketRoutesLobbyTransferOwnership } from "./transfer_lobby_ownership";
 
 export const socketRoutesLobby = (data: SocketRouteData) => {
 
@@ -12,5 +14,7 @@ export const socketRoutesLobby = (data: SocketRouteData) => {
     socketRoutesLobbyLeaveLobby(data);
     socketRoutesLobbyJoinLobby(data);
     socketRoutesLobbyChatMessage(data);
+    socketRoutesLobbyTransferOwnership(data);
+    socketRoutesLobbyKickPlayer(data);
 
 }

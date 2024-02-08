@@ -1,3 +1,4 @@
+import { GameConfig } from "./game_config";
 
 export interface LobbyState {
 
@@ -5,6 +6,8 @@ export interface LobbyState {
     joinable: boolean;
 
     players: LobbyPlayerState[];
+
+    game_config: GameConfig;
 
 }
 

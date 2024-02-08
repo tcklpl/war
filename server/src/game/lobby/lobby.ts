@@ -1,4 +1,4 @@
-import { LobbyState, LobbyPlayerState } from "../../../../protocol";
+import { LobbyState, LobbyPlayerState, GameConfig } from "../../../../protocol";
 import { ServerPacketChatMessage } from "../../socket/packet/lobby/chat_message";
 import { ServerPacketUpdateLobbyState } from "../../socket/packet/lobby/update_lobby_state";
 import { Player } from "../player/player";
@@ -8,7 +8,7 @@ export class Lobby {
     private _players: Player[] = [];
     joinable = true;
 
-    constructor(private _owner: Player, private _name: string) {
+    constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig) {
         this._players.push(this.owner);
     }
 
@@ -21,6 +21,9 @@ export class Lobby {
 
     removePlayer(p: Player) {
         this._players = this._players.filter(x => x !== p);
+        if (p === this._owner && this._players.length > 0) {
+            this._owner = this._players[0];
+        }
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
@@ -30,6 +33,12 @@ export class Lobby {
 
     broadcastChatMessage(sender: Player, msg: string) {
         new ServerPacketChatMessage(sender, msg).dispatch(...this._players);
+    }
+
+    changeOwnership(newOwner: Player) {
+        if (!this._players.find(p => p === newOwner)) return;
+        this._owner = newOwner;
+        new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
     get name() {
@@ -51,7 +60,8 @@ export class Lobby {
             players: this._players.map(p => <LobbyPlayerState> {
                 name: p.username,
                 is_lobby_owner: p === this._owner
-            })
+            }),
+            game_config: this._gameConfig
         }
     }
 }
