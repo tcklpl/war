@@ -11,6 +11,7 @@ export class WarServer {
 
     private _lobbies = new ListenableProperty<LobbyListState>();
     private _currentLobby = new ListenableProperty<WarGameLobby>();
+    private _lastLobbyExitReason = new ListenableProperty<"left" | "kicked" | "">("");
 
     constructor(private _connection: ServerConnection) {
         registerPacketListeners(_connection.socket, this);
@@ -38,6 +39,10 @@ export class WarServer {
 
     get currentLobby() {
         return this._currentLobby;
+    }
+
+    get lastLobbyExitReason() {
+        return this._lastLobbyExitReason;
     }
 
 }

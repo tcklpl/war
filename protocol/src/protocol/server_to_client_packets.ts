@@ -9,7 +9,7 @@ export interface ServerToClientPackets {
     failedToJoinLobby: () => void;
     joinedLobby: (lobby: LobbyState) => void;
     updateLobbyState: (lobby: LobbyState) => void;
-    leftLobby: () => void;
+    leftLobby: (kicked?: boolean) => void;
     chatMessage: (sender: string, msg: string) => void;
 
 }

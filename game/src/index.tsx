@@ -11,19 +11,19 @@ import { ConfirmationProvider } from './hooks/use_confirmation';
 
 const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
     return (
-        <GameProvider>
-            <ConfigProvider>
-                <GameSessionProvider>
-                    <CrashProvider>
-                        <AlertProvider>
-                            <ConfirmationProvider>
-                                { children }
-                            </ConfirmationProvider>
-                        </AlertProvider>
-                    </CrashProvider>
-                </GameSessionProvider>
-            </ConfigProvider>
-        </GameProvider>
+        <AlertProvider>
+            <ConfirmationProvider>
+                <GameProvider>
+                    <ConfigProvider>
+                        <GameSessionProvider>
+                            <CrashProvider>
+                                        { children }
+                            </CrashProvider>
+                        </GameSessionProvider>
+                    </ConfigProvider>
+                </GameProvider>
+            </ConfirmationProvider>
+        </AlertProvider>
     )
 }
 

@@ -10,7 +10,7 @@ export const socketRoutesLobbyKickPlayer = (data: SocketRouteData) => {
         data.player.lobby.changeOwnership(playerToBeKicked);
         if (playerToBeKicked.lobby !== data.player.lobby) return;
         playerToBeKicked.leaveCurrentLobby();
-        new ServerPacketLeftLobby().dispatch(playerToBeKicked);
+        new ServerPacketLeftLobby(true).dispatch(playerToBeKicked);
     });
 
 }

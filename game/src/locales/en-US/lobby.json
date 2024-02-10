@@ -17,5 +17,6 @@
 
     "lobby_owner": "Lobby Owner",
     "transfer_lobby_ownership": "Transfer Lobby Ownership",
-    "kick_player": "Kick player"
+    "kick_player": "Kick player",
+    "kicked": "You were kicked out of the lobby"
 }

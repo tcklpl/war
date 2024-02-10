@@ -5,6 +5,8 @@ import { useGame } from "./use_game";
 import { LobbyListState, LobbyState } from "../../../protocol";
 import { WarGameLobby } from "../game/lobby/war_game_lobby";
 import { LobbyChatMessage } from "../game/lobby/lobby_chat";
+import { useAlert } from "./use_alert";
+import { useTranslation } from "react-i18next";
 
 interface IGameSessionContext {
     username: string;
@@ -34,6 +36,8 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     // Hooks
     const { sessionConfig, saveConfig } = useConfig();
     const { gameInstance } = useGame();
+    const { enqueueAlert } = useAlert();
+    const { t } = useTranslation(["lobby"]);
 
     // Server connection and user states
     const [username, setUsername] = useState(sessionConfig.username);
@@ -46,6 +50,17 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     const [currentLobbyState, setCurrentLobbyState] = useState<LobbyState | undefined>();
     const [chat, setChat] = useState<LobbyChatMessage[]>([]);
 
+    const updateForLobbyExit = useCallback((reason: "" | "kicked" | "left" | undefined) => {
+        if (!gameInstance) return;
+        if (!gameInstance.state.server) return;
+        if (reason === "kicked") {
+            enqueueAlert({
+                content: t("lobby:kicked")
+            });
+        }
+        gameInstance.state.server.lastLobbyExitReason.value = "";
+    }, [gameInstance, enqueueAlert, t]);
+
     /*
         Auto update this hook if anything changes about the connection.
     */
@@ -55,18 +70,23 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
         gameInstance.state.onServerConnectionChange(conn => {
             setConnection(conn?.connection);
             if (!conn) return;
+            if (!gameInstance.state.server) return;
             
-            gameInstance.state.server?.lobbies.listen(lobbies => setLobbies(lobbies));
-            gameInstance.state.server?.currentLobby.listen(lobby => {
+            gameInstance.state.server.lobbies.listen(lobbies => setLobbies(lobbies));
+            gameInstance.state.server.currentLobby.listen(lobby => {
                 setCurrentLobby(lobby);
                 setCurrentLobbyState(lobby?.state.value);
                 lobby?.state.listen(state => setCurrentLobbyState(state));
                 lobby?.chat.onUpdate(msgs => setChat([...msgs]));
             });
-            gameInstance.state.server?.currentLobby.value?.state.listen(() => setCurrentLobby(gameInstance.state.server?.currentLobby.value));
+            gameInstance.state.server.currentLobby.value?.state.listen(() => setCurrentLobby(gameInstance.state.server?.currentLobby.value));
+
+            gameInstance.state.server.lastLobbyExitReason.listen(reason => {
+                updateForLobbyExit(reason);
+            });
         });
 
-    }, [gameInstance]);
+    }, [gameInstance, updateForLobbyExit]);
 
     /*
         Fetch the username from the config as soon as it's loaded.
