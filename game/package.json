@@ -8,6 +8,7 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.14.9",
+    "@mui/lab": "^5.0.0-alpha.165",
     "@mui/material": "^5.14.9",
     "@petamoriken/float16": "^3.8.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
