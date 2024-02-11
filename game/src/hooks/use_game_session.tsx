@@ -26,6 +26,8 @@ interface IGameSessionContext {
     lobbies?: LobbyListState;
     currentLobby?: WarGameLobby;
     currentLobbyState?: LobbyState;
+    modifyLobbyState(mod: (state: LobbyState) => LobbyState): void;
+
     chat: {sender: string, msg: string}[];
 }
 
@@ -60,6 +62,13 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
         }
         gameInstance.state.server.lastLobbyExitReason.value = "";
     }, [gameInstance, enqueueAlert, t]);
+
+    const modifyLobbyState = useCallback((mod: (state: LobbyState) => LobbyState) => {
+        if (!currentLobbyState) return;
+        const newState = mod({...currentLobbyState});
+        if (JSON.stringify(currentLobbyState) === JSON.stringify(newState)) return;
+        currentLobby?.modifyLobbyState(newState);
+    }, [currentLobby, currentLobbyState]);
 
     /*
         Auto update this hook if anything changes about the connection.
@@ -113,7 +122,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             connection, setConnection,
             saveGameSession,
             lobbies,
-            currentLobby, currentLobbyState, chat
+            currentLobby, currentLobbyState, modifyLobbyState, chat
         }}>
             { children }
         </GameSessionContext.Provider>

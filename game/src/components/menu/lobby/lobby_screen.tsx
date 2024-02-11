@@ -1,14 +1,20 @@
-import { Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Stack, Typography, useTheme } from "@mui/material";
-import React, { useState } from "react"
+import { Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../hooks/use_game_session";
 import './lobby_screen.sass';
 import LobbyChatBox from "./lobby_chat_box";
 import { useConfirmation } from "../../../hooks/use_confirmation";
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 import PublicIcon from '@mui/icons-material/Public';
 import ShieldIcon from '@mui/icons-material/Shield';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LobbyPartySelectorScreen from "./party_selector/lobby_party_selector";
+import LobbyAdminConfigScreen from "./admin/lobby_admin_cfg";
 
 const LobbyScreen: React.FC = () => {
 
@@ -24,41 +30,47 @@ const LobbyScreen: React.FC = () => {
         setPlayerListCtxAnchorEl(null);
         setPlayerListCtxSelectedPlayer(undefined);
     }
+    
+    const [infoTab, setInfoTab] = useState<"parties" | "config">("parties");
+
+    useEffect(() => {
+        if (!isLobbyOwner) setInfoTab("parties");
+    }, [isLobbyOwner]);
 
     return (
-        <Grid container className="lobby-screen" style={{ backgroundColor: palette.background.default }} justifyContent="center" alignContent="start">
-        
-            <Stack spacing={5} width="100%" height="100%">
-                { currentLobby && currentLobbyState ? (
-                    <>
-                        <Grid>
-                            <Typography variant="h4">
-                                <PublicIcon style={{marginRight: "0.5em", fontSize: "1em", verticalAlign: "middle"}}/>
-                                { t("lobby:lobbies") }
-                            </Typography>
-                            <Typography variant="caption">
-                                { `${t("common:playing_as")} ${username} @ ${currentLobbyState.name}` }
-                            </Typography>
-                            <Button onClick={() => {
-                                enqueueConfirmation({
-                                    title: t("lobby:leave_lobby"),
-                                    description: t("lobby:leave_lobby_desc"),
-                                    onConfirm() {
-                                        currentLobby.leave();
-                                    }
-                                });
-                            }}>{ t("lobby:leave_lobby") }</Button>
-                        </Grid>
+        <Grid className="lobby-screen" style={{ backgroundColor: palette.background.default }} justifyContent="center" alignContent="start" height="100%">
+            { currentLobby && currentLobbyState ? (
+                <Box display="flex" flexDirection="column" height="100%">
+                    <Box display="flex">
+                        <Typography variant="h4">
+                            <PublicIcon style={{marginRight: "0.5em", fontSize: "1em", verticalAlign: "middle"}}/>
+                            { t("lobby:lobbies") }
+                        </Typography>
+                        <Typography variant="caption">
+                            { `${t("common:playing_as")} ${username} @ ${currentLobbyState.name}` }
+                        </Typography>
+                        <Button onClick={() => {
+                            enqueueConfirmation({
+                                title: t("lobby:leave_lobby"),
+                                description: t("lobby:leave_lobby_desc"),
+                                onConfirm() {
+                                    currentLobby.leave();
+                                }
+                            });
+                        }}>{ t("lobby:leave_lobby") }</Button>
+                    </Box>
 
-                        <Grid container height="100%">
+                    <Box display="flex" flexGrow={1} height="100%">
+                        <Grid container position="relative">
 
-                            <Grid item xs={3} display="flex" flexDirection="column" padding={2}>
+                            <Grid item xs={3} display="flex" height="100%" flexDirection="column" padding={2}>
                                 <Typography>{ t("lobby:player_list") }</Typography>
 
                                 { isLobbyOwner && (
                                     <Menu anchorEl={playerListCtxAnchorEl} open={!!playerListCtxAnchorEl} onClose={closePlayerListCtxMenu}>
                                         <MenuItem onClick={() => {
                                             closePlayerListCtxMenu();
+                                            setInfoTab("parties");
                                             currentLobby.transferOwnership(playerListCtxSelectedPlayer ?? "")
                                         }} disableRipple disabled={playerListCtxSelectedPlayer === username}>
                                             <ListItemIcon>
@@ -110,20 +122,33 @@ const LobbyScreen: React.FC = () => {
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={7}>
-                                Info
+                            <Grid item xs={7} display="flex" height="93%" position="relative">
+                                <Box sx={{ width: '100%', typography: 'body1', height: '100%' }} position="absolute">
+                                    <TabContext value={infoTab}>
+                                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                            <TabList onChange={(_, val) => setInfoTab(val)}>
+                                                <Tab label="Parties" value="parties" />
+                                                { isLobbyOwner && <Tab label="Config" value="config" /> }
+                                            </TabList>
+                                        </Box>
+
+                                        <Box height="100%" position="relative">
+                                            <TabPanel value="parties"><LobbyPartySelectorScreen/></TabPanel>
+                                            { isLobbyOwner && <TabPanel value="config" sx={{height: '100%'}}><LobbyAdminConfigScreen/></TabPanel>}
+                                        </Box>
+                                    </TabContext>
+                                </Box>
                             </Grid>
 
                             <Grid item xs={2}>
                                 Flair
                             </Grid>
                         </Grid>
-                    </>
-                ) : (
-                    <>{ t("lobby:loading_lobby_data") }</>
-                )}
-
-            </Stack>
+                    </Box>
+                </Box>
+            ) : (
+                <>{ t("lobby:loading_lobby_data") }</>
+            )}
         </Grid>
     );
 }

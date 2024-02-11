@@ -1,6 +1,7 @@
 import { LobbyState } from "../../../../protocol";
 import { ClientPacketKickPlayer } from "../server/connection/packet/lobby/kick_player";
 import { ClientPacketLeaveLobby } from "../server/connection/packet/lobby/leave_lobby";
+import { ClientPacketModifyLobbyState } from "../server/connection/packet/lobby/modify_lobby_state";
 import { ClientPacketTransferLobbyOwnership } from "../server/connection/packet/lobby/transfer_ownership";
 import { ListenableProperty } from "../server/listenable_property";
 import { LobbyChat } from "./lobby_chat";
@@ -25,6 +26,10 @@ export class WarGameLobby {
 
     kickPlayer(player: string) {
         new ClientPacketKickPlayer(player).dispatch();
+    }
+
+    modifyLobbyState(state: LobbyState) {
+        new ClientPacketModifyLobbyState(state).dispatch();
     }
 
     get state() {
