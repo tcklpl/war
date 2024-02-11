@@ -14,7 +14,7 @@ export const socketRoutesLobbyLeaveLobby = (data: SocketRouteData) => {
         new ServerPacketLeftLobby().dispatch(data.player);
 
         // also send an updated lobby state package to the player, as they'll be back to the lobby selection screen
-        new ServerPacketLobbies(data.gameServer.lobbyManager, data.configManager.getConfig(CfgServer));
+        new ServerPacketLobbies(data.gameServer.lobbyManager, data.configManager.getConfig(CfgServer)).dispatch(data.player);
 
     });
 
