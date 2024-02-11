@@ -28,7 +28,7 @@ export class WarGame {
         this._engine.managers.scene.register(this._gameBoard);
         this._engine.managers.scene.activeScene = this._gameBoard;
 
-        this._engine.resumeRender();
+        // this._engine.resumeRender();
         
         this._ready = true;
         this._toRunWhenReady.forEach(runnable => runnable());
