@@ -41,6 +41,11 @@ export class Lobby {
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
+    replaceLobbyState(state: LobbyState) {
+        this.joinable = state.joinable;
+        this._gameConfig = state.game_config;
+    }
+
     get name() {
         return this._name;
     }

@@ -4,6 +4,7 @@ import { socketRoutesLobbyCreateLobby } from "./create_lobby";
 import { socketRoutesLobbyJoinLobby } from "./join_lobby";
 import { socketRoutesLobbyKickPlayer } from "./kick_player";
 import { socketRoutesLobbyLeaveLobby } from "./leave_lobby";
+import { socketRoutesLobbyModifyLobbyState } from "./modify_lobby_state";
 import { socketRoutesLobbyRequireLobbies } from "./req_lobbies";
 import { socketRoutesLobbyTransferOwnership } from "./transfer_lobby_ownership";
 
@@ -16,5 +17,6 @@ export const socketRoutesLobby = (data: SocketRouteData) => {
     socketRoutesLobbyChatMessage(data);
     socketRoutesLobbyTransferOwnership(data);
     socketRoutesLobbyKickPlayer(data);
+    socketRoutesLobbyModifyLobbyState(data);
 
 }
