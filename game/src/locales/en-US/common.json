@@ -5,5 +5,9 @@
     "playing_as": "Playing as:",
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "understood": "Understood"
+    "understood": "Understood",
+    "hp": "HP",
+    "hp_desc": "Unit starting HP",
+    "max_hp": "Max HP",
+    "max_hp_desc": "Unit maximum HP"
 }
