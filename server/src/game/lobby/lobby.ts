@@ -43,7 +43,10 @@ export class Lobby {
 
     replaceLobbyState(state: LobbyState) {
         this.joinable = state.joinable;
-        this._gameConfig = state.game_config;
+
+        if (!this._gameConfig.is_immutable) {
+            this._gameConfig = state.game_config;
+        }
     }
 
     get name() {

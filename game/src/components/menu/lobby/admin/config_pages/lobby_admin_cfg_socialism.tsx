@@ -1,5 +1,5 @@
 import { Box, Table, TableBody } from "@mui/material";
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useGameSession } from "../../../../../hooks/use_game_session";
 import { useTranslation } from "react-i18next";
 import LobbyAdminConfigOption from "./components/lobby_admin_cfg_option";
@@ -7,7 +7,7 @@ import LobbyAdminConfigGroupHp from "./components/lobby_admin_cfg_group_hp";
 import LobbyAdminConfigTitle from "./components/lobby_admin_cfg_title";
 
 
-const LobbyAdminConfigScreenSocialism: React.FC = () => {
+const LobbyAdminConfigScreenSocialism = ({ disabled }: { disabled: boolean }) => {
 
     const { currentLobbyState, modifyLobbyState } = useGameSession();
     const { t } = useTranslation(["common", "lobby"]);
@@ -39,7 +39,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={ t("lobby:bonus") }/>
@@ -53,7 +54,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={ t("lobby:debuff") }/>
@@ -67,7 +69,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: 'number',
@@ -79,7 +82,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_socialism_su_lula")}`}/>
@@ -92,6 +96,7 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             cfg.special_units.lula.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_socialism_su_lenin")}`}/>
@@ -104,6 +109,7 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             cfg.special_units.vladimir_lenin.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_socialism_su_stalin")}`}/>
@@ -116,6 +122,7 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             cfg.special_units.joseph_stalin.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: 'number',
@@ -127,7 +134,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_socialism_su_morus")}`}/>
@@ -140,6 +148,7 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             cfg.special_units.thomas_morus.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: 'number',
@@ -151,7 +160,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_socialism_su_wilson")}`}/>
@@ -164,6 +174,7 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             cfg.special_units.wilson.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: 'number',
@@ -175,7 +186,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_socialism_su_red_god")}`}/>
@@ -188,6 +200,7 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             cfg.special_units.red_god.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: 'number',
@@ -199,7 +212,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_abilities")} - ${t("lobby:cfg_socialism_sa_tsar")}`}/>
@@ -213,7 +227,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: 'number',
@@ -225,7 +240,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: 'number',
@@ -237,7 +253,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_abilities")} - ${t("lobby:cfg_socialism_sa_utopia_island")}`}/>
@@ -251,7 +268,8 @@ const LobbyAdminConfigScreenSocialism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                 </TableBody>

@@ -1,4 +1,5 @@
 {
+    "lobby": "Lobby",
     "lobbies": "Lobbies",
     "joinable": "Joinable",
     "owner": "Owner",
@@ -30,6 +31,27 @@
     "debuff": "Debuff",
     "special_units": "Special Units",
     "special_abilities": "Special Abilities",
+
+    "filiation": "Filiation",
+    "fil_neutral": "Neutral",
+    "fil_social": "Social",
+    "fil_capital": "Capital",
+
+    "objective": "Objective",
+    "objective_global_dom": "Global domination",
+
+    "troops_per_turn": "Troops per turn",
+    "troops_per_turn_default": "Half of the territory count (rounded down)",
+
+    "alliances": "Alliances",
+    "alliances_any": "Any party",
+    "alliances_none": "No alliances are permitted",
+    "alliances_neutral_or_social": "Only neutral or social filiations",
+    "alliances_neutral_or_capital": "Only neutral or capital filiations",
+
+    "starting_country": "Starting country",
+
+    "cfg_immutable": "This server has defined its default game config as immutable. You can still see the values below, but you're not able to modify them. (Except for the joinable property)",
 
     "cfg_anarchism_passive_unoccupied_country_conversion_base": "Unoccupied country conversion base",
     "cfg_anarchism_passive_unoccupied_country_conversion_base_desc": "Number of random unoccupied countries that will fall into anarchism per round",

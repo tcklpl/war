@@ -1,11 +1,11 @@
 import { Box, Table, TableBody } from "@mui/material";
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useGameSession } from "../../../../../hooks/use_game_session";
 import { useTranslation } from "react-i18next";
 import LobbyAdminConfigOption from "./components/lobby_admin_cfg_option";
 
 
-const LobbyAdminConfigScreenGlobal: React.FC = () => {
+const LobbyAdminConfigScreenGlobal = ({ disabled }: { disabled: boolean }) => {
 
     const { currentLobbyState, modifyLobbyState } = useGameSession();
     const { t } = useTranslation(["common", "lobby"]);
@@ -39,7 +39,8 @@ const LobbyAdminConfigScreenGlobal: React.FC = () => {
                         value: turnTimeoutSeconds,
                         setter: setTurnTimeoutSeconds,
                         min: 1,
-                        max: 300
+                        max: 300,
+                        disabled: disabled
                     }}/>
                 </TableBody>
             </Table>

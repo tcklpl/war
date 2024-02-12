@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography, useTheme } from "@mui/material";
+import { Box, Button, Container, Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../hooks/use_game_session";
@@ -10,7 +10,6 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
-import PublicIcon from '@mui/icons-material/Public';
 import ShieldIcon from '@mui/icons-material/Shield';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LobbyPartySelectorScreen from "./party_selector/lobby_party_selector";
@@ -41,24 +40,23 @@ const LobbyScreen: React.FC = () => {
         <Grid className="lobby-screen" style={{ backgroundColor: palette.background.default }} justifyContent="center" alignContent="start" height="100%">
             { currentLobby && currentLobbyState ? (
                 <Box display="flex" flexDirection="column" height="100%">
-                    <Box display="flex">
-                        <Typography variant="h4">
-                            <PublicIcon style={{marginRight: "0.5em", fontSize: "1em", verticalAlign: "middle"}}/>
-                            { t("lobby:lobbies") }
+                    <Container>
+                        <Typography variant="h5">
+                            <Button onClick={() => {
+                                enqueueConfirmation({
+                                    title: t("lobby:leave_lobby"),
+                                    description: t("lobby:leave_lobby_desc"),
+                                    onConfirm() {
+                                        currentLobby.leave();
+                                    }
+                                });
+                            }}><LogoutIcon style={{marginRight: "0.5em", verticalAlign: "middle"}}/> { t("lobby:leave_lobby") }</Button>
+                            { t("lobby:lobby") }: { currentLobbyState.name }
                         </Typography>
                         <Typography variant="caption">
-                            { `${t("common:playing_as")} ${username} @ ${currentLobbyState.name}` }
+                            { `${t("common:playing_as")} ${username}` }
                         </Typography>
-                        <Button onClick={() => {
-                            enqueueConfirmation({
-                                title: t("lobby:leave_lobby"),
-                                description: t("lobby:leave_lobby_desc"),
-                                onConfirm() {
-                                    currentLobby.leave();
-                                }
-                            });
-                        }}>{ t("lobby:leave_lobby") }</Button>
-                    </Box>
+                    </Container>
 
                     <Box display="flex" flexGrow={1} height="100%">
                         <Grid container position="relative">
@@ -134,7 +132,11 @@ const LobbyScreen: React.FC = () => {
 
                                         <Box height="100%" position="relative">
                                             <TabPanel value="parties"><LobbyPartySelectorScreen/></TabPanel>
-                                            { isLobbyOwner && <TabPanel value="config" sx={{height: '100%'}}><LobbyAdminConfigScreen/></TabPanel>}
+                                            { isLobbyOwner && 
+                                                <TabPanel value="config" sx={{height: '100%'}}>
+                                                    <LobbyAdminConfigScreen/>
+                                                </TabPanel>
+                                            }
                                         </Box>
                                     </TabContext>
                                 </Box>

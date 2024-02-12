@@ -1,5 +1,5 @@
 import { Box, Table, TableBody } from "@mui/material";
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useGameSession } from "../../../../../hooks/use_game_session";
 import { useTranslation } from "react-i18next";
 import LobbyAdminConfigOption from "./components/lobby_admin_cfg_option";
@@ -7,7 +7,7 @@ import LobbyAdminConfigGroupHp from "./components/lobby_admin_cfg_group_hp";
 import LobbyAdminConfigTitle from "./components/lobby_admin_cfg_title";
 
 
-const LobbyAdminConfigScreenFeudalism: React.FC = () => {
+const LobbyAdminConfigScreenFeudalism = ({ disabled }: { disabled: boolean }) => {
 
     const { currentLobbyState, modifyLobbyState } = useGameSession();
     const { t } = useTranslation(["common", "lobby"]);
@@ -39,7 +39,8 @@ const LobbyAdminConfigScreenFeudalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_feudalism_su_dragon")}`}/>
@@ -52,6 +53,7 @@ const LobbyAdminConfigScreenFeudalism: React.FC = () => {
                             cfg.special_units.dragon.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -63,7 +65,8 @@ const LobbyAdminConfigScreenFeudalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -75,7 +78,8 @@ const LobbyAdminConfigScreenFeudalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -87,7 +91,8 @@ const LobbyAdminConfigScreenFeudalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_abilities")} - ${t("lobby:cfg_feudalism_sa_wall")}`}/>
@@ -101,7 +106,8 @@ const LobbyAdminConfigScreenFeudalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -113,7 +119,8 @@ const LobbyAdminConfigScreenFeudalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                 </TableBody>

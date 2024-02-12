@@ -1,5 +1,5 @@
 import { Box, Table, TableBody } from "@mui/material";
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useGameSession } from "../../../../../hooks/use_game_session";
 import { useTranslation } from "react-i18next";
 import LobbyAdminConfigTitle from "./components/lobby_admin_cfg_title";
@@ -7,7 +7,7 @@ import LobbyAdminConfigOption from "./components/lobby_admin_cfg_option";
 import LobbyAdminConfigGroupHp from "./components/lobby_admin_cfg_group_hp";
 
 
-const LobbyAdminConfigScreenCapitalism: React.FC = () => {
+const LobbyAdminConfigScreenCapitalism = ({ disabled }: { disabled: boolean }) => {
 
     const { currentLobbyState, modifyLobbyState } = useGameSession();
     const { t } = useTranslation(["common", "lobby"]);
@@ -39,7 +39,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 10
+                        max: 10,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={t("lobby:bonus")}/>
@@ -53,7 +54,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 0,
-                        max: 10
+                        max: 10,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={t("lobby:debuff")}/>
@@ -67,7 +69,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -79,7 +82,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_capitalism_su_keynes")}`}/>
@@ -92,6 +96,7 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             cfg.special_units.john_keynes.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -103,7 +108,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -115,7 +121,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_capitalism_su_croc")}`}/>
@@ -128,6 +135,7 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             cfg.special_units.ray_croc.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -139,7 +147,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_capitalism_su_zuck")}`}/>
@@ -152,6 +161,7 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             cfg.special_units.mark_zuckerberg.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -163,7 +173,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -175,7 +186,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_capitalism_su_jobs")}`}/>
@@ -188,6 +200,7 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             cfg.special_units.steve_jobs.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -199,7 +212,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -211,7 +225,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_units")} - ${t("lobby:cfg_capitalism_su_trump")}`}/>
@@ -224,6 +239,7 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             cfg.special_units.donald_trump.max_hp = hp;
                             setCfg({...cfg});
                         }}
+                        disabled={disabled}
                     />
                     <LobbyAdminConfigOption options={{
                         type: "number",
@@ -235,7 +251,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
 
                     <LobbyAdminConfigTitle title={`${t("lobby:special_abilities")} - ${t("lobby:cfg_capitalism_sa_privatization")}`}/>
@@ -249,7 +266,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                             setCfg({...cfg});
                         },
                         min: 1,
-                        max: 99
+                        max: 99,
+                        disabled: disabled
                     }}/>
                     <LobbyAdminConfigOption options={{
                         type: "boolean",
@@ -259,7 +277,8 @@ const LobbyAdminConfigScreenCapitalism: React.FC = () => {
                         setter: (val) => {
                             cfg.special_abilities.privatization.allow_using_specials = val;
                             setCfg({...cfg});
-                        }
+                        },
+                        disabled: disabled
                     }}/>
 
                 </TableBody>
