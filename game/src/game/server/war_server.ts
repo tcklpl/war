@@ -1,9 +1,9 @@
 import { LobbyListState } from "../../../../protocol";
 import { WarGameLobby } from "../lobby/war_game_lobby";
 import { registerPacketListeners } from "./connection/packet/listeners/packet_listeners";
-import { ClientPacketCreateLobby } from "./connection/packet/lobby/create_lobby";
-import { ClientPacketJoinLobby } from "./connection/packet/lobby/join_lobby";
-import { ClientPacketRequireLobbies } from "./connection/packet/lobby/req_lobbies";
+import { ClientPacketCreateLobby } from "./connection/packet/to_send/lobby_list/create_lobby";
+import { ClientPacketJoinLobby } from "./connection/packet/to_send/lobby_list/join_lobby";
+import { ClientPacketRequireLobbies } from "./connection/packet/to_send/lobby_list/req_lobbies";
 import { ServerConnection } from "./connection/server_connection";
 import { ListenableProperty } from "./listenable_property";
 

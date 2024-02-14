@@ -1,5 +1,5 @@
 import { Listener } from "typeUtils";
-import { ClientPacketSendChatMessage } from "../server/connection/packet/lobby/send_chat_message";
+import { ClientPacketSendChatMessage } from "../server/connection/packet/to_send/lobby/common/send_chat_message";
 
 export type LobbyChatMessage = { sender: string, msg: string }; 
 
