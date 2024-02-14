@@ -55,6 +55,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     const updateForLobbyExit = useCallback((reason: "" | "kicked" | "left" | undefined) => {
         if (!gameInstance) return;
         if (!gameInstance.state.server) return;
+        if (reason === "") return;
         if (reason === "kicked") {
             enqueueAlert({
                 content: t("lobby:kicked")
