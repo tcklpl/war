@@ -1,12 +1,23 @@
-import { LobbyState, LobbyPlayerState, GameConfig } from "../../../../protocol";
+import { LobbyState, LobbyPlayerState, GameConfig, GameParty } from "../../../../protocol";
 import { ServerPacketChatMessage } from "../../socket/packet/lobby/chat_message";
 import { ServerPacketUpdateLobbyState } from "../../socket/packet/lobby/update_lobby_state";
+import { PartyAnarchism } from "../party/anarchism";
+import { PartyCapitalism } from "../party/capitalism";
+import { PartyFeudalism } from "../party/feudalism";
+import { Party } from "../party/party";
+import { PartySocialism } from "../party/socialism";
 import { Player } from "../player/player";
 
 export class Lobby {
 
     private _players: Player[] = [];
     joinable = true;
+    private _parties: Party[] = [
+        new PartyAnarchism(),
+        new PartyFeudalism(),
+        new PartySocialism(),
+        new PartyCapitalism()
+    ];
 
     constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig) {
         this._players.push(this.owner);
@@ -24,6 +35,7 @@ export class Lobby {
         if (p === this._owner && this._players.length > 0) {
             this._owner = this._players[0];
         }
+        p.party = undefined;
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
@@ -49,6 +61,20 @@ export class Lobby {
         }
     }
 
+    setPlayerParty(player: Player, protocolParty: GameParty) {
+        const party = this._parties.find(p => p.protocolValue === protocolParty);
+        if (!party || player.party || party.player) return;
+        player.party = party;
+        party.player = player;
+        new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+    }
+
+    deselectPlayerParty(player: Player) {
+        player.party = undefined;
+        this._parties.filter(p => p.player === player).forEach(p => p.player = undefined);
+        new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+    }
+
     get name() {
         return this._name;
     }
@@ -67,9 +93,11 @@ export class Lobby {
             joinable: this.joinable,
             players: this._players.map(p => <LobbyPlayerState> {
                 name: p.username,
-                is_lobby_owner: p === this._owner
+                is_lobby_owner: p === this._owner,
+                party: p.party?.protocolValue
             }),
-            game_config: this._gameConfig
+            game_config: this._gameConfig,
+            selectable_parties: this._parties.filter(p => !p.player).map(p => p.protocolValue)
         }
     }
 }
