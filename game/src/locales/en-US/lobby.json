@@ -21,6 +21,11 @@
     "kick_player": "Kick player",
     "kicked": "You were kicked out of the lobby",
 
+    "select": "Select",
+    "locked_as": "Locked as",
+    "deselect": "Deselect",
+    "party_is_selected_by": "The party <PARTY> is currently selected by <PLAYER>",
+
     "cfg_global_joinable": "Joinable",
     "cfg_global_joinable_desc": "If the lobby can be joined",
     "cfg_global_turn_timeout_seconds": "Turn timeout seconds",
