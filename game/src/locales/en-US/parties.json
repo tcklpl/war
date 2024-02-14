@@ -1,0 +1,40 @@
+{
+    "anarchism": "Anarchism",
+    "anarchism_pa_empty_territories": "Power Void",
+    "anarchism_pa_empty_territories_desc": "Unoccupied territories become anarchic, with a rate of <PER_TURN> per turn",
+    "anarchism_pa_dice_tie": "Offensive Maniac",
+    "anarchism_pa_dice_tie_desc": "Anarchism wins attacking ties and loses defense ties",
+    "anarchism_db_attack": "Unbound Aggression",
+    "anarchism_db_attack_desc": "If attacking an occupied territory is possible, Anarchism is obligated to do so",
+    "anarchism_db_un_ban": "Enemy of Civilization",
+    "anarchism_db_un_ban_desc": "Anarchism is banned from partaking in the UN council, even if it owns a council territory",
+    "anarchism_bn_troop": "Spontaneous Spawn",
+    "anarchism_bn_troop_desc": "Anarchism gains <TROOPS> troops after ending its turn (they are assigned to random owned territories)",
+    "anarchism_bn_attack_stack": "Frenzy",
+    "anarchism_bn_attack_stack_desc": "Winning an attack grants an attack bonus of +<BONUS> in the same turn, stacking up to <STACK> times (to a total of +<TOTAL>)",
+    "anarchism_bn_pressure": "Fearsome Enemy",
+    "anarchism_bn_pressure_desc": "After winning <ATTACKS> attacks in sequence and in the same turn, all attacked countries become pressured",
+    "anarchism_su_black_block": "Black Block",
+    "anarchism_su_black_block_desc": "Will attack all neighbor territories without spotting, prioritizing the one with the least enemy troops",
+    "anarchism_su_black_block_spawn_condition": "Anarchism loses <TERRITORIES> territories in sequence",
+    "anarchism_su_black_block_spawn_location": "Last occupied territory",
+
+    "feudalism": "Feudalism",
+    "feudalism_pa_defense": "Unified Defense",
+    "feudalism_pa_defense_desc": "Troops can be sent to defend walls without movement restriction",
+    "feudalism_db_one_attack": "Defensive Inclination",
+    "feudalism_db_one_attack_desc": "Feudalism can only attack once per turn",
+    "feudalism_bn_troop_gain": "Feudal Tax",
+    "feudalism_bn_troop_gain_desc": "Upon conquering a territory, Feudalism gains <TROOPS> troop(s), allocated to the newly conquered territory",
+    "feudalism_su_dragon": "Dragon",
+    "feudalism_su_dragon_desc": "Feudalism starts the game with one Dragon, starting with <HP> HP and gaining +<INCREMENT> HP each round until a max of <MAX_HP>",
+    "feudalism_su_dragon_spawn": "Feudalism start with the Dragon. If the dragon is killed, it'll respawn after <TURNS> turns",
+    "feudalism_sa_wall": "Wall",
+    "feudalism_sa_wall_desc": "Feudalism can create walls around <TERRITORIES> territory(ies). When another party attacks this territory, they'll have to roll a d6 for each troop, only troops that succeed in this d6 roll against the wall can continue the attack",
+
+    "socialism": "Socialism",
+
+    "capitalism": "Capitalism",
+
+    "": ""
+}
