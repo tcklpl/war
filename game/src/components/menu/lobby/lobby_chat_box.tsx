@@ -4,7 +4,9 @@ import { useGameSession } from "../../../hooks/use_game_session";
 import './lobby_screen.sass';
 import { useTranslation } from "react-i18next";
 
-const LobbyChatBox: React.FC = () => {
+import ChatIcon from '@mui/icons-material/Chat';
+
+const LobbyChatBox = () => {
 
     const { chat, currentLobby } = useGameSession();
 
@@ -30,7 +32,7 @@ const LobbyChatBox: React.FC = () => {
 
     return (        
         <>
-            <Typography>{t("lobby:chat")}</Typography>
+            <Typography sx={{ marginBottom: '1em'}}><ChatIcon sx={{ verticalAlign: 'middle', marginRight: '0.3em'}}/>{t("lobby:chat")}</Typography>
             <Box display="flex" flexDirection="column" justifyContent="space-between" component={Paper}>
                 <List sx={{ flexGrow: 1, overflowY: 'auto', height: '300px' }} onScroll={e => handleChatLogScroll(e)} ref={chatboxRef}>
                     <ListItem key="info">

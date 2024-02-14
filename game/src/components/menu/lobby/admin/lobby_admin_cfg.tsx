@@ -10,6 +10,13 @@ import LobbyAdminConfigScreenSocialism from "./config_pages/lobby_admin_cfg_soci
 import LobbyAdminConfigScreenCapitalism from "./config_pages/lobby_admin_cfg_capitalism";
 import { useGameSession } from "../../../../hooks/use_game_session";
 import { useTranslation } from "react-i18next";
+import "../lobby_screen.sass";
+
+import PublicIcon from '@mui/icons-material/Public';
+import AnarchismIcon from "../../../../images/icons/anarchism/anarchism_icon";
+import FeudalismIcon from "../../../../images/icons/feudalism/feudalism_ison";
+import SocialismIcon from "../../../../images/icons/socialism/socialism_ison";
+import CapitalismIcon from "../../../../images/icons/capitalism/capitalism_ison";
 
 
 const LobbyAdminConfigScreen = () => {
@@ -21,29 +28,29 @@ const LobbyAdminConfigScreen = () => {
     const isLobbyConfigReadonly = currentLobbyState?.game_config.is_immutable ?? false;
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%'}}>
-            { currentLobbyState?.game_config.is_immutable && <Alert severity="info" sx={{ marginBottom: '1em'}}>{ t("lobby:cfg_immutable") }</Alert>}
-            <Box sx={{ bgcolor: 'background.paper', display: 'flex', flexGrow: 1, minHeight: 0 }}>
-                <TabContext value={cfgPage}>
+        <TabContext value={cfgPage}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%'}}>
+                { currentLobbyState?.game_config.is_immutable && <Alert severity="info" sx={{ marginBottom: '1em'}}>{ t("lobby:cfg_immutable") }</Alert>}
+                <Box sx={{ bgcolor: 'background.paper', display: 'flex', flex: '1 1 auto' }}>
                     <Box sx={{ borderRight: 1, borderColor: 'divider' }}>
                         <TabList onChange={(_, val) => setCfgPage(val)} orientation="vertical">
-                            <Tab label="Global" value="global" />
-                            <Tab label="Anarchism" value="anarchism" />
-                            <Tab label="Feudalism" value="feudalism" />
-                            <Tab label="Socialism" value="socialism" />
-                            <Tab label="Capitalism" value="capitalism" />
+                            <Tab icon={<PublicIcon/>} label="Global" value="global" />
+                            <Tab icon={<AnarchismIcon/>} label={t("parties:anarchism")} value="anarchism" />
+                            <Tab icon={<FeudalismIcon/>} label={t("parties:feudalism")} value="feudalism" />
+                            <Tab icon={<SocialismIcon/>} label={t("parties:socialism")} value="socialism" />
+                            <Tab icon={<CapitalismIcon/>} label={t("parties:capitalism")} value="capitalism" />
                         </TabList>
                     </Box>
-                    <Box overflow="auto" sx={{ flexGrow: 1 }} height="100%">
-                        <TabPanel value="global"><LobbyAdminConfigScreenGlobal disabled={isLobbyConfigReadonly}/></TabPanel>
-                        <TabPanel value="anarchism"><LobbyAdminConfigScreenAnarchism disabled={isLobbyConfigReadonly}/></TabPanel>
-                        <TabPanel value="feudalism"><LobbyAdminConfigScreenFeudalism disabled={isLobbyConfigReadonly}/></TabPanel>
-                        <TabPanel value="socialism"><LobbyAdminConfigScreenSocialism disabled={isLobbyConfigReadonly}/></TabPanel>
-                        <TabPanel value="capitalism"><LobbyAdminConfigScreenCapitalism disabled={isLobbyConfigReadonly}/></TabPanel>
+                    <Box sx={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}>
+                        <TabPanel value="global" className="lobby-growable-tab-panel"><LobbyAdminConfigScreenGlobal disabled={isLobbyConfigReadonly}/></TabPanel>
+                        <TabPanel value="anarchism" className="lobby-growable-tab-panel"><LobbyAdminConfigScreenAnarchism disabled={isLobbyConfigReadonly}/></TabPanel>
+                        <TabPanel value="feudalism" className="lobby-growable-tab-panel"><LobbyAdminConfigScreenFeudalism disabled={isLobbyConfigReadonly}/></TabPanel>
+                        <TabPanel value="socialism" className="lobby-growable-tab-panel"><LobbyAdminConfigScreenSocialism disabled={isLobbyConfigReadonly}/></TabPanel>
+                        <TabPanel value="capitalism" className="lobby-growable-tab-panel"><LobbyAdminConfigScreenCapitalism disabled={isLobbyConfigReadonly}/></TabPanel>
                     </Box>
-                </TabContext>
+                </Box>
             </Box>
-        </Box>
+        </TabContext>
     );
 }
 

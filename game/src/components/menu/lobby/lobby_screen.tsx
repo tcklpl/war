@@ -1,5 +1,5 @@
 import { Box, Button, Container, Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react"
+import React, { ReactElement, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../hooks/use_game_session";
 import './lobby_screen.sass';
@@ -9,16 +9,25 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { GameParty } from "../../../../../protocol";
+import LobbyPartySelectorScreen from "./party_selector/lobby_party_selector";
+import LobbyAdminConfigScreen from "./admin/lobby_admin_cfg";
 
 import ShieldIcon from '@mui/icons-material/Shield';
 import LogoutIcon from '@mui/icons-material/Logout';
-import LobbyPartySelectorScreen from "./party_selector/lobby_party_selector";
-import LobbyAdminConfigScreen from "./admin/lobby_admin_cfg";
+import PersonIcon from '@mui/icons-material/Person';
+import AnarchismIcon from "../../../images/icons/anarchism/anarchism_icon";
+import FeudalismIcon from "../../../images/icons/feudalism/feudalism_ison";
+import SocialismIcon from "../../../images/icons/socialism/socialism_ison";
+import CapitalismIcon from "../../../images/icons/capitalism/capitalism_ison";
+import CrownIcon from "../../../images/icons/crown_icon";
+import FlagIcon from '@mui/icons-material/Flag';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const LobbyScreen: React.FC = () => {
 
     const { palette } = useTheme();
-    const { t } = useTranslation(["lobby", "common"]);
+    const { t } = useTranslation(["lobby", "common", "parties"]);
     const { username, currentLobby, currentLobbyState } = useGameSession();
     const { enqueueConfirmation } = useConfirmation();
     const isLobbyOwner = currentLobbyState?.players.find(p => p.name === username)?.is_lobby_owner ?? false;
@@ -35,6 +44,13 @@ const LobbyScreen: React.FC = () => {
     useEffect(() => {
         if (!isLobbyOwner) setInfoTab("parties");
     }, [isLobbyOwner]);
+
+    const partyDecoratorMap = new Map<GameParty, {name: string, icon: ReactElement}>([
+        ["anarchism", { name: t("parties:anarchism"), icon: (<AnarchismIcon/>)}],
+        ["feudalism", { name: t("parties:feudalism"), icon: (<FeudalismIcon/>)}],
+        ["socialism", { name: t("parties:socialism"), icon: (<SocialismIcon/>)}],
+        ["capitalism", { name: t("parties:capitalism"), icon: (<CapitalismIcon/>)}],
+    ]);
 
     return (
         <Grid className="lobby-screen" style={{ backgroundColor: palette.background.default }} justifyContent="center" alignContent="start" height="100%">
@@ -62,7 +78,7 @@ const LobbyScreen: React.FC = () => {
                         <Grid container position="relative">
 
                             <Grid item xs={3} display="flex" height="100%" flexDirection="column" padding={2}>
-                                <Typography>{ t("lobby:player_list") }</Typography>
+                                <Typography sx={{ marginBottom: '1em' }}><PersonIcon sx={{ verticalAlign: 'middle'}}/> { t("lobby:player_list") }</Typography>
 
                                 { isLobbyOwner && (
                                     <Menu anchorEl={playerListCtxAnchorEl} open={!!playerListCtxAnchorEl} onClose={closePlayerListCtxMenu}>
@@ -97,8 +113,8 @@ const LobbyScreen: React.FC = () => {
                                     {
                                         currentLobbyState.players.map(p => (
                                             <ListItem key={p.name} secondaryAction={
-                                                <IconButton edge="end">
-                                                    {p.is_lobby_owner && <ShieldIcon/>}
+                                                <IconButton edge="end" disableRipple>
+                                                    {p.is_lobby_owner && <CrownIcon/>}
                                                 </IconButton>
                                             } onClick={e => {
                                                 if (isLobbyOwner) {
@@ -106,8 +122,11 @@ const LobbyScreen: React.FC = () => {
                                                     setPlayerListCtxSelectedPlayer(p.name);
                                                 }
                                             }}>
+                                                <ListItemIcon sx={{ display: 'flex', justifyContent: 'center'}}>
+                                                    { p.party && partyDecoratorMap.get(p.party)?.icon }
+                                                </ListItemIcon>
                                                 <ListItemText>
-                                                    {p.name} 
+                                                    {p.name}
                                                     {p.is_lobby_owner && ` (${ t("lobby:lobby_owner") })`}
                                                 </ListItemText>
                                             </ListItem>
@@ -120,26 +139,26 @@ const LobbyScreen: React.FC = () => {
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={7} display="flex" height="93%" position="relative">
-                                <Box sx={{ width: '100%', typography: 'body1', height: '100%' }} position="absolute">
-                                    <TabContext value={infoTab}>
-                                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                            <TabList onChange={(_, val) => setInfoTab(val)}>
-                                                <Tab label="Parties" value="parties" />
-                                                { isLobbyOwner && <Tab label="Config" value="config" /> }
-                                            </TabList>
-                                        </Box>
+                            <Grid item xs={7} display="flex" flexDirection="column" height="100%">
+                                <TabContext value={infoTab}>
+                                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                        <TabList onChange={(_, val) => setInfoTab(val)}>
+                                            <Tab label="Parties" value="parties" icon={<FlagIcon/>} iconPosition="start"/>
+                                            { isLobbyOwner && <Tab label="Config" value="config" icon={<SettingsIcon/>} iconPosition="start" /> }
+                                        </TabList>
+                                    </Box>
 
-                                        <Box height="100%" position="relative">
-                                            <TabPanel value="parties"><LobbyPartySelectorScreen/></TabPanel>
-                                            { isLobbyOwner && 
-                                                <TabPanel value="config" sx={{height: '100%'}}>
-                                                    <LobbyAdminConfigScreen/>
-                                                </TabPanel>
-                                            }
-                                        </Box>
-                                    </TabContext>
-                                </Box>
+                                    <Box sx={{ flex: '1 1 auto', display: 'flex', minHeight: 0 }}>
+                                        <TabPanel value="parties" sx={{ flex: '1 1 auto' }}>
+                                            <LobbyPartySelectorScreen/>
+                                        </TabPanel>
+                                        { isLobbyOwner && 
+                                            <TabPanel value="config" sx={{ flex: '1 1 auto' }}>
+                                                <LobbyAdminConfigScreen/>
+                                            </TabPanel>
+                                        }
+                                    </Box>
+                                </TabContext>
                             </Grid>
 
                             <Grid item xs={2}>
