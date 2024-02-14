@@ -1,6 +1,7 @@
 import svlog from "../utils/logging_utils";
 import { WarServer } from "../war_server";
 import { Command } from "./command";
+import { CommandConfig } from "./default_commands/config";
 import { CommandHelp } from "./default_commands/help";
 import { CommandStop } from "./default_commands/stop";
 import * as readLine from "readline";
@@ -9,7 +10,8 @@ export class CommandProcessor {
 
     private _commands: Command[] = [
         new CommandHelp(),
-        new CommandStop()
+        new CommandStop(),
+        new CommandConfig()
     ];
 
     private _commandInterface!: readLine.Interface;

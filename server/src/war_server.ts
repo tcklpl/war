@@ -51,6 +51,10 @@ export class WarServer {
         process.exit(0);
     }
 
+    get configManager() {
+        return this._configManager;
+    }
+
     get gameServer() {
         return this._gameServer;
     }
