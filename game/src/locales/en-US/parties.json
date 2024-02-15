@@ -15,7 +15,7 @@
     "anarchism_bn_pressure": "Fearsome Enemy",
     "anarchism_bn_pressure_desc": "After winning <ATTACKS> attacks in sequence and in the same turn, all attacked countries become pressured",
     "anarchism_su_black_block": "Black Block",
-    "anarchism_su_black_block_desc": "Will attack all neighbor territories without spotting, prioritizing the one with the least enemy troops",
+    "anarchism_su_black_block_desc": "Will attack all neighbor territories without stopping, prioritizing the one with the least enemy troops. The Black Block regenerates <HP> HP if the attack succeeds",
     "anarchism_su_black_block_spawn_condition": "Anarchism loses <TERRITORIES> territories in sequence",
     "anarchism_su_black_block_spawn_location": "Last occupied territory",
 

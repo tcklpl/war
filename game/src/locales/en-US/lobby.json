@@ -44,6 +44,8 @@
 
     "objective": "Objective",
     "objective_global_dom": "Global domination",
+    "spawn_condition": "Spawn Condition",
+    "spawn_location": "Spawn Location",
 
     "troops_per_turn": "Troops per turn",
     "troops_per_turn_default": "Half of the territory count (rounded down)",
