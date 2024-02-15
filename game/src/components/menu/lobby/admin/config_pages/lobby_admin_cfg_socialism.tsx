@@ -9,10 +9,10 @@ import LobbyAdminConfigTitle from "./components/lobby_admin_cfg_title";
 
 const LobbyAdminConfigScreenSocialism = ({ disabled }: { disabled: boolean }) => {
 
-    const { currentLobbyState, modifyLobbyState } = useGameSession();
+    const { currentLobbyState, modifyLobbyState, cloneLobbyState } = useGameSession();
     const { t } = useTranslation(["common", "lobby"]);
 
-    const [cfg, setCfg] = useState(currentLobbyState?.game_config.party_config.socialism);
+    const [cfg, setCfg] = useState(cloneLobbyState()?.game_config.party_config.socialism);
     useEffect(() => {
         if (!cfg) return;
         modifyLobbyState(s => {

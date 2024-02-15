@@ -26,6 +26,7 @@ interface IGameSessionContext {
     lobbies?: LobbyListState;
     currentLobby?: WarGameLobby;
     currentLobbyState?: LobbyState;
+    cloneLobbyState(): LobbyState | undefined;
     modifyLobbyState(mod: (state: LobbyState) => LobbyState): void;
 
     chat: {sender: string, msg: string}[];
@@ -66,10 +67,12 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
 
     const modifyLobbyState = useCallback((mod: (state: LobbyState) => LobbyState) => {
         if (!currentLobbyState) return;
-        const newState = mod({...currentLobbyState});
+        const newState = mod(structuredClone(currentLobbyState));
         if (JSON.stringify(currentLobbyState) === JSON.stringify(newState)) return;
         currentLobby?.modifyLobbyState(newState);
     }, [currentLobby, currentLobbyState]);
+
+    const cloneLobbyState = () => { return currentLobbyState ? structuredClone(currentLobbyState) : undefined};
 
     /*
         Auto update this hook if anything changes about the connection.
@@ -123,7 +126,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             connection, setConnection,
             saveGameSession,
             lobbies,
-            currentLobby, currentLobbyState, modifyLobbyState, chat
+            currentLobby, currentLobbyState, modifyLobbyState, cloneLobbyState, chat
         }}>
             { children }
         </GameSessionContext.Provider>
