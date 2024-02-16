@@ -6,6 +6,7 @@
     "players_in_lobby": "Players in lobby",
 
     "create_lobby": "Create Lobby",
+    "lobby_name": "Lobby name",
     "create_lobby_desc": "Create a game lobby. Input the name for the lobby and if it'll be joinable upon creation (you can change everything later).",
     
     "loading_lobby_data": "Loading lobby data...",
