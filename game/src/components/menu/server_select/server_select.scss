@@ -1,0 +1,17 @@
+@import "../../../style/constants.scss";
+
+.server-select-screen {
+    z-index: $z-index-hud;
+    height: 100vh;
+}
+    
+.server-table {
+    cursor: pointer;
+    height: 60vh;
+    overflow-y: visible;
+    display: block;
+}
+
+.server-select-buttons {
+    width: 100%;
+}

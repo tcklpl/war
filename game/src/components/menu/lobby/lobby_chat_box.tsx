@@ -1,7 +1,7 @@
 import { Box, Divider, List, ListItem, ListItemText, Paper, TextField, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useGameSession } from "../../../hooks/use_game_session";
-import './lobby_screen.sass';
+import './lobby_screen.scss';
 import { useTranslation } from "react-i18next";
 
 import ChatIcon from '@mui/icons-material/Chat';

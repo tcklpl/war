@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack, TextField } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react"
-import "./server_select.sass";
+import "./server_select.scss";
 import { ServerConnectionCandidate } from "../../../game/server/connection/server_connection_candidate";
 import { useGame } from "../../../hooks/use_game";
 import { URLUtils } from "../../../utils/url_utils";

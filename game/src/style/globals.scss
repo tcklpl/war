@@ -1,0 +1,34 @@
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#root, .App {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.war-canvas {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-color: black;
+    border: 0;
+}
+
+.custom-icon {
+    circle[style*="fill:"]:not([style*="fill: none;"]), circle[fill]:not([fill="none"]),
+    path[style*="fill:"]:not([style*="fill: none;"]), path[fill]:not([fill="none"]),
+    ellipse[style*="fill:"]:not([style*="fill: none;"]), ellipse[fill]:not([fill="none"]) {
+        fill: currentColor !important;
+    }
+    circle[style*="stroke:"]:not([style*="stroke: none;"]), circle[stroke]:not([stroke="none"]), 
+    path[style*="stroke:"]:not([style*="stroke: none;"]), path[stroke]:not([stroke="none"]),
+    ellipse[style*="stroke:"]:not([style*="stroke: none;"]), ellipse[stroke]:not([stroke="none"]) {
+        stroke: currentColor !important;
+    }
+}
+    

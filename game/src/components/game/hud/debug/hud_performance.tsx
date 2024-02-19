@@ -3,7 +3,7 @@ import { useGame } from "../../../../hooks/use_game";
 import { Time } from "../../../../engine/time";
 import { Card, CardContent, CardHeader, Typography, useTheme } from "@mui/material";
 import SixtyFpsSelectIcon from '@mui/icons-material/SixtyFpsSelect';
-import "./debug_huds.sass";
+import "./debug_huds.scss";
 import { HUDPerformanceColor } from "./hud_performance_colors";
 import { LineChart, Line, YAxis, ReferenceLine } from 'recharts';
 import { useConfig } from "../../../../hooks/use_config";

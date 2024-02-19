@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack, TextField } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react"
-import "./server_select.sass";
+import "./server_select.scss";
 import { useTranslation } from "react-i18next";
 
 const ServerSelectPasswordPrompt: React.FC<{

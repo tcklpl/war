@@ -1,6 +1,6 @@
 import React from "react"
 import { Stack, Typography } from "@mui/material";
-import "./cfg_tooltip.sass";
+import "./cfg_tooltip.scss";
 
 const CfgTooltip: React.FC<{currentTooltip?: {title: string, content: string}}> = ({ currentTooltip }) => {
     

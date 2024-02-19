@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Container, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react"
-import "./server_select.sass";
+import "./server_select.scss";
 import { useTranslation } from "react-i18next";
 import { useGame } from "../../../hooks/use_game";
 import { ServerConnectionCandidate } from "../../../game/server/connection/server_connection_candidate";

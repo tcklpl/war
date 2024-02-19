@@ -1,5 +1,5 @@
 import { Grid, Stack, Typography, useTheme } from "@mui/material"
-import "./cfg_default_background.sass";
+import "./cfg_default_background.scss";
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useTranslation } from "react-i18next";
 

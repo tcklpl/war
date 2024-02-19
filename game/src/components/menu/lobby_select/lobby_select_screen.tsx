@@ -2,7 +2,7 @@ import { Button, Container, Grid, Stack, Typography, useTheme } from "@mui/mater
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../hooks/use_game_session";
-import './lobby_select.sass';
+import './lobby_select.scss';
 
 import PublicIcon from '@mui/icons-material/Public';
 import { useGame } from "../../../hooks/use_game";

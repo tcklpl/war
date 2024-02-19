@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from "react"
-import "./pause_screen.sass";
+import "./pause_screen.scss";
 import { Button, Grid, Stack, useTheme } from "@mui/material";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SettingsIcon from '@mui/icons-material/Settings';

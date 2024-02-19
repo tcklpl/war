@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import './loading_screen.sass';
+import './loading_screen.scss';
 import { useTranslation } from "react-i18next";
 import { useGame } from "../../hooks/use_game";
 import { LoadStage } from "../../game/loader/load_stage";

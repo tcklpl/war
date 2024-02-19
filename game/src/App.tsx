@@ -1,6 +1,6 @@
 import { CssBaseline, Theme, ThemeProvider } from '@mui/material';
 import WarGameComponent from './components/war_game_component';
-import './style/globals.sass';
+import './style/globals.scss';
 import '@fontsource/roboto/400.css';
 import themeDefaultDark from './style/themes/default_dark';
 import { useConfig } from './hooks/use_config';

@@ -7,7 +7,7 @@ import LobbyPartyPageAnarchism from "./party_pages/lobby_party_page_anarchism";
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../../hooks/use_game_session";
 import { GameParty } from "../../../../../../protocol";
-import "../lobby_screen.sass";
+import "../lobby_screen.scss";
 
 import InfoIcon from '@mui/icons-material/Info';
 import AnarchismIcon from "../../../../images/icons/anarchism/anarchism_icon";
@@ -15,6 +15,9 @@ import FeudalismIcon from "../../../../images/icons/feudalism/feudalism_ison";
 import SocialismIcon from "../../../../images/icons/socialism/socialism_ison";
 import CapitalismIcon from "../../../../images/icons/capitalism/capitalism_ison";
 import { TSXUtils } from "../../../../utils/tsx_utils";
+import LobbyPageInfo from "./party_pages/lobby_page_info";
+import LobbyPartyPageFeudalism from "./party_pages/lobby_party_page_feudalism";
+import LobbyPartyPageSocialism from "./party_pages/lobby_party_page_socialism";
 
 const LobbyPartySelectorScreen = () => {
 
@@ -36,6 +39,7 @@ const LobbyPartySelectorScreen = () => {
     return (
             <Box sx={{ bgcolor: 'background.paper', display: 'flex', flexGrow: 1, minHeight: 0, height: '100%', width: '100%' }}>
                 <TabContext value={partyPage}>
+                    
                     <Box sx={{ borderRight: 1, borderColor: 'divider' }}>
                         <TabList onChange={(_, val) => setPartyPage(val)} orientation="vertical">
                             <Tab icon={<InfoIcon/>} label="Lobby Info" value="none" />
@@ -46,10 +50,10 @@ const LobbyPartySelectorScreen = () => {
                         </TabList>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                        <TabPanel value="none" className="lobby-growable-tab-panel">aaaa</TabPanel>
+                        <TabPanel value="none" className="lobby-growable-tab-panel"><LobbyPageInfo/></TabPanel>
                         <TabPanel value={"anarchism"} className="lobby-growable-tab-panel"><LobbyPartyPageAnarchism/></TabPanel>
-                        <TabPanel value={"feudalism"} className="lobby-growable-tab-panel">feudal</TabPanel>
-                        <TabPanel value={"socialism"} className="lobby-growable-tab-panel">social</TabPanel>
+                        <TabPanel value={"feudalism"} className="lobby-growable-tab-panel"><LobbyPartyPageFeudalism/></TabPanel>
+                        <TabPanel value={"socialism"} className="lobby-growable-tab-panel"><LobbyPartyPageSocialism/></TabPanel>
                         <TabPanel value={"capitalism"} className="lobby-growable-tab-panel">capital</TabPanel>
 
                         {

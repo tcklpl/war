@@ -10,7 +10,7 @@ import LobbyAdminConfigScreenSocialism from "./config_pages/lobby_admin_cfg_soci
 import LobbyAdminConfigScreenCapitalism from "./config_pages/lobby_admin_cfg_capitalism";
 import { useGameSession } from "../../../../hooks/use_game_session";
 import { useTranslation } from "react-i18next";
-import "../lobby_screen.sass";
+import "../lobby_screen.scss";
 
 import PublicIcon from '@mui/icons-material/Public';
 import AnarchismIcon from "../../../../images/icons/anarchism/anarchism_icon";

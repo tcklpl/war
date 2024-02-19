@@ -2,7 +2,7 @@ import { Box, Button, Container, Divider, Grid, IconButton, List, ListItem, List
 import React, { ReactElement, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../hooks/use_game_session";
-import './lobby_screen.sass';
+import './lobby_screen.scss';
 import LobbyChatBox from "./lobby_chat_box";
 import { useConfirmation } from "../../../hooks/use_confirmation";
 import Tab from '@mui/material/Tab';

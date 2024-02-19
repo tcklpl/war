@@ -1,0 +1,12 @@
+@import "../../../../style/constants.scss";
+
+.pause-screen {
+    position: fixed;
+    z-index: $z-index-pause;
+    height: 100vh;
+}
+
+.pause-screen-categories {
+    height: 100%;
+    align-content: center;
+}

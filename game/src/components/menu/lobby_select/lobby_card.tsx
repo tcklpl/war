@@ -2,7 +2,7 @@ import { Card, CardContent, Typography } from "@mui/material";
 import React, { useCallback } from "react";
 import { LobbyListStateLobby } from "../../../../../protocol";
 import { useTranslation } from "react-i18next";
-import './lobby_select.sass';
+import './lobby_select.scss';
 
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';

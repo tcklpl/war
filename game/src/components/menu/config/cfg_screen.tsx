@@ -3,7 +3,7 @@ import { Alert, Box, Stack, ToggleButton, ToggleButtonGroup, useTheme } from "@m
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import MonitorIcon from '@mui/icons-material/Monitor';
 import CfgDisplayScreen from "../config/display/cfg_display_screen";
-import "./cfg_screen.sass";
+import "./cfg_screen.scss";
 import { useTranslation } from "react-i18next";
 import CfgGraphicsScreen from "./graphics/cfg_graphics_screen";
 import CfgGameScreen from "./game/cfg_game_screen";
