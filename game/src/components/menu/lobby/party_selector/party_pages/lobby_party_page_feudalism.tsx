@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../../../hooks/use_game_session";
 import { TSXUtils } from "../../../../../utils/tsx_utils";
 import LobbyAdminConfigTitle from "../../admin/config_pages/components/lobby_admin_cfg_title";
-import PowerVoidIcon from "../../../../../images/icons/anarchism/power_void_icon";
-import SpontaneousSpawnIcon from "../../../../../images/icons/anarchism/spontaneous_spawn_ison";
-import BlackBlockIcon from "../../../../../images/icons/anarchism/black_block_icon";
+import DragonIcon from "../../../../../images/icons/feudalism/dragon_icon";
 
 const LobbyPartyPageFeudalism = () => {
 
@@ -24,7 +22,6 @@ const LobbyPartyPageFeudalism = () => {
                     <TableRow>
                         <TableCell>
                             <Typography color="primary">
-                                <PowerVoidIcon sx={{ verticalAlign: 'middle' }}/>
                                 { t("parties:feudalism_pa_defense")}
                             </Typography>
                         </TableCell>
@@ -39,7 +36,6 @@ const LobbyPartyPageFeudalism = () => {
                     <TableRow>
                         <TableCell>
                             <Typography color="primary">
-                                <SpontaneousSpawnIcon sx={{ verticalAlign: 'middle' }}/>
                                 { t("parties:feudalism_bn_troop_gain")}
                             </Typography>
                         </TableCell>
@@ -73,7 +69,7 @@ const LobbyPartyPageFeudalism = () => {
             <Typography variant="h5" padding="16px" textAlign="center">{ t("lobby:special_units") }</Typography>
             <Box display="flex">
                 <Box display="flex" justifyItems="center" alignItems="center" marginRight="1em">
-                    <BlackBlockIcon sx={{ width: '200px !important', height: '200px !important'}}/>
+                    <DragonIcon sx={{ width: '200px !important', height: '200px !important'}}/>
                 </Box>
                 <Box flex="1 1 auto">
                     <Table width="100%">
