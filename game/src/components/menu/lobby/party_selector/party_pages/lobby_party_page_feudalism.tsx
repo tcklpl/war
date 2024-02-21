@@ -45,7 +45,7 @@ const LobbyPartyPageFeudalism = () => {
                                     t("parties:feudalism_bn_troop_gain_desc"), 
                                     {
                                         toReplace: "<TROOPS>",
-                                        value: (<Typography color="secondary" display="inline" component="span" key={0}>{ cfg.bonus.troop_bonus_on_conquering }</Typography>)
+                                        value: k => (<Typography color="secondary" display="inline" component="span" key={k}>{ cfg.bonus.troop_bonus_on_conquering }</Typography>)
                                     }
                                 )}
                             </Typography>
@@ -80,16 +80,16 @@ const LobbyPartyPageFeudalism = () => {
                                     <Typography variant="body1">
                                         { TSXUtils.replaceWithElement(t("parties:feudalism_su_dragon_desc" ), {
                                             toReplace: '<HP>',
-                                            value: (<Typography component="span" color="secondary" key={0}>{ cfg.special_units.dragon.hp }</Typography>)
+                                            value: k => (<Typography component="span" color="secondary" key={k}>{ cfg.special_units.dragon.hp }</Typography>)
                                         },{
                                             toReplace: '<INCREMENT>',
-                                            value: (<Typography component="span" color="secondary" key={1}>{ cfg.special_units.dragon.hp_increase_rate_until_max_hp }</Typography>)
+                                            value: k => (<Typography component="span" color="secondary" key={k}>{ cfg.special_units.dragon.hp_increase_rate_until_max_hp }</Typography>)
                                         },{
                                             toReplace: '<MAX_HP>',
-                                            value: (<Typography component="span" color="secondary" key={2}>{ cfg.special_units.dragon.max_hp }</Typography>)
+                                            value: k => (<Typography component="span" color="secondary" key={k}>{ cfg.special_units.dragon.max_hp }</Typography>)
                                         },{
                                             toReplace: '<REG_HP>',
-                                            value: (<Typography component="span" color="secondary" key={3}>{ cfg.special_units.dragon.hp_recovery_on_walled_territory }</Typography>)
+                                            value: k => (<Typography component="span" color="secondary" key={k}>{ cfg.special_units.dragon.hp_recovery_on_walled_territory }</Typography>)
                                         })}
                                     </Typography>
                                 </TableCell>
@@ -107,7 +107,7 @@ const LobbyPartyPageFeudalism = () => {
                                 <TableCell><Typography>
                                     { TSXUtils.replaceWithElement(t("parties:feudalism_su_dragon_spawn" ), {
                                         toReplace: '<TURNS>',
-                                        value: (<Typography component="span" color="secondary" key={0}>{ cfg.special_units.dragon.cooldown_after_dying }</Typography>)
+                                        value: k => (<Typography component="span" color="secondary" key={k}>{ cfg.special_units.dragon.cooldown_after_dying }</Typography>)
                                     }) }
                                 </Typography></TableCell>
                             </TableRow>

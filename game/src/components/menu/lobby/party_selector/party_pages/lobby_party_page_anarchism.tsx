@@ -38,7 +38,7 @@ const LobbyPartyPageAnarchism = () => {
                                     t("parties:anarchism_pa_empty_territories_desc"), 
                                     {
                                         toReplace: "<PER_TURN>", 
-                                        value: (<Typography color="secondary" display="inline" component="span" key={0}>{ cfg.passive.unoccupied_country_conversion_base }</Typography>)
+                                        value: k => (<Typography color="secondary" display="inline" component="span" key={k}>{ cfg.passive.unoccupied_country_conversion_base }</Typography>)
                                     }
                                 )}
                             </Typography>
@@ -72,7 +72,7 @@ const LobbyPartyPageAnarchism = () => {
                                     t("parties:anarchism_bn_troop_desc"), 
                                     {
                                         toReplace: "<TROOPS>",
-                                        value: (<Typography color="secondary" display="inline" component="span" key={0}>{ cfg.bonus.troops_each_turns_end }</Typography>)
+                                        value: k => (<Typography color="secondary" display="inline" component="span" key={k}>{ cfg.bonus.troops_each_turns_end }</Typography>)
                                     }
                                 )}
                             </Typography>
@@ -91,15 +91,15 @@ const LobbyPartyPageAnarchism = () => {
                                     t("parties:anarchism_bn_attack_stack_desc"), 
                                     {
                                         toReplace: "<BONUS>",
-                                        value: (<Typography color="secondary" display="inline" component="span" key={0}>{ cfg.bonus.attack_success_bonus }</Typography>)
+                                        value: k => (<Typography color="secondary" display="inline" component="span" key={k}>{ cfg.bonus.attack_success_bonus }</Typography>)
                                     },
                                     {
                                         toReplace: "<STACK>",
-                                        value: (<Typography color="secondary" display="inline" component="span" key={1}>{ cfg.bonus.attack_success_bonus_max_stack }</Typography>)
+                                        value: k => (<Typography color="secondary" display="inline" component="span" key={k}>{ cfg.bonus.attack_success_bonus_max_stack }</Typography>)
                                     },
                                     {
                                         toReplace: "<TOTAL>",
-                                        value: (<Typography color="secondary" display="inline" component="span" key={2}>{ cfg.bonus.attack_success_bonus * cfg.bonus.attack_success_bonus_max_stack }</Typography>)
+                                        value: k => (<Typography color="secondary" display="inline" component="span" key={k}>{ cfg.bonus.attack_success_bonus * cfg.bonus.attack_success_bonus_max_stack }</Typography>)
                                     }
                                 ).map( (frag, i) => <Fragment key={i}>{frag}</Fragment>)}
                             </Typography>
@@ -118,7 +118,7 @@ const LobbyPartyPageAnarchism = () => {
                                     t("parties:anarchism_bn_pressure_desc"), 
                                     {
                                         toReplace: "<ATTACKS>",
-                                        value: (<Typography color="secondary" display="inline" component="span" key={0}>{ cfg.bonus.number_of_successful_attacks_to_pressure }</Typography>)
+                                        value: k => (<Typography color="secondary" display="inline" component="span" key={k}>{ cfg.bonus.number_of_successful_attacks_to_pressure }</Typography>)
                                     }
                                 )}
                             </Typography>
@@ -162,7 +162,7 @@ const LobbyPartyPageAnarchism = () => {
                                     <Typography variant="body1">
                                         { TSXUtils.replaceWithElement(t("parties:anarchism_su_black_block_desc" ), {
                                             toReplace: '<HP>',
-                                            value: (<Typography component="span" color="secondary" key={0}>{ cfg.special_units.black_block.hp_recovery_on_successful_attack }</Typography>)
+                                            value: k => (<Typography component="span" color="secondary" key={k}>{ cfg.special_units.black_block.hp_recovery_on_successful_attack }</Typography>)
                                         }) }
                                     </Typography>
                                 </TableCell>
@@ -180,7 +180,7 @@ const LobbyPartyPageAnarchism = () => {
                                 <TableCell><Typography>
                                     { TSXUtils.replaceWithElement(t("parties:anarchism_su_black_block_spawn_condition" ), {
                                         toReplace: '<TERRITORIES>',
-                                        value: (<Typography component="span" color="secondary" key={0}>{ cfg.special_units.black_block.number_of_lost_territories_required_to_spawn }</Typography>)
+                                        value: k => (<Typography component="span" color="secondary" key={k}>{ cfg.special_units.black_block.number_of_lost_territories_required_to_spawn }</Typography>)
                                     }) }
                                 </Typography></TableCell>
                             </TableRow>

@@ -18,6 +18,7 @@ import { TSXUtils } from "../../../../utils/tsx_utils";
 import LobbyPageInfo from "./party_pages/lobby_page_info";
 import LobbyPartyPageFeudalism from "./party_pages/lobby_party_page_feudalism";
 import LobbyPartyPageSocialism from "./party_pages/lobby_party_page_socialism";
+import LobbyPartyPageCapitalism from "./party_pages/lobby_party_page_capitalism";
 
 const LobbyPartySelectorScreen = () => {
 
@@ -54,23 +55,23 @@ const LobbyPartySelectorScreen = () => {
                         <TabPanel value={"anarchism"} className="lobby-growable-tab-panel"><LobbyPartyPageAnarchism/></TabPanel>
                         <TabPanel value={"feudalism"} className="lobby-growable-tab-panel"><LobbyPartyPageFeudalism/></TabPanel>
                         <TabPanel value={"socialism"} className="lobby-growable-tab-panel"><LobbyPartyPageSocialism/></TabPanel>
-                        <TabPanel value={"capitalism"} className="lobby-growable-tab-panel">capital</TabPanel>
+                        <TabPanel value={"capitalism"} className="lobby-growable-tab-panel"><LobbyPartyPageCapitalism/></TabPanel>
 
                         {
-                            partyPage !== "none" && (
+                            (partyPage !== "none" || playerParty) && (
                                 <Box justifySelf="end" marginTop="1em" padding="1em" display="flex" justifyContent="end" alignItems="center">
 
                                     {
-                                        partyPagePlayer && (
+                                        partyPagePlayer && partyPage !== "none" && (
                                             <Typography marginRight="1em">
                                                 {
                                                     TSXUtils.replaceWithElement(t("lobby:party_is_selected_by"), {
                                                         toReplace: '<PARTY>',
-                                                        value: (<Typography color="secondary" component="span" display="inline" key={0}>{ partyDecoratorMap.get(partyPage)?.name }</Typography>)
+                                                        value: k => (<Typography color="secondary" component="span" display="inline" key={k}>{ partyDecoratorMap.get(partyPage)?.name }</Typography>)
                                                     },
                                                     {
                                                         toReplace: '<PLAYER>',
-                                                        value: (<Typography color="secondary" component="span" display="inline" key={1}>{ partyPagePlayer.name }</Typography>)
+                                                        value: k => (<Typography color="secondary" component="span" display="inline" key={k}>{ partyPagePlayer.name }</Typography>)
                                                     })
                                                 }
                                             </Typography>
@@ -83,7 +84,7 @@ const LobbyPartySelectorScreen = () => {
                                         onClick={() => {
                                             if (playerParty) {
                                                 currentLobby?.deselectCurrentParty();
-                                            } else {
+                                            } else if (partyPage !== "none") {
                                                 currentLobby?.selectParty(partyPage);
                                             }
                                         }}
@@ -91,8 +92,10 @@ const LobbyPartySelectorScreen = () => {
                                         {
                                             playerParty ? (
                                                 `${t("lobby:locked_as")} ${partyDecoratorMap.get(playerParty)?.name}`
-                                            ) : (
+                                            ) : partyPage !== "none" ? (
                                                 `${t("lobby:select")} ${partyDecoratorMap.get(partyPage)?.name}`
+                                            ) : (
+                                                `?`
                                             )
                                         }
                                         <Switch disabled checked={!!playerParty}/>
