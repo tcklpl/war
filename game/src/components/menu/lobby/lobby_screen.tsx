@@ -1,4 +1,4 @@
-import { Box, Button, Container, Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography, useTheme } from "@mui/material";
+import { Box, Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography, useTheme } from "@mui/material";
 import React, { ReactElement, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../hooks/use_game_session";
@@ -23,6 +23,7 @@ import CapitalismIcon from "../../../images/icons/capitalism/capitalism_ison";
 import CrownIcon from "../../../images/icons/crown_icon";
 import FlagIcon from '@mui/icons-material/Flag';
 import SettingsIcon from '@mui/icons-material/Settings';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const LobbyScreen: React.FC = () => {
 
@@ -31,6 +32,7 @@ const LobbyScreen: React.FC = () => {
     const { username, currentLobby, currentLobbyState } = useGameSession();
     const { enqueueConfirmation } = useConfirmation();
     const isLobbyOwner = currentLobbyState?.players.find(p => p.name === username)?.is_lobby_owner ?? false;
+    const canGameStart = !currentLobbyState?.players.some(p => !p.party);
 
     const [playerListCtxAnchorEl, setPlayerListCtxAnchorEl] = useState<null | HTMLElement>(null);
     const [playerListCtxSelectedPlayer, setPlayerListCtxSelectedPlayer] = useState<string>();
@@ -56,24 +58,6 @@ const LobbyScreen: React.FC = () => {
         <Grid className="lobby-screen" style={{ backgroundColor: palette.background.default }} justifyContent="center" alignContent="start" height="100%">
             { currentLobby && currentLobbyState ? (
                 <Box display="flex" flexDirection="column" height="100%">
-                    <Container>
-                        <Typography variant="h5">
-                            <Button onClick={() => {
-                                enqueueConfirmation({
-                                    title: t("lobby:leave_lobby"),
-                                    description: t("lobby:leave_lobby_desc"),
-                                    onConfirm() {
-                                        currentLobby.leave();
-                                    }
-                                });
-                            }}><LogoutIcon style={{marginRight: "0.5em", verticalAlign: "middle"}}/> { t("lobby:leave_lobby") }</Button>
-                            { t("lobby:lobby") }: { currentLobbyState.name }
-                        </Typography>
-                        <Typography variant="caption">
-                            { `${t("common:playing_as")} ${username}` }
-                        </Typography>
-                    </Container>
-
                     <Box display="flex" flexGrow={1} height="100%">
                         <Grid container position="relative">
 
@@ -139,12 +123,43 @@ const LobbyScreen: React.FC = () => {
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={7} display="flex" flexDirection="column" height="100%">
+                            <Grid item xs={9} display="flex" flexDirection="column" height="100%">
                                 <TabContext value={infoTab}>
                                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                         <TabList onChange={(_, val) => setInfoTab(val)}>
-                                            <Tab label="Parties" value="parties" icon={<FlagIcon/>} iconPosition="start"/>
-                                            { isLobbyOwner && <Tab label="Config" value="config" icon={<SettingsIcon/>} iconPosition="start" /> }
+                                            <Tab label={t("lobby:parties")} value="parties" icon={<FlagIcon/>} iconPosition="start"/>
+                                            { isLobbyOwner && <Tab label={t("common:config")} value="config" icon={<SettingsIcon/>} iconPosition="start" /> }
+
+                                            { isLobbyOwner && <Tab 
+                                                label={t("lobby:start_game")} value="starting" icon={<PlayArrowIcon/>} iconPosition="start" 
+                                                sx={{ marginLeft: 'auto'}} disableRipple
+                                                disabled={!canGameStart}
+                                                onClick={() => {
+                                                    enqueueConfirmation({
+                                                        title: t("lobby:start_game"),
+                                                        description: t("lobby:start_game_desc"),
+                                                        onConfirm() {
+                                                            // TODO: start game
+                                                            setInfoTab("parties");
+                                                        },
+                                                        onCancel() {
+                                                            setInfoTab("parties");
+                                                        },
+                                                    });
+                                                }}
+                                            />}
+                                            <Tab label={t("lobby:leave_lobby")} value="leaving" icon={<LogoutIcon/>} iconPosition="start" disableRipple onClick={() => {
+                                                enqueueConfirmation({
+                                                    title: t("lobby:leave_lobby"),
+                                                    description: t("lobby:leave_lobby_desc"),
+                                                    onConfirm() {
+                                                        currentLobby.leave();
+                                                    },
+                                                    onCancel() {
+                                                        setInfoTab("parties");
+                                                    },
+                                                });
+                                            }}/>
                                         </TabList>
                                     </Box>
 
@@ -159,10 +174,6 @@ const LobbyScreen: React.FC = () => {
                                         }
                                     </Box>
                                 </TabContext>
-                            </Grid>
-
-                            <Grid item xs={2}>
-                                Flair
                             </Grid>
                         </Grid>
                     </Box>
