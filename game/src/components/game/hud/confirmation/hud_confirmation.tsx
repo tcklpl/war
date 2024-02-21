@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Skeleton } from "@mui/material";
 import { ConfirmationRequestInfo, useConfirmation } from "../../../../hooks/use_confirmation";
 import { useTranslation } from "react-i18next";
 
@@ -40,11 +40,11 @@ const HUDConfirmation: React.FC = () => {
             onClose={cancel}
         >
             <DialogTitle>
-                { currentConfirmation?.title }
+                { currentConfirmation?.title ?? (<Skeleton variant="text" sx={{ fontSize: '1rem' }} />) }
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    { currentConfirmation?.description }
+                    { currentConfirmation?.description ?? (<Skeleton variant="text" sx={{ fontSize: '1rem' }} />) }
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
