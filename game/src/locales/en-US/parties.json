@@ -67,6 +67,28 @@
 
 
     "capitalism": "Capitalism",
+    "capitalism_pa_trade": "???",
+    "capitalism_pa_trade_desc": "Capitalism can trade territories, gaining <TROOPS> each time a trade is made",
+    "capitalism_db_crisis": "Crisis",
+    "capitalism_db_crisis_desc": "When Capitalism (or any of its allies) loses <BATTLES> battles in sequence, the <CRISIS> debuff will be active for <TURN> turns. During a <CRISIS> Capitalism's troop deployment gets halved and <PRIVATIZATION> cannot be used",
+    "capitalism_bn_continental": "???",
+    "capitalism_bn_continental_desc": "The Continental Bonus is doubled",
+    "capitalism_su_spawn_condition": "Overcome a Crisis",
+    "capitalism_su_spawn_condition_desc": "Capitalism needs to overcome a Crisis to be able to spawn any Special Unit",
+    "capitalism_su_spawn_location": "Any owned territory",
+    "capitalism_su_keynes": "John Keynes",
+    "capitalism_su_keynes_desc": "Can multiplicate the amount of troops in any territory by a factor of <FACTOR>, with a cooldown of <TURNS> turns",
+    "capitalism_su_croc": "Ray Croc",
+    "capitalism_su_croc_desc": "Can force a territory (including <SOCIALISM>s <UTOPIA_ISLAND>) to sell itself for 1 troop, with a cooldown of <TURNS> turns",
+    "capitalism_su_zuckerberg": "Mark Zuckerberg",
+    "capitalism_su_zuckerberg_desc": "Creates a social network in one territory, converting <TROOPS> troops to Capitalism each turn, with a social network creation cooldown of <TURN> turns",
+    "capitalism_su_jobs": "Steve Jobs",
+    "capitalism_su_jobs_desc": "Creates an Apple store in one territory, invalidating <TROOPS> troops per turn, with a store creation cooldown of <TURN> turns",
+    "capitalism_su_trump": "Donald Trump",
+    "capitalism_su_trump_desc": "The territory that has Trump will have a defense bonus of +<BONUS>",
+    "capitalism_sa_privatization": "Privatization",
+    "capitalism_sa_privatization_desc": "Capitalism can privatize countries, offering a trade where Capitalism will be able to use that territory and its troops in return for some amount of troops",
+
 
     "": ""
 }
