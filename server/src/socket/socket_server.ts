@@ -6,7 +6,7 @@ import { CryptManager } from "../crypt/crypt_manager";
 import { GameServer } from "../game/game_server";
 import { Player } from "../game/player/player";
 import { GameSocketServer } from "../@types/server_socket";
-import { socketRoutes } from "./routes/socket_routes";
+import { registerPacketListeners } from "./routes/packet_listeners";
 
 export class SocketServer {
 
@@ -44,7 +44,7 @@ export class SocketServer {
             this._gameServer.playerManager.loginPlayer(player);
 
             // register all socket routes
-            socketRoutes({
+            registerPacketListeners({
                 socket,
                 player,
                 gameServer: this._gameServer,
