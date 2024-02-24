@@ -17,7 +17,7 @@ const Hooks: React.FC<{children?: React.ReactNode}> = ({ children }) => {
                     <ConfigProvider>
                         <GameSessionProvider>
                             <CrashProvider>
-                                        { children }
+                                { children }
                             </CrashProvider>
                         </GameSessionProvider>
                     </ConfigProvider>
