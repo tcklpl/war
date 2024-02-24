@@ -17,6 +17,6 @@ export interface LobbyPlayerState {
 
     name: string;
     is_lobby_owner: boolean;
-    party?: GameParty;
+    party: GameParty;
 
 }

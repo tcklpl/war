@@ -4,6 +4,7 @@ import { PlayerStatus } from "./player_status";
 import { GameSocket } from "../../@types/server_socket";
 import { Lobby } from "../lobby/lobby";
 import { Party } from "../party/party";
+import { PartyNotSet } from "../party/not_set";
 
 export class Player {
 
@@ -13,7 +14,7 @@ export class Player {
     private _status = PlayerStatus.IN_LOBBY_LIST;
 
     private _lobby?: Lobby;
-    party?: Party;
+    party: Party = new PartyNotSet();
 
     constructor(authTokenBody: AuthTokenBody, socket: GameSocket) {
         this._username = authTokenBody.username;
@@ -31,7 +32,7 @@ export class Player {
         this._status = PlayerStatus.IN_LOBBY_LIST;
         this._lobby?.removePlayer(this);
         this._lobby = undefined;
-        this.party = undefined;
+        this.party = new PartyNotSet();
     }
 
     get username() {

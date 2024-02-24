@@ -4,6 +4,7 @@ import { ServerPacketUpdateLobbyState } from "../../socket/packet/lobby/update_l
 import { PartyAnarchism } from "../party/anarchism";
 import { PartyCapitalism } from "../party/capitalism";
 import { PartyFeudalism } from "../party/feudalism";
+import { PartyNotSet } from "../party/not_set";
 import { Party } from "../party/party";
 import { PartySocialism } from "../party/socialism";
 import { Player } from "../player/player";
@@ -35,7 +36,10 @@ export class Lobby {
         if (p === this._owner && this._players.length > 0) {
             this._owner = this._players[0];
         }
-        p.party = undefined;
+        if (p.party) {
+            p.party.player = undefined;
+            p.party = new PartyNotSet();
+        }
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
@@ -63,14 +67,14 @@ export class Lobby {
 
     setPlayerParty(player: Player, protocolParty: GameParty) {
         const party = this._parties.find(p => p.protocolValue === protocolParty);
-        if (!party || player.party || party.player) return;
+        if (!party || !(player.party instanceof PartyNotSet) || party.player) return;
         player.party = party;
         party.player = player;
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
     deselectPlayerParty(player: Player) {
-        player.party = undefined;
+        player.party = new PartyNotSet();
         this._parties.filter(p => p.player === player).forEach(p => p.player = undefined);
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }

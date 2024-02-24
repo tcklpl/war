@@ -32,7 +32,7 @@ const LobbyScreen: React.FC = () => {
     const { username, currentLobby, currentLobbyState } = useGameSession();
     const { enqueueConfirmation } = useConfirmation();
     const isLobbyOwner = currentLobbyState?.players.find(p => p.name === username)?.is_lobby_owner ?? false;
-    const canGameStart = !currentLobbyState?.players.some(p => !p.party);
+    const canGameStart = !currentLobbyState?.players.some(p => p.party === "not_set");
 
     const [playerListCtxAnchorEl, setPlayerListCtxAnchorEl] = useState<null | HTMLElement>(null);
     const [playerListCtxSelectedPlayer, setPlayerListCtxSelectedPlayer] = useState<string>();
@@ -107,7 +107,7 @@ const LobbyScreen: React.FC = () => {
                                                 }
                                             }}>
                                                 <ListItemIcon sx={{ display: 'flex', justifyContent: 'center'}}>
-                                                    { p.party && partyDecoratorMap.get(p.party)?.icon }
+                                                    { p.party !== "not_set" && partyDecoratorMap.get(p.party)?.icon }
                                                 </ListItemIcon>
                                                 <ListItemText>
                                                     {p.name}
@@ -148,18 +148,22 @@ const LobbyScreen: React.FC = () => {
                                                     });
                                                 }}
                                             />}
-                                            <Tab label={t("lobby:leave_lobby")} value="leaving" icon={<LogoutIcon/>} iconPosition="start" disableRipple onClick={() => {
-                                                enqueueConfirmation({
-                                                    title: t("lobby:leave_lobby"),
-                                                    description: t("lobby:leave_lobby_desc"),
-                                                    onConfirm() {
-                                                        currentLobby.leave();
-                                                    },
-                                                    onCancel() {
-                                                        setInfoTab("parties");
-                                                    },
-                                                });
-                                            }}/>
+                                            <Tab 
+                                                label={t("lobby:leave_lobby")} value="leaving" icon={<LogoutIcon/>} iconPosition="start" 
+                                                sx={ !isLobbyOwner ? { marginLeft: 'auto'} : {}} disableRipple 
+                                                onClick={() => {
+                                                    enqueueConfirmation({
+                                                        title: t("lobby:leave_lobby"),
+                                                        description: t("lobby:leave_lobby_desc"),
+                                                        onConfirm() {
+                                                            currentLobby.leave();
+                                                        },
+                                                        onCancel() {
+                                                            setInfoTab("parties");
+                                                        },
+                                                    });
+                                                }}
+                                            />
                                         </TabList>
                                     </Box>
 

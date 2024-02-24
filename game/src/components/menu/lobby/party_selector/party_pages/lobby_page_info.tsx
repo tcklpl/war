@@ -34,7 +34,7 @@ const LobbyPageInfo = () => {
     useEffect(() => {
 
         // if not all players are done selecting their parties
-        if (currentLobbyState?.players.some(p => !p.party)) {
+        if (currentLobbyState?.players.some(p => p.party === "not_set")) {
             setCurrentStep(() => 1);
             return;
         }

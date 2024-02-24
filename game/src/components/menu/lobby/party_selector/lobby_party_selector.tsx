@@ -24,7 +24,7 @@ const LobbyPartySelectorScreen = () => {
 
     const { t } = useTranslation(["lobby", "parties"]);
     const { username, currentLobby, currentLobbyState } = useGameSession();
-    const playerParty = currentLobbyState?.players.find(p => p.name === username)?.party;
+    const playerParty = currentLobbyState?.players.find(p => p.name === username)?.party ?? "not_set";
 
     const [partyPage, setPartyPage] = useState<GameParty | "none">("none");
     const isPartyAvailable = !currentLobbyState?.players.find(p => p.party === partyPage);
@@ -58,7 +58,7 @@ const LobbyPartySelectorScreen = () => {
                         <TabPanel value={"capitalism"} className="lobby-growable-tab-panel"><LobbyPartyPageCapitalism/></TabPanel>
 
                         {
-                            (partyPage !== "none" || playerParty) && (
+                            (partyPage !== "none" || playerParty !== "not_set") && (
                                 <Box justifySelf="end" marginTop="1em" padding="1em" display="flex" justifyContent="end" alignItems="center">
 
                                     {
@@ -79,10 +79,10 @@ const LobbyPartySelectorScreen = () => {
                                     }
                                     <Button
                                         variant="outlined"
-                                        disabled={!playerParty && !isPartyAvailable}
+                                        disabled={playerParty === "not_set" && !isPartyAvailable}
                                         sx={{ verticalAlign: 'middle' }}
                                         onClick={() => {
-                                            if (playerParty) {
+                                            if (playerParty !== "not_set") {
                                                 currentLobby?.deselectCurrentParty();
                                             } else if (partyPage !== "none") {
                                                 currentLobby?.selectParty(partyPage);
@@ -90,7 +90,7 @@ const LobbyPartySelectorScreen = () => {
                                         }}
                                     >
                                         {
-                                            playerParty ? (
+                                            playerParty !== "not_set" ? (
                                                 `${t("lobby:locked_as")} ${partyDecoratorMap.get(playerParty)?.name}`
                                             ) : partyPage !== "none" ? (
                                                 `${t("lobby:select")} ${partyDecoratorMap.get(partyPage)?.name}`
@@ -98,7 +98,7 @@ const LobbyPartySelectorScreen = () => {
                                                 `?`
                                             )
                                         }
-                                        <Switch disabled checked={!!playerParty}/>
+                                        <Switch disabled checked={playerParty !== "not_set"}/>
                                     </Button>
                                 </Box>
                             )
