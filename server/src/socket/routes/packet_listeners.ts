@@ -9,6 +9,8 @@ import { PLRequestLobbies } from "./lobby_list/pl_req_lobbies"
 import { PLSelectParty } from "./lobby/pl_select_party"
 import { PLTransferLobbyOwnership } from "./lobby/pl_transfer_lobby_ownership"
 import { SocketRouteData } from "./socket_route_data"
+import { PLStartGame } from "./lobby/pl_start_game"
+import { PLCancelGameStart } from "./lobby/pl_cancel_game_start"
 
 
 export const registerPacketListeners = (data: SocketRouteData) => {
@@ -26,5 +28,7 @@ export const registerPacketListeners = (data: SocketRouteData) => {
         new PLKickPlayer(data),
         new PLModifyLobbyState(data),
         new PLTransferLobbyOwnership(data),
+        new PLStartGame(data),
+        new PLCancelGameStart(data),
     ]
 }

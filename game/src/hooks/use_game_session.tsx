@@ -28,6 +28,7 @@ interface IGameSessionContext {
     currentLobbyState?: LobbyState;
     cloneLobbyState(): LobbyState | undefined;
     modifyLobbyState(mod: (state: LobbyState) => LobbyState): void;
+    gameStartingIn?: number;
 
     chat: {sender: string, msg: string}[];
 }
@@ -52,6 +53,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     const [currentLobby, setCurrentLobby] = useState<WarGameLobby | undefined>();
     const [currentLobbyState, setCurrentLobbyState] = useState<LobbyState | undefined>();
     const [chat, setChat] = useState<LobbyChatMessage[]>([]);
+    const [gameStartingIn, setGameStartingIn] = useState<number | undefined>();
 
     const updateForLobbyExit = useCallback((reason: "" | "kicked" | "left" | undefined) => {
         if (!gameInstance) return;
@@ -91,6 +93,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
                 setCurrentLobbyState(lobby?.state.value);
                 lobby?.state.listen(state => setCurrentLobbyState(state));
                 lobby?.chat.onUpdate(msgs => setChat([...msgs]));
+                lobby?.gameStartCountdown.listen(cd => setGameStartingIn(cd));
             });
             gameInstance.state.server.currentLobby.value?.state.listen(() => setCurrentLobby(gameInstance.state.server?.currentLobby.value));
 
@@ -126,7 +129,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             connection, setConnection,
             saveGameSession,
             lobbies,
-            currentLobby, currentLobbyState, modifyLobbyState, cloneLobbyState, chat
+            currentLobby, currentLobbyState, modifyLobbyState, cloneLobbyState, chat, gameStartingIn
         }}>
             { children }
         </GameSessionContext.Provider>

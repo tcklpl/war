@@ -64,6 +64,7 @@ export class LobbyManager {
     }
 
     removeLobby(lobby: Lobby) {
+        lobby.cleanup();
         this._lobbies = this._lobbies.filter(l => l !== lobby);
         this.updateLobbyStatusForPlayers();
     }

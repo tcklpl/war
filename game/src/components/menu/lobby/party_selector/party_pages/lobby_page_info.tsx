@@ -5,10 +5,11 @@ import { useTranslation } from "react-i18next";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
+import { TSXUtils } from "../../../../../utils/tsx_utils";
 
 const LobbyPageInfo = () => {
 
-    const { currentLobbyState, username } = useGameSession();
+    const { currentLobbyState, username, gameStartingIn } = useGameSession();
     const { t } = useTranslation(["lobby"]);
 
     const stepperSteps = [
@@ -26,8 +27,15 @@ const LobbyPageInfo = () => {
         },
         {
             label: t("lobby:lobby_step_4"),
-            description: t("lobby:lobby_step_4_desc")
-        }
+            description: TSXUtils.replaceWithElement(t("lobby:lobby_step_4_desc"), {
+                toReplace: '<SECONDS>',
+                value: k => (<Typography component="span" color="secondary" display="inline" key={k}>{ gameStartingIn }</Typography>)
+            })
+        },
+        {
+            label: t("lobby:lobby_step_5"),
+            description: t("lobby:lobby_step_5_desc")
+        },
     ]
     const [currentStep, setCurrentStep] = useState(1);
 
@@ -39,8 +47,19 @@ const LobbyPageInfo = () => {
             return;
         }
 
-        setCurrentStep(() => 2);
-    }, [currentLobbyState]);
+        if (gameStartingIn === undefined) {
+            setCurrentStep(() => 2);
+            return;
+        }
+
+        if (!!gameStartingIn && gameStartingIn > 0) {
+            setCurrentStep(() => 3);
+            return;
+        }
+
+        setCurrentStep(() => 4);
+        
+    }, [currentLobbyState, gameStartingIn]);
     
     return (
         <Box width="100%" height="100%" display="flex" flexDirection="column" alignItems="center">

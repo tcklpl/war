@@ -1,6 +1,10 @@
 import { LobbyState, LobbyPlayerState, GameConfig, GameParty } from "../../../../protocol";
+import { ServerPacketInitialGameState } from "../../socket/packet/game/initial_game_state";
 import { ServerPacketChatMessage } from "../../socket/packet/lobby/chat_message";
+import { ServerPacketGameStartCancelled } from "../../socket/packet/lobby/game_start_cancelled";
+import { ServerPacketStartingGame } from "../../socket/packet/lobby/starting_game";
 import { ServerPacketUpdateLobbyState } from "../../socket/packet/lobby/update_lobby_state";
+import { Game } from "../game";
 import { PartyAnarchism } from "../party/anarchism";
 import { PartyCapitalism } from "../party/capitalism";
 import { PartyFeudalism } from "../party/feudalism";
@@ -19,6 +23,10 @@ export class Lobby {
         new PartySocialism(),
         new PartyCapitalism()
     ];
+
+    private readonly startGameCooldown = 10; // seconds
+    private _startGameTask?: NodeJS.Timeout;
+    private _game?: Game;
 
     constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig) {
         this._players.push(this.owner);
@@ -77,6 +85,32 @@ export class Lobby {
         player.party = new PartyNotSet();
         this._parties.filter(p => p.player === player).forEach(p => p.player = undefined);
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+    }
+
+    startGame() {
+        // validate if all players have selected a party
+        if (this._players.some(p => p.party instanceof PartyNotSet)) return false;
+        new ServerPacketStartingGame(this.startGameCooldown).dispatch(...this._players);
+
+        // set a timeout to actually start the game
+        this._startGameTask = setTimeout(() => {
+            this._game = new Game(this);
+            new ServerPacketInitialGameState(this._game.initialGameStatePacket).dispatch(...this._players);
+        }, this.startGameCooldown * 1000);
+
+        return true;
+    }
+
+    cancelGameStart() {
+        if (this._startGameTask) {
+            clearTimeout(this._startGameTask);
+            new ServerPacketGameStartCancelled().dispatch(...this._players);
+        }
+    }
+
+    cleanup() {
+        this.cancelGameStart();
+        this.removeAllPlayers();
     }
 
     get name() {

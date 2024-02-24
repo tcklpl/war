@@ -27,6 +27,8 @@ export interface ClientToServerPackets {
     transferLobbyOwnership: (to: string) => void;
     modifyLobbyState: (state: LobbyState) => void;
     kickPlayer: (player: string) => void;
+    startGame: () => void;
+    lCancelGameStart: () => void;
     
 
 }

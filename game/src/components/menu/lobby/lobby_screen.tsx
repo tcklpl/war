@@ -24,15 +24,17 @@ import CrownIcon from "../../../images/icons/crown_icon";
 import FlagIcon from '@mui/icons-material/Flag';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 
 const LobbyScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const { t } = useTranslation(["lobby", "common", "parties"]);
-    const { username, currentLobby, currentLobbyState } = useGameSession();
+    const { username, currentLobby, currentLobbyState, gameStartingIn } = useGameSession();
     const { enqueueConfirmation } = useConfirmation();
     const isLobbyOwner = currentLobbyState?.players.find(p => p.name === username)?.is_lobby_owner ?? false;
     const canGameStart = !currentLobbyState?.players.some(p => p.party === "not_set");
+    const isGameStarting = !!gameStartingIn;
 
     const [playerListCtxAnchorEl, setPlayerListCtxAnchorEl] = useState<null | HTMLElement>(null);
     const [playerListCtxSelectedPlayer, setPlayerListCtxSelectedPlayer] = useState<string>();
@@ -131,21 +133,32 @@ const LobbyScreen: React.FC = () => {
                                             { isLobbyOwner && <Tab label={t("common:config")} value="config" icon={<SettingsIcon/>} iconPosition="start" /> }
 
                                             { isLobbyOwner && <Tab 
-                                                label={t("lobby:start_game")} value="starting" icon={<PlayArrowIcon/>} iconPosition="start" 
+                                                label={
+                                                    isGameStarting ? t("lobby:cancel_start") : t("lobby:start_game")} 
+                                                value="starting" 
+                                                icon={
+                                                    isGameStarting ? <StopIcon/> : <PlayArrowIcon/>
+                                                } 
+                                                iconPosition="start" 
                                                 sx={{ marginLeft: 'auto'}} disableRipple
                                                 disabled={!canGameStart}
                                                 onClick={() => {
-                                                    enqueueConfirmation({
-                                                        title: t("lobby:start_game"),
-                                                        description: t("lobby:start_game_desc"),
-                                                        onConfirm() {
-                                                            // TODO: start game
-                                                            setInfoTab("parties");
-                                                        },
-                                                        onCancel() {
-                                                            setInfoTab("parties");
-                                                        },
-                                                    });
+                                                    if (!isGameStarting) {
+                                                        enqueueConfirmation({
+                                                            title: t("lobby:start_game"),
+                                                            description: t("lobby:start_game_desc"),
+                                                            onConfirm() {
+                                                                currentLobby.startGame();
+                                                                setInfoTab("parties");
+                                                            },
+                                                            onCancel() {
+                                                                setInfoTab("parties");
+                                                            },
+                                                        });
+                                                    } else {
+                                                        currentLobby.cancelGameStart();
+                                                        setInfoTab("parties");
+                                                    }
                                                 }}
                                             />}
                                             <Tab 

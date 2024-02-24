@@ -1,4 +1,4 @@
-import { LobbyState, LobbyListState } from "./data";
+import { LobbyState, LobbyListState, InitialGameStatePacket } from "./data";
 
 export type LobbyCreationFailReason = "full" | "unavailable name" | "already owner" | "other";
 
@@ -22,5 +22,14 @@ export interface ServerToClientPackets {
     leftLobby: (kicked?: boolean) => void;
     chatMessage: (sender: string, msg: string) => void;
     updateLobbyState: (lobby: LobbyState) => void;
+    lStartingGame: (countdown: number) => void;
+    lGameStartCancelled: () => void;
+
+    /*
+        ----------------------------------------------------------
+        Game Packets
+        ----------------------------------------------------------
+    */
+   gInitialGameState: (state: InitialGameStatePacket) => void;
 
 }

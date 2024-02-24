@@ -30,6 +30,7 @@
 
     "start_game": "Start Game",
     "start_game_desc": "Do you want to start the game? All players will be locked into their current parties",
+    "cancel_start": "Cancel Start",
 
     "lobby_step_1": "Join the lobby",
     "lobby_step_1_desc": "Looks like you're in a lobby, congrats!",
@@ -38,7 +39,9 @@
     "lobby_step_3": "Ready to Start",
     "lobby_step_3_desc": "Everyone has selected their parties! The game is ready to start. Pressure the lobby owner to start it already",
     "lobby_step_4": "Starting",
-    "lobby_step_4_desc": "The game is starting...",
+    "lobby_step_4_desc": "The game will start in <SECONDS> seconds...",
+    "lobby_step_5": "Game has Started",
+    "lobby_step_5_desc": "The countdown has ended, the game will start shortly",
 
     "cfg_global_joinable": "Joinable",
     "cfg_global_joinable_desc": "If the lobby can be joined",
