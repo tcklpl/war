@@ -12,9 +12,11 @@ import { PartyNotSet } from "../party/not_set";
 import { Party } from "../party/party";
 import { PartySocialism } from "../party/socialism";
 import { Player } from "../player/player";
+import { LobbyStatus } from "./lobby_status";
 
 export class Lobby {
 
+    private _status = LobbyStatus.SELECTING;
     private _players: Player[] = [];
     joinable = true;
     private _parties: Party[] = [
@@ -49,6 +51,8 @@ export class Lobby {
             p.party = new PartyNotSet();
         }
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+        // will cancel any ongoing game start. This function will do nothing if the game isn't starting
+        this.cancelGameStart();
     }
 
     removeAllPlayers() {
@@ -60,20 +64,28 @@ export class Lobby {
     }
 
     changeOwnership(newOwner: Player) {
+
+        if (this._status !== LobbyStatus.SELECTING) return;
+
         if (!this._players.find(p => p === newOwner)) return;
         this._owner = newOwner;
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
 
     replaceLobbyState(state: LobbyState) {
-        this.joinable = state.joinable;
 
+        if (this._status !== LobbyStatus.SELECTING) return;
+
+        this.joinable = state.joinable;
         if (!this._gameConfig.is_immutable) {
             this._gameConfig = state.game_config;
         }
     }
 
     setPlayerParty(player: Player, protocolParty: GameParty) {
+
+        if (this._status !== LobbyStatus.SELECTING) return;
+
         const party = this._parties.find(p => p.protocolValue === protocolParty);
         if (!party || !(player.party instanceof PartyNotSet) || party.player) return;
         player.party = party;
@@ -82,6 +94,9 @@ export class Lobby {
     }
 
     deselectPlayerParty(player: Player) {
+
+        if (this._status !== LobbyStatus.SELECTING) return;
+
         player.party = new PartyNotSet();
         this._parties.filter(p => p.player === player).forEach(p => p.player = undefined);
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
@@ -91,11 +106,13 @@ export class Lobby {
         // validate if all players have selected a party
         if (this._players.some(p => p.party instanceof PartyNotSet)) return false;
         new ServerPacketStartingGame(this.startGameCooldown).dispatch(...this._players);
+        this._status = LobbyStatus.STARTING;
 
         // set a timeout to actually start the game
         this._startGameTask = setTimeout(() => {
             this._game = new Game(this);
             new ServerPacketInitialGameState(this._game.initialGameStatePacket).dispatch(...this._players);
+            this._status = LobbyStatus.IN_GAME;
         }, this.startGameCooldown * 1000);
 
         return true;
@@ -104,6 +121,7 @@ export class Lobby {
     cancelGameStart() {
         if (this._startGameTask) {
             clearTimeout(this._startGameTask);
+            this._status = LobbyStatus.SELECTING;
             new ServerPacketGameStartCancelled().dispatch(...this._players);
         }
     }
