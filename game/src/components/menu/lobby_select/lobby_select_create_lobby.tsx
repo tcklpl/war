@@ -28,6 +28,12 @@ const LobbySelectCreateLobby: React.FC<{
     return (
         <Dialog open={open} onClose={() => {
             setOpen(false);
+        }} PaperProps={{
+            component: 'form',
+            onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                createLobby();
+            }
         }}>
             <DialogTitle>{ t("lobby:create_lobby") }</DialogTitle>
             <DialogContent>
@@ -39,6 +45,7 @@ const LobbySelectCreateLobby: React.FC<{
                         id="server-name" 
                         label={t("common:name")} 
                         onChange={e => setName(e.currentTarget.value)} 
+                        autoFocus required
                         value={name} 
                         error={lobbies && !!lobbies.lobbies.find(x => x.name === name)}
                     />
