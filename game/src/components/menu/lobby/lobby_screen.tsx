@@ -34,7 +34,7 @@ const LobbyScreen: React.FC = () => {
     const { enqueueConfirmation } = useConfirmation();
     const isLobbyOwner = currentLobbyState?.players.find(p => p.name === username)?.is_lobby_owner ?? false;
     const canGameStart = !currentLobbyState?.players.some(p => p.party === "not_set");
-    const isGameStarting = !!gameStartingIn;
+    const isGameStarting = gameStartingIn !== undefined;
 
     const [playerListCtxAnchorEl, setPlayerListCtxAnchorEl] = useState<null | HTMLElement>(null);
     const [playerListCtxSelectedPlayer, setPlayerListCtxSelectedPlayer] = useState<string>();
@@ -48,6 +48,12 @@ const LobbyScreen: React.FC = () => {
     useEffect(() => {
         if (!isLobbyOwner) setInfoTab("parties");
     }, [isLobbyOwner]);
+
+    useEffect(() => {
+        if (isGameStarting) {
+            setInfoTab("parties");
+        }
+    }, [isGameStarting]);
 
     const partyDecoratorMap = new Map<GameParty, {name: string, icon: ReactElement}>([
         ["anarchism", { name: t("parties:anarchism"), icon: (<AnarchismIcon/>)}],
@@ -130,7 +136,7 @@ const LobbyScreen: React.FC = () => {
                                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                         <TabList onChange={(_, val) => setInfoTab(val)}>
                                             <Tab label={t("lobby:parties")} value="parties" icon={<FlagIcon/>} iconPosition="start"/>
-                                            { isLobbyOwner && <Tab label={t("common:config")} value="config" icon={<SettingsIcon/>} iconPosition="start" /> }
+                                            { isLobbyOwner && <Tab label={t("common:config")} value="config" icon={<SettingsIcon/>} iconPosition="start" disabled={isGameStarting} /> }
 
                                             { isLobbyOwner && <Tab 
                                                 label={

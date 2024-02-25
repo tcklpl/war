@@ -2,7 +2,7 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { Box, Button, Switch, Tab, Typography } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import LobbyPartyPageAnarchism from "./party_pages/lobby_party_page_anarchism";
 import { useTranslation } from "react-i18next";
 import { useGameSession } from "../../../../hooks/use_game_session";
@@ -23,12 +23,19 @@ import LobbyPartyPageCapitalism from "./party_pages/lobby_party_page_capitalism"
 const LobbyPartySelectorScreen = () => {
 
     const { t } = useTranslation(["lobby", "parties"]);
-    const { username, currentLobby, currentLobbyState } = useGameSession();
+    const { username, currentLobby, currentLobbyState, gameStartingIn } = useGameSession();
     const playerParty = currentLobbyState?.players.find(p => p.name === username)?.party ?? "not_set";
+    const isGameStarting = gameStartingIn !== undefined;
 
     const [partyPage, setPartyPage] = useState<GameParty | "none">("none");
     const isPartyAvailable = !currentLobbyState?.players.find(p => p.party === partyPage);
     const partyPagePlayer = currentLobbyState?.players.find(p => p.party === partyPage);
+
+    useEffect(() => {
+        if (isGameStarting) {
+            setPartyPage("none");
+        }
+    }, [isGameStarting]);
 
     const partyDecoratorMap = new Map<GameParty, {name: string, icon: ReactElement}>([
         ["anarchism", { name: t("parties:anarchism"), icon: (<AnarchismIcon/>)}],
@@ -44,10 +51,10 @@ const LobbyPartySelectorScreen = () => {
                     <Box sx={{ borderRight: 1, borderColor: 'divider' }}>
                         <TabList onChange={(_, val) => setPartyPage(val)} orientation="vertical">
                             <Tab icon={<InfoIcon/>} label="Lobby Info" value="none" />
-                            <Tab icon={<AnarchismIcon/>} label={t("parties:anarchism")} value={"anarchism"} />
-                            <Tab icon={<FeudalismIcon/>} label={t("parties:feudalism")} value={"feudalism"} />
-                            <Tab icon={<SocialismIcon/>} label={t("parties:socialism")} value={"socialism"} />
-                            <Tab icon={<CapitalismIcon/>} label={t("parties:capitalism")} value={"capitalism"} />
+                            <Tab icon={<AnarchismIcon/>} disabled={isGameStarting} label={t("parties:anarchism")} value={"anarchism"} />
+                            <Tab icon={<FeudalismIcon/>} disabled={isGameStarting} label={t("parties:feudalism")} value={"feudalism"} />
+                            <Tab icon={<SocialismIcon/>} disabled={isGameStarting} label={t("parties:socialism")} value={"socialism"} />
+                            <Tab icon={<CapitalismIcon/>} disabled={isGameStarting} label={t("parties:capitalism")} value={"capitalism"} />
                         </TabList>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
@@ -79,7 +86,7 @@ const LobbyPartySelectorScreen = () => {
                                     }
                                     <Button
                                         variant="outlined"
-                                        disabled={playerParty === "not_set" && !isPartyAvailable}
+                                        disabled={(playerParty === "not_set" && !isPartyAvailable) || isGameStarting}
                                         sx={{ verticalAlign: 'middle' }}
                                         onClick={() => {
                                             if (playerParty !== "not_set") {
