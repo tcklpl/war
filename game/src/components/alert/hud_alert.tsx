@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { IAlertInfo, useAlert } from "../../../../hooks/use_alert";
 import { useTranslation } from "react-i18next";
+import { IAlertInfo, useAlert } from "../../hooks/use_alert";
 
 const HUDAlert: React.FC = () => {
 

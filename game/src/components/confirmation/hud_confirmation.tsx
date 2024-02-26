@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Skeleton } from "@mui/material";
-import { ConfirmationRequestInfo, useConfirmation } from "../../../../hooks/use_confirmation";
 import { useTranslation } from "react-i18next";
+import { ConfirmationRequestInfo, useConfirmation } from "../../hooks/use_confirmation";
 
 const HUDConfirmation: React.FC = () => {
 
