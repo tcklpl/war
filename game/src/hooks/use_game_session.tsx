@@ -7,8 +7,10 @@ import { WarGameLobby } from "../game/lobby/war_game_lobby";
 import { LobbyChatMessage } from "../game/lobby/lobby_chat";
 import { useAlert } from "./use_alert";
 import { useTranslation } from "react-i18next";
+import { WarGameSession } from "../game/lobby/war_game_session";
 
 interface IGameSessionContext {
+    // Server states
     username: string;
     setUsername(name: string): void;
 
@@ -22,15 +24,20 @@ interface IGameSessionContext {
 
     connection?: ServerConnection;
     setConnection(connection?: ServerConnection): void;
-
     lobbies?: LobbyListState;
+
+    // Lobby states
     currentLobby?: WarGameLobby;
     currentLobbyState?: LobbyState;
     cloneLobbyState(): LobbyState | undefined;
     modifyLobbyState(mod: (state: LobbyState) => LobbyState): void;
     gameStartingIn?: number;
-
     chat: {sender: string, msg: string}[];
+
+    // Game states
+    currentGameSession?: WarGameSession;
+    gTurnPlayerIndex: number;
+    
 }
 
 const GameSessionContext = createContext<IGameSessionContext>({} as IGameSessionContext);
@@ -54,6 +61,10 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     const [currentLobbyState, setCurrentLobbyState] = useState<LobbyState | undefined>();
     const [chat, setChat] = useState<LobbyChatMessage[]>([]);
     const [gameStartingIn, setGameStartingIn] = useState<number | undefined>();
+
+    // game states
+    const [currentGameSession, setCurrentGameSession] = useState<WarGameSession | undefined>();
+    const [gTurnPlayerIndex, setGTurnPlayerIndex] = useState(0);
 
     const updateForLobbyExit = useCallback((reason: "" | "kicked" | "left" | undefined) => {
         if (!gameInstance) return;
@@ -94,6 +105,11 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
                 lobby?.state.listen(state => setCurrentLobbyState(state));
                 lobby?.chat.onUpdate(msgs => setChat([...msgs]));
                 lobby?.gameStartCountdown.listen(cd => setGameStartingIn(cd));
+
+                lobby?.gameSession.listen(gs => {
+                    setCurrentGameSession(gs);
+                    gs?.currentTurnPlayerIndex.listen(pi => setGTurnPlayerIndex(pi ?? 0));
+                });
             });
             gameInstance.state.server.currentLobby.value?.state.listen(() => setCurrentLobby(gameInstance.state.server?.currentLobby.value));
 
@@ -129,7 +145,8 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             connection, setConnection,
             saveGameSession,
             lobbies,
-            currentLobby, currentLobbyState, modifyLobbyState, cloneLobbyState, chat, gameStartingIn
+            currentLobby, currentLobbyState, modifyLobbyState, cloneLobbyState, chat, gameStartingIn,
+            currentGameSession, gTurnPlayerIndex
         }}>
             { children }
         </GameSessionContext.Provider>

@@ -9,14 +9,17 @@ import { ClientPacketLeaveLobby } from "../server/connection/packet/to_send/lobb
 import { ClientPacketSelectParty } from "../server/connection/packet/to_send/lobby/common/select_party";
 import { ListenableProperty } from "../server/listenable_property";
 import { LobbyChat } from "./lobby_chat";
+import { WarGameSession } from "./war_game_session";
 
 export class WarGameLobby {
 
     private _state: ListenableProperty<LobbyState>;
     private _chat = new LobbyChat();
     
-    private _gameStartCountdown = new ListenableProperty<number>();
+    private readonly _gameStartCountdown = new ListenableProperty<number>();
     private _taskGameStartCountdown?: number;
+
+    readonly gameSession = new ListenableProperty<WarGameSession>();
 
     constructor(state: LobbyState) {
         this._state = new ListenableProperty(state);
