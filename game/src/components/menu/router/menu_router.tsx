@@ -6,6 +6,7 @@ import CfgMenu from "../config/cfg_menu";
 import LobbySelectScreen from "../lobby_select/lobby_select_screen";
 import GameControlledRoute from "./control/game_controlled_route";
 import LobbyScreen from "../lobby/lobby_screen";
+import GameHud from "../../game/hud/game_hud";
 
 const MenuRouter: React.FC = () => {
 
@@ -25,6 +26,12 @@ const MenuRouter: React.FC = () => {
             <Route path="/lobby" element={
                 <GameControlledRoute requiresActiveLobby redirectPath="/lobbies">
                     <LobbyScreen/>
+                </GameControlledRoute>
+            }/>
+
+            <Route path="/game" element={
+                <GameControlledRoute redirectPath="/lobbies">
+                    <GameHud/>
                 </GameControlledRoute>
             }/>
         </Routes>

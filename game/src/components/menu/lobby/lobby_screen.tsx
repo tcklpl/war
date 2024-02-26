@@ -12,6 +12,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { GameParty } from "../../../../../protocol";
 import LobbyPartySelectorScreen from "./party_selector/lobby_party_selector";
 import LobbyAdminConfigScreen from "./admin/lobby_admin_cfg";
+import { useNavigate } from "react-router-dom";
 
 import ShieldIcon from '@mui/icons-material/Shield';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -30,8 +31,9 @@ const LobbyScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const { t } = useTranslation(["lobby", "common", "parties"]);
-    const { username, currentLobby, currentLobbyState, gameStartingIn } = useGameSession();
+    const { username, currentLobby, currentLobbyState, gameStartingIn, currentGameSession } = useGameSession();
     const { enqueueConfirmation } = useConfirmation();
+    const navigate = useNavigate();
     const isLobbyOwner = currentLobbyState?.players.find(p => p.name === username)?.is_lobby_owner ?? false;
     const canGameStart = !currentLobbyState?.players.some(p => p.party === "not_set");
     const isGameStarting = gameStartingIn !== undefined;
@@ -54,6 +56,12 @@ const LobbyScreen: React.FC = () => {
             setInfoTab("parties");
         }
     }, [isGameStarting]);
+
+    useEffect(() => {
+        if (currentGameSession) {
+            navigate("/game");
+        }
+    }, [currentGameSession, navigate]);
 
     const partyDecoratorMap = new Map<GameParty, {name: string, icon: ReactElement}>([
         ["anarchism", { name: t("parties:anarchism"), icon: (<AnarchismIcon/>)}],
