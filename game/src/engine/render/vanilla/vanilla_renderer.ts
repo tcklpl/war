@@ -15,6 +15,8 @@ export class VanillaRenderer extends Renderer {
     private _renderPipeline = new VanillaRenderPipeline();
     private _renderResourcePool = new RenderResourcePool();
     private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
+    private _lumHistogramBins = 256;
+    private _lumHistogramBuffer = BufferUtils.createEmptyBuffer(this._lumHistogramBins * 4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
 
     // Jitter offsets - Needed for TAA, should be an array of zeroes if TAA is disabled
     private _jitterOffsetCount = 16;
@@ -33,7 +35,10 @@ export class VanillaRenderer extends Renderer {
             viewProjBuffer: this._renderResourcePool.viewProjBuffer,
             pickingBuffer: this._pickingBuffer,
             hdrTextureFormat: this._renderResourcePool.hdrTextureFormat,
-            shadowMapAtlas: this._renderResourcePool.shadowMapAtlas
+            shadowMapAtlas: this._renderResourcePool.shadowMapAtlas,
+
+            luminanceHistogramBins: this._lumHistogramBins,
+            luminanceHistogramBuffer: this._lumHistogramBuffer,
         });
         this.buildJitterOffsets(this._renderProjection.resolution.full);
     }
@@ -76,12 +81,25 @@ export class VanillaRenderer extends Renderer {
         this.buildJitterOffsets(this._renderProjection.resolution.full);
     }
 
+    /**
+     * Maps and reads the picking id under the mouse, sending the result to the IO Mouse class.
+     */
     private async updatePicking() {
         await this._pickingBuffer.mapAsync(GPUMapMode.READ, 0, 4);
         const idArray = new Uint32Array(this._pickingBuffer.getMappedRange(0, 4));
         const id = idArray[0];
         this._pickingBuffer.unmap();
         game.engine.managers.io.mouseInteractionManager.notifyFramePickingID(id);
+    }
+
+    /**
+     * Maps and reads the luminance histogram result buffer.
+     */
+    private async updateLuminanceHistogram() {
+        await this._lumHistogramBuffer.mapAsync(GPUMapMode.READ);
+        const histogram = new Uint32Array(this._lumHistogramBuffer.getMappedRange());
+        console.log(histogram);
+        this._lumHistogramBuffer.unmap();
     }
     
     async render() {
@@ -101,17 +119,26 @@ export class VanillaRenderer extends Renderer {
 
         this.assertCanvasResolution(); 
         const commandEncoder = device.createCommandEncoder();
-        this._renderResourcePool.prepareForFrame(scene, commandEncoder, this._renderProjection, this._renderPostEffects, frameJitter);
+        this._renderResourcePool.prepareForFrame(
+            scene, 
+            commandEncoder, 
+            this._renderProjection, 
+            this._renderPostEffects, 
+            frameJitter
+        );
         this._renderPipeline.render(this._renderResourcePool);
         device.queue.submit([commandEncoder.finish()]);
 
         await this.updatePicking();
+        await this.updateLuminanceHistogram();
         
     }
 
     free() {
         this._renderResourcePool.free();
         this._renderPipeline.free();
+        this._pickingBuffer?.destroy();
+        this._lumHistogramBuffer?.destroy();
     }
 
 }

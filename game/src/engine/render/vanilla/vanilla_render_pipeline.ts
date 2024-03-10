@@ -13,6 +13,7 @@ import { RenderStagePicking } from "./render_stages/rs_picking";
 import { RenderStageEnvironment } from "./render_stages/rs_environment";
 import { RenderStageTAA } from "./render_stages/rs_taa";
 import { ConfigGraphics } from "../../config/cfg_graphics";
+import { RenderStageExposureCalculation } from "./render_stages/rs_exposure_calculation";
 
 export class VanillaRenderPipeline {
 
@@ -20,13 +21,14 @@ export class VanillaRenderPipeline {
     private _rsLights = new RenderStageLights();
     private _rsSolidGeometry = new RenderStageSolidGeometry();
     private _rsSkybox = new RenderStageSkybox();
-    private _rsTAA = new RenderStageTAA();
+    private _rsExposureCalculation = new RenderStageExposureCalculation();
     private _rsSSAO = new RenderStageSSAO();
     private _rsEnvironment = new RenderStageEnvironment();
+    private _rsTAA = new RenderStageTAA();
     private _rsBloom = new RenderStageBloom();
+    private _rs_pfx_tonemap = new RenderStagePFXToneMapping();
     private _rsPicking = new RenderStagePicking();
 
-    private _rs_pfx_tonemap = new RenderStagePFXToneMapping();
 
     private _currentPipeline: RenderStage[] = [];
 
@@ -36,6 +38,7 @@ export class VanillaRenderPipeline {
             this._rsLights,
             this._rsSolidGeometry,
             this._rsSkybox,
+            this._rsExposureCalculation,
             ...(graphicsConfig.useSSAO ? [this._rsSSAO]: []),
             this._rsEnvironment,
             ...(graphicsConfig.useTAA ? [this._rsTAA] : []),

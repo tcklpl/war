@@ -39,7 +39,7 @@ export class RenderProjection {
 
     updateResolution(fullSize: Vec2) {
         this._resolution.full = fullSize;
-        this.buildProjectionMatrices();    
+        this.buildProjectionMatrices();
     }
 
     updatePreviousFrameMatrices() {
