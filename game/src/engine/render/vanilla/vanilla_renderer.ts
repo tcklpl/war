@@ -6,6 +6,7 @@ import { RenderProjection } from "./render_projection";
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { MathUtils } from "../../../utils/math_utils";
 import { RenderPostEffects } from "./render_post_effects";
+import { LuminanceHistogram } from "../../data/histogram/luminance_histogram";
 
 export class VanillaRenderer extends Renderer {
 
@@ -14,9 +15,9 @@ export class VanillaRenderer extends Renderer {
     private _renderPostEffects = new RenderPostEffects();
     private _renderPipeline = new VanillaRenderPipeline();
     private _renderResourcePool = new RenderResourcePool();
+    private _luminanceHistogram = new LuminanceHistogram();
+
     private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
-    private _lumHistogramBins = 256;
-    private _lumHistogramBuffer = BufferUtils.createEmptyBuffer(this._lumHistogramBins * 4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
 
     // Jitter offsets - Needed for TAA, should be an array of zeroes if TAA is disabled
     private _jitterOffsetCount = 16;
@@ -37,8 +38,8 @@ export class VanillaRenderer extends Renderer {
             hdrTextureFormat: this._renderResourcePool.hdrTextureFormat,
             shadowMapAtlas: this._renderResourcePool.shadowMapAtlas,
 
-            luminanceHistogramBins: this._lumHistogramBins,
-            luminanceHistogramBuffer: this._lumHistogramBuffer,
+            luminanceHistogramBins: this._luminanceHistogram.bins,
+            luminanceHistogramBuffer: this._luminanceHistogram.buffer,
         });
         this.buildJitterOffsets(this._renderProjection.resolution.full);
     }
@@ -91,16 +92,6 @@ export class VanillaRenderer extends Renderer {
         this._pickingBuffer.unmap();
         game.engine.managers.io.mouseInteractionManager.notifyFramePickingID(id);
     }
-
-    /**
-     * Maps and reads the luminance histogram result buffer.
-     */
-    private async updateLuminanceHistogram() {
-        await this._lumHistogramBuffer.mapAsync(GPUMapMode.READ);
-        const histogram = new Uint32Array(this._lumHistogramBuffer.getMappedRange());
-        console.log(histogram);
-        this._lumHistogramBuffer.unmap();
-    }
     
     async render() {
         const scene = game.engine.managers.scene.activeScene;
@@ -130,15 +121,15 @@ export class VanillaRenderer extends Renderer {
         device.queue.submit([commandEncoder.finish()]);
 
         await this.updatePicking();
-        await this.updateLuminanceHistogram();
+        await this._luminanceHistogram.updateLuminanceHistogram();
         
     }
 
     free() {
         this._renderResourcePool.free();
         this._renderPipeline.free();
+        this._luminanceHistogram.free();
         this._pickingBuffer?.destroy();
-        this._lumHistogramBuffer?.destroy();
     }
 
 }
