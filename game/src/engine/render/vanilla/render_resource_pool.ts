@@ -174,13 +174,17 @@ export class RenderResourcePool {
         if (!camera) return;
 
         // write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
-        device.queue.writeBuffer(this._viewProjBuffer, 0, camera.viewMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 1 * Mat4.byteSize, camera.cameraMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 2 * Mat4.byteSize, camera.previousFrameViewMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 3 * Mat4.byteSize, this.projectionMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 4 * Mat4.byteSize, this._renderProjection.previousFrameProjectionMatrix.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 5 * Mat4.byteSize, camera.position.asF32Array);
-        device.queue.writeBuffer(this._viewProjBuffer, 5 * Mat4.byteSize + Vec3.byteSize + 4, jitter.asF32Array);
+        const frameSharedBuffer = Float32Array.of(
+            ...camera.viewMatrix.asF32Array,                                        // 0x000 - 0x040 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...camera.cameraMatrix.asF32Array,                                      // 0x040 - 0x080 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...camera.previousFrameViewMatrix.asF32Array,                           // 0x080 - 0x0c0 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...this.projectionMatrix.asF32Array,                                    // 0x0c0 - 0x100 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...this._renderProjection.previousFrameProjectionMatrix.asF32Array,     // 0x100 - 0x140 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...camera.position.asF32Array,                                          // 0x140 - 0x14c - 12B - (1) Vec3 [ 3 * 4B = 12B ]
+            0,                                                                      // 0x14c - 0x150 -  4B - Padding
+            ...jitter.asF32Array,                                                   // 0x150 - 0x158 -  8B - (1) Vec2 [ 2 * 4B = 8B ]
+        )
+        device.queue.writeBuffer(this._viewProjBuffer, 0, frameSharedBuffer);
 
         // switch HDR textures (to also store the previous frame)
         this._hdrBufferChain.swapCurrentAndPrevious();
