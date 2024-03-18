@@ -15,7 +15,7 @@ export class VanillaRenderer extends Renderer {
     private _renderPostEffects = new RenderPostEffects();
     private _renderPipeline = new VanillaRenderPipeline();
     private _renderResourcePool = new RenderResourcePool();
-    private _luminanceHistogram = new LuminanceHistogram();
+    private _luminanceHistogram!: LuminanceHistogram;
 
     private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
 
@@ -25,6 +25,7 @@ export class VanillaRenderer extends Renderer {
     private _currentJitter = 0;
 
     async initialize() {
+        this._luminanceHistogram = new LuminanceHistogram();
         this._renderProjection.initialize();
         this._presentationFormat = navigator.gpu.getPreferredCanvasFormat();
         await this._renderResourcePool.initialize();
@@ -110,13 +111,14 @@ export class VanillaRenderer extends Renderer {
 
         this.assertCanvasResolution(); 
         const commandEncoder = device.createCommandEncoder();
-        this._renderResourcePool.prepareForFrame(
-            scene, 
-            commandEncoder, 
-            this._renderProjection, 
-            this._renderPostEffects, 
-            frameJitter
-        );
+        this._renderResourcePool.prepareForFrame({
+            scene,
+            commandEncoder,
+            projection: this._renderProjection,
+            postEffets: this._renderPostEffects,
+            jitter: frameJitter,
+            luminanceHistogram: this._luminanceHistogram
+        });
         this._renderPipeline.render(this._renderResourcePool);
         device.queue.submit([commandEncoder.finish()]);
 

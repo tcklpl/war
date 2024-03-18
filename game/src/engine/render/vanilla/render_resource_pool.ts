@@ -1,5 +1,6 @@
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { ShadowMapAtlas } from "../../data/atlas/shadow_map_atlas";
+import { LuminanceHistogram } from "../../data/histogram/luminance_histogram";
 import { Mat4 } from "../../data/mat/mat4";
 import { Scene } from "../../data/scene/scene";
 import { RenderHDRBufferChain } from "../../data/texture/render_hdr_buffer_chain";
@@ -160,18 +161,25 @@ export class RenderResourcePool {
         });
     }
 
-    prepareForFrame(scene: Scene, commandEncoder: GPUCommandEncoder, projection: RenderProjection, postEffets: RenderPostEffects, jitter: Vec2) {
-        this._scene = scene;
-        this._commandEncoder = commandEncoder;
+    prepareForFrame(data: {
+        scene: Scene, 
+        commandEncoder: GPUCommandEncoder, 
+        projection: RenderProjection, 
+        postEffets: RenderPostEffects, 
+        jitter: Vec2,
+        luminanceHistogram: LuminanceHistogram,
+    }) {
+        this._scene = data.scene;
+        this._commandEncoder = data.commandEncoder;
         this._canvasTextureView = gpuCtx.getCurrentTexture().createView();
-        this._projectionMatrix = projection.projectionMatrix;
-        this._inverseProjectionMatrix = projection.inverseProjectionMatrix;
-        this._renderProjection = projection;
-        this._renderPostEffects = postEffets;
-        this._jitter = jitter;
+        this._projectionMatrix = data.projection.projectionMatrix;
+        this._inverseProjectionMatrix = data.projection.inverseProjectionMatrix;
+        this._renderProjection = data.projection;
+        this._renderPostEffects = data.postEffets;
+        this._jitter = data.jitter;
 
-        const camera = scene.activeCamera;
-        if (!camera) return;
+        const camera = data.scene.activeCamera;
+        if (!camera) return;        
 
         // write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
         const frameSharedBuffer = Float32Array.of(
@@ -182,7 +190,7 @@ export class RenderResourcePool {
             ...this._renderProjection.previousFrameProjectionMatrix.asF32Array,     // 0x100 - 0x140 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
             ...camera.position.asF32Array,                                          // 0x140 - 0x14c - 12B - (1) Vec3 [ 3 * 4B = 12B ]
             0,                                                                      // 0x14c - 0x150 -  4B - Padding
-            ...jitter.asF32Array,                                                   // 0x150 - 0x158 -  8B - (1) Vec2 [ 2 * 4B = 8B ]
+            ...data.jitter.asF32Array,                                              // 0x150 - 0x158 -  8B - (1) Vec2 [ 2 * 4B = 8B ]
         )
         device.queue.writeBuffer(this._viewProjBuffer, 0, frameSharedBuffer);
 
