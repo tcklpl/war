@@ -79,7 +79,7 @@ export class InitialTerritorySelectionManager {
         this.removeFromTerritoryPool(selected);
 
         // If it's the last player
-        if (this._curPlayerIndex === (this._game.players.length - 1)) {
+        if (this._curPlayerIndex >= (this._game.players.length - 1)) {
             this.onSelectionFinished?.();
         }
         else {
