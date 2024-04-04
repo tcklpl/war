@@ -17,12 +17,12 @@ export class CommandHelp extends Command {
         if (data.args.length > 0) {
             const command = data.server.commandProcessor.getCommandByNameOrAlias(data.args[0]);
             if (!command) {
-                svlog.log(`Failed to get help on unknown command "${data.args[0]}"`);
+                svlog.info(`Failed to get help on unknown command "${data.args[0]}"`);
                 return false;
             }
             const finalExecutor = command.getRoutedExecutor(data.args.slice(1));
             if (!finalExecutor) {
-                svlog.log(`Failed to get subroute "${data.args[1]}" from command "${command.name}"`);
+                svlog.info(`Failed to get subroute "${data.args[1]}" from command "${command.name}"`);
                 return false;
             }
             console.table({
@@ -33,7 +33,7 @@ export class CommandHelp extends Command {
                 subroutes: finalExecutor.subroutes.map(s => s.command).join(",")
             });
         } else {
-            svlog.log(`Help Screen. To get info on a specific command, use "help <command name or alias>"`);
+            svlog.info(`Help Screen. To get info on a specific command, use "help <command name or alias>"`);
             const table = data.server.commandProcessor.commands.map(c => {
                 return {
                     command: c.command,

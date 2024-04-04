@@ -29,7 +29,7 @@ export class CryptManager {
         if (!this.checkIfKeyFilesExist()) {
             const cryptConfig = this._configManager.getConfig(CfgCrypt);
 
-            svlog.log(`Crypt key files not found, generating new ones with length ${cryptConfig.rsa_key_length}`);
+            svlog.info(`Crypt key files not found, generating new ones with length ${cryptConfig.rsa_key_length}`);
             const newKeys = CryptoUtils.generateRSAKeys(cryptConfig.rsa_key_length);
 
             fs.writeFileSync(this._publicKeyFile, newKeys.publicKey, { encoding: 'utf-8' });
@@ -38,11 +38,11 @@ export class CryptManager {
             this._publicKey = newKeys.publicKey;
             this._privateKey = newKeys.privateKey;
         } else {
-            svlog.log(`Reading key files`);
+            svlog.info(`Reading key files`);
             this._publicKey = fs.readFileSync(this._publicKeyFile, { encoding: 'utf-8' });
             this._privateKey = fs.readFileSync(this._privateKeyFile, { encoding: 'utf-8' });
         }
-        svlog.log(`Keys are loaded`);
+        svlog.info(`Keys are loaded`);
     }
 
     private validateAlgo() {

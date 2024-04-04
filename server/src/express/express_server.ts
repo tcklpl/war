@@ -26,7 +26,7 @@ export class ExpressServer {
         this._app.use(this._routes.routes.map(r => r.router));
 
         this._server = this._app.listen(serverConfig.rest_port);
-        svlog.log(`REST Server listening on ${serverConfig.host}:${serverConfig.rest_port}`);
+        svlog.info(`REST Server listening on ${serverConfig.host}:${serverConfig.rest_port}`);
     }
 
     stop() {

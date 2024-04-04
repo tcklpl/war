@@ -7,6 +7,7 @@ import { SocketServer } from "./socket/socket_server";
 import svlog from "./utils/logging_utils";
 import { WarServerBanner } from "./banner";
 import { CommandProcessor } from "./commands/command_processor";
+import { CfgServer } from "./config/default/cfg_server";
 
 export class WarServer {
 
@@ -26,7 +27,7 @@ export class WarServer {
         console.log(this._banner.greetings);
 
         const startTime = Date.now();
-        svlog.log(`Initializing server`);
+        svlog.info(`Initializing server`);
 
         await this._configManager.loadConfig();
         await this._cryptManager.initialize();
@@ -36,18 +37,21 @@ export class WarServer {
         await this._socketServer.initialize();
 
         const loadTime = Date.now() - startTime;
-        svlog.log(`Server started ${chalk.green("successfully")} in ${loadTime}ms`);
+        svlog.info(`Server started ${chalk.green("successfully")} in ${loadTime}ms`);
+
+        const logLvl = svlog.parseLogLevelFromString(this._configManager.getConfig(CfgServer).log_level);
+        svlog.setLogLevel(logLvl);
 
         this._commandProcessor.parseCommands();
     }
 
     async stop() {
-        svlog.log(`Stopping server...`);
+        svlog.info(`Stopping server...`);
         this._commandProcessor.stop();
         await this._gameServer.stop();
         await this._expressServer.stop();
         await this._socketServer.stop();
-        svlog.log(`Server closed`);
+        svlog.info(`Server closed`);
         process.exit(0);
     }
 

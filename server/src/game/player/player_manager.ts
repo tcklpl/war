@@ -14,14 +14,14 @@ export class PlayerManager {
     loginPlayer(player: Player) {
         if (!this.isUsernameAvailable(player.username)) throw new Error(`Trying to login player with unavailable username "${player.username}"`);
         this._loggedPlayers.push(player);
-        svlog.log(`${player.username} logged in. (from ${player.ip})`);
+        svlog.info(`${player.username} logged in. (from ${player.ip})`);
     }
 
     logoffPlayer(player?: Player) {
         if (!player) return;
         this._loggedPlayers = this._loggedPlayers.filter(x => x.username !== player.username);
         this._onPlayerLogoff.forEach(l => l(player));
-        svlog.log(`${player.username} logged off`);
+        svlog.info(`${player.username} logged off`);
     }
 
     getPlayerByName(name: string): Player | undefined {

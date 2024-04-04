@@ -25,7 +25,7 @@ export class SocketServer {
         this.registerConnectionEvents();
         
         this._io.listen(serverConfig.socket_port);
-        svlog.log(`Socket Server listening on ${serverConfig.host}:${serverConfig.socket_port}`);
+        svlog.info(`Socket Server listening on ${serverConfig.host}:${serverConfig.socket_port}`);
     }
 
     private registerConnectionEvents() {

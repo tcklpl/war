@@ -29,7 +29,7 @@ export class ConfigManager {
 
     private assertConfigFolder() {
         if (!fs.existsSync(this._configFolder)) {
-            svlog.log(`Config folder doesn't exist, creating a new one`);
+            svlog.info(`Config folder doesn't exist, creating a new one`);
             fs.mkdirSync(this._configFolder);
         }
     }
@@ -37,7 +37,7 @@ export class ConfigManager {
     private assertConfigFiles() {
         this._configs.forEach(cfg => {
             if (!fs.existsSync(path.join(this._configFolder, cfg.PATH))) {
-                svlog.log(`Config "${cfg.NAME}" doesn't exist, copying the default one`);
+                svlog.info(`Config "${cfg.NAME}" doesn't exist, copying the default one`);
                 
                 if (!fs.existsSync(cfg.DEFAULT_PATH)) {
                     svlog.err(`Failed to load the default config "${cfg.NAME}" from "${cfg.DEFAULT_PATH}"`);
@@ -61,7 +61,7 @@ export class ConfigManager {
             const parsed = json5.parse(fileContents);
             return parsed;
         } catch (err) {
-            svlog.log(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
+            svlog.info(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
             fs.copyFileSync(config.DEFAULT_PATH, path.join(this._configFolder, config.PATH));
             return this.parseConfigFile(config);
         }
@@ -87,7 +87,7 @@ export class ConfigManager {
     }
     
     async loadConfig() {
-        svlog.log(`Loading configs`);
+        svlog.info(`Loading configs`);
         if (!this.checkPermissions()) {
             svlog.err(`The server doesn't have permission to read or write to the current folder (${__dirname})`);
             exit(1);

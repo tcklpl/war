@@ -32,10 +32,10 @@ class CommandConfigReload extends Command {
     }
 
     execute(data: CommandExecutionData): boolean {
-        svlog.log("Reloading config...");
+        svlog.info("Reloading config...");
         (async () => {
             await data.server.configManager.loadConfig();
-            svlog.log("Config reloaded");
+            svlog.info("Config reloaded");
         })();
         return true;
     }

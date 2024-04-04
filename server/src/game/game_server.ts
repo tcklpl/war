@@ -12,7 +12,7 @@ export class GameServer {
     constructor (private _configManager: ConfigManager, private _cryptManager: CryptManager) {}
 
     async initialize() {
-        svlog.log("Game server started");
+        svlog.info("Game server started");
         this._lobbyManager = new LobbyManager(this._configManager, this);
     }
 

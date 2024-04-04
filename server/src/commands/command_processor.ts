@@ -41,7 +41,7 @@ export class CommandProcessor {
                     server: this._server
                 });
             } else {
-                svlog.log(`Unknown command "${commandParts[0]}"`);
+                svlog.info(`Unknown command "${commandParts[0]}"`);
             }
             if (this._shouldParseNextCommand) this.parseNextCommand();
         });

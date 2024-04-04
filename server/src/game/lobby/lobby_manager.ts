@@ -45,7 +45,7 @@ export class LobbyManager {
         const toPurge = this._lobbies.filter(l => l.players.length === 0);
         toPurge.forEach(p => {
             this.removeLobby(p);
-            svlog.log(`Lobby "${p.name}" was removed (reason: empty)`);
+            svlog.info(`Lobby "${p.name}" was removed (reason: empty)`);
         });
         this.updateLobbyStatusForPlayers();
     }
