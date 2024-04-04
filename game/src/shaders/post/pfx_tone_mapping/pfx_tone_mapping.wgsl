@@ -58,12 +58,22 @@ struct PFXOptions {
 
     // Options
     gamma: f32,
-    exposure: f32,
+    avg_luminance: f32,
     vignette_strength: f32,
     vignette_size: f32,
     chromatic_aberration_amount: f32
 };
 @group(1) @binding(0) var<uniform> opt: PFXOptions;
+
+const kSRGBLuminanceFactors = vec3f(0.2126, 0.7152, 0.0722);
+fn srgbLuminance(color: vec3f) -> f32 {
+    return saturate(dot(color, kSRGBLuminanceFactors));
+}
+
+fn reinhardExtended(v: vec3f, maxWhite: f32) -> vec3f {
+    var numerator = v * (1.0 + (v / vec3f(maxWhite * maxWhite)));
+    return numerator / (1.0 + v);
+}
 
 @fragment
 fn fragment(v: VSOutput) -> @location(0) vec4f {
@@ -98,7 +108,12 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var mixedColor = mix(hdrColor, bloomColor, bloom_strength);
 
     // Tone Mapping
-    var mapped = vec3f(1.0) - exp(-mixedColor * opt.exposure);
+    var luminance = srgbLuminance(mixedColor);
+    var whitePoint = 3.0;
+    var lp = mixedColor / (9.6 * opt.avg_luminance + 0.0001);
+    var mapped = reinhardExtended(lp, whitePoint);
+
+    // var mapped = vec3f(1.0) - exp(-mixedColor * opt.exposure);
     mapped = pow(mapped, vec3f(1.0 / opt.gamma));
 
     // Film Grain

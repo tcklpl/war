@@ -1,7 +1,7 @@
 
 export class RenderPostEffects {
     
-    exposure = 1;
+    avg_luminance = 1;
     gamma = 2.2;
 
     vignette = {
@@ -36,7 +36,7 @@ export class RenderPostEffects {
 
         // write options
         device.queue.writeBuffer(buffer, 8, new Float32Array([
-            this.gamma, this.exposure, 
+            this.gamma, this.avg_luminance, 
             this.vignette.strength, this.vignette.size, 
             this.chromaticAberration.amount
         ]));
