@@ -9,7 +9,7 @@ export class PLLeaveLobby extends PacketListener {
     register(): void {
         this._data.socket.on("leaveLobby", () => {
         
-            svlog.log(`${this._data.player.username} left lobby "${this._data.player.lobby?.name}"`);
+            svlog.info(`${this._data.player.username} left lobby "${this._data.player.lobby?.name}"`);
             this._data.player.leaveCurrentLobby();
             this._data.gameServer.lobbyManager.purgeEmptyLobbies();
             new ServerPacketLeftLobby().dispatch(this._data.player);

@@ -15,22 +15,22 @@ export class PLCreateLobby extends PacketListener {
             try {
     
                 const lobby = this._data.gameServer.lobbyManager.createLobby(this._data.player, name, joinable);
-                svlog.log(`${this._data.player.username} created lobby "${name}" (current lobbies: ${this._data.gameServer.lobbyManager.lobbies.length} / ${this._data.gameServer.lobbyManager.maxLobbies})`);
+                svlog.info(`${this._data.player.username} created lobby "${name}" (current lobbies: ${this._data.gameServer.lobbyManager.lobbies.length} / ${this._data.gameServer.lobbyManager.maxLobbies})`);
                 new ServerPacketJoinedLobby(lobby).dispatch(this._data.player);
                 
             } catch (e) {
     
                 let errorReason: LobbyCreationFailReason;
                 if (e instanceof OverLimitError) {
-                    svlog.log(`${this._data.player.username} failed to create lobby "${name}": The max numbers of lobbies was reached`);
+                    svlog.info(`${this._data.player.username} failed to create lobby "${name}": The max numbers of lobbies was reached`);
                     errorReason = "full";
                 }
                 else if (e instanceof UnavailableNameError) {
-                    svlog.log(`${this._data.player.username} failed to create lobby "${name}": This lobby name is already in use`);
+                    svlog.info(`${this._data.player.username} failed to create lobby "${name}": This lobby name is already in use`);
                     errorReason = "unavailable name";
                 }
                 else if (e instanceof PlayerAlreadyOwnsALobbyError) {
-                    svlog.log(`${this._data.player.username} failed to create lobby "${name}": ${this._data.player.username} already owns a lobby`);
+                    svlog.info(`${this._data.player.username} failed to create lobby "${name}": ${this._data.player.username} already owns a lobby`);
                     errorReason = "already owner";
                 }
                 else {
