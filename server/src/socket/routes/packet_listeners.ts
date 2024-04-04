@@ -11,6 +11,8 @@ import { PLTransferLobbyOwnership } from "./lobby/pl_transfer_lobby_ownership"
 import { SocketRouteData } from "./socket_route_data"
 import { PLStartGame } from "./lobby/pl_start_game"
 import { PLCancelGameStart } from "./lobby/pl_cancel_game_start"
+import { PLGameAction } from "./game/pl_game_action"
+import { PLSelectStartingTerritory } from "./game/pl_select_starting_territory"
 
 
 export const registerPacketListeners = (data: SocketRouteData) => {
@@ -30,5 +32,9 @@ export const registerPacketListeners = (data: SocketRouteData) => {
         new PLTransferLobbyOwnership(data),
         new PLStartGame(data),
         new PLCancelGameStart(data),
+
+        // Game
+        new PLSelectStartingTerritory(data),
+        new PLGameAction(data),
     ]
 }
