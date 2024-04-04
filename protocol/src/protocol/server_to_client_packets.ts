@@ -1,4 +1,5 @@
-import { LobbyState, LobbyListState, InitialGameStatePacket } from "./data";
+import { LobbyState, LobbyListState, InitialGameStatePacket, RoundState, TurnAllowedActions, GameStage, TerritoryCode } from "./data";
+import { GameError } from "./data/ingame/game_error";
 
 export type LobbyCreationFailReason = "full" | "unavailable name" | "already owner" | "other";
 
@@ -30,6 +31,17 @@ export interface ServerToClientPackets {
         Game Packets
         ----------------------------------------------------------
     */
-   gInitialGameState: (state: InitialGameStatePacket) => void;
+    // Global game state update
+    gInitialGameState: (state: InitialGameStatePacket) => void;
+    gUpdateGameStage: (stage: GameStage) => void;
+
+    // Territory selection
+    gInitialTerritorySelectionTurn: (currentPlayer: string, timeout: number) => void;
+    gInitialTerritorySelectionAllowedTerritories: (allowed: TerritoryCode[]) => void;
+    gInitialTerritorySelectionAssignment: (player: string, territory: TerritoryCode, reason: 'selected' | 'timeout') => void;
+
+    gUpdateRoundState: (state: RoundState) => void;
+    gTurnAllowedActions: (allowed: TurnAllowedActions) => void;
+    gGameError: (error: GameError) => void;
 
 }

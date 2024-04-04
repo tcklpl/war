@@ -1,4 +1,4 @@
-import { GameParty, LobbyState } from "./data";
+import { GameParty, LobbyState, TerritoryCode, TurnAction } from "./data";
 
 export interface ClientToServerPackets {
 
@@ -30,5 +30,12 @@ export interface ClientToServerPackets {
     startGame: () => void;
     lCancelGameStart: () => void;
     
+    /*
+        ----------------------------------------------------------
+        Game Packets
+        ----------------------------------------------------------
+    */
+    gSelectStartingTerritory: (code: TerritoryCode) => void;
+    gGameAction: (action: TurnAction) => void;
 
 }
