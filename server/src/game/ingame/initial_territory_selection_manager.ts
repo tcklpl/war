@@ -3,6 +3,7 @@ import { PlayerWithParty } from "../../@types/utils";
 import { ServerPacketInitialTerritorySelectionAllowedTerritories } from "../../socket/packet/game/ini_territory_selection_allowed_territories";
 import { ServerPacketInitialTerritoryAssignment } from "../../socket/packet/game/ini_territory_selection_assignment";
 import { ServerPacketInitialTerritorySelectionTurn } from "../../socket/packet/game/ini_territory_selection_turn";
+import svlog from "../../utils/logging_utils";
 import { Game } from "./game";
 
 export class InitialTerritorySelectionManager {
@@ -50,20 +51,30 @@ export class InitialTerritorySelectionManager {
         new ServerPacketInitialTerritorySelectionAllowedTerritories(availableStarts).dispatch(this.currentPlayer);
 
         this._curSelectionTimeout = setTimeout(() => this.onSelectionTimeout(), this._timeoutDurationSeconds * 1000);
+        svlog.debug(`player ${this.currentPlayer.username} is now selecting a starting territory`);
     }
 
     startPlayerTerritorySelection() {
+        svlog.debug(`Starting territory selection, territory pool with size ${this._freeUseTerritoryPool.length}`);
         this.setupTerritoryPool();
+        svlog.debug(`Filtered territory pool, new size: ${this._freeUseTerritoryPool.length}`);
         this.selectPlayerTerritory();
     }
 
     onTerritorySelection(player: PlayerWithParty, territory: TerritoryCode) {
-        if (!this._curAllowedTerritories.find(t => t === territory)) return;
-        if (player !== this.currentPlayer) return;
+        if (!this._curAllowedTerritories.find(t => t === territory)) {
+            svlog.warn(`player ${player} is trying to select a territory that isn't allowed`);
+            return;
+        }
+        if (player !== this.currentPlayer) {
+            svlog.warn(`player ${player} is trying to pick a starting territory on another players turn`);
+            return;
+        }
 
         clearTimeout(this._curSelectionTimeout);
         this._curSelectionTimeout = undefined;
 
+        svlog.debug(`player ${player} selected the starting territory ${territory}`);
         new ServerPacketInitialTerritoryAssignment(this.currentPlayer.username, territory, 'selected').dispatch(...this._game.players);
         this.finishUpCurrentSelection(territory);
     }
@@ -72,6 +83,7 @@ export class InitialTerritorySelectionManager {
         this._curSelectionTimeout = undefined;
         const selected = this._curAllowedTerritories[Math.floor(Math.random() * this._curAllowedTerritories.length)];
         new ServerPacketInitialTerritoryAssignment(this.currentPlayer.username, selected, 'timeout').dispatch(...this._game.players);
+        svlog.debug(`player ${this.currentPlayer.username} timed out the territory selection, ${selected} was picked at random`);
         this.finishUpCurrentSelection(selected);
     }
 
@@ -80,9 +92,11 @@ export class InitialTerritorySelectionManager {
 
         // If it's the last player
         if (this._curPlayerIndex >= (this._game.players.length - 1)) {
+            svlog.debug(`Territory selection has finished`);
             this.onSelectionFinished?.();
         }
         else {
+            svlog.debug(`Selecting territory for next player`);
             this.selectForNextPlayer();
         }
 
