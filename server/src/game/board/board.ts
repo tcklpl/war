@@ -58,6 +58,10 @@ export class Board {
         japan: this.graph.addNode(new Territory("japan", "asia"))
     }
 
+    private mapTerritoriesToNodes() {
+        this.graph.nodes.forEach(n => n.data.node = n);
+    }
+
     private registerGraphEdges() {
         /*
             North America
@@ -203,6 +207,7 @@ export class Board {
     }
 
     constructor() {
+        this.mapTerritoriesToNodes();
         this.registerGraphEdges();
         this.validateGraph();
     }
