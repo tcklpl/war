@@ -1,10 +1,10 @@
-import { LobbyState, LobbyPlayerState, GameConfig, GameParty } from "../../../../protocol";
+import { LobbyState, LobbyPlayerState, GameConfig, GameParty, GameStage } from "../../../../protocol";
 import { ServerPacketInitialGameState } from "../../socket/packet/game/initial_game_state";
 import { ServerPacketChatMessage } from "../../socket/packet/lobby/chat_message";
 import { ServerPacketGameStartCancelled } from "../../socket/packet/lobby/game_start_cancelled";
 import { ServerPacketStartingGame } from "../../socket/packet/lobby/starting_game";
 import { ServerPacketUpdateLobbyState } from "../../socket/packet/lobby/update_lobby_state";
-import { Game } from "../game";
+import { Game } from "../ingame/game";
 import { PartyAnarchism } from "../party/anarchism";
 import { PartyCapitalism } from "../party/capitalism";
 import { PartyFeudalism } from "../party/feudalism";
@@ -12,11 +12,10 @@ import { PartyNotSet } from "../party/not_set";
 import { Party } from "../party/party";
 import { PartySocialism } from "../party/socialism";
 import { Player } from "../player/player";
-import { LobbyStatus } from "./lobby_status";
 
 export class Lobby {
 
-    private _status = LobbyStatus.SELECTING;
+    private _status: GameStage = 'in lobby';
     private _players: Player[] = [];
     joinable = true;
     private _parties: Party[] = [
@@ -65,7 +64,7 @@ export class Lobby {
 
     changeOwnership(newOwner: Player) {
 
-        if (this._status !== LobbyStatus.SELECTING) return;
+        if (this._status !== 'in lobby') return;
 
         if (!this._players.find(p => p === newOwner)) return;
         this._owner = newOwner;
@@ -74,7 +73,7 @@ export class Lobby {
 
     replaceLobbyState(state: LobbyState) {
 
-        if (this._status !== LobbyStatus.SELECTING) return;
+        if (this._status !== 'in lobby') return;
 
         this.joinable = state.joinable;
         if (!this._gameConfig.is_immutable) {
@@ -84,7 +83,7 @@ export class Lobby {
 
     setPlayerParty(player: Player, protocolParty: GameParty) {
 
-        if (this._status !== LobbyStatus.SELECTING) return;
+        if (this._status !== 'in lobby') return;
 
         const party = this._parties.find(p => p.protocolValue === protocolParty);
         if (!party || !(player.party instanceof PartyNotSet) || party.player) return;
@@ -95,7 +94,7 @@ export class Lobby {
 
     deselectPlayerParty(player: Player) {
 
-        if (this._status !== LobbyStatus.SELECTING) return;
+        if (this._status !== 'in lobby') return;
 
         player.party = new PartyNotSet();
         this._parties.filter(p => p.player === player).forEach(p => p.player = undefined);
@@ -106,13 +105,13 @@ export class Lobby {
         // validate if all players have selected a party
         if (this._players.some(p => p.party instanceof PartyNotSet)) return false;
         new ServerPacketStartingGame(this.startGameCooldown).dispatch(...this._players);
-        this._status = LobbyStatus.STARTING;
+        this._status = 'starting';
 
         // set a timeout to actually start the game
         this._startGameTask = setTimeout(() => {
-            this._game = new Game(this);
+            this._game = new Game(this, (s) => this._status = s);
             new ServerPacketInitialGameState(this._game.initialGameStatePacket).dispatch(...this._players);
-            this._status = LobbyStatus.IN_GAME;
+            this._game.setupGame();
         }, this.startGameCooldown * 1000);
 
         return true;
@@ -121,7 +120,7 @@ export class Lobby {
     cancelGameStart() {
         if (this._startGameTask) {
             clearTimeout(this._startGameTask);
-            this._status = LobbyStatus.SELECTING;
+            this._status = 'in lobby';
             new ServerPacketGameStartCancelled().dispatch(...this._players);
         }
     }
@@ -141,6 +140,18 @@ export class Lobby {
 
     get owner() {
         return this._owner;
+    }
+
+    get gameConfig() {
+        return this._gameConfig;
+    }
+
+    get game() {
+        return this._game;
+    }
+
+    get status() {
+        return this._status;
     }
 
     get asProtocolLobbyState(): LobbyState {
