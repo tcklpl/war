@@ -2,6 +2,7 @@ import { GameStage, GameStatePlayerInfo, InitialGameStatePacket, TerritoryCode, 
 import { PlayerWithParty } from "../../@types/utils";
 import { LobbyNotReadyError } from "../../exceptions/lobby_not_ready_error";
 import { ServerPacketUpdateGameStage } from "../../socket/packet/game/update_game_stage";
+import svlog from "../../utils/logging_utils";
 import { Board } from "../board/board";
 import { Lobby } from "../lobby/lobby";
 import { Player } from "../player/player";
@@ -37,10 +38,19 @@ export class Game {
 
     }
 
+    /**
+     * First function to be called when starting the game (after the countdown is over).
+     */
     setupGame() {
+        svlog.debug(`Starting game ${this._lobby.name}`);
         this.runInitialTerritorySelection();
     }
 
+    /**
+     * First game phase: each player has to select their starting territory.
+     * 
+     * To help keeping states and timeout, this function was delegated to the class InitialTerritorySelectionManager.
+     */
     private runInitialTerritorySelection() {
         this._setLobbyStatus("selecting starting territory");
 
@@ -49,8 +59,13 @@ export class Game {
         this._initialTerritorySelectionManager.onSelectionFinished = () => this.startGameLoop();
     }
 
+    /**
+     * To be called AFTER the initial territory selection, when the game is actually ready to start.
+     * 
+     * We'll dispatch the call to the TurnManager, the class that will deal with pretty much all the game.
+     */
     private startGameLoop() {
-        
+        this._turnManager.startFirstTurn();
     }
 
     get initialGameStatePacket(): InitialGameStatePacket {
