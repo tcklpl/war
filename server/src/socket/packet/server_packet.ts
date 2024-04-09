@@ -1,8 +1,8 @@
 import { ServerToClientPackets } from "../../../../protocol";
 import { Player } from "../../game/player/player";
 
-type ServerPacketEventNames = keyof ServerToClientPackets;
-type ServerPacketEventParams<Event extends ServerPacketEventNames> = Parameters<ServerToClientPackets[Event]>;
+export type ServerPacketEventNames = keyof ServerToClientPackets;
+export type ServerPacketEventParams<Event extends ServerPacketEventNames> = Parameters<ServerToClientPackets[Event]>;
 
 export abstract class ServerPacket<E extends ServerPacketEventNames> {
 
