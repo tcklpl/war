@@ -35,14 +35,28 @@ const ServerSelectPasswordPrompt: React.FC<{
     }, [t, password, setOpen, onPasswordSet]);
 
     return (
-        <Dialog open={open}>
+        <Dialog open={open} PaperProps={{
+            component: 'form',
+            onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                validate();
+            }
+        }}>
             <DialogTitle>{ t("server_list:password_prompt_title") }</DialogTitle>
             <DialogContent>
                 <Stack spacing={1}>
                     <DialogContentText>
                         { t("server_list:password_prompt_desc") }
                     </DialogContentText>
-                    <TextField id="server-name" label="Password" onChange={e => setPassword(e.currentTarget.value)} value={password} error={!!passwordError} helperText={passwordError} type="password" />
+                    <TextField 
+                        id="server-name" 
+                        label="Password" 
+                        onChange={e => setPassword(e.currentTarget.value)} 
+                        required
+                        value={password} 
+                        error={!!passwordError} helperText={passwordError} 
+                        type="password"
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions>
