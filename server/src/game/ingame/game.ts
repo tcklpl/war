@@ -1,8 +1,8 @@
 import { GameStage, GameStatePlayerInfo, InitialGameStatePacket, TerritoryCode, TurnAction } from "../../../../protocol";
 import { PlayerWithParty } from "../../@types/utils";
 import { LobbyNotReadyError } from "../../exceptions/lobby_not_ready_error";
+import { Logger } from "../../log/logger";
 import { ServerPacketUpdateGameStage } from "../../socket/packet/game/update_game_stage";
-import svlog from "../../utils/logging_utils";
 import { Board } from "../board/board";
 import { Lobby } from "../lobby/lobby";
 import { Player } from "../player/player";
@@ -11,18 +11,18 @@ import { TurnManager } from "./turn_manager";
 
 export class Game {
 
-    readonly board = new Board();
+    readonly board = new Board(this._log.createChildContext("Board"));
     private _players: PlayerWithParty[];
     private _owner!: Player;
     private _turnManager: TurnManager;
-    private _initialTerritorySelectionManager = new InitialTerritorySelectionManager(this);
+    private _initialTerritorySelectionManager = new InitialTerritorySelectionManager(this, this._log.createChildContext("Initial Territory Selection"));
 
-    constructor(private _lobby: Lobby, private _setLobbyStatus: (s: GameStage) => void) {
+    constructor(private _lobby: Lobby, private _setLobbyStatus: (s: GameStage) => void, private _log: Logger) {
         if (_lobby.players.some(p => !p.party)) throw new LobbyNotReadyError();
         // shuffle the player list, this will be the play order
         this._players = _lobby.players.sort(() => Math.random() - 0.5);
 
-        this._turnManager = new TurnManager(this._players, this.board, _lobby.gameConfig);
+        this._turnManager = new TurnManager(this._players, this.board, _lobby.gameConfig, this._log.createChildContext("Turn Manager"));
     }
 
     onPlayerAction(actionType: 'select initial territory' | 'game action', action: TerritoryCode | TurnAction, player: PlayerWithParty) {
@@ -42,7 +42,7 @@ export class Game {
      * First function to be called when starting the game (after the countdown is over).
      */
     setupGame() {
-        svlog.debug(`Starting game ${this._lobby.name}`);
+        this._log.debug(`Starting game ${this._lobby.name}`);
         this.runInitialTerritorySelection();
     }
 

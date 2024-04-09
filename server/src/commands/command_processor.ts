@@ -1,4 +1,4 @@
-import svlog from "../utils/logging_utils";
+import { Logger } from "../log/logger";
 import { WarServer } from "../war_server";
 import { Command } from "./command";
 import { CommandConfig } from "./default_commands/config";
@@ -9,15 +9,15 @@ import * as readLine from "readline";
 export class CommandProcessor {
 
     private _commands: Command[] = [
-        new CommandHelp(),
-        new CommandStop(),
-        new CommandConfig()
+        new CommandHelp(this._log.createChildContext("Help")),
+        new CommandStop(this._log.createChildContext("Stop")),
+        new CommandConfig(this._log.createChildContext("Config"))
     ];
 
     private _commandInterface!: readLine.Interface;
     private _shouldParseNextCommand = true;
 
-    constructor(private _server: WarServer) {}
+    constructor(private _server: WarServer, private _log: Logger) {}
 
     stop() {
         this._shouldParseNextCommand = false;
@@ -41,7 +41,7 @@ export class CommandProcessor {
                     server: this._server
                 });
             } else {
-                svlog.info(`Unknown command "${commandParts[0]}"`);
+                this._log.info(`Unknown command "${commandParts[0]}"`);
             }
             if (this._shouldParseNextCommand) this.parseNextCommand();
         });

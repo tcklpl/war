@@ -1,15 +1,16 @@
-import svlog from "../../utils/logging_utils";
+import { Logger } from "../../log/logger";
 import { Command } from "../command";
 import { CommandExecutionData } from "../command_execution_data";
 
 export class CommandHelp extends Command {
 
-    constructor() {
+    constructor(logger: Logger) {
         super(
             "help",
             "Help",
             ["h"],
-            "Shows help screen"
+            "Shows help screen",
+            logger
         );
     }
 
@@ -17,12 +18,12 @@ export class CommandHelp extends Command {
         if (data.args.length > 0) {
             const command = data.server.commandProcessor.getCommandByNameOrAlias(data.args[0]);
             if (!command) {
-                svlog.info(`Failed to get help on unknown command "${data.args[0]}"`);
+                this._log.info(`Failed to get help on unknown command "${data.args[0]}"`);
                 return false;
             }
             const finalExecutor = command.getRoutedExecutor(data.args.slice(1));
             if (!finalExecutor) {
-                svlog.info(`Failed to get subroute "${data.args[1]}" from command "${command.name}"`);
+                this._log.info(`Failed to get subroute "${data.args[1]}" from command "${command.name}"`);
                 return false;
             }
             console.table({
@@ -33,7 +34,7 @@ export class CommandHelp extends Command {
                 subroutes: finalExecutor.subroutes.map(s => s.command).join(",")
             });
         } else {
-            svlog.info(`Help Screen. To get info on a specific command, use "help <command name or alias>"`);
+            this._log.info(`Help Screen. To get info on a specific command, use "help <command name or alias>"`);
             const table = data.server.commandProcessor.commands.map(c => {
                 return {
                     command: c.command,

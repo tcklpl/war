@@ -1,17 +1,18 @@
-import svlog from "../../utils/logging_utils";
+import { Logger } from "../../log/logger";
 import { Command } from "../command";
 import { CommandExecutionData } from "../command_execution_data";
 
 export class CommandConfig extends Command {
 
-    constructor() {
+    constructor(logger: Logger) {
         super(
             "config",
             "Config",
             ["cfg"],
-            "Commands about the server's configuration"
+            "Commands about the server's configuration",
+            logger
         );
-        this.registerSubroute(new CommandConfigReload());
+        this.registerSubroute(new CommandConfigReload( logger.createChildContext("Reload")));
     }
 
     execute(data: CommandExecutionData): boolean {
@@ -22,20 +23,21 @@ export class CommandConfig extends Command {
 
 class CommandConfigReload extends Command {
 
-    constructor() {
+    constructor(logger: Logger) {
         super(
             "reload",
             "Reload",
             [],
-            "Reloads the config"
+            "Reloads the config",
+            logger
         );
     }
 
     execute(data: CommandExecutionData): boolean {
-        svlog.info("Reloading config...");
+        this._log.info("Reloading config...");
         (async () => {
             await data.server.configManager.loadConfig();
-            svlog.info("Config reloaded");
+            this._log.info("Config reloaded");
         })();
         return true;
     }

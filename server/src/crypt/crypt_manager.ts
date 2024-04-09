@@ -4,13 +4,13 @@ import * as jwt from "jsonwebtoken";
 import { ConfigManager } from "../config/config_manager";
 import { CfgCrypt } from "../config/default/cfg_crypt";
 import { CryptoUtils } from "../utils/crypto_utils";
-import svlog from "../utils/logging_utils";
 import { AuthTokenBody } from "../../../protocol";
 import { CfgServer } from "../config/default/cfg_server";
+import { Logger } from "../log/logger";
 
 export class CryptManager {
 
-    constructor(private _configManager: ConfigManager) {}
+    constructor(private _configManager: ConfigManager, private _log: Logger) {}
 
     private _keyFolder = process.cwd();
     private _publicKeyFile = path.join(this._keyFolder, 'public.key');
@@ -29,7 +29,7 @@ export class CryptManager {
         if (!this.checkIfKeyFilesExist()) {
             const cryptConfig = this._configManager.getConfig(CfgCrypt);
 
-            svlog.info(`Crypt key files not found, generating new ones with length ${cryptConfig.rsa_key_length}`);
+            this._log.info(`Crypt key files not found, generating new ones with length ${cryptConfig.rsa_key_length}`);
             const newKeys = CryptoUtils.generateRSAKeys(cryptConfig.rsa_key_length);
 
             fs.writeFileSync(this._publicKeyFile, newKeys.publicKey, { encoding: 'utf-8' });
@@ -38,11 +38,11 @@ export class CryptManager {
             this._publicKey = newKeys.publicKey;
             this._privateKey = newKeys.privateKey;
         } else {
-            svlog.info(`Reading key files`);
+            this._log.info(`Reading key files`);
             this._publicKey = fs.readFileSync(this._publicKeyFile, { encoding: 'utf-8' });
             this._privateKey = fs.readFileSync(this._privateKeyFile, { encoding: 'utf-8' });
         }
-        svlog.info(`Keys are loaded`);
+        this._log.info(`Keys are loaded`);
     }
 
     private validateAlgo() {

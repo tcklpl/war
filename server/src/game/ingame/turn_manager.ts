@@ -1,4 +1,5 @@
 import { GameConfig, RoundState, TurnAction, TurnAllowedAction, TurnPhase } from "../../../../protocol";
+import { Logger } from "../../log/logger";
 import { ServerPacketGameError } from "../../socket/packet/game/game_error";
 import { ServerPacketTurnAllowedActions } from "../../socket/packet/game/turn_allowed_actions";
 import { ServerPacketUpdateRoundState } from "../../socket/packet/game/update_round_state";
@@ -27,7 +28,8 @@ export class TurnManager {
     constructor(
         private _players: PlayerWithParty[],
         private _board: Board,
-        private _gameConfig: GameConfig
+        private _gameConfig: GameConfig,
+        private _log: Logger
     ) {}
 
     startFirstTurn() {

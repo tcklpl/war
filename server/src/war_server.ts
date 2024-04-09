@@ -4,30 +4,31 @@ import { CryptManager } from "./crypt/crypt_manager";
 import { ExpressServer } from "./express/express_server";
 import { GameServer } from "./game/game_server";
 import { SocketServer } from "./socket/socket_server";
-import svlog from "./utils/logging_utils";
 import { WarServerBanner } from "./banner";
 import { CommandProcessor } from "./commands/command_processor";
 import { CfgServer } from "./config/default/cfg_server";
+import { Logger } from "./log/logger";
 
 export class WarServer {
 
+    private _log = new Logger("War Server");
     private _banner = new WarServerBanner();
 
-    private _configManager = new ConfigManager();
-    private _cryptManager = new CryptManager(this._configManager);
+    private _configManager = new ConfigManager(this._log.createChildContext("Config Manager"));
+    private _cryptManager = new CryptManager(this._configManager, this._log.createChildContext("Crypt Manager"));
 
-    private _gameServer = new GameServer(this._configManager, this._cryptManager);
-    private _expressServer = new ExpressServer(this._configManager, this._cryptManager, this._gameServer);
-    private _socketServer = new SocketServer(this._configManager, this._cryptManager, this._gameServer);
+    private _gameServer = new GameServer(this._configManager, this._cryptManager, this._log.createChildContext("Game Server"));
+    private _expressServer = new ExpressServer(this._configManager, this._cryptManager, this._gameServer, this._log.createChildContext("Express Server"));
+    private _socketServer = new SocketServer(this._configManager, this._cryptManager, this._gameServer, this._log.createChildContext("Socket Server"));
 
-    private _commandProcessor = new CommandProcessor(this);
+    private _commandProcessor = new CommandProcessor(this, this._log.createChildContext("Command Processor"));
     
     async initialize() {
 
         console.log(this._banner.greetings);
 
         const startTime = Date.now();
-        svlog.info(`Initializing server`);
+        this._log.info(`Initializing server`);
 
         await this._configManager.loadConfig();
         await this._cryptManager.initialize();
@@ -37,21 +38,21 @@ export class WarServer {
         await this._socketServer.initialize();
 
         const loadTime = Date.now() - startTime;
-        svlog.info(`Server started ${chalk.green("successfully")} in ${loadTime}ms`);
+        this._log.info(`Server started ${chalk.green("successfully")} in ${loadTime}ms`);
 
-        const logLvl = svlog.parseLogLevelFromString(this._configManager.getConfig(CfgServer).log_level);
-        svlog.setLogLevel(logLvl);
+        const logLvl = Logger.parseLogLevelFromString(this._configManager.getConfig(CfgServer).log_level);
+        Logger.setLogLevel(logLvl);
 
         this._commandProcessor.parseCommands();
     }
 
     async stop() {
-        svlog.info(`Stopping server...`);
+        this._log.info(`Stopping server...`);
         this._commandProcessor.stop();
         await this._gameServer.stop();
         await this._expressServer.stop();
         await this._socketServer.stop();
-        svlog.info(`Server closed`);
+        this._log.info(`Server closed`);
         process.exit(0);
     }
 

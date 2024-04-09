@@ -1,16 +1,16 @@
 import { Server } from "socket.io";
 import { ConfigManager } from "../config/config_manager";
 import { CfgServer } from "../config/default/cfg_server";
-import svlog from "../utils/logging_utils";
 import { CryptManager } from "../crypt/crypt_manager";
 import { GameServer } from "../game/game_server";
 import { Player } from "../game/player/player";
 import { GameSocketServer } from "../@types/server_socket";
 import { registerPacketListeners } from "./routes/packet_listeners";
+import { Logger } from "../log/logger";
 
 export class SocketServer {
 
-    constructor (private _configManager: ConfigManager, private _cryptManager: CryptManager, private _gameServer: GameServer) {}
+    constructor (private _configManager: ConfigManager, private _cryptManager: CryptManager, private _gameServer: GameServer, private _log: Logger) {}
 
     private _io!: GameSocketServer;
 
@@ -25,7 +25,7 @@ export class SocketServer {
         this.registerConnectionEvents();
         
         this._io.listen(serverConfig.socket_port);
-        svlog.info(`Socket Server listening on ${serverConfig.host}:${serverConfig.socket_port}`);
+        this._log.info(`Socket Server listening on ${serverConfig.host}:${serverConfig.socket_port}`);
     }
 
     private registerConnectionEvents() {
@@ -49,7 +49,7 @@ export class SocketServer {
                 player,
                 gameServer: this._gameServer,
                 configManager: this._configManager
-            });
+            }, this._log.createChildContext("Listeners"));
 
             socket.on("disconnect", () => {
                 this._gameServer.playerManager.logoffPlayer(player);

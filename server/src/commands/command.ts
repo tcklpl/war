@@ -1,4 +1,5 @@
 import { DuplicatedCommandError } from "../exceptions/duplicated_command_error";
+import { Logger } from "../log/logger";
 import { CommandExecutionData } from "./command_execution_data";
 
 export abstract class Command {
@@ -9,7 +10,8 @@ export abstract class Command {
         public readonly command: string,
         public readonly name: string,
         public readonly aliases: string[],
-        public readonly description: string
+        public readonly description: string,
+        protected readonly _log: Logger
     ) {}
 
     abstract execute(data: CommandExecutionData): boolean;

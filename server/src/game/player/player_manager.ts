@@ -1,4 +1,4 @@
-import svlog from "../../utils/logging_utils";
+import { Logger } from "../../log/logger";
 import { Player } from "./player";
 import { PlayerStatus } from "./player_status";
 
@@ -7,6 +7,8 @@ export class PlayerManager {
     private _loggedPlayers: Player[] = [];
     private _onPlayerLogoff: ((player: Player) => void)[] = [];
 
+    constructor(private _log: Logger) {}
+
     isUsernameAvailable(username: string) {
         return !this._loggedPlayers.find(x => x.username === username);
     }
@@ -14,14 +16,14 @@ export class PlayerManager {
     loginPlayer(player: Player) {
         if (!this.isUsernameAvailable(player.username)) throw new Error(`Trying to login player with unavailable username "${player.username}"`);
         this._loggedPlayers.push(player);
-        svlog.info(`${player.username} logged in. (from ${player.ip})`);
+        this._log.info(`${player.username} logged in. (from ${player.ip})`);
     }
 
     logoffPlayer(player?: Player) {
         if (!player) return;
         this._loggedPlayers = this._loggedPlayers.filter(x => x.username !== player.username);
         this._onPlayerLogoff.forEach(l => l(player));
-        svlog.info(`${player.username} logged off`);
+        this._log.info(`${player.username} logged off`);
     }
 
     getPlayerByName(name: string): Player | undefined {

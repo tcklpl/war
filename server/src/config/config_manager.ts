@@ -1,14 +1,16 @@
 import * as fs from "fs";
 import * as path from "path";
-import svlog from "../utils/logging_utils";
 import { exit } from "process";
 import { CfgServer } from "./default/cfg_server";
 import { Config } from "./config";
 import * as json5 from 'json5';
 import { CfgCrypt } from "./default/cfg_crypt";
 import { CfgGame } from "./default/cfg_game";
+import { Logger } from "../log/logger";
 
 export class ConfigManager {
+
+    constructor(private _log: Logger) {}
 
     private _configFolder = path.join(process.cwd(), "config");
     private _configs = [
@@ -29,7 +31,7 @@ export class ConfigManager {
 
     private assertConfigFolder() {
         if (!fs.existsSync(this._configFolder)) {
-            svlog.info(`Config folder doesn't exist, creating a new one`);
+            this._log.info(`Config folder doesn't exist, creating a new one`);
             fs.mkdirSync(this._configFolder);
         }
     }
@@ -37,10 +39,10 @@ export class ConfigManager {
     private assertConfigFiles() {
         this._configs.forEach(cfg => {
             if (!fs.existsSync(path.join(this._configFolder, cfg.PATH))) {
-                svlog.info(`Config "${cfg.NAME}" doesn't exist, copying the default one`);
+                this._log.info(`Config "${cfg.NAME}" doesn't exist, copying the default one`);
                 
                 if (!fs.existsSync(cfg.DEFAULT_PATH)) {
-                    svlog.err(`Failed to load the default config "${cfg.NAME}" from "${cfg.DEFAULT_PATH}"`);
+                    this._log.err(`Failed to load the default config "${cfg.NAME}" from "${cfg.DEFAULT_PATH}"`);
                     process.exit(1);
                 }
 
@@ -52,7 +54,7 @@ export class ConfigManager {
     private parseConfigFile(config: Config) {
         const cfgPath = path.join(this._configFolder, config.PATH);
         if (!fs.existsSync(cfgPath)) {
-            svlog.err(`Failed to load file "${cfgPath}": File doesn't exist`);
+            this._log.err(`Failed to load file "${cfgPath}": File doesn't exist`);
             process.exit(1);
         }
         const fileContents = fs.readFileSync(cfgPath, { encoding: 'utf-8' });
@@ -61,7 +63,7 @@ export class ConfigManager {
             const parsed = json5.parse(fileContents);
             return parsed;
         } catch (err) {
-            svlog.info(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
+            this._log.info(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
             fs.copyFileSync(config.DEFAULT_PATH, path.join(this._configFolder, config.PATH));
             return this.parseConfigFile(config);
         }
@@ -87,9 +89,9 @@ export class ConfigManager {
     }
     
     async loadConfig() {
-        svlog.info(`Loading configs`);
+        this._log.info(`Loading configs`);
         if (!this.checkPermissions()) {
-            svlog.err(`The server doesn't have permission to read or write to the current folder (${__dirname})`);
+            this._log.err(`The server doesn't have permission to read or write to the current folder (${__dirname})`);
             exit(1);
         }
         this.assertConfigFolder();

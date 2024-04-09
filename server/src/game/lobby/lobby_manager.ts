@@ -5,8 +5,8 @@ import { CfgServer } from "../../config/default/cfg_server";
 import { OverLimitError } from "../../exceptions/over_limit_error";
 import { PlayerAlreadyOwnsALobbyError } from "../../exceptions/player_already_owns_a_lobby_error";
 import { UnavailableNameError } from "../../exceptions/unavailable_name_error";
+import { Logger } from "../../log/logger";
 import { ServerPacketLobbies } from "../../socket/packet/lobby/lobbies";
-import svlog from "../../utils/logging_utils";
 import { GameServer } from "../game_server";
 import { Player } from "../player/player";
 import { PlayerStatus } from "../player/player_status";
@@ -18,7 +18,7 @@ export class LobbyManager {
     private _maxLobbies: number;
     private readonly _defaultGameConfig: GameConfig;
 
-    constructor(private _configManager: ConfigManager, private _gameServer: GameServer) {
+    constructor(private _configManager: ConfigManager, private _gameServer: GameServer, private _log: Logger) {
         this._maxLobbies = this._configManager.getConfig(CfgServer).max_lobbies;
         this._defaultGameConfig = _configManager.getConfig(CfgGame).default_game_config;
         this.registerEvents();
@@ -45,7 +45,7 @@ export class LobbyManager {
         const toPurge = this._lobbies.filter(l => l.players.length === 0);
         toPurge.forEach(p => {
             this.removeLobby(p);
-            svlog.info(`Lobby "${p.name}" was removed (reason: empty)`);
+            this._log.info(`Lobby "${p.name}" was removed (reason: empty)`);
         });
         this.updateLobbyStatusForPlayers();
     }
@@ -55,7 +55,7 @@ export class LobbyManager {
         if (this._lobbies.find(l => l.name === name)) throw new UnavailableNameError();
         if (this._lobbies.find(l => l.owner === owner)) throw new PlayerAlreadyOwnsALobbyError();
 
-        const lobby = new Lobby(owner, name, {...this._defaultGameConfig});
+        const lobby = new Lobby(owner, name, {...this._defaultGameConfig}, this._log.createChildContext(name));
         owner.joinLobby(lobby);
         lobby.joinable = joinable;
         this._lobbies.push(lobby);

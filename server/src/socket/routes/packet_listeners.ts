@@ -13,28 +13,29 @@ import { PLStartGame } from "./lobby/pl_start_game"
 import { PLCancelGameStart } from "./lobby/pl_cancel_game_start"
 import { PLGameAction } from "./game/pl_game_action"
 import { PLSelectStartingTerritory } from "./game/pl_select_starting_territory"
+import { Logger } from "../../log/logger"
 
 
-export const registerPacketListeners = (data: SocketRouteData) => {
+export const registerPacketListeners = (data: SocketRouteData, logger: Logger) => {
     return [
         // Lobby list
-        new PLCreateLobby(data),
-        new PLJoinLobby(data),
-        new PLRequestLobbies(data),
+        new PLCreateLobby(data, logger),
+        new PLJoinLobby(data, logger),
+        new PLRequestLobbies(data, logger),
 
         // Lobby
-        new PLChatMessage(data),
-        new PLSelectParty(data),
-        new PLLeaveLobby(data),
-        new PLDeselectParty(data),
-        new PLKickPlayer(data),
-        new PLModifyLobbyState(data),
-        new PLTransferLobbyOwnership(data),
-        new PLStartGame(data),
-        new PLCancelGameStart(data),
+        new PLChatMessage(data, logger),
+        new PLSelectParty(data, logger),
+        new PLLeaveLobby(data, logger),
+        new PLDeselectParty(data, logger),
+        new PLKickPlayer(data, logger),
+        new PLModifyLobbyState(data, logger),
+        new PLTransferLobbyOwnership(data, logger),
+        new PLStartGame(data, logger),
+        new PLCancelGameStart(data, logger),
 
         // Game
-        new PLSelectStartingTerritory(data),
-        new PLGameAction(data),
+        new PLSelectStartingTerritory(data, logger),
+        new PLGameAction(data, logger),
     ]
 }

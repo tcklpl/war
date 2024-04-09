@@ -1,4 +1,5 @@
 import { LobbyState, LobbyPlayerState, GameConfig, GameParty, GameStage } from "../../../../protocol";
+import { Logger } from "../../log/logger";
 import { ServerPacketInitialGameState } from "../../socket/packet/game/initial_game_state";
 import { ServerPacketChatMessage } from "../../socket/packet/lobby/chat_message";
 import { ServerPacketGameStartCancelled } from "../../socket/packet/lobby/game_start_cancelled";
@@ -29,7 +30,7 @@ export class Lobby {
     private _startGameTask?: NodeJS.Timeout;
     private _game?: Game;
 
-    constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig) {
+    constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig, private _log: Logger) {
         this._players.push(this.owner);
     }
 
@@ -109,7 +110,7 @@ export class Lobby {
 
         // set a timeout to actually start the game
         this._startGameTask = setTimeout(() => {
-            this._game = new Game(this, (s) => this._status = s);
+            this._game = new Game(this, (s) => this._status = s, this._log.createChildContext("In Game"));
             new ServerPacketInitialGameState(this._game.initialGameStatePacket).dispatch(...this._players);
             this._game.setupGame();
         }, this.startGameCooldown * 1000);

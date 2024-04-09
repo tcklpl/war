@@ -1,6 +1,6 @@
 import { GraphNodeTerritoryPacket, GraphTerritoryPacket } from "../../../../protocol";
 import { Graph } from "../../graph/graph";
-import svlog from "../../utils/logging_utils";
+import { Logger } from "../../log/logger";
 import { Territory } from "../territory/territory";
 
 export class Board {
@@ -193,20 +193,20 @@ export class Board {
             // by land
             for (const an of Array.from(n.landAdjacentNodes)) {
                 if (!an.landAdjacentNodes.has(n)) {
-                    svlog.err(`While validating Territory Graph: Node "${an.data.code}" is missing bidirectional connection to node "${n.data.code}" via "land"`);
+                    this._log.err(`While validating Territory Graph: Node "${an.data.code}" is missing bidirectional connection to node "${n.data.code}" via "land"`);
                 }
             }
             // by sea
             for (const an of Array.from(n.seaAdjacentNodes)) {
                 if (!an.seaAdjacentNodes.has(n)) {
-                    svlog.err(`While validating Territory Graph: Node "${an.data.code}" is missing bidirectional connection to node "${n.data.code}" via "sea"`);
+                    this._log.err(`While validating Territory Graph: Node "${an.data.code}" is missing bidirectional connection to node "${n.data.code}" via "sea"`);
                 }
             }
         }
         
     }
 
-    constructor() {
+    constructor(private _log: Logger) {
         this.mapTerritoriesToNodes();
         this.registerGraphEdges();
         this.validateGraph();
