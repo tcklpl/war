@@ -38,6 +38,7 @@ export class Lobby {
         if (!this._players.find(x => x === p)) {
             this._players.push(p);
             new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+            this._log.info(`Player ${p.username} has joined the lobby`);
         }
     }
 
@@ -51,6 +52,7 @@ export class Lobby {
             p.party = new PartyNotSet();
         }
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+        this._log.info(`Player ${p.username} has left the lobby`);
         // will cancel any ongoing game start. This function will do nothing if the game isn't starting
         this.cancelGameStart();
     }
@@ -66,8 +68,9 @@ export class Lobby {
     changeOwnership(newOwner: Player) {
 
         if (this._status !== 'in lobby') return;
-
         if (!this._players.find(p => p === newOwner)) return;
+
+        this._log.info(`Lobby ownership changed from ${this._owner.username} to ${newOwner.username}`);
         this._owner = newOwner;
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
     }
@@ -91,6 +94,7 @@ export class Lobby {
         player.party = party;
         party.player = player;
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+        this._log.debug(`${player.username} selected the party ${protocolParty}`);
     }
 
     deselectPlayerParty(player: Player) {
@@ -100,6 +104,7 @@ export class Lobby {
         player.party = new PartyNotSet();
         this._parties.filter(p => p.player === player).forEach(p => p.player = undefined);
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
+        this._log.debug(`${player.username} deselected their current party`);
     }
 
     startGame() {
@@ -115,6 +120,7 @@ export class Lobby {
             this._game.setupGame();
         }, this.startGameCooldown * 1000);
 
+        this._log.info(`Starting game`);
         return true;
     }
 
@@ -123,6 +129,7 @@ export class Lobby {
             clearTimeout(this._startGameTask);
             this._status = 'in lobby';
             new ServerPacketGameStartCancelled().dispatch(...this._players);
+            this._log.info(`Game start cancelled`);
         }
     }
 
