@@ -57,6 +57,7 @@ export class Game {
         new ServerPacketUpdateGameStage(this._lobby.status).dispatch(...this._players);
         this._initialTerritorySelectionManager.startPlayerTerritorySelection();
         this._initialTerritorySelectionManager.onSelectionFinished = () => this.startGameLoop();
+        this._log.debug(`Running initial territory selection`);
     }
 
     /**
@@ -66,6 +67,7 @@ export class Game {
      */
     private startGameLoop() {
         this._turnManager.startFirstTurn();
+        this._log.debug(`Starting the actual game`);
     }
 
     get initialGameStatePacket(): InitialGameStatePacket {
