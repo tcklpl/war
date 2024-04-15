@@ -12,7 +12,7 @@ export class VanillaRenderer extends Renderer {
 
     private _presentationFormat!: GPUTextureFormat;
     private _renderProjection = new RenderProjection();
-    private _renderPostEffects = new RenderPostEffects();
+    private _renderPostEffects!: RenderPostEffects;
     private _renderPipeline = new VanillaRenderPipeline();
     private _renderResourcePool = new RenderResourcePool();
     private _luminanceHistogram!: LuminanceHistogram;
@@ -27,6 +27,7 @@ export class VanillaRenderer extends Renderer {
     async initialize() {
         this._luminanceHistogram = new LuminanceHistogram();
         this._renderProjection.initialize();
+        this._renderPostEffects = new RenderPostEffects();
         this._presentationFormat = navigator.gpu.getPreferredCanvasFormat();
         await this._renderResourcePool.initialize();
         this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
@@ -124,6 +125,7 @@ export class VanillaRenderer extends Renderer {
 
         await this.updatePicking();
         await this._luminanceHistogram.updateLuminanceHistogram();
+        this._renderPostEffects.avg_luminance_target = this._luminanceHistogram.avg;
         
     }
 
