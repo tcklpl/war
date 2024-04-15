@@ -43,7 +43,7 @@ export class LuminanceHistogram {
         return this._buffer;
     }
 
-    get mean() {
+    get avg() {
         return this._avg;
     }
 
