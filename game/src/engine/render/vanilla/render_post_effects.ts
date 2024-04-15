@@ -1,7 +1,10 @@
+import { frameListener } from "../../data/traits/frame_listener";
 
-export class RenderPostEffects {
+export class RenderPostEffects extends frameListener(class {}) {
     
-    avg_luminance = 1;
+    private _avgLuminance = 1;
+    avg_luminance_target = 1;
+
     gamma = 2.2;
 
     vignette = {
@@ -27,6 +30,17 @@ export class RenderPostEffects {
         amount: 3
     };
 
+    onEachFrame(deltaTime: number): void {
+        if (this._avgLuminance !== this.avg_luminance_target) {
+
+            const diff = this.avg_luminance_target - this._avgLuminance;
+            let adjustmentFactor = Math.min(deltaTime, Math.abs(diff));
+            if (diff < 0) adjustmentFactor *= -1;
+
+            this._avgLuminance += adjustmentFactor;
+        }
+    }
+
     writeToBuffer(buffer: GPUBuffer) {
         // write options
         device.queue.writeBuffer(buffer, 0, new Uint32Array([
@@ -36,7 +50,7 @@ export class RenderPostEffects {
 
         // write options
         device.queue.writeBuffer(buffer, 8, new Float32Array([
-            this.gamma, this.avg_luminance, 
+            this.gamma, this._avgLuminance, 
             this.vignette.strength, this.vignette.size, 
             this.chromaticAberration.amount
         ]));
