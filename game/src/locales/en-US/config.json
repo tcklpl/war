@@ -23,7 +23,9 @@
     "display": "Display",
     "display_performance": "Performance",
     "display_performance_show_stats": "Show Performance Stats",
-    "display_performance_show_stats_desc": "Displays performance stats on the top-right corner of the screen. \n\nCurrent stats: FPS",
+    "display_performance_show_stats_desc": "Displays performance stats on the top-right corner of the screen. \n\nCurrent stats: FPS and Ping",
+    "display_performance_show_stats_chart": "Show Performance Charts",
+    "display_performance_show_stats_chart_desc": "Displays a chart of the last minute for all performance stats.",
 
     "graphics": "Graphics",
     "graphics_rendering": "Rendering",
