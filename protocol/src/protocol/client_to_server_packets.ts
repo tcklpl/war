@@ -35,7 +35,7 @@ export interface ClientToServerPackets {
         Game Packets
         ----------------------------------------------------------
     */
+    gPing: (pong: () => void) => void;
     gSelectStartingTerritory: (code: TerritoryCode) => void;
     gGameAction: (action: TurnAction) => void;
-
 }

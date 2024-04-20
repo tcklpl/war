@@ -14,6 +14,7 @@ import { PLCancelGameStart } from "./lobby/pl_cancel_game_start"
 import { PLGameAction } from "./game/pl_game_action"
 import { PLSelectStartingTerritory } from "./game/pl_select_starting_territory"
 import { Logger } from "../../log/logger"
+import { PLPing } from "./game/pl_ping"
 
 
 export const registerPacketListeners = (data: SocketRouteData, logger: Logger) => {
@@ -35,6 +36,7 @@ export const registerPacketListeners = (data: SocketRouteData, logger: Logger) =
         new PLCancelGameStart(data, logger),
 
         // Game
+        new PLPing(data, logger),
         new PLSelectStartingTerritory(data, logger),
         new PLGameAction(data, logger),
     ]
