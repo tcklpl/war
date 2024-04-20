@@ -12,6 +12,10 @@ export class GameStateManager {
         await this._serverList.initializeDB(game.engine.db);
     }
 
+    cleanup() {
+        this._currentServer?.cleanup();
+    }
+
     connectToServer(target: ServerConnection) {
         this._currentServer = new WarServer(target);
         this._serverConnectionChangeListeners.forEach(l => l(this._currentServer));

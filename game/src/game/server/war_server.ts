@@ -17,6 +17,10 @@ export class WarServer {
         registerPacketListeners(_connection.socket, this);
     }
 
+    cleanup() {
+        this._currentLobby.value?.cleanup();
+    }
+
     requestLobbies() {
         new ClientPacketRequireLobbies().dispatch();
     }

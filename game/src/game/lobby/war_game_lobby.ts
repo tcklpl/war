@@ -27,8 +27,13 @@ export class WarGameLobby {
 
     leave() {
         new ClientPacketLeaveLobby().dispatch();
-        this._chat.eraseHistory();
+        this.cleanup();
+    }
+
+    cleanup() {
         this.cancelGameStartCountdown();
+        this.gameSession.value?.cleanup();
+        this._chat.eraseHistory();
     }
 
     transferOwnership(newOwner: string) {

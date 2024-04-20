@@ -27,8 +27,6 @@ export class WarGame {
         await this._gameBoard.initialize();
         this._engine.managers.scene.register(this._gameBoard);
         this._engine.managers.scene.activeScene = this._gameBoard;
-
-        // this._engine.resumeRender();
         
         this._ready = true;
         this._toRunWhenReady.forEach(runnable => runnable());
@@ -38,6 +36,7 @@ export class WarGame {
     async kill() {
         // free all engine gpu memory
         await this._engine.free();
+        this._state.cleanup();
     }
 
     runWhenReady(runnable: () => void) {
