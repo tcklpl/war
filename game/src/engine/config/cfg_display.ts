@@ -5,4 +5,5 @@ export class ConfigDisplay implements ConfigPage {
     theme: string = 'dark';
     language: string = 'en-US';
     showPerformance: boolean = false;
+    showPerformanceCharts: boolean = false;
 }
