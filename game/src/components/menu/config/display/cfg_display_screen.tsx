@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react"
+import React, { useEffect, useLayoutEffect, useState } from "react"
 import { Grid, MenuItem, Select, Stack, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CfgTooltip from "../tooltip/cfg_tooltip";
@@ -16,6 +16,7 @@ const CfgDisplayScreen: React.FC = () => {
     const [theme, setTheme] = useState(displayConfig.theme);
     const [language, setLanguage] = useState(displayConfig.language);
     const [showPerformance, setShowPerformance] = useState(displayConfig.showPerformance);
+    const [showPerformanceChart, setShowPerformanceChart] = useState(displayConfig.showPerformanceCharts);
 
     // useLayoutEffect instead of useEffect to run this before unmounting the parent cfg_screen
     useLayoutEffect(() => {
@@ -24,8 +25,13 @@ const CfgDisplayScreen: React.FC = () => {
             displayConfig.language = language;
             displayConfig.theme = theme;
             displayConfig.showPerformance = showPerformance;
+            displayConfig.showPerformanceCharts = showPerformanceChart;
         }
-    }, [showPerformance, language, theme, displayConfig]);
+    }, [showPerformance, showPerformanceChart, language, theme, displayConfig]);
+
+    useEffect(() => {
+        if (!showPerformance) setShowPerformanceChart(false);
+    }, [showPerformance]);
     
     return (
         <Grid container style={{ backgroundColor: palette.background.default }} className="cfg-display-screen">
@@ -43,7 +49,7 @@ const CfgDisplayScreen: React.FC = () => {
                             <TableCell><Typography variant="body1">{ t("config:visual_language") }</Typography></TableCell>
                             <TableCell align="right">
                                 <Select value={language} onChange={e => {
-                                    setLanguage(e.target.value as string);
+                                    setLanguage(e.target.value);
                                 }}>
 
                                     <MenuItem value={'en-US'}>
@@ -62,7 +68,7 @@ const CfgDisplayScreen: React.FC = () => {
                             <TableCell align="right">
                                 <Select value={theme} onChange={e => {
                                     // theme changes should be applied instantly
-                                    setTheme(e.target.value as string);
+                                    setTheme(e.target.value);
                                     const newConfig = {...displayConfig};
                                     newConfig.theme = e.target.value;
                                     setDisplayConfig(newConfig);
@@ -98,6 +104,18 @@ const CfgDisplayScreen: React.FC = () => {
                             <TableCell align="right">
                                 <Switch checked={showPerformance} onChange={e => {
                                     setShowPerformance(e.target.checked);
+                                }}/>
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:display_performance_show_stats_chart"), content: t("config:display_performance_show_stats_chart_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:display_performance_show_stats_chart") }</Typography></TableCell>
+                            <TableCell align="right">
+                                <Switch checked={showPerformanceChart} disabled={!showPerformance} onChange={e => {
+                                    setShowPerformanceChart(e.target.checked);
                                 }}/>
                             </TableCell>
                         </TableRow>
