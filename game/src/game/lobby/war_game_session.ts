@@ -13,6 +13,7 @@ export class WarGameSession {
         public readonly initialGameState: InitialGameStatePacket
     ) {
         this.measurePing();
+        game.engine.resumeRender();
     }
 
     private measurePing() {
