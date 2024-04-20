@@ -19,12 +19,37 @@
 		"prefix": "efc",
 		"body": [
 			"const $1 = () => {",
-			"	",
-			"	return (<></>);",
+			"\t",
+			"\treturn (<></>);",
 			"}",
 			"",
 			"export default $1;"
 		],
 		"description": "Create empty basic class"
+	},
+
+	"Create empty translated functional component": {
+		"prefix": "tfc",
+		"body": [
+			"import { useTranslation } from \"react-i18next\";",
+			"import { FunctionComponent } from \"react\";",
+			"",
+			"interface $1Props {",
+			"\t",
+			"}",
+			"",
+			"const $1: FunctionComponent<$1Props> = () => {",
+			"\t",
+			"\tconst { t } = useTranslation([]);",
+			"\t",
+			"\treturn (",
+			"\t\t<></>",
+			"\t);",
+			"\t",
+			"}",
+			"",
+			"export default $1;"
+		],
+		"description": "Create an empty translated functional component"
 	}
 }
