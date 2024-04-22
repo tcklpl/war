@@ -1,6 +1,7 @@
 import { BufferUtils } from "../../../utils/buffer_utils";
 import { DirectionalLight } from "../lights/directional_light";
 import { Light } from "../lights/light";
+import { PointLight } from "../lights/point_light";
 import { Skybox } from "../skybox/skybox";
 import { SceneInfoBindGroupOptions } from "./scene_info_bind_group_options";
 
@@ -10,6 +11,7 @@ export class SceneInfo {
     private _skybox: Skybox;
 
     private _directionalLightBuffer = BufferUtils.createEmptyBuffer(DirectionalLight.byteSize * 2 + 16, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _pointLightBuffer = BufferUtils.createEmptyBuffer(PointLight.byteSize * 64 + 16, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
     private _pipelineBindGroups = new Map<GPURenderPipeline, {bg: GPUBindGroup, opt: SceneInfoBindGroupOptions}>();
 
     constructor(lights: Light[], skybox: Skybox) {
@@ -20,12 +22,22 @@ export class SceneInfo {
 
     updateLightBuffers() {
         this.updateDirectionalLightBuffer();
+        this.updatePointLightBuffer();
     }
 
     private updateDirectionalLightBuffer() {
         const directionalLights = this._lights.filter(x => x instanceof DirectionalLight);
-        device.queue.writeBuffer(this._directionalLightBuffer, 0, new Uint32Array([directionalLights.length]));
-        directionalLights.forEach((l, i) => l.writeToBuffer(this._directionalLightBuffer, i, 16));
+        this.updateLightBuffer(directionalLights, this._directionalLightBuffer);
+    }
+
+    private updatePointLightBuffer() {
+        const pointLights = this._lights.filter(x => x instanceof PointLight);
+        this.updateLightBuffer(pointLights, this._pointLightBuffer);
+    }
+
+    private updateLightBuffer(lights: Light[], buffer: GPUBuffer, starPadding = 16) {
+        device.queue.writeBuffer(buffer, 0, new Uint32Array([lights.length]));
+        lights.forEach((l, i) => l.writeToBuffer(buffer, i, 16));
     }
 
     private createBindGroup(pipeline: GPURenderPipeline, opt: SceneInfoBindGroupOptions) {
@@ -42,6 +54,7 @@ export class SceneInfo {
             layout: pipeline.getBindGroupLayout(opt.layoutIndex),
             entries: [
                 ...(opt.directionalLights.use ?     [{ binding: opt.directionalLights.index, resource: { buffer: this._directionalLightBuffer } }] : []),
+                ...(opt.pointLights.use ?           [{ binding: opt.pointLights.index, resource: { buffer: this._pointLightBuffer } }] : []),
                 ...(opt.skybox.use ?                [{ binding: opt.skybox.index, resource: this._skybox.prefilteredSkybox.texture.createView({ dimension: 'cube' }) }] : []),
                 ...(opt.prefilteredSkybox.use ?     [{ binding: opt.prefilteredSkybox.index, resource: this._skybox.prefilteredSkybox.texture.createView({ dimension: 'cube' }) }] : []),
                 ...(opt.brdfLUT.use ?               [{ binding: opt.brdfLUT.index, resource: game.engine.brdfLUT.createView()}] : []),
@@ -70,6 +83,7 @@ export class SceneInfo {
 
     free() {
         this._directionalLightBuffer?.destroy();
+        this._pointLightBuffer?.destroy();
     }
 
     get lights() {

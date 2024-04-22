@@ -7,6 +7,7 @@ interface SceneInfoBindGroupOption {
 export class SceneInfoBindGroupOptions {
 
     private _directionalLights: SceneInfoBindGroupOption = { use: false, index: -1 };
+    private _pointLights: SceneInfoBindGroupOption = { use: false, index: -1 };
     
     private _skybox: SceneInfoBindGroupOption = { use: false, index: -1 };
     private _prefilteredSkybox: SceneInfoBindGroupOption = { use: false, index: -1 };
@@ -19,6 +20,11 @@ export class SceneInfoBindGroupOptions {
 
     includeDirectionalLights(index: number) {
         this._directionalLights = { use: true, index };
+        return this;
+    }
+
+    includePointLights(index: number) {
+        this._pointLights = { use: true, index };
         return this;
     }
 
@@ -48,6 +54,10 @@ export class SceneInfoBindGroupOptions {
 
     get directionalLights() {
         return this._directionalLights;
+    }
+
+    get pointLights() {
+        return this._pointLights;
     }
 
     get skybox() {
