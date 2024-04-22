@@ -29,6 +29,7 @@ export class RenderStageSolidGeometry implements RenderStage {
 
         this._sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO)
         .includeDirectionalLights(2)
+        .includePointLights(3)
         .includeExtras([
             { binding: 0, resource: this._shadowMapSampler },
             { binding: 1, resource: resources.shadowMapAtlas.texture.view }
