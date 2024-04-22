@@ -20,7 +20,7 @@ export class GameBoard extends Scene {
         super('Game board scene', {
             entities: [ ...countries.allCountries ],
             cameras: [ mainCamera ],
-            lights: [ lights.sun ],
+            lights: [ lights.sun, ...countries.allCountries.map(c => c.hoverLight) ],
             skyboxes: [ skybox ],
 
             activeCamera: mainCamera,
