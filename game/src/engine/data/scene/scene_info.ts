@@ -26,12 +26,12 @@ export class SceneInfo {
     }
 
     private updateDirectionalLightBuffer() {
-        const directionalLights = this._lights.filter(x => x instanceof DirectionalLight);
+        const directionalLights = this._lights.filter(x => x instanceof DirectionalLight && x.enabled);
         this.updateLightBuffer(directionalLights, this._directionalLightBuffer);
     }
 
     private updatePointLightBuffer() {
-        const pointLights = this._lights.filter(x => x instanceof PointLight);
+        const pointLights = this._lights.filter(x => x instanceof PointLight && x.enabled);
         this.updateLightBuffer(pointLights, this._pointLightBuffer);
     }
 
