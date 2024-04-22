@@ -25,6 +25,8 @@ export class MatrixTransformative {
 
     private _windingOrder: 'cw' | 'ccw' = 'ccw';
 
+    private _transformListeners: (() => void)[] = [];
+
     private buildModelMatrix() {
         this._modelMatrix = Mat4.identity()
             .multiply(this._translationMatrix)
@@ -45,6 +47,9 @@ export class MatrixTransformative {
 
         // update children
         this._children.forEach(c => c.buildModelMatrix());
+
+        // update listeners
+        this._transformListeners.forEach(t => t());
     }
 
     buildTranslationMatrix() {
@@ -57,6 +62,10 @@ export class MatrixTransformative {
 
     buildScaleMatrix() {
         this._scaleMatrix = Mat4.scaling(this._scale.x, this._scale.y, this._scale.z);
+    }
+
+    onTransform(t: () => void) {
+        this._transformListeners.push(t);
     }
 
     get translation() {
