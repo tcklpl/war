@@ -3,7 +3,7 @@ import shaderSource from './principled_bsdf.wgsl';
 
 export class PrincipledBSDFShader extends Shader {
 
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         VIEWPROJ: 0,
         MODEL: 1,
         MATERIAL: 2,
