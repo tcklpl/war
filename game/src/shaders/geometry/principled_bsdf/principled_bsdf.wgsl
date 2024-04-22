@@ -9,6 +9,7 @@
 
 const PI = 3.14159265359;
 const MAX_DIRECTIONAL_LIGHTS = 2;
+const MAX_POINT_LIGHTS = 64;
 
 /*
     Vertex uniforms what are common to every entity on the scane (on the same frame)
@@ -211,11 +212,25 @@ struct DirectionalLightInfo {
     uv: vec4f,
     view_proj: mat4x4f
 };
+
+// Scene Info - Point Lights
+struct PointLightInfo {
+    color: vec3f,
+    intensity: f32,
+    position: vec3f
+};
+
 struct DirectionalLights {
     count: u32,
     lights: array<DirectionalLightInfo, MAX_DIRECTIONAL_LIGHTS>
 };
 @group(3) @binding(2) var<uniform> directionalLights: DirectionalLights;
+
+struct PointLights {
+    count: u32,
+    lights: array<PointLightInfo, MAX_POINT_LIGHTS>
+};
+@group(3) @binding(3) var<uniform> pointLights: PointLights;
 
 // TODO: Scene Info - Punctual Lights
 
@@ -525,6 +540,33 @@ fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors, cp: CommonPosi
     return color;
 }
 
+fn evaluatePunctualLights(pixel: PixelInfo, cv: CommonVectors, cp: CommonPositions) -> vec3f {
+
+    var color = vec3f(0.0);
+    for (var i = 0u; i < pointLights.count; i++) {
+
+        var diff = cp.model_pos - pointLights.lights[i].position;
+        var L = normalize(diff);
+        var intensity = pointLights.lights[i].intensity;
+        var distance = distance(cp.model_pos, pointLights.lights[i].position);
+        var attenuation = 1.0 / (distance * distance);
+
+        // Shadow mapping
+        var visibility = 1.0;
+
+        // TODO: actually load light intensity
+        var light = Light(
+            vec4f(pointLights.lights[i].color, intensity),  // color
+            attenuation,                                    // attenuation
+            L,                                              // light vector
+            saturate(dot(cv.N, L))                          // NoL
+        );
+        
+        color += surfaceShading(pixel, light, cv, visibility);
+    }
+    return color;
+}
+
 /*
     --------------------------------------------------------------------------------------------------
     Pixel Params and Remapping
@@ -570,7 +612,8 @@ fn evaluateLights(mat: MaterialInputs, pixel: PixelInfo, cv: CommonVectors, cp: 
 
     // IBL was delegated to the environment shader
     color += evaluateDirectionalLights(pixel, cv, cp);
-    // TODO: Punctual Lights (point and spot)
+    color += evaluatePunctualLights(pixel, cv, cp);
+    // TODO: More punctual Lights (spot)
 
     return vec4f(color, 1.0);
 }
