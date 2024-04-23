@@ -7,6 +7,7 @@
         This file will only impact the server dafaults, each game lobby owner is free to change their game rules, UNLESS you configure
         the property "is_immutable" as true, in that case the rules in this file will be forced on every game.
     */
+    game_start_countdown_seconds: 10,
 
     default_game_config: {
         /*

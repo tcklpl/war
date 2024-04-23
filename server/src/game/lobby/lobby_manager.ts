@@ -1,4 +1,3 @@
-import { GameConfig } from "../../../../protocol";
 import { ConfigManager } from "../../config/config_manager";
 import { CfgGame } from "../../config/default/cfg_game";
 import { CfgServer } from "../../config/default/cfg_server";
@@ -16,11 +15,11 @@ export class LobbyManager {
 
     private _lobbies: Lobby[] = [];
     private _maxLobbies: number;
-    private readonly _defaultGameConfig: GameConfig;
+    private readonly _cfgGame: CfgGame;
 
     constructor(private _configManager: ConfigManager, private _gameServer: GameServer, private _log: Logger) {
         this._maxLobbies = this._configManager.getConfig(CfgServer).max_lobbies;
-        this._defaultGameConfig = _configManager.getConfig(CfgGame).default_game_config;
+        this._cfgGame = _configManager.getConfig(CfgGame);
         this.registerEvents();
     }
 
@@ -55,7 +54,7 @@ export class LobbyManager {
         if (this._lobbies.find(l => l.name === name)) throw new UnavailableNameError();
         if (this._lobbies.find(l => l.owner === owner)) throw new PlayerAlreadyOwnsALobbyError();
 
-        const lobby = new Lobby(owner, name, {...this._defaultGameConfig}, this._log.createChildContext(name));
+        const lobby = new Lobby(owner, name, {...this._cfgGame.default_game_config}, this._cfgGame.game_start_countdown_seconds, this._log.createChildContext(name));
         owner.joinLobby(lobby);
         lobby.joinable = joinable;
         this._lobbies.push(lobby);

@@ -26,11 +26,10 @@ export class Lobby {
         new PartyCapitalism()
     ];
 
-    private readonly startGameCooldown = 10; // seconds
     private _startGameTask?: NodeJS.Timeout;
     private _game?: Game;
 
-    constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig, private _log: Logger) {
+    constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig, private _gameStartCountdown: number, private _log: Logger) {
         this._players.push(this.owner);
     }
 
@@ -110,7 +109,7 @@ export class Lobby {
     startGame() {
         // validate if all players have selected a party
         if (this._players.some(p => p.party instanceof PartyNotSet)) return false;
-        new ServerPacketStartingGame(this.startGameCooldown).dispatch(...this._players);
+        new ServerPacketStartingGame(this._gameStartCountdown).dispatch(...this._players);
         this._status = 'starting';
 
         // set a timeout to actually start the game
@@ -118,7 +117,7 @@ export class Lobby {
             this._game = new Game(this, (s) => this._status = s, this._log.createChildContext("In Game"));
             new ServerPacketInitialGameState(this._game.initialGameStatePacket).dispatch(...this._players);
             this._game.setupGame();
-        }, this.startGameCooldown * 1000);
+        }, this._gameStartCountdown * 1000);
 
         this._log.info(`Starting game`);
         return true;
