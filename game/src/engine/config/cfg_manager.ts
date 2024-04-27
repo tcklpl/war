@@ -44,11 +44,21 @@ export class ConfigManager extends IDBController<ConfigPage> {
      */
     private assertLoadedConfigCompletion<T extends ConfigPage>(reference: T, loadedConfig?: T) {
         if (!loadedConfig) return reference;
+
+        // Check if the loaded config has any missing keys
         for (let refKey of Object.keys(reference)) {
             if (!Object.keys(loadedConfig).find(x => x === refKey)) {
                 (loadedConfig as any)[refKey] = reference[refKey as keyof typeof reference];
             }
         }
+
+        // Check if the loaded config has eny extra unused keys
+        for (const loadedKey of Object.keys(loadedConfig)) {
+            if (!Object.keys(reference).find(k => k === loadedKey)) {
+                delete (loadedConfig as any)[loadedKey];
+            }
+        }
+        
         return loadedConfig;
     }
 
