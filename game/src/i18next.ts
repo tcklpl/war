@@ -28,8 +28,13 @@ export const resources = {
     }
 };
 
+const defaultLanguage = 'en-US';
+let language = localStorage.getItem("language");
+if (!language) language = defaultLanguage;
+localStorage.setItem("language", language);
+
 i18next.use(initReactI18next).init({
-    lng: 'en', // if you're using a language detector, do not define the lng option
+    lng: language,
     debug: false,
     fallbackLng: 'en', // use en if detected lng is not available
     saveMissing: true, // send not translated keys to endpoint

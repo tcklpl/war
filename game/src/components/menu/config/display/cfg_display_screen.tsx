@@ -10,11 +10,11 @@ const CfgDisplayScreen: React.FC = () => {
 
     const { palette } = useTheme();
     const [currentTooltip, setCurrentTooltip] = useState<{title: string, content: string} | undefined>();
-    const { t } = useTranslation(["config"]);
+    const { t, i18n } = useTranslation(["config"]);
     const { displayConfig, setDisplayConfig } = useConfig();
 
     const [theme, setTheme] = useState(displayConfig.theme);
-    const [language, setLanguage] = useState(displayConfig.language);
+    const [language, setLanguage] = useState(localStorage.getItem("language"));
     const [showPerformance, setShowPerformance] = useState(displayConfig.showPerformance);
     const [showPerformanceChart, setShowPerformanceChart] = useState(displayConfig.showPerformanceCharts);
 
@@ -22,12 +22,11 @@ const CfgDisplayScreen: React.FC = () => {
     useLayoutEffect(() => {
         // save the config when this screen is closed
         return () => {
-            displayConfig.language = language;
             displayConfig.theme = theme;
             displayConfig.showPerformance = showPerformance;
             displayConfig.showPerformanceCharts = showPerformanceChart;
         }
-    }, [showPerformance, showPerformanceChart, language, theme, displayConfig]);
+    }, [showPerformance, showPerformanceChart, theme, displayConfig]);
 
     useEffect(() => {
         if (!showPerformance) setShowPerformanceChart(false);
@@ -50,6 +49,8 @@ const CfgDisplayScreen: React.FC = () => {
                             <TableCell align="right">
                                 <Select value={language} onChange={e => {
                                     setLanguage(e.target.value);
+                                    i18n.changeLanguage(e.target.value as string);
+                                    localStorage.setItem("language", e.target.value as string);
                                 }}>
 
                                     <MenuItem value={'en-US'}>
