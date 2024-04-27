@@ -88,7 +88,7 @@ const ServerSelectScreen: React.FC = () => {
         - The user enters the password for a server and presses connect.
     */
     const connectToServer = useCallback(async (password?: string) => {
-        if (!selectedServer || !selectedServer.serverInfo) return;
+        if (!selectedServer?.serverInfo) return;
 
         setServerConMessage(t("server_list:connecting"));
 
