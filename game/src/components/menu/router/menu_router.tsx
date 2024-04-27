@@ -7,6 +7,7 @@ import LobbySelectScreen from "../lobby_select/lobby_select_screen";
 import GameControlledRoute from "./control/game_controlled_route";
 import LobbyScreen from "../lobby/lobby_screen";
 import GameHud from "../../game/hud/game_hud";
+import CreditsScreen from "../credits/credits_screen";
 
 const MenuRouter: React.FC = () => {
 
@@ -16,6 +17,7 @@ const MenuRouter: React.FC = () => {
             <Route path="/" Component={MainMenu}/>
             <Route path="/servers" Component={ServerSelectScreen}/>
             <Route path="/config" Component={CfgMenu}/>
+            <Route path="/credits" Component={CreditsScreen}/>
             
             <Route path="/lobbies" element={
                 <GameControlledRoute requiresActiveSession redirectPath="/servers">
