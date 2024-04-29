@@ -1,2 +1,1 @@
-
-export class LobbyNotReadyError extends Error { }
+export class LobbyNotReadyError extends Error {}

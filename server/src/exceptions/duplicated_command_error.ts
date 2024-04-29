@@ -1,4 +1,1 @@
-
-export class DuplicatedCommandError extends Error {
-
-}
+export class DuplicatedCommandError extends Error {}

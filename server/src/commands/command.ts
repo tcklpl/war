@@ -1,9 +1,8 @@
-import { DuplicatedCommandError } from "../exceptions/duplicated_command_error";
-import { Logger } from "../log/logger";
-import { CommandExecutionData } from "./command_execution_data";
+import { DuplicatedCommandError } from '../exceptions/duplicated_command_error';
+import { Logger } from '../log/logger';
+import { CommandExecutionData } from './command_execution_data';
 
 export abstract class Command {
-
     private _subroutes: Command[] = [];
 
     constructor(
@@ -11,15 +10,20 @@ export abstract class Command {
         public readonly name: string,
         public readonly aliases: string[],
         public readonly description: string,
-        protected readonly _log: Logger
+        protected readonly _log: Logger,
     ) {}
 
     abstract execute(data: CommandExecutionData): boolean;
 
     protected registerSubroute(subroute: Command) {
-        if (this._subroutes.find(s => s.command === subroute.command || 
-            s.aliases.find(a => subroute.aliases.find(b => a === b)))
-        ) throw new DuplicatedCommandError(`Trying to register a duplicated subroute "${subroute.command}" on command "${this.command}"`);
+        if (
+            this._subroutes.find(
+                s => s.command === subroute.command || s.aliases.find(a => subroute.aliases.find(b => a === b)),
+            )
+        )
+            throw new DuplicatedCommandError(
+                `Trying to register a duplicated subroute "${subroute.command}" on command "${this.command}"`,
+            );
         this._subroutes.push(subroute);
     }
 
@@ -31,7 +35,8 @@ export abstract class Command {
     }
 
     executeRouted(data: CommandExecutionData) {
-        const possibleSubroute = data.args.length > 0 ? this._subroutes.find(s => s.command === data.args[0]) : undefined;
+        const possibleSubroute =
+            data.args.length > 0 ? this._subroutes.find(s => s.command === data.args[0]) : undefined;
         if (possibleSubroute) {
             data.args = data.args.slice(1);
             possibleSubroute.executeRouted(data);
@@ -43,5 +48,4 @@ export abstract class Command {
     get subroutes() {
         return this._subroutes;
     }
-
 }

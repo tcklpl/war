@@ -1,4 +1,1 @@
-
-export class PlayerAlreadyOwnsALobbyError extends Error {
-
-}
+export class PlayerAlreadyOwnsALobbyError extends Error {}

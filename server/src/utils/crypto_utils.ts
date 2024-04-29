@@ -1,20 +1,17 @@
-
-import { generateKeyPairSync } from "crypto";
+import { generateKeyPairSync } from 'crypto';
 
 export class CryptoUtils {
-
     static generateRSAKeys(length: number) {
-        return generateKeyPairSync("rsa", {
+        return generateKeyPairSync('rsa', {
             modulusLength: length,
             publicKeyEncoding: {
-                type: "spki",
-                format: "pem"
+                type: 'spki',
+                format: 'pem',
             },
             privateKeyEncoding: {
-                type: "pkcs8",
-                format: "pem"
-            }
+                type: 'pkcs8',
+                format: 'pem',
+            },
         });
     }
-
 }

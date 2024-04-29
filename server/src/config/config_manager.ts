@@ -1,29 +1,24 @@
-import * as fs from "fs";
-import * as path from "path";
-import { exit } from "process";
-import { CfgServer } from "./default/cfg_server";
-import { Config } from "./config";
+import * as fs from 'fs';
+import * as path from 'path';
+import { exit } from 'process';
+import { CfgServer } from './default/cfg_server';
+import { Config } from './config';
 import * as json5 from 'json5';
-import { CfgCrypt } from "./default/cfg_crypt";
-import { CfgGame } from "./default/cfg_game";
-import { Logger } from "../log/logger";
+import { CfgCrypt } from './default/cfg_crypt';
+import { CfgGame } from './default/cfg_game';
+import { Logger } from '../log/logger';
 
 export class ConfigManager {
-
     constructor(private _log: Logger) {}
 
-    private _configFolder = path.join(process.cwd(), "config");
-    private _configs = [
-        new CfgServer(),
-        new CfgCrypt(),
-        new CfgGame()
-    ];
-    private _loadedConfigs: Map<(typeof Config)['name'], Config> = new Map(); 
+    private _configFolder = path.join(process.cwd(), 'config');
+    private _configs = [new CfgServer(), new CfgCrypt(), new CfgGame()];
+    private _loadedConfigs: Map<(typeof Config)['name'], Config> = new Map();
 
     private checkPermissions() {
         try {
-           fs.accessSync(__dirname, fs.constants.R_OK || fs.constants.W_OK);
-           return true;
+            fs.accessSync(__dirname, fs.constants.R_OK || fs.constants.W_OK);
+            return true;
         } catch (err) {
             return false;
         }
@@ -40,7 +35,7 @@ export class ConfigManager {
         this._configs.forEach(cfg => {
             if (!fs.existsSync(path.join(this._configFolder, cfg.PATH))) {
                 this._log.info(`Config "${cfg.NAME}" doesn't exist, copying the default one`);
-                
+
                 if (!fs.existsSync(cfg.DEFAULT_PATH)) {
                     this._log.err(`Failed to load the default config "${cfg.NAME}" from "${cfg.DEFAULT_PATH}"`);
                     process.exit(1);
@@ -76,18 +71,16 @@ export class ConfigManager {
             const example = fs.readFileSync(cfg.DEFAULT_PATH, { encoding: 'utf-8' });
             const parsedExample = json5.parse(example);
 
-            let incomplete = false;
             for (const exampleKey of Object.keys(parsedExample)) {
                 if (!loadedCfg[exampleKey]) {
                     loadedCfg[exampleKey] = parsedExample[exampleKey];
-                    incomplete = true;
                 }
             }
 
             this._loadedConfigs.set(cfg.NAME, loadedCfg);
         });
     }
-    
+
     async loadConfig() {
         this._log.info(`Loading configs`);
         if (!this.checkPermissions()) {
@@ -100,7 +93,7 @@ export class ConfigManager {
     }
 
     getConfig<T extends Config>(type: new () => T): T {
-        const configType = new type();        
+        const configType = new type();
         return this._loadedConfigs.get(configType.NAME) as T;
     }
 }

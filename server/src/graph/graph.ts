@@ -1,7 +1,6 @@
-import { Node } from "./node";
+import { Node } from './node';
 
 export class Graph<T> {
-
     nodes: Map<T, Node<T>> = new Map();
 
     addNode(n: T) {
@@ -12,5 +11,4 @@ export class Graph<T> {
         this.nodes.set(n, node);
         return node;
     }
-
 }
