@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
-      - name: Switch to Server
-        run: cd server
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -21,6 +19,8 @@ jobs:
           cache: "npm"
           cache-dependency-path: server/package-lock.json
       - name: Installing Requirements
+        working-directory: server
         run: npm ci
       - name: Verify Lint
+        working-directory: server
         run: npm run lint
