@@ -55,7 +55,7 @@ export class CryptManager {
         this._algo = algo as 'RS256' | 'RS384' | 'RS512';
 
         const expiration = this._configManager.getConfig(CfgServer).client_auth_token_expiration;
-        if (!/^[0-9]+h$/.test(expiration))
+        if (!/^\d+h$/.test(expiration))
             throw new Error(
                 `Wrong token expiration format on "server.json5", should be on format [0-9]+h eg. 4h, 12h, 16h etc.`,
             );
