@@ -58,18 +58,21 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: server-dist
+      - name: Generate New Tag Name
+        run: echo "builddate=$(date +'%Y%m%d%H%M')" >> $GITHUB_OUTPUT
+        id: tag-ver
       - name: Update In-Dev Tag
         uses: rickstaa/action-create-tag@v1
         id: create-tag
         with:
-          tag: in-dev-${{ github.event.repository.updated_at }}
+          tag: indev-${{ steps.tag-ver.outputs.builddate }}
           tag_exists_error: false
           message: Latest In-Dev Artifacts
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          name: In-Dev ${{ github.event.repository.updated_at }}
+          name: In-Dev ${{ steps.tag-ver.outputs.builddate }}
           draft: false
           prerelease: true
-          tag_name: in-dev-${{ github.event.repository.updated_at }}
+          tag_name: indev-${{ steps.tag-ver.outputs.builddate }}
           files: war2-server-*
