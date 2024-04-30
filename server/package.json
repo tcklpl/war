@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "build": "tsc && copyfiles -u 1 src/**/*.json5 build",
+    "build": "tsc --build && copyfiles -u 1 src/**/*.json5 build",
     "pack": "npx pkg --compress GZip ."
   },
   "author": "tcklpl",
