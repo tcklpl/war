@@ -1,7 +1,7 @@
 {
   "name": "war2-server",
   "version": "0.0.1",
-  "description": "War2 game server",
+  "description": "War2 Game Server",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
