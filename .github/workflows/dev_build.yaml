@@ -56,6 +56,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: server-dist
+      - name: Update In-Dev Tag
+        uses: rickstaa/action-create-tag@v1
+        id: create-tag
+        with:
+          tag: in-dev
+          tag_exists_error: false
+          message: Latest In-Dev Artifacts
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -63,3 +70,4 @@ jobs:
           draft: false
           prerelease: true
           files: dist/*
+          tag_name: in-dev
