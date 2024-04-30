@@ -58,13 +58,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: server-dist
-      - name: debug prints
-        run: ls -la .
       - name: Update In-Dev Tag
         uses: rickstaa/action-create-tag@v1
         id: create-tag
         with:
-          tag: in-dev
+          tag: in-dev-${{ github.event.repository.updated_at }}
           tag_exists_error: false
           message: Latest In-Dev Artifacts
       - name: Create Release
@@ -73,5 +71,5 @@ jobs:
           name: In-Dev ${{ github.event.repository.updated_at }}
           draft: false
           prerelease: true
-          files: dist/*
-          tag_name: in-dev
+          tag_name: in-dev-${{ github.event.repository.updated_at }}
+          files: war2-server-*
