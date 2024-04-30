@@ -2,7 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "strictNullChecks": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+    "outDir": "build"
   },
   "ts-node": {
     "swc": true
