@@ -1,4 +1,4 @@
-name: Dev Build Pipeline
+name: Nightly Dev Build
 on:
   schedule:
     - cron: "15 0 * * *" # Run this workflow everyday at 00:15 UTC
