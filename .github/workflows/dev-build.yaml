@@ -1,7 +1,8 @@
-name: Nightly Dev Build
+name: Dev Build
 on:
-  schedule:
-    - cron: "15 0 * * *" # Run this workflow everyday at 00:15 UTC
+  push:
+    tags:
+      - v**-* # Will trigger on all "open" tags, eg. v0.9.0-dev or v1.0.0-alpha, not triggering on "closed" tags like v1.0.0
 
 jobs:
   build-server:
@@ -62,21 +63,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: server-dist
-      - name: Generate New Tag Name
-        run: echo "builddate=$(date +'%Y%m%d%H%M')" >> $GITHUB_OUTPUT
-        id: tag-ver
-      - name: Update In-Dev Tag
-        uses: rickstaa/action-create-tag@v1
-        id: create-tag
-        with:
-          tag: indev-${{ steps.tag-ver.outputs.builddate }}
-          tag_exists_error: false
-          message: Latest In-Dev Artifacts
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          name: In-Dev ${{ steps.tag-ver.outputs.builddate }}
+          name: In-Dev ${{ github.ref_name }}
           draft: false
           prerelease: true
-          tag_name: indev-${{ steps.tag-ver.outputs.builddate }}
+          tag_name: ${{ github.ref_name }}
           files: war2-server-*
