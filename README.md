@@ -6,7 +6,7 @@ This is the browser version of a class-based war2-inspired game made using NodeJ
 
 # Compiling
 
-Make sure you have `node` and `npm` installed on your system. I'm currently using `node v16.17.1` and `npm 8.15.0`
+Make sure you have `node` and `npm` installed on your system. I'm currently using `node v20.12.2` and `npm 10.5.0`
 
 The game is still in early development and the engine is currently being worked on. To start the game in development mode (hot reload) you can do the following:
 ```

@@ -5,20 +5,23 @@ Stuff used in the game/engine and who made it.
 ## Assets
 
 ### glTF Assets
-Asset name | File Name | Author(s) | License | Extra Info
----|---|---|---|---
-Game Board | board.gltf | [Jader](https://github.com/JaderGedeon), [tcklpl](https://github.com/tcklpl) | CC0 | 
+
+| Asset name | File Name  | Author(s)                                                                    | License | Extra Info |
+| ---------- | ---------- | ---------------------------------------------------------------------------- | ------- | ---------- |
+| Game Board | board.gltf | [Jader](https://github.com/JaderGedeon), [tcklpl](https://github.com/tcklpl) | CC0     |
 
 ### HDR Assets
-Asset name | File Name | Author(s) | License | Extra Info
----|---|---|---|---
-kloofendal_43d_clear_4k | kloofendal_43d_clear_4k.AVIF | [Greg Zaal](https://gregzaal.com/) | CC0 | [File in Poly Haven](https://polyhaven.com/a/kloofendal_43d_clear). The HDR file was converted to AVIF so it could be easily loaded.
-thatch_chapel_4k | thatch_chapel_4k.hdr | [Dimitrios Savva](https://polyhaven.com/all?a=Dimitrios+Savva), [Jarod Guest](https://polyhaven.com/all?a=Jarod+Guest) | CC0 | [File in Poly Haven](https://polyhaven.com/a/thatch_chapel)
+
+| Asset name              | File Name                    | Author(s)                                                                                                              | License | Extra Info                                                                                                                           |
+| ----------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| kloofendal_43d_clear_4k | kloofendal_43d_clear_4k.AVIF | [Greg Zaal](https://gregzaal.com/)                                                                                     | CC0     | [File in Poly Haven](https://polyhaven.com/a/kloofendal_43d_clear). The HDR file was converted to AVIF so it could be easily loaded. |
+| thatch_chapel_4k        | thatch_chapel_4k.hdr         | [Dimitrios Savva](https://polyhaven.com/all?a=Dimitrios+Savva), [Jarod Guest](https://polyhaven.com/all?a=Jarod+Guest) | CC0     | [File in Poly Haven](https://polyhaven.com/a/thatch_chapel)                                                                          |
 
 ## Localizations
-Locale | Author(s)
----|---
-en | [tcklpl](https://github.com/tcklpl)
+
+| Locale | Author(s)                           |
+| ------ | ----------------------------------- |
+| en     | [tcklpl](https://github.com/tcklpl) |
 
 ## Projects / Repos / Articles / Interviews used as reference
 
@@ -35,4 +38,3 @@ en | [tcklpl](https://github.com/tcklpl)
 - KhronosGroup's glTF 2.0 [Specification](https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/README.md) and [Tutorial](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/README.md). This project heavily uses glTF files and I wrote the glTF importer based on these pages.
 
 - [io-rgbe by David Lenaerts](https://github.com/DerSchmale/io-rgbe/): I'm using my adapted version of his loader to decode .hdr RGBE files. The list of changes and the MIT license note can be found on the file [hdr_loader.ts](./src/engine/asset/loaders/hdr_loader.ts).
-
