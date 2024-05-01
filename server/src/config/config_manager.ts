@@ -37,7 +37,7 @@ export class ConfigManager {
                 this._log.info(`Config "${cfg.NAME}" doesn't exist, copying the default one`);
 
                 if (!fs.existsSync(cfg.DEFAULT_PATH)) {
-                    this._log.err(`Failed to load the default config "${cfg.NAME}" from "${cfg.DEFAULT_PATH}"`);
+                    this._log.fatal(`Failed to load the default config "${cfg.NAME}" from "${cfg.DEFAULT_PATH}"`);
                     process.exit(1);
                 }
 
@@ -49,7 +49,7 @@ export class ConfigManager {
     private parseConfigFile(config: Config) {
         const cfgPath = path.join(this._configFolder, config.PATH);
         if (!fs.existsSync(cfgPath)) {
-            this._log.err(`Failed to load file "${cfgPath}": File doesn't exist`);
+            this._log.fatal(`Failed to load file "${cfgPath}": File doesn't exist`);
             process.exit(1);
         }
         const fileContents = fs.readFileSync(cfgPath, { encoding: 'utf-8' });
@@ -58,7 +58,7 @@ export class ConfigManager {
             const parsed = json5.parse(fileContents);
             return parsed;
         } catch (err) {
-            this._log.info(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
+            this._log.warn(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
             fs.copyFileSync(config.DEFAULT_PATH, path.join(this._configFolder, config.PATH));
             return this.parseConfigFile(config);
         }
@@ -84,7 +84,7 @@ export class ConfigManager {
     async loadConfig() {
         this._log.info(`Loading configs`);
         if (!this.checkPermissions()) {
-            this._log.err(`The server doesn't have permission to read or write to the current folder (${__dirname})`);
+            this._log.fatal(`The server doesn't have permission to read or write to the current folder (${__dirname})`);
             exit(1);
         }
         this.assertConfigFolder();
