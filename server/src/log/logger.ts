@@ -1,10 +1,12 @@
 import chalk from 'chalk';
 
 export enum LogLevel {
-    ERROR = 0,
-    INFO = 1,
+    FATAL = 0,
+    ERROR = 1,
     WARN = 2,
-    DEBUG = 3,
+    INFO = 3,
+    DEBUG = 4,
+    TRACE = 5,
 }
 
 export class Logger {
@@ -12,14 +14,16 @@ export class Logger {
 
     static parseLogLevelFromString(s: string) {
         switch (s.trim().toLowerCase()) {
-            case 'debug':
-                return LogLevel.DEBUG;
-            case 'info':
-                return LogLevel.INFO;
-            case 'warn':
-                return LogLevel.WARN;
+            case 'fatal':
+                return LogLevel.FATAL;
             case 'error':
                 return LogLevel.ERROR;
+            case 'warn':
+                return LogLevel.WARN;
+            case 'debug':
+                return LogLevel.DEBUG;
+            case 'trace':
+                return LogLevel.TRACE;
             default:
                 return LogLevel.INFO;
         }
@@ -50,23 +54,37 @@ export class Logger {
         return `${this._contextStack.map(c => chalk.yellow(c)).join(chalk.gray(' > '))} ${chalk.gray('>>>')}`;
     }
 
+    private printLogLine(severity: string, str: string) {
+        console.log(`[${this.getCurrentTimeString()}] [${severity}] ${this.getContextString()} ${str}`);
+    }
+
+    trace(str: string) {
+        if (Logger._logLevel < LogLevel.TRACE) return;
+        this.printLogLine(chalk.gray('TRACE'), str);
+    }
+
     debug(str: string) {
         if (Logger._logLevel < LogLevel.DEBUG) return;
-        console.log(`[${this.getCurrentTimeString()}] [${chalk.gray('DEBUG')}] ${this.getContextString()} ${str}`);
+        this.printLogLine(chalk.gray('DEBUG'), str);
     }
 
     info(str: string) {
         if (Logger._logLevel < LogLevel.INFO) return;
-        console.log(`[${this.getCurrentTimeString()}] [${chalk.gray('INFO')}] ${this.getContextString()} ${str}`);
+        this.printLogLine(chalk.blueBright('INFO '), str);
     }
 
     warn(str: string) {
         if (Logger._logLevel < LogLevel.WARN) return;
-        console.log(`[${this.getCurrentTimeString()}] [${chalk.yellow('WARN')}] ${this.getContextString()} ${str}`);
+        this.printLogLine(chalk.yellow('WARN '), str);
     }
 
-    err(str: string) {
+    error(str: string) {
         if (Logger._logLevel < LogLevel.ERROR) return;
-        console.error(`[${this.getCurrentTimeString()}] [${chalk.red('ERROR')}] ${this.getContextString()} ${str}`);
+        this.printLogLine(chalk.red('ERROR'), str);
+    }
+
+    fatal(str: string) {
+        if (Logger._logLevel < LogLevel.FATAL) return;
+        this.printLogLine(chalk.redBright('FATAL'), str);
     }
 }
