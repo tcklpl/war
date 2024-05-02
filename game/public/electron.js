@@ -1,5 +1,6 @@
 const path = require('path');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { readFile } = require("fs/promises");
 
 function createWindow() {
     // Create the browser window.
@@ -7,7 +8,8 @@ function createWindow() {
         width: 1280,
         height: 720,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js')
         },
         autoHideMenuBar: true
     });
@@ -34,4 +36,9 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
+});
+
+ipcMain.handle('channel-fs', async (event, filePath, encoding) => {
+    const localPath = path.join(__dirname, filePath);
+    return await readFile(localPath, encoding);
 });
