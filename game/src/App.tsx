@@ -6,7 +6,7 @@ import themeDefaultDark from './style/themes/default_dark';
 import { useConfig } from './hooks/use_config';
 import { useEffect, useState } from 'react';
 import themeDefaultLight from './style/themes/default_light';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 
 function App() {
@@ -33,10 +33,10 @@ function App() {
     return (
         <div className="App">
             <ThemeProvider theme={theme}>
-                <BrowserRouter>
+                <HashRouter>
                     <CssBaseline/>
                     <WarGameComponent/>
-                </BrowserRouter>
+                </HashRouter>
             </ThemeProvider> 
         </div>
     );
