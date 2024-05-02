@@ -30,7 +30,7 @@ export class ServerConnectionCandidate {
         this.status = 'pinging';
 
         this._pingAbortController = new AbortController();
-        setTimeout(() => this._pingAbortController?.abort(), this.TIMEOUT * 1000); // 20 sec timeout
+        window.setTimeout(() => this._pingAbortController?.abort(), this.TIMEOUT * 1000); // 20 sec timeout
 
         try {
             const result = await fetch(this._listInfo.address, { signal: this._pingAbortController.signal });

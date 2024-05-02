@@ -69,7 +69,7 @@ export class WarGameLobby {
 
         this._gameStartCountdown.value = cd;
         const decrease = () => {
-            this._taskGameStartCountdown = setTimeout(() => {
+            this._taskGameStartCountdown = window.setTimeout(() => {
                 if (this._gameStartCountdown.value && this._gameStartCountdown.value > 0) {
                     this._gameStartCountdown.value = this._gameStartCountdown.value - 1;
                     decrease();
