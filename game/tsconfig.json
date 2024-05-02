@@ -20,7 +20,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "types": [
-      "@webgpu/types"
+      "@webgpu/types",
+      "node"
     ]    
   },
   "include": [
