@@ -50,7 +50,7 @@ jobs:
 
   build-game:
     name: Build Game
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       matrix:
         node-version: [22.x]
