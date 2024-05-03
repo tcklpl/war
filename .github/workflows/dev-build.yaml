@@ -78,7 +78,7 @@ jobs:
         run: npm run build
       - name: Build Windows Binaries
         working-directory: game
-        run: npm run electron-pack-windows
+        run: npm run electron-build-windows
       - name: Sharing Executables
         uses: actions/upload-artifact@v4
         with:
