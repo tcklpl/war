@@ -85,8 +85,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "electron-build-windows": "electron-builder --windows portable",
-    "electron-build-linux": "electron-builder --linux AppImage"
+    "electron-build-windows": "electron-builder --windows nsis portable"
   },
   "eslintConfig": {
     "extends": [
