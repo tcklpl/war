@@ -53,7 +53,8 @@ const WarCanvas: React.FC = () => {
         if (!glCtx) throw new WebGPUUnsupportedError(t("engine:unsupported_webgl2"));
         globalThis.gl = glCtx;
 
-    }, [ t ]);
+        //eslint-disable-next-line
+    }, []);
 
     useEffect(() => {
         getContext().then(() => {
