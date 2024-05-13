@@ -17,7 +17,7 @@ export class VanillaRenderer extends Renderer {
     private _renderResourcePool = new RenderResourcePool();
     private _luminanceHistogram!: LuminanceHistogram;
 
-    private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
+    private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ, 'Picking');
 
     // Jitter offsets - Needed for TAA, should be an array of zeroes if TAA is disabled
     private _jitterOffsetCount = 16;
@@ -88,11 +88,15 @@ export class VanillaRenderer extends Renderer {
      * Maps and reads the picking id under the mouse, sending the result to the IO Mouse class.
      */
     private async updatePicking() {
-        await this._pickingBuffer.mapAsync(GPUMapMode.READ, 0, 4);
-        const idArray = new Uint32Array(this._pickingBuffer.getMappedRange(0, 4));
-        const id = idArray[0];
-        this._pickingBuffer.unmap();
-        game.engine.managers.io.mouseInteractionManager.notifyFramePickingID(id);
+        try {
+            await this._pickingBuffer.mapAsync(GPUMapMode.READ, 0, 4);
+            const idArray = new Uint32Array(this._pickingBuffer.getMappedRange(0, 4));
+            const id = idArray[0];
+            this._pickingBuffer.unmap();
+            game.engine.managers.io.mouseInteractionManager.notifyFramePickingID(id);
+        } catch (e) {
+            console.warn(`Failed to get the picking buffer, probably due to the renderer being destructed`);
+        }
     }
     
     async render() {
@@ -129,11 +133,11 @@ export class VanillaRenderer extends Renderer {
         
     }
 
-    free() {
+    async free() {
         this._renderResourcePool.free();
         this._renderPipeline.free();
         this._luminanceHistogram.free();
-        this._pickingBuffer?.destroy();
+        this._pickingBuffer.destroy();
     }
 
 }
