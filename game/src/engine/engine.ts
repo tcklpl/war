@@ -124,9 +124,6 @@ export class Engine {
         // prevent rendering while we destroy the whole engine
         this.pauseRender();
 
-        // TODO: Fix DB closing timing
-        // await this._db.closeConnection();
-
         // assets don't need any memory freeing
         // cameras also don't need any memory freeing
         this._managers.mesh.freeMeshes();
@@ -143,6 +140,17 @@ export class Engine {
         this._brdfLUT?.destroy();
 
         this._renderer.free();
+    }
+
+    async reinitializeRenderer() {
+        const wasRendering = this._shouldRender;
+        this.pauseRender();
+        
+        await this._renderer.free();
+        this._renderer = new VanillaRenderer();
+        await this._renderer.initialize();
+
+        if (wasRendering) this.resumeRender();
     }
 
     get idPool() {
