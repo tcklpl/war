@@ -4,18 +4,22 @@ export class LuminanceHistogram {
 
     readonly bins = 256;
     private _rawData: Uint32Array = new Uint32Array(new Array(this.bins).fill(0));
-    private _buffer = BufferUtils.createEmptyBuffer(this.bins * 4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ);
+    private _buffer = BufferUtils.createEmptyBuffer(this.bins * 4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ, 'Luminance histogram');
     private _avg: number = 0;
 
     /**
      * Maps and reads the luminance histogram result buffer.
      */
     async updateLuminanceHistogram() {
-        await this._buffer.mapAsync(GPUMapMode.READ);
-        const newData = new Uint32Array(this._buffer.getMappedRange());
-        this.updateRawData(newData);
-        this._buffer.unmap();
-        this.calculateAverage();
+        try {
+            await this._buffer.mapAsync(GPUMapMode.READ);
+            const newData = new Uint32Array(this._buffer.getMappedRange());
+            this.updateRawData(newData);
+            this._buffer.unmap();
+            this.calculateAverage();
+        } catch (e) {
+            console.warn('Failed to map luminance histogram buffer, probably because the histogram is being deleted');
+        }
     }
 
     /**
