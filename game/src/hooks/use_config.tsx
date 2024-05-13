@@ -1,10 +1,9 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { ConfigDisplay } from "../engine/config/cfg_display";
 import { ConfigGraphics } from "../engine/config/cfg_graphics";
 import { useGame } from "./use_game";
 import { LoadStage } from "../game/loader/load_stage";
 import { ConfigGame } from "../engine/config/cfg_game";
-import { WarGame } from "../game/war_game";
 import { ConfigSession } from "../engine/config/cfg_session";
 
 interface IConfigContext {
@@ -32,7 +31,7 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
     const [gameConfig, setGameConfig] = useState(new ConfigGame());
     const [sessionConfig, setSessionConfig] = useState(new ConfigSession());
 
-    const { gameInstance, setGameInstance } = useGame();
+    const { gameInstance } = useGame();
 
     useEffect(() => {
         if (!gameInstance) return;
@@ -61,7 +60,7 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
         return true;
     }
 
-    const shouldRenitializeGame = useCallback(() => {
+    const shouldRenitializeRenderer = useCallback(() => {
         if (!gameInstance) return false;
 
         let hasChanged = false;
@@ -77,7 +76,7 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
         if (!gameInstance) return;
 
         // see if the user has actually changed anything
-        const shouldReinitializeGame = shouldRenitializeGame();
+        const shouldReinitializeRenderer = shouldRenitializeRenderer();
 
         // update engine config copying the local config objects
         gameInstance.engine.config.display = {...displayConfig};
@@ -87,25 +86,22 @@ const ConfigProvider: React.FC<{children?: React.ReactNode}> = ({ children }) =>
         await gameInstance.engine.config.saveConfig();
 
         // only reinitialize the game if needed
-        const reinitializeGame = async () => {
-            await gameInstance.kill();
-            const game = WarGame.initialize();
-            setGameInstance(game);
-        }
-        if (shouldReinitializeGame) {
-            reinitializeGame();
+        if (shouldReinitializeRenderer) {
+            gameInstance.engine.reinitializeRenderer();
         }
 
-    }, [displayConfig, graphicsConfig, gameConfig, gameInstance, sessionConfig, setGameInstance, shouldRenitializeGame]);
+    }, [displayConfig, graphicsConfig, gameConfig, gameInstance, sessionConfig, shouldRenitializeRenderer]);
+
+    const valueMemo = useMemo<IConfigContext>(() => { return {
+        displayConfig, setDisplayConfig,
+        graphicsConfig, setGraphicsConfig,
+        gameConfig, setGameConfig,
+        sessionConfig, setSessionConfig,
+        saveConfig
+    } as IConfigContext}, [displayConfig, setDisplayConfig, graphicsConfig, setGraphicsConfig, gameConfig, setGameConfig, sessionConfig, setSessionConfig, saveConfig]);
 
     return (
-        <ConfigContext.Provider value={{ 
-            displayConfig, setDisplayConfig, 
-            graphicsConfig, setGraphicsConfig, 
-            gameConfig, setGameConfig, 
-            sessionConfig, setSessionConfig, 
-            saveConfig 
-        }}>
+        <ConfigContext.Provider value={valueMemo}>
             { children }
         </ConfigContext.Provider>
     );
