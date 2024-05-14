@@ -88,7 +88,10 @@ export class RenderStageSolidGeometry implements RenderStage {
                     { format: hdrTextureFormat },                   // hdr buffer
                     { format: 'rgba8unorm' as GPUTextureFormat },   // view-space normal buffer
                     { format: 'rg16float' as GPUTextureFormat }     // specular and roughness
-                ]
+                ],
+                constants: {
+                    shader_quality: game.engine.config.graphics.shaderQuality
+                }
             },
             primitive: {
                 topology: 'triangle-list',
@@ -184,7 +187,7 @@ export class RenderStageSolidGeometry implements RenderStage {
     }
 
     free() {
-        
+        // nothing to free here
     }
     
 }

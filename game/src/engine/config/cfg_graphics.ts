@@ -14,6 +14,13 @@ export class ConfigGraphics implements ConfigPage {
      */
     shadowMapQuality: number = 3;
 
+    /**
+     * Shader quality
+     * 1    Low
+     * 2    Normal
+     */
+    shaderQuality: number = 2;
+
     // post processing
     useSSAO: boolean = true;
     useBloom: boolean = true;

@@ -31,6 +31,8 @@
     "graphics_rendering": "Rendering",
     "graphics_rendering_shadows": "Shadows",
     "graphics_rendering_shadows_desc": "Shadow map resolution, setting to Off disables shadows.",
+    "graphics_rendering_shaders": "Shader Quality",
+    "graphics_rendering_shaders_desc": "Defines which formulas to use when calculating how light interacts with objects.",
     "graphics_post_effects": "Post Effects",
     "graphics_post_effects_ssao": "SSAO",
     "graphics_post_effects_ssao_desc": "Screen Space Ambient Occlusion: Darkens objects close to each other or faces at close angles, emulating how light would be occluded.",

@@ -12,6 +12,7 @@ const CfgGraphicsScreen: React.FC = () => {
     const { graphicsConfig } = useConfig();
 
     const [shadowQuality, setShadowQuality] = useState(graphicsConfig.shadowMapQuality);
+    const [shaderQuality, setShaderQuality] = useState(graphicsConfig.shaderQuality);
 
     const [useSSAO, setUseSSAO] = useState(graphicsConfig.useSSAO);
     const [useBloom, setUseBloom] = useState(graphicsConfig.useBloom);
@@ -24,6 +25,7 @@ const CfgGraphicsScreen: React.FC = () => {
         // save the config when this screen is closed
         return () => {
             graphicsConfig.shadowMapQuality = shadowQuality;
+            graphicsConfig.shaderQuality = shaderQuality;
 
             graphicsConfig.useSSAO = useSSAO;
             graphicsConfig.useBloom = useBloom;
@@ -31,7 +33,7 @@ const CfgGraphicsScreen: React.FC = () => {
             graphicsConfig.motionBlurAmount = motionBlurAmount;
             graphicsConfig.useFilmGrain = useFilmGrain;
         }
-    }, [shadowQuality, useSSAO, useBloom, useTAA, motionBlurAmount, useFilmGrain, graphicsConfig]);
+    }, [shadowQuality, shaderQuality, useSSAO, useBloom, useTAA, motionBlurAmount, useFilmGrain, graphicsConfig]);
 
     
     return (
@@ -56,6 +58,25 @@ const CfgGraphicsScreen: React.FC = () => {
                                     <MenuItem value={2}>{t("config:generic_low")}</MenuItem>
                                     <MenuItem value={3}>{t("config:generic_medium")}</MenuItem>
                                     <MenuItem value={4}>{t("config:generic_high")}</MenuItem>
+                                </Select>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+
+                <Table>
+                    <TableBody>
+                        <TableRow 
+                            onMouseEnter={() => setCurrentTooltip({ title: t("config:graphics_rendering_shaders"), content: t("config:graphics_rendering_shaders_desc")})}
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell><Typography variant="body1">{ t("config:graphics_rendering_shaders") }</Typography></TableCell>
+                            <TableCell align="right">
+                                <Select value={shaderQuality} onChange={e => {
+                                    setShaderQuality(e.target.value as number);
+                                }}>
+                                    <MenuItem value={1}>{t("config:generic_low")}</MenuItem>
+                                    <MenuItem value={2}>{t("config:generic_medium")}</MenuItem>
                                 </Select>
                             </TableCell>
                         </TableRow>
