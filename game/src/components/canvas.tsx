@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { InvalidCanvasError } from "../errors/engine/initialization/invalid_canvas";
 import { WebGPUUnsupportedError } from "../errors/engine/initialization/webgpu_unsupported";
 import { WarGame } from "../game/war_game";
@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useGame } from "../hooks/use_game";
 import { useCrash } from "../hooks/use_crash";
 
-const WarCanvas: React.FC = () => {
+const WarCanvas = memo(() => {
 
     const ref = useRef<HTMLCanvasElement>(null);
     const glRef = useRef<HTMLCanvasElement>(null);
@@ -79,6 +79,6 @@ const WarCanvas: React.FC = () => {
             <canvas ref={glRef} style={{ display: 'none' }}></canvas>
         </>
     );
-};
+});
 
 export default WarCanvas;
