@@ -22,7 +22,11 @@ fn Fd_Burley(roughness: f32, NoV: f32, NoL: f32, LoH: f32) -> f32 {
 */
 
 fn diffuse(roughness: f32, NoV: f32, NoL: f32, LoH: f32) -> f32 {
-    // can also be Fd_Lambert
-    // TODO: Shader quality control
-    return Fd_Burley(roughness, NoV, NoL, LoH);
+    if (shader_quality >= SHADER_QUALITY_NORMAL) {
+        return Fd_Burley(roughness, NoV, NoL, LoH);
+    } 
+    // Low and below
+    else {
+        return Fd_Lambert();
+    }
 }

@@ -1,5 +1,6 @@
 import { Shader } from "../../shader";
 import constants from "./constants.wgsl";
+import overrides from "./overrides.wgsl";
 import uniforms from "./uniforms.wgsl";
 import utils from "./utils.wgsl";
 import vertexShader from "./vertex.wgsl";
@@ -30,6 +31,7 @@ export class PrincipledBSDFShader extends Shader {
 
         const shaderSource = ''.concat(
             constants,
+            overrides,
             uniforms,
             utils,
 

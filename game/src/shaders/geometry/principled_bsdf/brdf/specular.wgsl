@@ -76,9 +76,13 @@ fn distributionClearCoat(roughness: f32, NoH: f32, H: vec3f) -> f32 {
 }
 
 fn visibility(roughness: f32, NoV: f32, NoL: f32) -> f32 {
-    // can also be V_SmithGGXCorrelated_Fast
-    // TODO: Shader quality control
-    return V_SmithGGXCorrelated(roughness, NoV, NoL);
+    if (shader_quality >= SHADER_QUALITY_NORMAL) {
+        return V_SmithGGXCorrelated(roughness, NoV, NoL);
+    }
+    // Low and below
+    else {
+        return V_SmithGGXCorrelated_Fast(roughness, NoV, NoL);
+    }
 }
 
 fn visibilityAnisotropic(roughness: f32, at: f32, ab: f32, ToV: f32, BoV: f32, ToL: f32, BoL: f32, NoV: f32, NoL: f32) -> f32 {
