@@ -135,7 +135,7 @@ jobs:
       - name: Upload Build to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './game/build'
+          path: './game-bundle/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
