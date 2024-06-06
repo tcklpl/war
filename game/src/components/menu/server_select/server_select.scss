@@ -1,10 +1,10 @@
-@import "../../../style/constants.scss";
+@import '../../../style/constants.scss';
 
 .server-select-screen {
     z-index: $z-index-hud;
     height: 100vh;
 }
-    
+
 .server-table {
     cursor: pointer;
     height: 60vh;

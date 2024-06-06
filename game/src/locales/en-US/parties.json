@@ -65,7 +65,6 @@
     "socialism_sa_tsar_bomb": "Tsar Bomb",
     "socialism_sa_tsar_bomb_desc": "Capable of destroying a whole continent. The Tsar Bomb takes <CAST> turns to cast and the <FAMINE> debuff is multiplied by <MULTIPLIER> while it's being cast. After ravaging the land, the Tsar Bomb leaves a radiation falloff for <RAD> turns, rendering the land hostile to human life for its duration, killing every troop that enters it",
 
-
     "capitalism": "Capitalism",
     "capitalism_pa_trade": "???",
     "capitalism_pa_trade_desc": "Capitalism can trade territories, gaining <TROOPS> each time a trade is made",
@@ -88,7 +87,6 @@
     "capitalism_su_trump_desc": "The territory that has Trump will have a defense bonus of +<BONUS>",
     "capitalism_sa_privatization": "Privatization",
     "capitalism_sa_privatization_desc": "Capitalism can privatize countries, offering a trade where Capitalism will be able to use that territory and its troops in return for some amount of troops",
-
 
     "": ""
 }

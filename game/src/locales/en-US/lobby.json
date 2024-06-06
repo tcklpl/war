@@ -9,7 +9,7 @@
     "create_lobby": "Create Lobby",
     "lobby_name": "Lobby name",
     "create_lobby_desc": "Create a game lobby. Input the name for the lobby and if it'll be joinable upon creation (you can change everything later).",
-    
+
     "loading_lobby_data": "Loading lobby data...",
     "player_list": "Player List",
     "leave_lobby": "Leave lobby",
@@ -175,5 +175,4 @@
     "cfg_capitalism_sa_privatization_cooldown_desc": "Cooldown to try another privatization",
     "cfg_capitalism_sa_privatization_allow_specials": "Allow using specials",
     "cfg_capitalism_sa_privatization_allow_specials_desc": "Allow control of special units in privatized territories"
-    
 }
