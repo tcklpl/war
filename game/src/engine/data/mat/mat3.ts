@@ -6,7 +6,7 @@ export class Mat3 {
     values: number[] = new Array<number>(9);
 
     constructor(values: number[]) {
-        if (values.length != 9) throw new BadMatrixLengthError(`Trying to create a 3x3 matrix with ${values.length} elements`);
+        if (values.length !== 9) throw new BadMatrixLengthError(`Trying to create a 3x3 matrix with ${values.length} elements`);
         this.values = values;
     }
 

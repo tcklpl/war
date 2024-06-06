@@ -1,5 +1,4 @@
 import { ShadowMapAtlas } from "../../data/atlas/shadow_map_atlas";
-import { Resolution } from "../../resolution";
 
 export interface RenderInitializationResources {
 
