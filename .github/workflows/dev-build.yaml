@@ -68,9 +68,17 @@ jobs:
       - name: Installing Dependencies
         working-directory: game
         run: npm ci
+      - name: Verify Lint
+        working-directory: game
+        run: npm run lint
       - name: Build Game
         working-directory: game
         run: npm run build
+      - name: Share Game Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-bundle
+          path: game/build/
       - name: Build Windows Binaries
         working-directory: game
         run: npm run electron-build-windows
@@ -80,26 +88,40 @@ jobs:
           name: game-dist
           path: game/dist/*.exe
 
-
   generate-release:
     name: Generate Release
     needs: [build-server, build-game]
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
+    concurrency: 
+      group: "pages"
+      cancel-in-progress: false
+    environment: 
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
         with:
           ref: dev
-      - name: Download Server Artifacts
+      - name: Download Server Binaries
         uses: actions/download-artifact@v4
         with:
           name: server-dist
-      - name: Download Game Artifacts
+          path: './binaries/'
+      - name: Download Game Binaries
         uses: actions/download-artifact@v4
         with:
           name: game-dist
+          path: './binaries/'
+      - name: Download Game Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: game-bundle
+          path: './game-bundle/'
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -107,4 +129,13 @@ jobs:
           draft: false
           prerelease: true
           tag_name: ${{ github.ref_name }}
-          files: War2*
+          files: ./binaries/*
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Build to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './game/build'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
