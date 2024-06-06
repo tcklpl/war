@@ -65,7 +65,7 @@ export class AssetManager extends Manager<Asset> {
      * @returns fetch's Response
      */
     private async fetchAssetFile(name: string, asset: AddressableAsset) {
-        const assetUrl = asset.url;
+        const assetUrl = window.location.href + asset.url;
 
         const assetRequest = await fetch(assetUrl);
         if (!assetRequest.ok) throw new MissingAssetError(`Failed to load asset '${name}'`);
