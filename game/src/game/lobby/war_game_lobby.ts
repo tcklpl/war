@@ -1,21 +1,20 @@
-import { GameParty, LobbyState } from "../../../../protocol";
-import { ClientPacketCancelGameStart } from "../server/connection/packet/to_send/lobby/admin/cancel_game_start";
-import { ClientPacketKickPlayer } from "../server/connection/packet/to_send/lobby/admin/kick_player";
-import { ClientPacketModifyLobbyState } from "../server/connection/packet/to_send/lobby/admin/modify_lobby_state";
-import { ClientPacketStartGame } from "../server/connection/packet/to_send/lobby/admin/start_game";
-import { ClientPacketTransferLobbyOwnership } from "../server/connection/packet/to_send/lobby/admin/transfer_ownership";
-import { ClientPacketDeselectParty } from "../server/connection/packet/to_send/lobby/common/deselect_current_party";
-import { ClientPacketLeaveLobby } from "../server/connection/packet/to_send/lobby/common/leave_lobby";
-import { ClientPacketSelectParty } from "../server/connection/packet/to_send/lobby/common/select_party";
-import { ListenableProperty } from "../server/listenable_property";
-import { LobbyChat } from "./lobby_chat";
-import { WarGameSession } from "./war_game_session";
+import { GameParty, LobbyState } from '../../../../protocol';
+import { ClientPacketCancelGameStart } from '../server/connection/packet/to_send/lobby/admin/cancel_game_start';
+import { ClientPacketKickPlayer } from '../server/connection/packet/to_send/lobby/admin/kick_player';
+import { ClientPacketModifyLobbyState } from '../server/connection/packet/to_send/lobby/admin/modify_lobby_state';
+import { ClientPacketStartGame } from '../server/connection/packet/to_send/lobby/admin/start_game';
+import { ClientPacketTransferLobbyOwnership } from '../server/connection/packet/to_send/lobby/admin/transfer_ownership';
+import { ClientPacketDeselectParty } from '../server/connection/packet/to_send/lobby/common/deselect_current_party';
+import { ClientPacketLeaveLobby } from '../server/connection/packet/to_send/lobby/common/leave_lobby';
+import { ClientPacketSelectParty } from '../server/connection/packet/to_send/lobby/common/select_party';
+import { ListenableProperty } from '../server/listenable_property';
+import { LobbyChat } from './lobby_chat';
+import { WarGameSession } from './war_game_session';
 
 export class WarGameLobby {
-
     private _state: ListenableProperty<LobbyState>;
     private _chat = new LobbyChat();
-    
+
     private readonly _gameStartCountdown = new ListenableProperty<number>();
     private _taskGameStartCountdown?: number;
 
@@ -75,8 +74,8 @@ export class WarGameLobby {
                     decrease();
                 }
             }, 1000);
-        }
-        
+        };
+
         decrease();
     }
 
@@ -96,5 +95,4 @@ export class WarGameLobby {
     get gameStartCountdown() {
         return this._gameStartCountdown;
     }
-
 }

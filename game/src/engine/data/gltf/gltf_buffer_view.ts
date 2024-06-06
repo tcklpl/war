@@ -1,17 +1,14 @@
-import { BadGLTFFileError } from "../../../errors/engine/gltf/bad_gltf_file";
-import { BufferUtils } from "../../../utils/buffer_utils";
-import { GLTFBuffer } from "./gltf_buffer";
-
+import { BadGLTFFileError } from '../../../errors/engine/gltf/bad_gltf_file';
+import { BufferUtils } from '../../../utils/buffer_utils';
+import { GLTFBuffer } from './gltf_buffer';
 
 export class GLTFBufferView {
-
     private _buffer: GLTFBuffer;
     private _length: number;
     private _offset: number;
     private _target?: number; // gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER or undefined
 
     constructor(buffer: GLTFBuffer, length: number, offset: number, target?: number) {
-
         const validTargetTypes: number[] = [gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER];
         if (!!target && !validTargetTypes.includes(target)) {
             throw new BadGLTFFileError(`Invalid buffer view target type: ${target}`);
@@ -58,5 +55,4 @@ export class GLTFBufferView {
         const buffer = BufferUtils.createBuffer(new Uint8Array(slice), bufferUsage() | GPUBufferUsage.COPY_DST);
         return buffer;
     }
-
 }

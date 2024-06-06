@@ -1,4 +1,4 @@
-import { Constructor } from "typeUtils";
+import { Constructor } from 'typeUtils';
 
 export interface IIdentifiable {
     get id(): number;
@@ -7,7 +7,6 @@ export interface IIdentifiable {
 
 export function identifiable<T extends Constructor>(base: T): Constructor<IIdentifiable> & T {
     return class extends base {
-
         private _id: number;
         private _idUint32: Uint32Array;
 
@@ -24,5 +23,5 @@ export function identifiable<T extends Constructor>(base: T): Constructor<IIdent
         get idUint32() {
             return this._idUint32;
         }
-    }
+    };
 }

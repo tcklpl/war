@@ -1,9 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export class TSXUtils {
-
-    static replaceWithElement(source: string, ...replacements: {toReplace: string, value: (key: number) => ReactNode}[]) {
-        let result: ReactNode[] = [ source ];
+    static replaceWithElement(
+        source: string,
+        ...replacements: { toReplace: string; value: (key: number) => ReactNode }[]
+    ) {
+        let result: ReactNode[] = [source];
         let replacementKey = 0;
 
         replacements.forEach(replacement => {
@@ -21,16 +23,11 @@ export class TSXUtils {
                 }
 
                 if (newNodes.length > 1) {
-                    result = [
-                        ...result.slice(0, index),
-                        ...newNodes,
-                        ...result.slice(index + 1)
-                    ];
+                    result = [...result.slice(0, index), ...newNodes, ...result.slice(index + 1)];
                 }
             });
         });
 
         return result;
     }
-
 }

@@ -1,11 +1,10 @@
-import { Shader } from "../../../shaders/shader";
-import { TexturePackerVec3f32Shader } from "../../../shaders/util/texture_packer/texture_packer_vec3_f32_shader";
-import { TexturePackerVec4Shader } from "../../../shaders/util/texture_packer/texture_packer_vec4_shader";
-import { Texture } from "../../data/texture/texture";
-import { Vec2 } from "../../data/vec/vec2";
+import { Shader } from '../../../shaders/shader';
+import { TexturePackerVec3f32Shader } from '../../../shaders/util/texture_packer/texture_packer_vec3_f32_shader';
+import { TexturePackerVec4Shader } from '../../../shaders/util/texture_packer/texture_packer_vec4_shader';
+import { Texture } from '../../data/texture/texture';
+import { Vec2 } from '../../data/vec/vec2';
 
 export class TexturePackingRenderer {
-
     private _shaderVec4!: TexturePackerVec4Shader;
     private _shaderVec3f32!: TexturePackerVec3f32Shader;
 
@@ -16,11 +15,10 @@ export class TexturePackingRenderer {
     private _sampler = device.createSampler({
         label: 'texture packing sampler',
         magFilter: 'linear',
-        minFilter: 'linear'
+        minFilter: 'linear',
     });
 
     async initialize() {
-
         await new Promise<void>(res => {
             this._shaderVec4 = new TexturePackerVec4Shader('Texture Packer Vec4 Shader', () => res());
         });
@@ -33,7 +31,6 @@ export class TexturePackingRenderer {
         this._pipelineVec3f32 = await this.createPipeline(this._shaderVec3f32);
 
         this._renderPassDescriptor = this.createRenderPassDescriptor();
-
     }
 
     private createPipeline(shader: Shader) {
@@ -42,19 +39,17 @@ export class TexturePackingRenderer {
             layout: 'auto',
             vertex: {
                 module: shader.module,
-                entryPoint: 'vertex'
+                entryPoint: 'vertex',
             },
             fragment: {
                 module: shader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: 'rgba8unorm' as GPUTextureFormat }
-                ]
+                targets: [{ format: 'rgba8unorm' as GPUTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'none'
-            }
+                cullMode: 'none',
+            },
         });
     }
 
@@ -65,9 +60,9 @@ export class TexturePackingRenderer {
                     // view: Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'clear',
-                    storeOp: 'store'
-                } as GPURenderPassColorAttachment
-            ]
+                    storeOp: 'store',
+                } as GPURenderPassColorAttachment,
+            ],
         } as GPURenderPassDescriptor;
     }
 
@@ -90,7 +85,7 @@ export class TexturePackingRenderer {
         const targetGPUTex = device.createTexture({
             size: [resolution.x, resolution.y],
             format: 'rgba8unorm',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
         return new Texture(targetGPUTex);
     }
@@ -104,8 +99,8 @@ export class TexturePackingRenderer {
                 { binding: 1, resource: r.view },
                 { binding: 2, resource: g.view },
                 { binding: 3, resource: b.view },
-                { binding: 4, resource: a.view }
-            ]
+                { binding: 4, resource: a.view },
+            ],
         });
         await this.packTexture(sourceBindings, this._pipelineVec4, targetTex);
         return targetTex;
@@ -118,8 +113,8 @@ export class TexturePackingRenderer {
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: rgb.view },
-                { binding: 2, resource: a.view }
-            ]
+                { binding: 2, resource: a.view },
+            ],
         });
         await this.packTexture(sourceBindings, this._pipelineVec3f32, targetTex);
         return targetTex;
@@ -137,7 +132,5 @@ export class TexturePackingRenderer {
         await device.queue.onSubmittedWorkDone();
     }
 
-    free() {
-    }
-
+    free() {}
 }

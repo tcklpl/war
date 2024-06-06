@@ -1,12 +1,11 @@
-import { BloomDownsampleShader } from "../../../../shaders/post/bloom/bloom_downsample_shader";
-import { BloomUpsampleShader } from "../../../../shaders/post/bloom/bloom_upsample_shader";
-import { Shader } from "../../../../shaders/shader";
-import { RenderInitializationResources } from "../render_initialization_resources";
-import { RenderResourcePool } from "../render_resource_pool";
-import { RenderStage } from "./render_stage";
+import { BloomDownsampleShader } from '../../../../shaders/post/bloom/bloom_downsample_shader';
+import { BloomUpsampleShader } from '../../../../shaders/post/bloom/bloom_upsample_shader';
+import { Shader } from '../../../../shaders/shader';
+import { RenderInitializationResources } from '../render_initialization_resources';
+import { RenderResourcePool } from '../render_resource_pool';
+import { RenderStage } from './render_stage';
 
 export class RenderStageBloom implements RenderStage {
-
     private _downsampleShader!: BloomDownsampleShader;
     private _upsampleShader!: BloomUpsampleShader;
 
@@ -19,11 +18,10 @@ export class RenderStageBloom implements RenderStage {
         addressModeU: 'clamp-to-edge',
         addressModeV: 'clamp-to-edge',
         minFilter: 'linear',
-        magFilter: 'linear'
+        magFilter: 'linear',
     });
 
     async initialize(resources: RenderInitializationResources) {
-        
         await new Promise<void>(r => {
             this._downsampleShader = new BloomDownsampleShader('bloom downsample shader', () => r());
         });
@@ -45,19 +43,17 @@ export class RenderStageBloom implements RenderStage {
             vertex: {
                 module: shader.module,
                 entryPoint: 'vertex',
-                buffers: [] as GPUVertexBufferLayout[]
+                buffers: [] as GPUVertexBufferLayout[],
             },
             fragment: {
                 module: shader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: hdrTextureFormat }
-                ]
+                targets: [{ format: hdrTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'none'
-            }
+                cullMode: 'none',
+            },
         });
     }
 
@@ -68,9 +64,9 @@ export class RenderStageBloom implements RenderStage {
                     // view: undefined, Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'load',
-                    storeOp: 'store'
-                }
-            ] as GPURenderPassColorAttachment[]
+                    storeOp: 'store',
+                },
+            ] as GPURenderPassColorAttachment[],
         } as GPURenderPassDescriptor;
     }
 
@@ -80,8 +76,8 @@ export class RenderStageBloom implements RenderStage {
             layout: pipeline.getBindGroupLayout(layoutIndex),
             entries: [
                 { binding: 0, resource: this._sampler },
-                { binding: 1, resource: texView }
-            ]
+                { binding: 1, resource: texView },
+            ],
         });
     }
 
@@ -90,43 +86,41 @@ export class RenderStageBloom implements RenderStage {
     }
 
     private renderDownsamples(pool: RenderResourcePool) {
-
         for (let i = 0; i < pool.bloomMipsLength; i++) {
-
-            const sourceTexture = i === 0 ? pool.hdrBufferChain.current.view : pool.bloomMips.texture.createView({
-                mipLevelCount: 1,
-                baseMipLevel: i - 1
-            });
+            const sourceTexture =
+                i === 0
+                    ? pool.hdrBufferChain.current.view
+                    : pool.bloomMips.texture.createView({
+                          mipLevelCount: 1,
+                          baseMipLevel: i - 1,
+                      });
 
             const targetMip = pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
-                baseMipLevel: i
+                baseMipLevel: i,
             });
 
             this.setRenderTexture(targetMip);
-            const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);            
+            const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
             const layoutIndex = BloomDownsampleShader.BINDING_GROUPS.TEXTURE;
 
             rpe.setPipeline(this._downsamplePipeline);
             rpe.setBindGroup(layoutIndex, this.createBindGroup(this._downsamplePipeline, layoutIndex, sourceTexture));
             rpe.draw(6);
             rpe.end();
-
         }
     }
 
     private renderUpsamples(pool: RenderResourcePool) {
-        
         for (let i = pool.bloomMipsLength - 1; i > 0; i--) {
-
             const sourceTexture = pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
-                baseMipLevel: i
+                baseMipLevel: i,
             });
 
             const targetMip = pool.bloomMips.texture.createView({
                 mipLevelCount: 1,
-                baseMipLevel: i - 1
+                baseMipLevel: i - 1,
             });
 
             this.setRenderTexture(targetMip);
@@ -137,7 +131,6 @@ export class RenderStageBloom implements RenderStage {
             rpe.setBindGroup(layoutIndex, this.createBindGroup(this._upsamplePipeline, layoutIndex, sourceTexture));
             rpe.draw(6);
             rpe.end();
-
         }
     }
 
@@ -158,5 +151,4 @@ export class RenderStageBloom implements RenderStage {
     free() {
         // TODO
     }
-
 }

@@ -1,18 +1,17 @@
-import { BufferUtils } from "../../../utils/buffer_utils";
-import { ShadowMapAtlas } from "../../data/atlas/shadow_map_atlas";
-import { LuminanceHistogram } from "../../data/histogram/luminance_histogram";
-import { Mat4 } from "../../data/mat/mat4";
-import { Scene } from "../../data/scene/scene";
-import { RenderHDRBufferChain } from "../../data/texture/render_hdr_buffer_chain";
-import { Texture } from "../../data/texture/texture";
-import { Vec2 } from "../../data/vec/vec2";
-import { Vec3 } from "../../data/vec/vec3";
-import { Resolution } from "../../resolution";
-import { RenderPostEffects } from "./render_post_effects";
-import { RenderProjection } from "./render_projection";
+import { BufferUtils } from '../../../utils/buffer_utils';
+import { ShadowMapAtlas } from '../../data/atlas/shadow_map_atlas';
+import { LuminanceHistogram } from '../../data/histogram/luminance_histogram';
+import { Mat4 } from '../../data/mat/mat4';
+import { Scene } from '../../data/scene/scene';
+import { RenderHDRBufferChain } from '../../data/texture/render_hdr_buffer_chain';
+import { Texture } from '../../data/texture/texture';
+import { Vec2 } from '../../data/vec/vec2';
+import { Vec3 } from '../../data/vec/vec3';
+import { Resolution } from '../../resolution';
+import { RenderPostEffects } from './render_post_effects';
+import { RenderProjection } from './render_projection';
 
 export class RenderResourcePool {
-
     private _hdrTextureFormat: GPUTextureFormat = 'rgba16float';
 
     private _commandEncoder!: GPUCommandEncoder;
@@ -44,10 +43,14 @@ export class RenderResourcePool {
     constructor() {
         // buffer has 5 mat4s and 1 vec3 (camera position)
         const viewProjByteSize = Mat4.byteSize * 5 + Vec3.byteSize + Vec2.byteSize;
-        this._viewProjBuffer = BufferUtils.createEmptyBuffer(viewProjByteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST, 'Render Resource Pool: ViewProj Buffer');
+        this._viewProjBuffer = BufferUtils.createEmptyBuffer(
+            viewProjByteSize,
+            GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+            'Render Resource Pool: ViewProj Buffer',
+        );
 
         // prefer rg11b10ufloat if the device supports it, as it uses 32 bits per pixel instead of 64 with rgba16float
-        const canRenderToRG11B10 = device.features.has("rg11b10ufloat-renderable");
+        const canRenderToRG11B10 = device.features.has('rg11b10ufloat-renderable');
         if (canRenderToRG11B10) this._hdrTextureFormat = 'rg11b10ufloat';
 
         this._hdrBufferChain = new RenderHDRBufferChain(this._hdrTextureFormat);
@@ -63,7 +66,7 @@ export class RenderResourcePool {
             High (4)        4096 x 4096 (2^12)
         */
         const cfgShadowMapQuality = game.engine.config.graphics.shadowMapQuality;
-        const shadowMapResolution = cfgShadowMapQuality === 0 ? 1 : 2**(8 + cfgShadowMapQuality);
+        const shadowMapResolution = cfgShadowMapQuality === 0 ? 1 : 2 ** (8 + cfgShadowMapQuality);
         this._shadowMapAtlas = new ShadowMapAtlas(shadowMapResolution);
     }
 
@@ -80,28 +83,28 @@ export class RenderResourcePool {
             label: 'render pool: depth texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'depth24plus',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
 
         this._velocityTexture.texture = device.createTexture({
             label: 'render pool: velocity texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rg16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
 
         this._normalTexture.texture = device.createTexture({
             label: 'render pool: normal texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rgba8unorm',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
 
         this._specularTexture.texture = device.createTexture({
             label: 'render pool: specular texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rg16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
     }
 
@@ -109,65 +112,65 @@ export class RenderResourcePool {
         const ssaoTextureSize = resolution.half;
         const useSSAO = game.engine.config.graphics.useSSAO;
 
-        this._ssaoTextureNoisy.texture = useSSAO ? 
-        // if SSAO is enabled
-        device.createTexture({
-            label: 'render pool: ssao noisy texture',
-            size: [ssaoTextureSize.x, ssaoTextureSize.y],
-            format: 'r16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        }) :
-        // if SSAO is disabled
-        device.createTexture({
-            label: 'render pool: ssao noisy texture',
-            size: [1, 1],
-            format: 'r16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
+        this._ssaoTextureNoisy.texture = useSSAO
+            ? // if SSAO is enabled
+              device.createTexture({
+                  label: 'render pool: ssao noisy texture',
+                  size: [ssaoTextureSize.x, ssaoTextureSize.y],
+                  format: 'r16float',
+                  usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+              })
+            : // if SSAO is disabled
+              device.createTexture({
+                  label: 'render pool: ssao noisy texture',
+                  size: [1, 1],
+                  format: 'r16float',
+                  usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+              });
 
-        this._ssaoTextureBlurred.texture = useSSAO ? 
-        // if SSAO is enabled
-        device.createTexture({
-            label: 'render pool: ssao blurred texture',
-            size: [ssaoTextureSize.x, ssaoTextureSize.y],
-            format: 'r16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        }) :
-        // if SSAO is disabled
-        device.createTexture({
-            label: 'render pool: ssao blurred texture',
-            size: [1, 1],
-            format: 'r16float',
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
+        this._ssaoTextureBlurred.texture = useSSAO
+            ? // if SSAO is enabled
+              device.createTexture({
+                  label: 'render pool: ssao blurred texture',
+                  size: [ssaoTextureSize.x, ssaoTextureSize.y],
+                  format: 'r16float',
+                  usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+              })
+            : // if SSAO is disabled
+              device.createTexture({
+                  label: 'render pool: ssao blurred texture',
+                  size: [1, 1],
+                  format: 'r16float',
+                  usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+              });
     }
 
     private resizeBloomBuffers(resolution: Resolution) {
-        this._bloomMips.texture = game.engine.config.graphics.useBloom ? 
-        // if bloom is enabled
-        device.createTexture({
-            label: 'render pool: bloom mips',
-            size: [resolution.half.x, resolution.half.y],
-            format: this._hdrTextureFormat,
-            mipLevelCount: this._bloomMipsLength,
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        }) : 
-        // if bloom is disabled
-        device.createTexture({
-            label: 'render pool: bloom mips',
-            size: [1, 1],
-            format: this._hdrTextureFormat,
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
+        this._bloomMips.texture = game.engine.config.graphics.useBloom
+            ? // if bloom is enabled
+              device.createTexture({
+                  label: 'render pool: bloom mips',
+                  size: [resolution.half.x, resolution.half.y],
+                  format: this._hdrTextureFormat,
+                  mipLevelCount: this._bloomMipsLength,
+                  usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+              })
+            : // if bloom is disabled
+              device.createTexture({
+                  label: 'render pool: bloom mips',
+                  size: [1, 1],
+                  format: this._hdrTextureFormat,
+                  usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+              });
     }
 
     prepareForFrame(data: {
-        scene: Scene, 
-        commandEncoder: GPUCommandEncoder, 
-        projection: RenderProjection, 
-        postEffets: RenderPostEffects, 
-        jitter: Vec2,
-        luminanceHistogram: LuminanceHistogram,
+        scene: Scene;
+        commandEncoder: GPUCommandEncoder;
+        projection: RenderProjection;
+        postEffets: RenderPostEffects;
+        jitter: Vec2;
+        luminanceHistogram: LuminanceHistogram;
     }) {
         this._scene = data.scene;
         this._commandEncoder = data.commandEncoder;
@@ -179,19 +182,19 @@ export class RenderResourcePool {
         this._jitter = data.jitter;
 
         const camera = data.scene.activeCamera;
-        if (!camera) return;        
+        if (!camera) return;
 
         // write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
         const frameSharedBuffer = Float32Array.of(
-            ...camera.viewMatrix.asF32Array,                                        // 0x000 - 0x040 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-            ...camera.cameraMatrix.asF32Array,                                      // 0x040 - 0x080 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-            ...camera.previousFrameViewMatrix.asF32Array,                           // 0x080 - 0x0c0 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-            ...this.projectionMatrix.asF32Array,                                    // 0x0c0 - 0x100 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-            ...this._renderProjection.previousFrameProjectionMatrix.asF32Array,     // 0x100 - 0x140 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-            ...camera.position.asF32Array,                                          // 0x140 - 0x14c - 12B - (1) Vec3 [ 3 * 4B = 12B ]
-            0,                                                                      // 0x14c - 0x150 -  4B - Padding
-            ...data.jitter.asF32Array,                                              // 0x150 - 0x158 -  8B - (1) Vec2 [ 2 * 4B = 8B ]
-        )
+            ...camera.viewMatrix.asF32Array, // 0x000 - 0x040 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...camera.cameraMatrix.asF32Array, // 0x040 - 0x080 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...camera.previousFrameViewMatrix.asF32Array, // 0x080 - 0x0c0 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...this.projectionMatrix.asF32Array, // 0x0c0 - 0x100 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...this._renderProjection.previousFrameProjectionMatrix.asF32Array, // 0x100 - 0x140 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+            ...camera.position.asF32Array, // 0x140 - 0x14c - 12B - (1) Vec3 [ 3 * 4B = 12B ]
+            0, // 0x14c - 0x150 -  4B - Padding
+            ...data.jitter.asF32Array, // 0x150 - 0x158 -  8B - (1) Vec2 [ 2 * 4B = 8B ]
+        );
         device.queue.writeBuffer(this._viewProjBuffer, 0, frameSharedBuffer);
 
         // switch HDR textures (to also store the previous frame)
@@ -246,7 +249,7 @@ export class RenderResourcePool {
     get scene() {
         return this._scene;
     }
-    
+
     get commandEncoder() {
         return this._commandEncoder;
     }

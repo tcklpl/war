@@ -8,9 +8,7 @@ import { useEffect, useState } from 'react';
 import themeDefaultLight from './style/themes/default_light';
 import { HashRouter } from 'react-router-dom';
 
-
 function App() {
-
     const { displayConfig } = useConfig();
     const [theme, setTheme] = useState(themeDefaultDark);
 
@@ -31,13 +29,13 @@ function App() {
     }, [displayConfig, theme]);
 
     return (
-        <div className="App">
+        <div className='App'>
             <ThemeProvider theme={theme}>
                 <HashRouter>
-                    <CssBaseline/>
-                    <WarGameComponent/>
+                    <CssBaseline />
+                    <WarGameComponent />
                 </HashRouter>
-            </ThemeProvider> 
+            </ThemeProvider>
         </div>
     );
 }

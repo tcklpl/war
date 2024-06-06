@@ -1,10 +1,13 @@
-import { BufferUtils } from "../../../utils/buffer_utils";
+import { BufferUtils } from '../../../utils/buffer_utils';
 
 export class LuminanceHistogram {
-
     readonly bins = 256;
     private _rawData: Uint32Array = new Uint32Array(new Array(this.bins).fill(0));
-    private _buffer = BufferUtils.createEmptyBuffer(this.bins * 4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ, 'Luminance histogram');
+    private _buffer = BufferUtils.createEmptyBuffer(
+        this.bins * 4,
+        GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+        'Luminance histogram',
+    );
     private _avg: number = 0;
 
     /**
@@ -28,7 +31,9 @@ export class LuminanceHistogram {
      */
     private updateRawData(data: Uint32Array) {
         if (data.length !== 256) {
-            console.warn(`Trying to update a luminance histogram with an array of length ${data.length}, should've been ${this.bins}`);
+            console.warn(
+                `Trying to update a luminance histogram with an array of length ${data.length}, should've been ${this.bins}`,
+            );
             return;
         }
         this._rawData.set(data);
@@ -36,11 +41,12 @@ export class LuminanceHistogram {
 
     private calculateAverage() {
         let total = 0;
-        this._avg = this._rawData.reduce((sum, cur, i) => {
-            const binLDRSlice = i / (this.bins - 1);
-            total += cur;
-            return sum + (cur * binLDRSlice);
-        }, 0) / (total);
+        this._avg =
+            this._rawData.reduce((sum, cur, i) => {
+                const binLDRSlice = i / (this.bins - 1);
+                total += cur;
+                return sum + cur * binLDRSlice;
+            }, 0) / total;
     }
 
     get buffer() {
@@ -54,5 +60,4 @@ export class LuminanceHistogram {
     free() {
         this._buffer?.destroy();
     }
-
 }

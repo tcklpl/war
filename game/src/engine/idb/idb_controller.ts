@@ -1,4 +1,4 @@
-import { IDBConnector } from "./idb_connector";
+import { IDBConnector } from './idb_connector';
 
 export interface IDBControllerInfo {
     name: string;
@@ -6,8 +6,10 @@ export interface IDBControllerInfo {
 }
 
 export class IDBController<T> {
-
-    constructor(private _connection: IDBConnector, private _info: IDBControllerInfo) { }
+    constructor(
+        private _connection: IDBConnector,
+        private _info: IDBControllerInfo,
+    ) {}
 
     private createTransaction(mode: IDBTransactionMode) {
         const transaction = this._connection.db?.transaction(this._info.name, mode);
@@ -45,7 +47,7 @@ export class IDBController<T> {
     }
 
     async getOneAs<C extends T>(key: any) {
-        return await this.getOne(key) as C;
+        return (await this.getOne(key)) as C;
     }
 
     getAll() {
@@ -97,5 +99,4 @@ export class IDBController<T> {
             request.onerror = () => reject();
         });
     }
-
 }

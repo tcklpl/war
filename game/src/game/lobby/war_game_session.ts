@@ -1,17 +1,14 @@
-import { InitialGameStatePacket } from "../../../../protocol";
-import { ClientPacketPing } from "../server/connection/packet/to_send/ingame/ping";
-import { ListenableProperty } from "../server/listenable_property";
+import { InitialGameStatePacket } from '../../../../protocol';
+import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';
+import { ListenableProperty } from '../server/listenable_property';
 
 export class WarGameSession {
-
     private _currentTurnPlayerIndex = new ListenableProperty(0);
-    
+
     private _ping = new ListenableProperty<number>(0);
     private _pingTask = -1;
 
-    constructor(
-        public readonly initialGameState: InitialGameStatePacket
-    ) {
+    constructor(public readonly initialGameState: InitialGameStatePacket) {
         this.measurePing();
         game.engine.resumeRender();
     }
@@ -36,5 +33,4 @@ export class WarGameSession {
     get ping() {
         return this._ping;
     }
-
 }

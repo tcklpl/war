@@ -1,8 +1,7 @@
-import { Vec2 } from "../data/vec/vec2";
-import { IMouseListener } from "./mouse_listener";
+import { Vec2 } from '../data/vec/vec2';
+import { IMouseListener } from './mouse_listener';
 
 export class Mouse {
-    
     private _listeners: IMouseListener[] = [];
 
     private _position = new Vec2(0, 0);
@@ -19,7 +18,6 @@ export class Mouse {
     }
 
     private registerEvents() {
-
         // Movement
         gameCanvas.addEventListener('mousemove', e => {
             const rect = gameCanvas.getBoundingClientRect();
@@ -77,7 +75,4 @@ export class Mouse {
     get position() {
         return this._position;
     }
-
 }
-
-

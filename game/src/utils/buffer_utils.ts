@@ -1,10 +1,12 @@
-import { BufferError } from "../errors/engine/data/buffer_error";
-
+import { BufferError } from '../errors/engine/data/buffer_error';
 
 export class BufferUtils {
-
-    static createBuffer<T extends ArrayLike<number> & {byteLength: number, set: (array: ArrayLike<number>, offset?: number | undefined) => void}>(data: T, usage: number) {
-
+    static createBuffer<
+        T extends ArrayLike<number> & {
+            byteLength: number;
+            set: (array: ArrayLike<number>, offset?: number | undefined) => void;
+        },
+    >(data: T, usage: number) {
         device.pushErrorScope('out-of-memory');
 
         const size = Math.ceil(data.byteLength / 4) * 4;
@@ -12,7 +14,7 @@ export class BufferUtils {
         const buffer = device.createBuffer({
             size: size,
             usage: usage,
-            mappedAtCreation: true
+            mappedAtCreation: true,
         });
         const dst = new Uint8Array(buffer.getMappedRange());
         dst.set(data);
@@ -20,7 +22,9 @@ export class BufferUtils {
 
         device.popErrorScope().then(err => {
             if (err) {
-                throw new BufferError(`OUT OF MEMORY: Failed to allocate buffer of length ${data.byteLength}] with usage ${usage}`);
+                throw new BufferError(
+                    `OUT OF MEMORY: Failed to allocate buffer of length ${data.byteLength}] with usage ${usage}`,
+                );
             }
         });
 
@@ -28,7 +32,6 @@ export class BufferUtils {
     }
 
     static createEmptyBuffer(size: number, usage: number, label?: string) {
-
         device.pushErrorScope('out-of-memory');
 
         size = Math.ceil(size / 16) * 16;
@@ -36,17 +39,17 @@ export class BufferUtils {
         const buffer = device.createBuffer({
             label: label,
             size: size,
-            usage: usage
+            usage: usage,
         });
 
         device.popErrorScope().then(err => {
             if (err) {
-                throw new BufferError(`OUT OF MEMORY: Failed to allocate buffer of length ${size}] with usage ${usage}`);
+                throw new BufferError(
+                    `OUT OF MEMORY: Failed to allocate buffer of length ${size}] with usage ${usage}`,
+                );
             }
         });
 
         return buffer;
-
     }
-
 }

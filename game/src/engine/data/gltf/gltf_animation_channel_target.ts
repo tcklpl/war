@@ -1,9 +1,11 @@
-import { GLTFAnimationChannelTargetPath } from "gltf";
-import { GLTFNode } from "./gltf_node";
+import { GLTFAnimationChannelTargetPath } from 'gltf';
+import { GLTFNode } from './gltf_node';
 
 export class GLTFAnimationChannelTarget {
-
-    constructor (private _node: GLTFNode, private _path: GLTFAnimationChannelTargetPath) {}
+    constructor(
+        private _node: GLTFNode,
+        private _path: GLTFAnimationChannelTargetPath,
+    ) {}
 
     get node() {
         return this._node;
@@ -12,5 +14,4 @@ export class GLTFAnimationChannelTarget {
     get path() {
         return this._path;
     }
-    
 }

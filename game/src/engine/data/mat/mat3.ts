@@ -1,12 +1,12 @@
-import { BadMatrixLengthError } from "../../../errors/engine/data/bad_matrix_length";
-import { Mat4 } from "./mat4";
+import { BadMatrixLengthError } from '../../../errors/engine/data/bad_matrix_length';
+import { Mat4 } from './mat4';
 
 export class Mat3 {
-
     values: number[] = new Array<number>(9);
 
     constructor(values: number[]) {
-        if (values.length !== 9) throw new BadMatrixLengthError(`Trying to create a 3x3 matrix with ${values.length} elements`);
+        if (values.length !== 9)
+            throw new BadMatrixLengthError(`Trying to create a 3x3 matrix with ${values.length} elements`);
         this.values = values;
     }
 
@@ -35,18 +35,13 @@ export class Mat3 {
             0,
             0,
             0,
-            1
+            1,
         ]);
     }
 
     // -----------------[ STATIC UTILS ]-----------------
 
     static identity() {
-        return new Mat3([
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1
-        ]);
+        return new Mat3([1, 0, 0, 0, 1, 0, 0, 0, 1]);
     }
-    
 }

@@ -1,7 +1,6 @@
-import { IDBConnector } from "./idb/idb_connector";
+import { IDBConnector } from './idb/idb_connector';
 
 export class IDBWarConnection extends IDBConnector {
-
     constructor() {
         super('war', 3);
     }
@@ -9,5 +8,4 @@ export class IDBWarConnection extends IDBConnector {
     async initialize() {
         await this.openConnection();
     }
-
 }

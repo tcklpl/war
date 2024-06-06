@@ -1,17 +1,15 @@
-import { SkyboxShader } from "../../../../shaders/geometry/skybox/skybox_shader";
-import { RenderInitializationResources } from "../render_initialization_resources";
-import { RenderResourcePool } from "../render_resource_pool";
-import { RenderStage } from "./render_stage";
+import { SkyboxShader } from '../../../../shaders/geometry/skybox/skybox_shader';
+import { RenderInitializationResources } from '../render_initialization_resources';
+import { RenderResourcePool } from '../render_resource_pool';
+import { RenderStage } from './render_stage';
 
 export class RenderStageSkybox implements RenderStage {
-
     private _shader!: SkyboxShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroup!: GPUBindGroup;
 
     async initialize(resources: RenderInitializationResources) {
-        
         await new Promise<void>(r => {
             this._shader = new SkyboxShader('rs skybox shader', () => r());
         });
@@ -28,24 +26,22 @@ export class RenderStageSkybox implements RenderStage {
             vertex: {
                 module: this._shader.module,
                 entryPoint: 'vertex',
-                buffers: [] as GPUVertexBufferLayout[]
+                buffers: [] as GPUVertexBufferLayout[],
             },
             fragment: {
                 module: this._shader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: hdrTextureFormat }
-                ]
+                targets: [{ format: hdrTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'front'
+                cullMode: 'front',
             },
             depthStencil: {
                 depthWriteEnabled: false,
                 depthCompare: 'less-equal',
-                format: 'depth24plus'
-            }
+                format: 'depth24plus',
+            },
         });
     }
 
@@ -57,13 +53,13 @@ export class RenderStageSkybox implements RenderStage {
                     // resolveTarget: undefined, Assigned Later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'load',
-                    storeOp: 'store'
-                }
+                    storeOp: 'store',
+                },
             ] as GPURenderPassColorAttachment[],
             depthStencilAttachment: {
                 // view: undefined, Assigned later
-                depthReadOnly: true
-            } as GPURenderPassDepthStencilAttachment
+                depthReadOnly: true,
+            } as GPURenderPassDepthStencilAttachment,
         } as GPURenderPassDescriptor;
     }
 
@@ -71,9 +67,7 @@ export class RenderStageSkybox implements RenderStage {
         return device.createBindGroup({
             label: 'PBR ViewProj',
             layout: this._pipeline.getBindGroupLayout(SkyboxShader.BINDING_GROUPS.VIEWPROJ),
-            entries: [
-                { binding: 0, resource: { buffer: buffer }}
-            ]
+            entries: [{ binding: 0, resource: { buffer: buffer } }],
         });
     }
 
@@ -86,9 +80,8 @@ export class RenderStageSkybox implements RenderStage {
     }
 
     render(pool: RenderResourcePool) {
-
         if (!pool.scene.activeSkybox) return;
-        
+
         pool.commandEncoder.pushDebugGroup('Skybox Renderer');
         this.setDepthTexture(pool.depthTextureView);
         this.setColorTexture(pool.hdrBufferChain.current.view);
@@ -96,15 +89,16 @@ export class RenderStageSkybox implements RenderStage {
 
         rpe.setPipeline(this._pipeline);
         rpe.setBindGroup(SkyboxShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroup);
-        rpe.setBindGroup(SkyboxShader.BINDING_GROUPS.TEXTURE, pool.scene.activeSkybox.getBindGroup(this._pipeline).skybox);
+        rpe.setBindGroup(
+            SkyboxShader.BINDING_GROUPS.TEXTURE,
+            pool.scene.activeSkybox.getBindGroup(this._pipeline).skybox,
+        );
         rpe.draw(36);
         rpe.end();
         pool.commandEncoder.popDebugGroup();
-
     }
 
     free() {
         // TODO
     }
-
 }

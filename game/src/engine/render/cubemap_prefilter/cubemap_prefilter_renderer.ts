@@ -1,33 +1,34 @@
-import { BadResolutionError } from "../../../errors/engine/data/bad_resolution";
-import { PrefilterCubemapShader } from "../../../shaders/util/cubemap_prefiltering/prefilter_cubemap_shader";
-import { BufferUtils } from "../../../utils/buffer_utils";
-import { MathUtils } from "../../../utils/math_utils";
-import { Mat4 } from "../../data/mat/mat4";
-import { Vec3 } from "../../data/vec/vec3";
+import { BadResolutionError } from '../../../errors/engine/data/bad_resolution';
+import { PrefilterCubemapShader } from '../../../shaders/util/cubemap_prefiltering/prefilter_cubemap_shader';
+import { BufferUtils } from '../../../utils/buffer_utils';
+import { MathUtils } from '../../../utils/math_utils';
+import { Mat4 } from '../../data/mat/mat4';
+import { Vec3 } from '../../data/vec/vec3';
 
 export class CubemapPrefilterRenderer {
-
     private _convolutionShader!: PrefilterCubemapShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
 
     private _projectionMat = Mat4.perspective(MathUtils.degToRad(90), 1, 0.1, 10);
     private _cameraMatrices = [
-        Mat4.lookAt(Vec3.zero, new Vec3( 1,  0,  0), new Vec3( 0,  1,  0)), // + X
-        Mat4.lookAt(Vec3.zero, new Vec3(-1,  0,  0), new Vec3( 0,  1,  0)), // - X
-        Mat4.lookAt(Vec3.zero, new Vec3( 0,  1,  0), new Vec3( 0,  0,  1)), // + Y
-        Mat4.lookAt(Vec3.zero, new Vec3( 0, -1,  0), new Vec3( 0,  0, -1)), // - Y
-        Mat4.lookAt(Vec3.zero, new Vec3( 0,  0, -1), new Vec3( 0,  1,  0)), // - Z
-        Mat4.lookAt(Vec3.zero, new Vec3( 0,  0,  1), new Vec3( 0,  1,  0))  // + Z
+        Mat4.lookAt(Vec3.zero, new Vec3(1, 0, 0), new Vec3(0, 1, 0)), // + X
+        Mat4.lookAt(Vec3.zero, new Vec3(-1, 0, 0), new Vec3(0, 1, 0)), // - X
+        Mat4.lookAt(Vec3.zero, new Vec3(0, 1, 0), new Vec3(0, 0, 1)), // + Y
+        Mat4.lookAt(Vec3.zero, new Vec3(0, -1, 0), new Vec3(0, 0, -1)), // - Y
+        Mat4.lookAt(Vec3.zero, new Vec3(0, 0, -1), new Vec3(0, 1, 0)), // - Z
+        Mat4.lookAt(Vec3.zero, new Vec3(0, 0, 1), new Vec3(0, 1, 0)), // + Z
     ];
-    private _uniformBuffer = BufferUtils.createEmptyBuffer(2 * Mat4.byteSize, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _uniformBuffer = BufferUtils.createEmptyBuffer(
+        2 * Mat4.byteSize,
+        GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    );
     private _optionsBuffer = BufferUtils.createEmptyBuffer(16, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
 
     private _matrixBindGroup!: GPUBindGroup;
     private _sampler!: GPUSampler;
 
     async initialize() {
-
         await new Promise<void>(r => {
             this._convolutionShader = new PrefilterCubemapShader('cubemap prefilter shader', () => r());
         });
@@ -48,19 +49,17 @@ export class CubemapPrefilterRenderer {
             layout: 'auto',
             vertex: {
                 module: this._convolutionShader.module,
-                entryPoint: 'vertex'
+                entryPoint: 'vertex',
             },
             fragment: {
                 module: this._convolutionShader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: 'rgba16float' as GPUTextureFormat }
-                ]
+                targets: [{ format: 'rgba16float' as GPUTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'front'
-            }
+                cullMode: 'front',
+            },
         });
     }
 
@@ -71,9 +70,9 @@ export class CubemapPrefilterRenderer {
                     // view: Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'clear',
-                    storeOp: 'store'
-                } as GPURenderPassColorAttachment
-            ]
+                    storeOp: 'store',
+                } as GPURenderPassColorAttachment,
+            ],
         } as GPURenderPassDescriptor;
     }
 
@@ -82,7 +81,7 @@ export class CubemapPrefilterRenderer {
             label: 'cubemap convolution sampler',
             magFilter: 'linear',
             minFilter: 'linear',
-            mipmapFilter: 'linear'
+            mipmapFilter: 'linear',
         });
     }
 
@@ -90,15 +89,15 @@ export class CubemapPrefilterRenderer {
         return device.createBindGroup({
             label: 'cubemap convolution matrix bindgroup',
             layout: this._pipeline.getBindGroupLayout(PrefilterCubemapShader.BINDING_GROUPS.VIEWPROJ),
-            entries: [
-                { binding: 0, resource: { buffer: this._uniformBuffer }}
-            ]
+            entries: [{ binding: 0, resource: { buffer: this._uniformBuffer } }],
         });
     }
 
     async prefilterCubemap(cubemap: GPUTexture, cubemapResolution = 128, mipLevels = 5) {
         if (cubemapResolution <= 0 || cubemapResolution > device.limits.maxTextureDimension3D) {
-            throw new BadResolutionError(`Trying to render a cubemap of resolution ${cubemapResolution}, should be between [1, ${device.limits.maxTextureDimension3D}]`);
+            throw new BadResolutionError(
+                `Trying to render a cubemap of resolution ${cubemapResolution}, should be between [1, ${device.limits.maxTextureDimension3D}]`,
+            );
         }
 
         // write cubemap resolution to the buffer (with an offset of 4 bytes as the first 4 bytes are the roughness)
@@ -111,7 +110,7 @@ export class CubemapPrefilterRenderer {
             dimension: '2d',
             mipLevelCount: mipLevels,
             size: [cubemapResolution, cubemapResolution, 6],
-            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT,
         });
 
         // create bindgroup to hold the supplied texture
@@ -121,13 +120,12 @@ export class CubemapPrefilterRenderer {
             entries: [
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: cubemap.createView({ dimension: 'cube' }) },
-                { binding: 2, resource: { buffer: this._optionsBuffer }}
-            ]
+                { binding: 2, resource: { buffer: this._optionsBuffer } },
+            ],
         });
 
         // render for all 6 sides
         for (let i = 0; i < 6; i++) {
-
             const cameraMatrix = this._cameraMatrices[i];
 
             // write view matrix to buffer
@@ -135,19 +133,19 @@ export class CubemapPrefilterRenderer {
 
             // render all mip levels for each face
             for (let mipLevel = 0; mipLevel < mipLevels; mipLevel++) {
-
                 const roughness = mipLevel / (mipLevels - 1);
                 // write mip level to the first 4 bytes of the options buffer
                 device.queue.writeBuffer(this._optionsBuffer, 0, new Float32Array([roughness]));
 
                 const commandEncoder = device.createCommandEncoder();
 
-                (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = renderTarget.createView({
-                    arrayLayerCount: 1,
-                    baseArrayLayer: i,
-                    mipLevelCount: 1,
-                    baseMipLevel: mipLevel
-                });
+                (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view =
+                    renderTarget.createView({
+                        arrayLayerCount: 1,
+                        baseArrayLayer: i,
+                        mipLevelCount: 1,
+                        baseMipLevel: mipLevel,
+                    });
 
                 const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
                 passEncoder.setPipeline(this._pipeline);

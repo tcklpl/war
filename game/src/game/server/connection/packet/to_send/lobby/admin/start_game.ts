@@ -1,9 +1,7 @@
-import { ClientPacket } from "../../../client_packet";
+import { ClientPacket } from '../../../client_packet';
 
-export class ClientPacketStartGame extends ClientPacket<"startGame"> {
-
+export class ClientPacketStartGame extends ClientPacket<'startGame'> {
     constructor() {
-        super("startGame");
+        super('startGame');
     }
-
 }

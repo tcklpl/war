@@ -1,16 +1,14 @@
-import { Shader } from "../../shader";
-import shaderSource from "./ssao.wgsl";
+import { Shader } from '../../shader';
+import shaderSource from './ssao.wgsl';
 
 export class SSAOShader extends Shader {
-
     static BINDING_GROUPS = {
         TEXTURES: 0,
-        OPT_KERNEL: 1
-    }
+        OPT_KERNEL: 1,
+    };
 
     constructor(name: string, cb: () => void) {
         super(name);
         this.compileShader(shaderSource).then(() => cb());
     }
-
 }

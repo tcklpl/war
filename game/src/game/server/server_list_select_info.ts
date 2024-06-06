@@ -1,4 +1,3 @@
-
 export interface ServerListSelectInfo {
     id: string;
     localName: string;

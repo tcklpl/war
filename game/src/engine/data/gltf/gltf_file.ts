@@ -1,5 +1,5 @@
-import { BadGLTFFileError } from "../../../errors/engine/gltf/bad_gltf_file";
-import { GLTFScene } from "./gltf_scene";
+import { BadGLTFFileError } from '../../../errors/engine/gltf/bad_gltf_file';
+import { GLTFScene } from './gltf_scene';
 
 interface GLTFAssetInfo {
     generator: string;
@@ -7,13 +7,15 @@ interface GLTFAssetInfo {
 }
 
 export class GLTFFile {
-
     private _assetInfo: GLTFAssetInfo;
     private _scenes: GLTFScene[];
     private _defaultScene: GLTFScene;
 
     constructor(assetInfo: GLTFAssetInfo, scenes: GLTFScene[], defaultSceneIndex: number) {
-        if (defaultSceneIndex < 0 || defaultSceneIndex >= scenes.length) throw new BadGLTFFileError(`Cannot set default scene as '${defaultSceneIndex}' for a collection of '${scenes.length}' scenes`);
+        if (defaultSceneIndex < 0 || defaultSceneIndex >= scenes.length)
+            throw new BadGLTFFileError(
+                `Cannot set default scene as '${defaultSceneIndex}' for a collection of '${scenes.length}' scenes`,
+            );
         this._assetInfo = assetInfo;
         this._scenes = scenes;
         this._defaultScene = scenes[defaultSceneIndex];
@@ -30,6 +32,4 @@ export class GLTFFile {
     get defaultScene() {
         return this._defaultScene;
     }
-
-
 }

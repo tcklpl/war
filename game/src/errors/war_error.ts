@@ -1,4 +1,1 @@
-
-export class WarError extends Error {
-    
-}
+export class WarError extends Error {}

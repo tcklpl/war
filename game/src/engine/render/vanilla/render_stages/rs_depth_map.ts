@@ -1,11 +1,10 @@
-import { DepthAndVelocityShader } from "../../../../shaders/geometry/depth/depth_and_velocity_shader";
-import { PrimitiveDrawOptions } from "../../../data/meshes/primitive_draw_options";
-import { RenderInitializationResources } from "../render_initialization_resources";
-import { RenderResourcePool } from "../render_resource_pool";
-import { RenderStage } from "./render_stage";
+import { DepthAndVelocityShader } from '../../../../shaders/geometry/depth/depth_and_velocity_shader';
+import { PrimitiveDrawOptions } from '../../../data/meshes/primitive_draw_options';
+import { RenderInitializationResources } from '../render_initialization_resources';
+import { RenderResourcePool } from '../render_resource_pool';
+import { RenderStage } from './render_stage';
 
 export class RenderStageDepthMap implements RenderStage {
-    
     private _depthShader!: DepthAndVelocityShader;
     private _depthPipelineCW!: GPURenderPipeline;
     private _depthPipelineCCW!: GPURenderPipeline;
@@ -15,7 +14,6 @@ export class RenderStageDepthMap implements RenderStage {
     private _meshDrawOptions = new PrimitiveDrawOptions().includePosition(0);
 
     async initialize(resources: RenderInitializationResources) {
-
         await new Promise<void>(r => {
             this._depthShader = new DepthAndVelocityShader('rs depth and velocity shader', () => r());
         });
@@ -38,29 +36,25 @@ export class RenderStageDepthMap implements RenderStage {
                     // position
                     {
                         arrayStride: 3 * 4,
-                        attributes: [
-                            { shaderLocation: 0, offset: 0, format: 'float32x3' }
-                        ]
-                    }
-                ] as GPUVertexBufferLayout[]
+                        attributes: [{ shaderLocation: 0, offset: 0, format: 'float32x3' }],
+                    },
+                ] as GPUVertexBufferLayout[],
             },
             fragment: {
                 module: this._depthShader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: 'rg16float' as GPUTextureFormat }
-                ]
+                targets: [{ format: 'rg16float' as GPUTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
                 cullMode: 'back',
-                frontFace: windingOrder
+                frontFace: windingOrder,
             },
             depthStencil: {
                 depthWriteEnabled: true,
                 depthCompare: 'less',
-                format: 'depth24plus'
-            }
+                format: 'depth24plus',
+            },
         });
     }
 
@@ -72,14 +66,14 @@ export class RenderStageDepthMap implements RenderStage {
                     // view will be assigned later
                     loadOp: 'clear',
                     storeOp: 'store',
-                }
+                },
             ] as GPURenderPassColorAttachment[],
             depthStencilAttachment: {
                 // view will be assigned later
                 depthClearValue: 1,
                 depthLoadOp: 'clear',
-                depthStoreOp: 'store'
-            } as GPURenderPassDepthStencilAttachment
+                depthStoreOp: 'store',
+            } as GPURenderPassDepthStencilAttachment,
         } as GPURenderPassDescriptor;
     }
 
@@ -88,9 +82,7 @@ export class RenderStageDepthMap implements RenderStage {
         return device.createBindGroup({
             label: 'PBR ViewProj',
             layout: pipeline.getBindGroupLayout(DepthAndVelocityShader.BINDING_GROUPS.VIEWPROJ),
-            entries: [
-                { binding: 0, resource: { buffer: buffer }}
-            ]
+            entries: [{ binding: 0, resource: { buffer: buffer } }],
         });
     }
 
@@ -103,7 +95,6 @@ export class RenderStageDepthMap implements RenderStage {
     }
 
     render(pool: RenderResourcePool) {
-        
         pool.commandEncoder.pushDebugGroup('Depth Map Renderer');
         this.setDepthTexture(pool.depthTextureView);
         this.setVelocityTexture(pool.velocityTextureView);
@@ -112,22 +103,22 @@ export class RenderStageDepthMap implements RenderStage {
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
             rpe.setPipeline(this._depthPipelineCCW);
             rpe.setBindGroup(DepthAndVelocityShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCCW);
-            pool.scene.entitiesPerWindingOrder.ccw.forEach(e => e.draw(rpe, this._depthPipelineCCW, this._meshDrawOptions));
+            pool.scene.entitiesPerWindingOrder.ccw.forEach(e =>
+                e.draw(rpe, this._depthPipelineCCW, this._meshDrawOptions),
+            );
         }
 
         if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
             rpe.setPipeline(this._depthPipelineCW);
             rpe.setBindGroup(DepthAndVelocityShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCW);
-            pool.scene.entitiesPerWindingOrder.cw.forEach(e => e.draw(rpe, this._depthPipelineCW, this._meshDrawOptions));
+            pool.scene.entitiesPerWindingOrder.cw.forEach(e =>
+                e.draw(rpe, this._depthPipelineCW, this._meshDrawOptions),
+            );
         }
 
         rpe.end();
         pool.commandEncoder.popDebugGroup();
-
     }
 
-    free() {
-        
-    }
-
+    free() {}
 }

@@ -1,5 +1,3 @@
-import { WarError } from "../war_error";
+import { WarError } from '../war_error';
 
-export class EngineError extends WarError {
-    
-}
+export class EngineError extends WarError {}

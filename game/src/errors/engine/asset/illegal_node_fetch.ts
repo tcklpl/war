@@ -1,5 +1,3 @@
-import { AssetError } from "./asset_error";
+import { AssetError } from './asset_error';
 
-export class IllegalNodeFetchError extends AssetError {
-    
-}
+export class IllegalNodeFetchError extends AssetError {}

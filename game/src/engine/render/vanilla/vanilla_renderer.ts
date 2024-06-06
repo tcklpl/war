@@ -1,15 +1,14 @@
-import { Renderer } from "../renderer";
-import { VanillaRenderPipeline } from "./vanilla_render_pipeline";
-import { RenderResourcePool } from "./render_resource_pool";
-import { Vec2 } from "../../data/vec/vec2";
-import { RenderProjection } from "./render_projection";
-import { BufferUtils } from "../../../utils/buffer_utils";
-import { MathUtils } from "../../../utils/math_utils";
-import { RenderPostEffects } from "./render_post_effects";
-import { LuminanceHistogram } from "../../data/histogram/luminance_histogram";
+import { Renderer } from '../renderer';
+import { VanillaRenderPipeline } from './vanilla_render_pipeline';
+import { RenderResourcePool } from './render_resource_pool';
+import { Vec2 } from '../../data/vec/vec2';
+import { RenderProjection } from './render_projection';
+import { BufferUtils } from '../../../utils/buffer_utils';
+import { MathUtils } from '../../../utils/math_utils';
+import { RenderPostEffects } from './render_post_effects';
+import { LuminanceHistogram } from '../../data/histogram/luminance_histogram';
 
 export class VanillaRenderer extends Renderer {
-
     private _presentationFormat!: GPUTextureFormat;
     private _renderProjection = new RenderProjection();
     private _renderPostEffects!: RenderPostEffects;
@@ -17,7 +16,11 @@ export class VanillaRenderer extends Renderer {
     private _renderResourcePool = new RenderResourcePool();
     private _luminanceHistogram!: LuminanceHistogram;
 
-    private _pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ, 'Picking');
+    private _pickingBuffer = BufferUtils.createEmptyBuffer(
+        4,
+        GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+        'Picking',
+    );
 
     // Jitter offsets - Needed for TAA, should be an array of zeroes if TAA is disabled
     private _jitterOffsetCount = 16;
@@ -49,11 +52,10 @@ export class VanillaRenderer extends Renderer {
     /**
      * Jitter offsets used by TAA (Temporal Anti-Aliasing) to smooth pixelated edges.
      * Should be initialized to an array of zeroes if TAA is disabled.
-     * 
+     *
      * @param resolution Screen resolution, needed to make sure all jitter offsets are less than 1px.
      */
     private buildJitterOffsets(resolution: Vec2) {
-
         let offsets: Vec2[] = [];
 
         if (game.engine.config.graphics.useTAA) {
@@ -74,7 +76,8 @@ export class VanillaRenderer extends Renderer {
         const width = Math.max(1, Math.min(device.limits.maxTextureDimension2D, gameCanvas.clientWidth));
         const height = Math.max(1, Math.min(device.limits.maxTextureDimension2D, gameCanvas.clientHeight));
 
-        const resize = !this._renderResourcePool.hasTextures || width !== gameCanvas.width || height !== gameCanvas.height;
+        const resize =
+            !this._renderResourcePool.hasTextures || width !== gameCanvas.width || height !== gameCanvas.height;
         if (!resize) return;
 
         gameCanvas.width = width;
@@ -98,7 +101,7 @@ export class VanillaRenderer extends Renderer {
             console.warn(`Failed to get the picking buffer, probably due to the renderer being destructed`);
         }
     }
-    
+
     async render() {
         const scene = game.engine.managers.scene.activeScene;
         if (!scene) {
@@ -114,7 +117,7 @@ export class VanillaRenderer extends Renderer {
         this._currentJitter = (this._currentJitter + 1) % this._jitterOffsetCount;
         const frameJitter = this._jitterOffsets[this._currentJitter];
 
-        this.assertCanvasResolution(); 
+        this.assertCanvasResolution();
         const commandEncoder = device.createCommandEncoder();
         this._renderResourcePool.prepareForFrame({
             scene,
@@ -122,7 +125,7 @@ export class VanillaRenderer extends Renderer {
             projection: this._renderProjection,
             postEffets: this._renderPostEffects,
             jitter: frameJitter,
-            luminanceHistogram: this._luminanceHistogram
+            luminanceHistogram: this._luminanceHistogram,
         });
         this._renderPipeline.render(this._renderResourcePool);
         device.queue.submit([commandEncoder.finish()]);
@@ -130,7 +133,6 @@ export class VanillaRenderer extends Renderer {
         await this.updatePicking();
         await this._luminanceHistogram.updateLuminanceHistogram();
         this._renderPostEffects.avg_luminance_target = this._luminanceHistogram.avg;
-        
     }
 
     async free() {
@@ -139,5 +141,4 @@ export class VanillaRenderer extends Renderer {
         this._luminanceHistogram.free();
         this._pickingBuffer.destroy();
     }
-
 }

@@ -1,13 +1,13 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { useConfig } from "./use_config";
-import { ServerConnection } from "../game/server/connection/server_connection";
-import { useGame } from "./use_game";
-import { LobbyListState, LobbyState } from "../../../protocol";
-import { WarGameLobby } from "../game/lobby/war_game_lobby";
-import { LobbyChatMessage } from "../game/lobby/lobby_chat";
-import { useAlert } from "./use_alert";
-import { useTranslation } from "react-i18next";
-import { WarGameSession } from "../game/lobby/war_game_session";
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { useConfig } from './use_config';
+import { ServerConnection } from '../game/server/connection/server_connection';
+import { useGame } from './use_game';
+import { LobbyListState, LobbyState } from '../../../protocol';
+import { WarGameLobby } from '../game/lobby/war_game_lobby';
+import { LobbyChatMessage } from '../game/lobby/lobby_chat';
+import { useAlert } from './use_alert';
+import { useTranslation } from 'react-i18next';
+import { WarGameSession } from '../game/lobby/war_game_session';
 
 interface IGameSessionContext {
     // Server states
@@ -32,23 +32,21 @@ interface IGameSessionContext {
     cloneLobbyState(): LobbyState | undefined;
     modifyLobbyState(mod: (state: LobbyState) => LobbyState): void;
     gameStartingIn?: number;
-    chat: {sender: string, msg: string}[];
+    chat: { sender: string; msg: string }[];
 
     // Game states
     currentGameSession?: WarGameSession;
     gTurnPlayerIndex: number;
-    
 }
 
 const GameSessionContext = createContext<IGameSessionContext>({} as IGameSessionContext);
 
-const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children }) => {
-
+const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     // Hooks
     const { sessionConfig, saveConfig } = useConfig();
     const { gameInstance } = useGame();
     const { enqueueAlert } = useAlert();
-    const { t } = useTranslation(["lobby"]);
+    const { t } = useTranslation(['lobby']);
 
     // Server connection and user states
     const [username, setUsername] = useState(sessionConfig.username);
@@ -66,26 +64,34 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     const [currentGameSession, setCurrentGameSession] = useState<WarGameSession | undefined>();
     const [gTurnPlayerIndex, setGTurnPlayerIndex] = useState(0);
 
-    const updateForLobbyExit = useCallback((reason: "" | "kicked" | "left" | undefined) => {
-        if (!gameInstance) return;
-        if (!gameInstance.state.server) return;
-        if (reason === "") return;
-        if (reason === "kicked") {
-            enqueueAlert({
-                content: t("lobby:kicked")
-            });
-        }
-        gameInstance.state.server.lastLobbyExitReason.value = "";
-    }, [gameInstance, enqueueAlert, t]);
+    const updateForLobbyExit = useCallback(
+        (reason: '' | 'kicked' | 'left' | undefined) => {
+            if (!gameInstance) return;
+            if (!gameInstance.state.server) return;
+            if (reason === '') return;
+            if (reason === 'kicked') {
+                enqueueAlert({
+                    content: t('lobby:kicked'),
+                });
+            }
+            gameInstance.state.server.lastLobbyExitReason.value = '';
+        },
+        [gameInstance, enqueueAlert, t],
+    );
 
-    const modifyLobbyState = useCallback((mod: (state: LobbyState) => LobbyState) => {
-        if (!currentLobbyState) return;
-        const newState = mod(structuredClone(currentLobbyState));
-        if (JSON.stringify(currentLobbyState) === JSON.stringify(newState)) return;
-        currentLobby?.modifyLobbyState(newState);
-    }, [currentLobby, currentLobbyState]);
+    const modifyLobbyState = useCallback(
+        (mod: (state: LobbyState) => LobbyState) => {
+            if (!currentLobbyState) return;
+            const newState = mod(structuredClone(currentLobbyState));
+            if (JSON.stringify(currentLobbyState) === JSON.stringify(newState)) return;
+            currentLobby?.modifyLobbyState(newState);
+        },
+        [currentLobby, currentLobbyState],
+    );
 
-    const cloneLobbyState = () => { return currentLobbyState ? structuredClone(currentLobbyState) : undefined};
+    const cloneLobbyState = () => {
+        return currentLobbyState ? structuredClone(currentLobbyState) : undefined;
+    };
 
     /*
         Auto update this hook if anything changes about the connection.
@@ -97,7 +103,7 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
             setConnection(conn?.connection);
             if (!conn) return;
             if (!gameInstance.state.server) return;
-            
+
             gameInstance.state.server.lobbies.listen(lobbies => setLobbies(lobbies));
             gameInstance.state.server.currentLobby.listen(lobby => {
                 setCurrentLobby(lobby);
@@ -111,13 +117,14 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
                     gs?.currentTurnPlayerIndex.listen(pi => setGTurnPlayerIndex(pi ?? 0));
                 });
             });
-            gameInstance.state.server.currentLobby.value?.state.listen(() => setCurrentLobby(gameInstance.state.server?.currentLobby.value));
+            gameInstance.state.server.currentLobby.value?.state.listen(() =>
+                setCurrentLobby(gameInstance.state.server?.currentLobby.value),
+            );
 
             gameInstance.state.server.lastLobbyExitReason.listen(reason => {
                 updateForLobbyExit(reason);
             });
         });
-
     }, [gameInstance, updateForLobbyExit]);
 
     /*
@@ -139,16 +146,27 @@ const GameSessionProvider: React.FC<{children?: React.ReactNode}> = ({ children 
     }, [username, token, sessionConfig, saveConfig]);
 
     return (
-        <GameSessionContext.Provider value={{ 
-            username, setUsername, 
-            token, setToken, 
-            connection, setConnection,
-            saveGameSession,
-            lobbies,
-            currentLobby, currentLobbyState, modifyLobbyState, cloneLobbyState, chat, gameStartingIn,
-            currentGameSession, gTurnPlayerIndex
-        }}>
-            { children }
+        <GameSessionContext.Provider
+            value={{
+                username,
+                setUsername,
+                token,
+                setToken,
+                connection,
+                setConnection,
+                saveGameSession,
+                lobbies,
+                currentLobby,
+                currentLobbyState,
+                modifyLobbyState,
+                cloneLobbyState,
+                chat,
+                gameStartingIn,
+                currentGameSession,
+                gTurnPlayerIndex,
+            }}
+        >
+            {children}
         </GameSessionContext.Provider>
     );
 };
@@ -157,4 +175,4 @@ function useGameSession(): IGameSessionContext {
     return useContext(GameSessionContext);
 }
 
-export { GameSessionProvider, useGameSession }
+export { GameSessionProvider, useGameSession };

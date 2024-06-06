@@ -1,5 +1,3 @@
-import { EngineError } from "../engine_error";
+import { EngineError } from '../engine_error';
 
-export class AssetError extends EngineError {
-    
-}
+export class AssetError extends EngineError {}

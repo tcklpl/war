@@ -1,10 +1,9 @@
-import { MathUtils } from "../../../utils/math_utils";
-import { Mat4 } from "../../data/mat/mat4";
-import { Vec2 } from "../../data/vec/vec2";
-import { Resolution } from "../../resolution";
+import { MathUtils } from '../../../utils/math_utils';
+import { Mat4 } from '../../data/mat/mat4';
+import { Vec2 } from '../../data/vec/vec2';
+import { Resolution } from '../../resolution';
 
 export class RenderProjection {
-
     private _near = 0.9;
     private _far = 30;
     private _resolution = new Resolution(new Vec2(gpuCtx.canvas.width, gpuCtx.canvas.height));
@@ -22,7 +21,7 @@ export class RenderProjection {
 
     initialize() {
         game.engine.registerFrameListener({
-            onEachFrame: delta => this.updatePreviousFrameMatrices()
+            onEachFrame: delta => this.updatePreviousFrameMatrices(),
         });
     }
 
@@ -30,8 +29,8 @@ export class RenderProjection {
         this._projectionMatrix = Mat4.perspective(
             MathUtils.degToRad(this._fovY),
             this._resolution.aspectRatio,
-            this._near, 
-            this._far
+            this._near,
+            this._far,
         );
         this._inverseProjectionMatrix = this._projectionMatrix.inverse();
         this.updatePreviousFrameMatrices();
@@ -93,5 +92,4 @@ export class RenderProjection {
     get previousFrameInverseProjectionMatrix() {
         return this._previousFrameInverseProjectionMatrix;
     }
-
 }

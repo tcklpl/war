@@ -1,5 +1,5 @@
-import { PBRMaterial } from "../material/pbr_material";
-import { Vec4 } from "../vec/vec4";
+import { PBRMaterial } from '../material/pbr_material';
+import { Vec4 } from '../vec/vec4';
 
 interface GLTFMaterialProperties {
     doubleSided: boolean;
@@ -12,10 +12,9 @@ interface GLTFMaterialProperties {
 }
 
 export class GLTFMaterial {
-
     private _name: string;
     private _doubleSided: boolean;
-    
+
     private _baseColor: number[]; //vec4
     private _metallic: number;
     private _roughness: number;
@@ -41,9 +40,8 @@ export class GLTFMaterial {
             baseColor: Vec4.fromArray(this._baseColor),
             metallic: this._metallic,
             roughness: this._roughness,
-            ior: this._ior
+            ior: this._ior,
         });
-
     }
 
     get asEnginePBRMaterial(): PBRMaterial {

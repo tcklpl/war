@@ -1,10 +1,9 @@
-import { SkyboxShader } from "../../../shaders/geometry/skybox/skybox_shader";
-import { TextureUtils } from "../../../utils/texture_utils";
-import { HDRAsset } from "../../asset/hdr_asset";
-import { Texture } from "../texture/texture";
+import { SkyboxShader } from '../../../shaders/geometry/skybox/skybox_shader';
+import { TextureUtils } from '../../../utils/texture_utils';
+import { HDRAsset } from '../../asset/hdr_asset';
+import { Texture } from '../texture/texture';
 
 export abstract class Skybox {
-
     private _sampler = device.createSampler({
         label: 'Skybox sampler',
         minFilter: 'linear',
@@ -12,10 +11,10 @@ export abstract class Skybox {
         mipmapFilter: 'linear',
         addressModeU: 'clamp-to-edge',
         addressModeV: 'clamp-to-edge',
-        addressModeW: 'clamp-to-edge'
+        addressModeW: 'clamp-to-edge',
     });
     private _prefilteredSkybox = new Texture();
-    private _pipelineBindGroups = new Map<GPURenderPipeline, {skybox: GPUBindGroup}>();
+    private _pipelineBindGroups = new Map<GPURenderPipeline, { skybox: GPUBindGroup }>();
 
     abstract initialize(): Promise<void>;
 
@@ -28,12 +27,12 @@ export abstract class Skybox {
             layout: pipeline.getBindGroupLayout(SkyboxShader.BINDING_GROUPS.TEXTURE),
             entries: [
                 { binding: 0, resource: this._sampler },
-                { binding: 1, resource: this._prefilteredSkybox.texture.createView({ dimension: 'cube' }) }
-            ]
+                { binding: 1, resource: this._prefilteredSkybox.texture.createView({ dimension: 'cube' }) },
+            ],
         });
 
         const res = {
-            skybox: skyboxBindGroup
+            skybox: skyboxBindGroup,
         };
 
         this._pipelineBindGroups.set(pipeline, res);
@@ -42,9 +41,9 @@ export abstract class Skybox {
 
     /**
      * Constructs a skybox texture and pre-filters the produced cubemap from an equirectangular HDR asset.
-     * 
+     *
      * This function essentially creates the skybox.
-     * 
+     *
      * @param hdrAsset HDR Asset from the Asset Manager.
      * @param resolution Desired cubemap resolution.
      */
@@ -63,8 +62,8 @@ export abstract class Skybox {
         const cubemapTex = new Texture(
             await game.engine.utilRenderers.equirecToCubemap.renderEquirectangularMapToCubemap(equirecTex.texture, {
                 cubemapResolution: resolution,
-                mipCount: 10
-            })
+                mipCount: 10,
+            }),
         );
         await cubemapTex.generateBitmaps();
         await this.prefilterSkybox(cubemapTex);
@@ -78,7 +77,10 @@ export abstract class Skybox {
      */
     async prefilterSkybox(skybox: Texture) {
         // the cubemap resolution is going to be the width as we want the first layer to be a copy of the skybox.
-        this._prefilteredSkybox.texture = await game.engine.utilRenderers.cubemapPrefilter.prefilterCubemap(skybox.texture, skybox.texture.width);
+        this._prefilteredSkybox.texture = await game.engine.utilRenderers.cubemapPrefilter.prefilterCubemap(
+            skybox.texture,
+            skybox.texture.width,
+        );
     }
 
     get prefilteredSkybox() {
@@ -96,5 +98,4 @@ export abstract class Skybox {
     free() {
         this._prefilteredSkybox.free();
     }
-    
 }

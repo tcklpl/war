@@ -1,14 +1,13 @@
-import { GameSocket } from "../../../../../@types/socket";
-import { WarServer } from "../../../war_server";
-import { PLInitialGameState } from "./game/pl_initial_game_state";
-import { PLChat } from "./lobby/pl_chat";
-import { PLGameStartCancelled } from "./lobby/pl_game_start_cancelled";
-import { PLJoinedLobby } from "./lobby/pl_joined_lobby";
-import { PLLeftLobby } from "./lobby/pl_left_lobby";
-import { PLLobbies } from "./lobby_list/pl_lobbies";
-import { PLStartingGame } from "./lobby/pl_starting_game";
-import { PLUpdateLobbyState } from "./lobby/pl_update_lobby_state";
-
+import { GameSocket } from '../../../../../@types/socket';
+import { WarServer } from '../../../war_server';
+import { PLInitialGameState } from './game/pl_initial_game_state';
+import { PLChat } from './lobby/pl_chat';
+import { PLGameStartCancelled } from './lobby/pl_game_start_cancelled';
+import { PLJoinedLobby } from './lobby/pl_joined_lobby';
+import { PLLeftLobby } from './lobby/pl_left_lobby';
+import { PLLobbies } from './lobby_list/pl_lobbies';
+import { PLStartingGame } from './lobby/pl_starting_game';
+import { PLUpdateLobbyState } from './lobby/pl_update_lobby_state';
 
 export const registerPacketListeners = (socket: GameSocket, server: WarServer) => {
     return [
@@ -26,4 +25,4 @@ export const registerPacketListeners = (socket: GameSocket, server: WarServer) =
         // game
         new PLInitialGameState(socket, server),
     ];
-}
+};

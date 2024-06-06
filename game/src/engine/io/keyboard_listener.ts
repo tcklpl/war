@@ -1,4 +1,4 @@
-import { Constructor } from "typeUtils";
+import { Constructor } from 'typeUtils';
 
 interface IKeyboardListener {
     onKeyDown(key: string, fn: () => void): void;
@@ -7,7 +7,6 @@ interface IKeyboardListener {
 
 export function keyboardListener<T extends Constructor>(base: T): Constructor<IKeyboardListener> & T {
     return class extends base {
-
         protected onKeyDown(key: string, fn: () => void) {
             game.engine.managers.io.keyboard.registerKeyListener(key, 'down', fn);
         }
@@ -15,6 +14,5 @@ export function keyboardListener<T extends Constructor>(base: T): Constructor<IK
         protected onKeyUp(key: string, fn: () => void) {
             game.engine.managers.io.keyboard.registerKeyListener(key, 'up', fn);
         }
-
-    }
+    };
 }

@@ -1,31 +1,28 @@
-import { TAAShader } from "../../../../shaders/post/taa/taa_shader";
-import { RenderInitializationResources } from "../render_initialization_resources";
-import { RenderResourcePool } from "../render_resource_pool";
-import { RenderStage } from "./render_stage";
+import { TAAShader } from '../../../../shaders/post/taa/taa_shader';
+import { RenderInitializationResources } from '../render_initialization_resources';
+import { RenderResourcePool } from '../render_resource_pool';
+import { RenderStage } from './render_stage';
 
 export class RenderStageTAA implements RenderStage {
-
     private _taaShader!: TAAShader;
     private _taaPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _samplerNearest = device.createSampler({
         minFilter: 'nearest',
-        magFilter: 'nearest'
+        magFilter: 'nearest',
     });
     private _samplerLinear = device.createSampler({
         minFilter: 'linear',
-        magFilter: 'linear'
+        magFilter: 'linear',
     });
 
     async initialize(resources: RenderInitializationResources) {
-
         await new Promise<void>(r => {
             this._taaShader = new TAAShader('taa shader', () => r());
         });
 
         this._taaPipeline = await this.createTAAPipeline(resources.hdrTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
-
     }
 
     private createTAAPipeline(hdrTextureFormat: GPUTextureFormat) {
@@ -35,19 +32,17 @@ export class RenderStageTAA implements RenderStage {
             vertex: {
                 module: this._taaShader.module,
                 entryPoint: 'vertex',
-                buffers: [] as GPUVertexBufferLayout[]
+                buffers: [] as GPUVertexBufferLayout[],
             },
             fragment: {
                 module: this._taaShader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: hdrTextureFormat }
-                ]
+                targets: [{ format: hdrTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'none'
-            }
+                cullMode: 'none',
+            },
         });
     }
 
@@ -58,9 +53,9 @@ export class RenderStageTAA implements RenderStage {
                     // view: undefined, Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'load',
-                    storeOp: 'store'
-                }
-            ] as GPURenderPassColorAttachment[]
+                    storeOp: 'store',
+                },
+            ] as GPURenderPassColorAttachment[],
         } as GPURenderPassDescriptor;
     }
 
@@ -73,8 +68,8 @@ export class RenderStageTAA implements RenderStage {
                 { binding: 1, resource: this._samplerLinear },
                 { binding: 2, resource: pool.hdrBufferChain.current.view },
                 { binding: 3, resource: pool.hdrBufferChain.previous.view },
-                { binding: 4, resource: pool.velocityTextureView }
-            ]
+                { binding: 4, resource: pool.velocityTextureView },
+            ],
         });
     }
 
@@ -83,7 +78,6 @@ export class RenderStageTAA implements RenderStage {
     }
 
     render(pool: RenderResourcePool) {
-
         pool.commandEncoder.pushDebugGroup('TAA Renderer');
         const bindGroup = this.createBindGroup(pool);
 
@@ -97,12 +91,11 @@ export class RenderStageTAA implements RenderStage {
 
         // update the hdr chain to notify the next render stages to use the antialiased texture as input
         pool.hdrBufferChain.swapCurrentBuffers();
-        
+
         pool.commandEncoder.popDebugGroup();
     }
 
     free() {
         // TODO
     }
-
 }

@@ -1,12 +1,11 @@
-import { Camera } from "../camera/camera";
-import { Entity } from "../entity/entity";
-import { Light } from "../lights/light";
-import { BlackSkybox } from "../skybox/black_skybox";
-import { Skybox } from "../skybox/skybox";
-import { SceneInfo } from "./scene_info";
+import { Camera } from '../camera/camera';
+import { Entity } from '../entity/entity';
+import { Light } from '../lights/light';
+import { BlackSkybox } from '../skybox/black_skybox';
+import { Skybox } from '../skybox/skybox';
+import { SceneInfo } from './scene_info';
 
 export class Scene {
-
     private _entities: Entity[];
     private _cameras: Camera[];
     private _lights: Light[];
@@ -19,18 +18,21 @@ export class Scene {
 
     private _entitiesPerWindingOrder = {
         cw: [] as Entity[],
-        ccw: [] as Entity[]
+        ccw: [] as Entity[],
     };
-    
-    constructor(private _name: string, props: {
-        entities: Entity[],
-        cameras: Camera[],
-        lights: Light[],
-        skyboxes: Skybox[],
 
-        activeCamera?: Camera,
-        activeSkybox?: Skybox
-    }) {
+    constructor(
+        private _name: string,
+        props: {
+            entities: Entity[];
+            cameras: Camera[];
+            lights: Light[];
+            skyboxes: Skybox[];
+
+            activeCamera?: Camera;
+            activeSkybox?: Skybox;
+        },
+    ) {
         this._entities = props.entities;
         this._cameras = props.cameras;
         this._lights = props.lights;
@@ -122,5 +124,4 @@ export class Scene {
         this.info.free();
         this._skyboxes.forEach(s => s.free());
     }
-
 }

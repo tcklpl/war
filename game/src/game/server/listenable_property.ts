@@ -1,6 +1,4 @@
-
 export class ListenableProperty<T> {
-
     private _value?: T;
     private _listeners: ((value?: T) => void)[] = [];
 
@@ -20,5 +18,4 @@ export class ListenableProperty<T> {
     listen(listener: (value?: T) => void) {
         this._listeners.push(listener);
     }
-
 }

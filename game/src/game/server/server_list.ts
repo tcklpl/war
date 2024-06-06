@@ -1,9 +1,8 @@
-import { IDBConnector } from "../../engine/idb/idb_connector";
-import { ServerListSelectInfo } from "./server_list_select_info";
-import { ServerListStorage } from "./server_list_storage";
+import { IDBConnector } from '../../engine/idb/idb_connector';
+import { ServerListSelectInfo } from './server_list_select_info';
+import { ServerListStorage } from './server_list_storage';
 
 export class ServerList {
-
     private _serverStorage!: ServerListStorage;
 
     async initializeDB(connection: IDBConnector) {
@@ -21,7 +20,7 @@ export class ServerList {
             id: uuid,
             localName: name,
             address: address,
-            listPosition: listEndPosition
+            listPosition: listEndPosition,
         } as ServerListSelectInfo;
         await this._serverStorage.put(newServerInfo);
         return newServerInfo;
@@ -45,5 +44,4 @@ export class ServerList {
             i++;
         }
     }
-
 }

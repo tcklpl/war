@@ -1,9 +1,11 @@
-import { GameSocket } from "../../../../../@types/socket";
-import { WarServer } from "../../../war_server";
+import { GameSocket } from '../../../../../@types/socket';
+import { WarServer } from '../../../war_server';
 
 export abstract class PacketListener {
-
-    constructor(private _socket: GameSocket, private _server: WarServer) {
+    constructor(
+        private _socket: GameSocket,
+        private _server: WarServer,
+    ) {
         this.register();
     }
 

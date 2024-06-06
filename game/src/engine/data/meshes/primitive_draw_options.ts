@@ -1,11 +1,9 @@
-
 interface PrimitiveDrawOptionsEntry {
     use: boolean;
     index: number;
 }
 
 export class PrimitiveDrawOptions {
-
     private _position: PrimitiveDrawOptionsEntry = { use: false, index: -1 };
     private _uv: PrimitiveDrawOptionsEntry = { use: false, index: -1 };
     private _normal: PrimitiveDrawOptionsEntry = { use: false, index: -1 };
@@ -38,12 +36,7 @@ export class PrimitiveDrawOptions {
     }
 
     includeAll() {
-        return this
-            .includePosition(0)
-            .includeUV(1)
-            .includeNormal(2)
-            .includeTangent(3)
-            .includeMaterial();
+        return this.includePosition(0).includeUV(1).includeNormal(2).includeTangent(3).includeMaterial();
     }
 
     get position() {
@@ -65,5 +58,4 @@ export class PrimitiveDrawOptions {
     get useMaterial() {
         return this._useMaterial;
     }
-
 }

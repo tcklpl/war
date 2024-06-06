@@ -1,7 +1,6 @@
-import { IIdentifiable } from "./data/traits/identifiable";
+import { IIdentifiable } from './data/traits/identifiable';
 
 export class IdentifierPool {
-
     private _currentID: number = 0;
     private _indentifiables: Map<number, IIdentifiable> = new Map();
 
@@ -14,5 +13,4 @@ export class IdentifierPool {
     get(id: number) {
         return this._indentifiables.get(id);
     }
-
 }

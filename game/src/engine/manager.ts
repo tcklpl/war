@@ -1,6 +1,4 @@
-
 export abstract class Manager<T> {
-
     private _registered: T[] = [];
 
     register(item: T) {
@@ -14,5 +12,4 @@ export abstract class Manager<T> {
     get all() {
         return this._registered;
     }
-    
 }

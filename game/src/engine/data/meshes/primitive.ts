@@ -1,6 +1,6 @@
-import { BindDeletedMeshPrimitiveError } from "../../../errors/engine/data/bind_deleted_mesh_primitive";
-import { Material } from "../material/material";
-import { PrimitiveDrawOptions } from "./primitive_draw_options";
+import { BindDeletedMeshPrimitiveError } from '../../../errors/engine/data/bind_deleted_mesh_primitive';
+import { Material } from '../material/material';
+import { PrimitiveDrawOptions } from './primitive_draw_options';
 
 type PrimitiveBuffers = {
     positions: GPUBuffer;
@@ -8,10 +8,9 @@ type PrimitiveBuffers = {
     normals: GPUBuffer;
     tangent: GPUBuffer;
     indices: GPUBuffer;
-}
+};
 
 export class Primitive {
-
     private _indicesSize: number;
     private _buffers: PrimitiveBuffers;
     private _available = true;
@@ -25,9 +24,9 @@ export class Primitive {
 
     draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options: PrimitiveDrawOptions) {
         if (!this._available) throw new BindDeletedMeshPrimitiveError();
-        
+
         if (options.useMaterial) this._material.bind(passEncoder, pipeline);
-        
+
         if (options.position.use) passEncoder.setVertexBuffer(options.position.index, this._buffers.positions);
         if (options.uv.use) passEncoder.setVertexBuffer(options.uv.index, this._buffers.uv);
         if (options.normal.use) passEncoder.setVertexBuffer(options.normal.index, this._buffers.normals);
@@ -44,5 +43,4 @@ export class Primitive {
         this._buffers.indices.destroy();
         this._available = false;
     }
-
 }
