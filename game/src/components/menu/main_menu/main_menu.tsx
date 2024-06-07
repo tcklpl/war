@@ -1,4 +1,4 @@
-import { Button, Grid, Stack } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PlayerNameBox from '../config/player_name_box/player_name_box';
@@ -38,6 +38,18 @@ const MainMenu: React.FC = () => {
                     </Button>
                 </Link>
             </Stack>
+            <Box
+                position={'fixed'}
+                bottom={0}
+                left={0}
+                display={'flex'}
+                margin={'1em 1em 1em 1em'}
+                sx={{ pointerEvents: 'none' }}
+            >
+                <Typography variant='body2' color={'gray'}>
+                    {process.env.REACT_APP_VERSION}
+                </Typography>
+            </Box>
         </Grid>
     );
 };
