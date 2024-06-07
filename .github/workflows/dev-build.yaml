@@ -47,10 +47,10 @@ jobs:
         with:
           name: server-dist
           path: server/dist
-
+  
   build-game:
     name: Build Game
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [22.x]
@@ -79,6 +79,33 @@ jobs:
         with:
           name: game-bundle
           path: game/build/**/*
+
+  game-compile-windows:
+    name: Compile Windows Binaries
+    needs: [build-game]
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: game/package-lock.json
+      - name: Installing Dependencies
+        working-directory: game
+        run: npm ci
+      - name: Download Game Pre-Compiled Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: game-dist
+          path: './build/'
       - name: Build Windows Binaries
         working-directory: game
         run: npm run electron-build-windows
@@ -90,7 +117,7 @@ jobs:
 
   generate-release:
     name: Generate Release
-    needs: [build-server, build-game]
+    needs: [build-server, game-compile-windows]
     runs-on: ubuntu-latest
     permissions:
       contents: write
