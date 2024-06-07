@@ -104,7 +104,7 @@ jobs:
       - name: Download Game Pre-Compiled Bundle
         uses: actions/download-artifact@v4
         with:
-          name: game-dist
+          name: game-bundle
           path: './build/'
       - name: Build Windows Binaries
         working-directory: game
