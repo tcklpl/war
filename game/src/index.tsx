@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import './i18next';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { GameProvider } from './hooks/use_game';
 import { ConfigProvider } from './hooks/use_config';
 import { CrashProvider } from './hooks/use_crash';
@@ -31,8 +30,3 @@ root.render(
         <App />
     </Hooks>,
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
