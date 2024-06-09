@@ -1,13 +1,13 @@
-import { BadMatrixLengthError } from "../../../errors/engine/data/bad_matrix_length";
-import { Vec3 } from "../vec/vec3";
-import { Vec4 } from "../vec/vec4";
+import { BadMatrixLengthError } from '../../../errors/engine/data/bad_matrix_length';
+import { Vec3 } from '../vec/vec3';
+import { Vec4 } from '../vec/vec4';
 
 export class Mat4 {
-
     values: number[] = new Array<number>(16);
 
     constructor(values: number[]) {
-        if (values.length !== 16) throw new BadMatrixLengthError(`Trying to create a 4x4 matrix with ${values.length} elements`);
+        if (values.length !== 16)
+            throw new BadMatrixLengthError(`Trying to create a 4x4 matrix with ${values.length} elements`);
         this.values = values;
     }
 
@@ -89,12 +89,12 @@ export class Mat4 {
         const a31 = this.values[3 * 4 + 1];
         const a32 = this.values[3 * 4 + 2];
         const a33 = this.values[3 * 4 + 3];
-        
+
         return new Vec4(
-            (a00 * v.x) + (a01 * v.y) + (a02 * v.z) + (a03 * v.w),
-            (a10 * v.x) + (a11 * v.y) + (a12 * v.z) + (a13 * v.w),
-            (a20 * v.x) + (a21 * v.y) + (a22 * v.z) + (a23 * v.w),
-            (a30 * v.x) + (a31 * v.y) + (a32 * v.z) + (a33 * v.w)
+            a00 * v.x + a01 * v.y + a02 * v.z + a03 * v.w,
+            a10 * v.x + a11 * v.y + a12 * v.z + a13 * v.w,
+            a20 * v.x + a21 * v.y + a22 * v.z + a23 * v.w,
+            a30 * v.x + a31 * v.y + a32 * v.z + a33 * v.w,
         );
     }
 
@@ -104,10 +104,22 @@ export class Mat4 {
 
     transpose() {
         return new Mat4([
-            this.values[ 0], this.values[ 4], this.values[ 8], this.values[12], 
-            this.values[ 1], this.values[ 5], this.values[ 9], this.values[13], 
-            this.values[ 2], this.values[ 6], this.values[10], this.values[14], 
-            this.values[ 3], this.values[ 7], this.values[11], this.values[15]
+            this.values[0],
+            this.values[4],
+            this.values[8],
+            this.values[12],
+            this.values[1],
+            this.values[5],
+            this.values[9],
+            this.values[13],
+            this.values[2],
+            this.values[6],
+            this.values[10],
+            this.values[14],
+            this.values[3],
+            this.values[7],
+            this.values[11],
+            this.values[15],
         ]);
     }
 
@@ -153,14 +165,10 @@ export class Mat4 {
         const tmp_22 = m00 * m11;
         const tmp_23 = m10 * m01;
 
-        const t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
-            (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
-        const t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
-            (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
-        const t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
-            (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
-        const t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
-            (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
+        const t0 = tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31 - (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
+        const t1 = tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31 - (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
+        const t2 = tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31 - (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
+        const t3 = tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21 - (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
 
         const d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
 
@@ -169,30 +177,18 @@ export class Mat4 {
             d * t1,
             d * t2,
             d * t3,
-            d * ((tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30) -
-                (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30)),
-            d * ((tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30) -
-                (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30)),
-            d * ((tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30) -
-                (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30)),
-            d * ((tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20) -
-                (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20)),
-            d * ((tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33) -
-                (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33)),
-            d * ((tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33) -
-                (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33)),
-            d * ((tmp_14 * m03 + tmp_19 * m13 + tmp_22 * m33) -
-                (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33)),
-            d * ((tmp_17 * m03 + tmp_20 * m13 + tmp_23 * m23) -
-                (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23)),
-            d * ((tmp_14 * m22 + tmp_17 * m32 + tmp_13 * m12) -
-                (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22)),
-            d * ((tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22) -
-                (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02)),
-            d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) -
-                (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
-            d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
-                (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
+            d * (tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30 - (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30)),
+            d * (tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30 - (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30)),
+            d * (tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30 - (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30)),
+            d * (tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20 - (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20)),
+            d * (tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33 - (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33)),
+            d * (tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33 - (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33)),
+            d * (tmp_14 * m03 + tmp_19 * m13 + tmp_22 * m33 - (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33)),
+            d * (tmp_17 * m03 + tmp_20 * m13 + tmp_23 * m23 - (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23)),
+            d * (tmp_14 * m22 + tmp_17 * m32 + tmp_13 * m12 - (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22)),
+            d * (tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22 - (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02)),
+            d * (tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02 - (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
+            d * (tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12 - (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
         ]);
     }
 
@@ -237,70 +233,73 @@ export class Mat4 {
     // -----------------[ STATIC UTILS ]-----------------
 
     static identity(): Mat4 {
-        return new Mat4([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ]);
+        return new Mat4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
     }
 
     static translation(x: number, y: number, z: number): Mat4 {
-        return new Mat4([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            x, y, z, 1
-        ]);
+        return new Mat4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]);
     }
 
     static scaling(x: number, y: number, z: number): Mat4 {
-        return new Mat4([
-            x, 0, 0, 0,
-            0, y, 0, 0,
-            0, 0, z, 0,
-            0, 0, 0, 1
-        ]);
+        return new Mat4([x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1]);
     }
 
     static perspective(fovRadians: number, aspect: number, near: number, far: number): Mat4 {
         const f = Math.tan(Math.PI * 0.5 - 0.5 * fovRadians);
         const rangeInv = 1 / (near - far);
 
-        return new Mat4([
-            f / aspect , 0 , 0                    , 0,
-            0          , f , 0                    , 0,
-            0          , 0 , far * rangeInv       , -1,
-            0          , 0 , near * far * rangeInv, 0,
-        ]);
+        return new Mat4([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, far * rangeInv, -1, 0, 0, near * far * rangeInv, 0]);
     }
 
     static ortho(left: number, right: number, bottom: number, top: number, near: number, far: number) {
         return new Mat4([
-            2 / (right - left)              , 0                                 , 0                     , 0,
-            0                               , 2 / (top - bottom)                , 0                     , 0,
-            0                               , 0                                 , 1 / (near - far)      , 0,
-            (right + left) / (left - right) , (top + bottom) / (bottom - top)   , near / (near - far)   , 1
+            2 / (right - left),
+            0,
+            0,
+            0,
+            0,
+            2 / (top - bottom),
+            0,
+            0,
+            0,
+            0,
+            1 / (near - far),
+            0,
+            (right + left) / (left - right),
+            (top + bottom) / (bottom - top),
+            near / (near - far),
+            1,
         ]);
     }
 
     static frustum(left: number, right: number, bottom: number, top: number, near: number, far: number) {
-
-        const dx = (right - left);
-        const dy = (top - bottom);
-        const dz = (near - far);
+        const dx = right - left;
+        const dy = top - bottom;
+        const dz = near - far;
 
         return new Mat4([
-            2 * near / dx       , 0                     , 0                 , 0,
-            0                   , 2 * near / dy         , 0                 , 0,
-            (left + right) / dx , (top + bottom) / dy   , far / dz          , -1,
-            0                   , 0                     , near * far / dz   , 0
+            (2 * near) / dx,
+            0,
+            0,
+            0,
+            0,
+            (2 * near) / dy,
+            0,
+            0,
+            (left + right) / dx,
+            (top + bottom) / dy,
+            far / dz,
+            -1,
+            0,
+            0,
+            (near * far) / dz,
+            0,
         ]);
     }
 
     /**
      * Aim matrix, makes an object aim down +Z toward the target.
-     * 
+     *
      * @param pos Position
      * @param target Target position
      * @param up Vector pointing upwards
@@ -312,10 +311,22 @@ export class Mat4 {
         const yAxis = Vec3.cross(zAxis, xAxis).normalize();
 
         return new Mat4([
-            xAxis.x, xAxis.y, xAxis.z, 0,
-            yAxis.x, yAxis.y, yAxis.z, 0,
-            zAxis.x, zAxis.y, zAxis.z, 0,
-            pos.x  , pos.y  , pos.z  , 1
+            xAxis.x,
+            xAxis.y,
+            xAxis.z,
+            0,
+            yAxis.x,
+            yAxis.y,
+            yAxis.z,
+            0,
+            zAxis.x,
+            zAxis.y,
+            zAxis.z,
+            0,
+            pos.x,
+            pos.y,
+            pos.z,
+            1,
         ]);
     }
 
@@ -325,10 +336,22 @@ export class Mat4 {
         const yAxis = Vec3.cross(zAxis, xAxis).normalize();
 
         return new Mat4([
-            xAxis.x, xAxis.y, xAxis.z, 0,
-            yAxis.x, yAxis.y, yAxis.z, 0,
-            zAxis.x, zAxis.y, zAxis.z, 0,
-            pos.x  , pos.y  , pos.z  , 1
+            xAxis.x,
+            xAxis.y,
+            xAxis.z,
+            0,
+            yAxis.x,
+            yAxis.y,
+            yAxis.z,
+            0,
+            zAxis.x,
+            zAxis.y,
+            zAxis.z,
+            0,
+            pos.x,
+            pos.y,
+            pos.z,
+            1,
         ]);
     }
 
@@ -338,14 +361,22 @@ export class Mat4 {
         let yAxis = Vec3.cross(zAxis, xAxis).normalize();
 
         return new Mat4([
-            xAxis.x, yAxis.x, zAxis.x, 0,
-            xAxis.y, yAxis.y, zAxis.y, 0,
-            xAxis.z, yAxis.z, zAxis.z, 0,
+            xAxis.x,
+            yAxis.x,
+            zAxis.x,
+            0,
+            xAxis.y,
+            yAxis.y,
+            zAxis.y,
+            0,
+            xAxis.z,
+            yAxis.z,
+            zAxis.z,
+            0,
             -(xAxis.x * pos.x + xAxis.y * pos.y + xAxis.z * pos.z),
             -(yAxis.x * pos.x + yAxis.y * pos.y + yAxis.z * pos.z),
             -(zAxis.x * pos.x + zAxis.y * pos.y + zAxis.z * pos.z),
-            1
+            1,
         ]);
     }
-    
 }

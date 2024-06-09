@@ -1,19 +1,17 @@
-import { PrincipledBSDFShader } from "../../../shaders/geometry/principled_bsdf/principled_bsdf_shader";
-import { MathUtils } from "../../../utils/math_utils";
-import { Mat4 } from "../mat/mat4";
-import { Mesh } from "../meshes/mesh";
-import { PrimitiveDrawOptions } from "../meshes/primitive_draw_options";
-import { identifiable } from "../traits/identifiable";
-import { Vec3 } from "../vec/vec3";
-import { Vec4 } from "../vec/vec4";
-import { FrameListenerMatrixTransformative } from "./frame_listener_matrix_transformative";
-import { MatrixTransformative } from "./matrix_transformative";
-
+import { PrincipledBSDFShader } from '../../../shaders/geometry/principled_bsdf/principled_bsdf_shader';
+import { MathUtils } from '../../../utils/math_utils';
+import { Mat4 } from '../mat/mat4';
+import { Mesh } from '../meshes/mesh';
+import { PrimitiveDrawOptions } from '../meshes/primitive_draw_options';
+import { identifiable } from '../traits/identifiable';
+import { Vec3 } from '../vec/vec3';
+import { Vec4 } from '../vec/vec4';
+import { FrameListenerMatrixTransformative } from './frame_listener_matrix_transformative';
+import { MatrixTransformative } from './matrix_transformative';
 
 const EntityBase = identifiable(FrameListenerMatrixTransformative);
 
 export class Entity extends EntityBase {
-
     visible: boolean = true;
 
     private _name: string;
@@ -21,17 +19,17 @@ export class Entity extends EntityBase {
 
     private _overlayColor = Vec3.fromValue(0);
     private _overlayIntensity = 0;
-    
+
     private _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
 
-    constructor(data: {name: string, mesh: Mesh}) {
+    constructor(data: { name: string; mesh: Mesh }) {
         super();
         this._name = data.name;
         this._mesh = data.mesh;
         // write id to buffer
         device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize + Vec4.byteSize, this.idUint32);
     }
-    
+
     getBindGroup(pipeline: GPURenderPipeline) {
         const result = this._pipelineBindGroups.get(pipeline);
         if (result) return result;
@@ -39,9 +37,7 @@ export class Entity extends EntityBase {
         const newBindGroup = device.createBindGroup({
             label: `Entity '${this._name}' model matrix`,
             layout: pipeline.getBindGroupLayout(PrincipledBSDFShader.BINDING_GROUPS.MODEL),
-            entries: [
-                { binding: 0, resource: { buffer: this.modelMatrixUniformBuffer }}
-            ]
+            entries: [{ binding: 0, resource: { buffer: this.modelMatrixUniformBuffer } }],
         });
         this._pipelineBindGroups.set(pipeline, newBindGroup);
         return newBindGroup;
@@ -90,7 +86,10 @@ export class Entity extends EntityBase {
     set overlayIntensity(intensity: number) {
         const clampedIntensity = MathUtils.clamp(0, 1, intensity);
         this._overlayIntensity = clampedIntensity;
-        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize + Vec3.byteSize, new Float32Array([this._overlayIntensity]));
+        device.queue.writeBuffer(
+            this.modelMatrixUniformBuffer,
+            3 * Mat4.byteSize + Vec3.byteSize,
+            new Float32Array([this._overlayIntensity]),
+        );
     }
-
 }

@@ -1,0 +1,19 @@
+import { TerritoryCode, TurnPhase, TurnAllowedActions } from "../../../../protocol";
+import { Party } from "./party";
+
+export class PartyNotSet extends Party {
+    
+    get startingTerritories(): TerritoryCode[] | "any" {
+        throw new Error("Method not implemented.");
+    }
+    calculateAllowedTurnActionsForPhase(phase: TurnPhase): TurnAllowedActions {
+        throw new Error("Method not implemented.");
+    }
+    checkWinCondition(): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    constructor() {
+        super("not_set");
+    }
+}

@@ -3,7 +3,12 @@
     "name": "Name",
     "back_to_menu": "Back to Menu",
     "playing_as": "Playing as:",
+    "config": "Config",
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "understood": "Understood"
+    "understood": "Understood",
+    "hp": "HP",
+    "hp_desc": "Unit starting HP",
+    "max_hp": "Max HP",
+    "max_hp_desc": "Unit maximum HP"
 }

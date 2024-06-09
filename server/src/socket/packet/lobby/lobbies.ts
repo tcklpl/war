@@ -3,7 +3,7 @@ import { CfgServer } from "../../../config/default/cfg_server";
 import { LobbyManager } from "../../../game/lobby/lobby_manager";
 import { ServerPacket } from "../server_packet";
 
-export class ServerPacketLobbies extends ServerPacket {
+export class ServerPacketLobbies extends ServerPacket<"lobbies"> {
 
     constructor(gameRoomManager: LobbyManager, serverCfg: CfgServer) {
 

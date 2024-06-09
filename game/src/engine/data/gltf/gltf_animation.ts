@@ -1,9 +1,12 @@
-import { GLTFAnimationChannel } from "./gltf_animation_channel";
-import { GLTFAnimationSampler } from "./gltf_animation_sampler";
+import { GLTFAnimationChannel } from './gltf_animation_channel';
+import { GLTFAnimationSampler } from './gltf_animation_sampler';
 
 export class GLTFAnimation {
-    
-    constructor (private _name: string, private _samplers: GLTFAnimationSampler[], private _channels: GLTFAnimationChannel[]) { }
+    constructor(
+        private _name: string,
+        private _samplers: GLTFAnimationSampler[],
+        private _channels: GLTFAnimationChannel[],
+    ) {}
 
     get name() {
         return this._name;
@@ -16,5 +19,4 @@ export class GLTFAnimation {
     get samplers() {
         return this._samplers;
     }
-
 }

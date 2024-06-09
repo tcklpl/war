@@ -10,6 +10,7 @@ export class CfgServer extends Config {
     host!: string;
     rest_port!: number;
     socket_port!: number;
+    log_level!: "debug" | "info" | "warn" | "error";
 
     name!: string;
     password!: string;

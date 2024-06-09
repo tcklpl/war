@@ -1,8 +1,7 @@
-import { Mat4 } from "../mat/mat4";
-import { Vec3 } from "../vec/vec3";
+import { Mat4 } from '../mat/mat4';
+import { Vec3 } from '../vec/vec3';
 
 export abstract class Camera {
-
     private _pos: Vec3;
     private _up: Vec3;
 
@@ -16,7 +15,7 @@ export abstract class Camera {
         this._pos = pos;
         this._up = up;
         game.engine.registerFrameListener({
-            onEachFrame: delta => this.updatePreviousFrameMatrices()
+            onEachFrame: delta => this.updatePreviousFrameMatrices(),
         });
     }
 

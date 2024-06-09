@@ -1,13 +1,11 @@
-import { BufferUtils } from "../../../utils/buffer_utils";
-import { MathUtils } from "../../../utils/math_utils";
-import { Mat4 } from "../mat/mat4";
-import { Quaternion } from "../quaternion/quaternion";
-import { Vec3 } from "../vec/vec3";
-import { Vec4 } from "../vec/vec4";
-
+import { BufferUtils } from '../../../utils/buffer_utils';
+import { MathUtils } from '../../../utils/math_utils';
+import { Mat4 } from '../mat/mat4';
+import { Quaternion } from '../quaternion/quaternion';
+import { Vec3 } from '../vec/vec3';
+import { Vec4 } from '../vec/vec4';
 
 export class MatrixTransformative {
-
     private _parent?: MatrixTransformative;
     private _children: MatrixTransformative[] = [];
 
@@ -21,9 +19,14 @@ export class MatrixTransformative {
 
     private _modelMatrix = Mat4.identity();
     private _modelMatrixInverse = Mat4.identity();
-    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(3 * Mat4.byteSize + Vec4.byteSize + 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(
+        3 * Mat4.byteSize + Vec4.byteSize + 4,
+        GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    );
 
     private _windingOrder: 'cw' | 'ccw' = 'ccw';
+
+    private _transformListeners: (() => void)[] = [];
 
     private buildModelMatrix() {
         this._modelMatrix = Mat4.identity()
@@ -45,6 +48,9 @@ export class MatrixTransformative {
 
         // update children
         this._children.forEach(c => c.buildModelMatrix());
+
+        // update listeners
+        this._transformListeners.forEach(t => t());
     }
 
     buildTranslationMatrix() {
@@ -57,6 +63,10 @@ export class MatrixTransformative {
 
     buildScaleMatrix() {
         this._scaleMatrix = Mat4.scaling(this._scale.x, this._scale.y, this._scale.z);
+    }
+
+    onTransform(t: () => void) {
+        this._transformListeners.push(t);
     }
 
     get translation() {
@@ -86,7 +96,11 @@ export class MatrixTransformative {
     }
 
     set rotationEulerDegrees(r: Vec3) {
-        this._rotation = Quaternion.fromEulerAnglesRadians(MathUtils.degToRad(r.x), MathUtils.degToRad(r.y), MathUtils.degToRad(r.z));
+        this._rotation = Quaternion.fromEulerAnglesRadians(
+            MathUtils.degToRad(r.x),
+            MathUtils.degToRad(r.y),
+            MathUtils.degToRad(r.z),
+        );
         this.buildRotationMatrix();
         this.buildModelMatrix();
     }
@@ -129,5 +143,4 @@ export class MatrixTransformative {
     get windingOrder() {
         return this._windingOrder;
     }
-
 }

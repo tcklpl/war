@@ -1,8 +1,7 @@
-import { Constructor } from "typeUtils";
-import { Vec2 } from "../data/vec/vec2";
+import { Constructor } from 'typeUtils';
+import { Vec2 } from '../data/vec/vec2';
 
 export interface IMouseListener {
-    
     onMouseMove?(position: Vec2): void;
     onMouseMoveOffset?(offset: Vec2): void;
     onMouseStop?(): void;
@@ -16,11 +15,9 @@ export interface IMouseListener {
 
 export function mouseListener<T extends Constructor>(base: T): Constructor<IMouseListener> & T {
     return class extends base {
-
         constructor(...args: any[]) {
             super(...args);
             game.engine.managers.io.mouse.registerListener(this);
         }
-
-    }
+    };
 }

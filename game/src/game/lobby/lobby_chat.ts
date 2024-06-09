@@ -1,10 +1,9 @@
-import { Listener } from "typeUtils";
-import { ClientPacketSendChatMessage } from "../server/connection/packet/lobby/send_chat_message";
+import { Listener } from 'typeUtils';
+import { ClientPacketSendChatMessage } from '../server/connection/packet/to_send/lobby/common/send_chat_message';
 
-export type LobbyChatMessage = { sender: string, msg: string }; 
+export type LobbyChatMessage = { sender: string; msg: string };
 
 export class LobbyChat {
-
     private _messages: LobbyChatMessage[] = [];
     private _listeners: Listener<LobbyChatMessage[]>[] = [];
 
@@ -33,5 +32,4 @@ export class LobbyChat {
     get messages() {
         return this._messages;
     }
-
 }

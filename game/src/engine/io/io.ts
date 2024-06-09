@@ -1,10 +1,9 @@
-import { InteractableManager } from "./interaction/interactable_manager";
-import { MouseInteractionManager } from "./interaction/mouse_interaction_manager";
-import { Keyboard } from "./keyboard";
-import { Mouse } from "./mouse";
+import { InteractableManager } from './interaction/interactable_manager';
+import { MouseInteractionManager } from './interaction/mouse_interaction_manager';
+import { Keyboard } from './keyboard';
+import { Mouse } from './mouse';
 
 export class GameIO {
-
     private _mouse = new Mouse();
     private _keyboard = new Keyboard();
 
@@ -26,5 +25,4 @@ export class GameIO {
     get mouseInteractionManager() {
         return this._mouseInteractionManager;
     }
-
 }

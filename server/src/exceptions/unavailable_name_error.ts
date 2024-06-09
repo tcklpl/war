@@ -1,4 +1,1 @@
-
-export class UnavailableNameError extends Error {
-
-}
+export class UnavailableNameError extends Error {}

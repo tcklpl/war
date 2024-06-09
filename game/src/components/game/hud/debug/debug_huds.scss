@@ -1,0 +1,8 @@
+@import '../../../../style/constants.scss';
+
+.hud-debug-performance {
+    position: fixed;
+    z-index: $z-index-hud;
+    top: 2em;
+    right: 1em;
+}

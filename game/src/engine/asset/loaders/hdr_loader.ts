@@ -1,49 +1,48 @@
-
 export interface HDRImageData {
-	width: number;
-	height: number;
-	exposure: number;
-	gamma: number;
-	data: Float32Array;
+    width: number;
+    height: number;
+    exposure: number;
+    gamma: number;
+    data: Float32Array;
 }
 
 type Header = {
-	width: number,
-	height: number,
-	gamma: number,
-	exposure: number,
-	colorCorr: number[],
-	flipX: boolean,
-	flipY: boolean
+    width: number;
+    height: number;
+    gamma: number;
+    exposure: number;
+    colorCorr: number[];
+    flipX: boolean;
+    flipY: boolean;
 };
 
 type DataStream = {
-	offset: number,
-	data: DataView
+    offset: number;
+    data: DataView;
 };
 
 /**
  * This loader was adapted from io-rgbe by David Lenaerts (https://github.com/DerSchmale/io-rgbe/).
- * 
+ *
  * Changes I made to the decoder:
  *  - Changed the returned Float32Array to also contain an alpha pixel 1.0. Thus making the length 4 * width * height;
  *  - Made the decoder invert the Y axis on "-Y" instead of "+Y"; and
  *  - Put the functions inside a class and made all of them private except for "decodeRGBE".
- * 
+ *
  * MIT License
- * 
+ *
  * Copyright (c) 2020 David Lenaerts
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -51,14 +50,13 @@ type DataStream = {
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  */
 export class HDRLoader {
-    
     decodeRGBE(data: DataView): HDRImageData {
         const stream = {
             data,
-            offset: 0
+            offset: 0,
         };
 
         const header = this.parseHeader(stream);
@@ -68,49 +66,51 @@ export class HDRLoader {
             height: header.height,
             exposure: header.exposure,
             gamma: header.gamma,
-            data: this.parseData(stream, header)
+            data: this.parseData(stream, header),
         };
     }
 
     private parseHeader(stream: DataStream): Header {
         let line = this.readLine(stream);
         const header = {
-            colorCorr: [ 1, 1, 1 ],
+            colorCorr: [1, 1, 1],
             exposure: 1,
             gamma: 1,
             width: 0,
             height: 0,
             flipX: false,
-            flipY: false
+            flipY: false,
         };
 
-        if (line !== "#?RADIANCE" && line !== "#?RGBE")
-            throw new Error("Incorrect file format!");
+        if (line !== '#?RADIANCE' && line !== '#?RGBE') throw new Error('Incorrect file format!');
 
-        while (line !== "") {
+        while (line !== '') {
             // empty line means there's only 1 line left, containing size info:
             line = this.readLine(stream);
-            const parts = line.split("=");
+            const parts = line.split('=');
             switch (parts[0]) {
-                case "GAMMA":
+                case 'GAMMA':
                     header.gamma = parseFloat(parts[1]);
                     break;
-                case "FORMAT":
-                    if (parts[1] !== "32-bit_rle_rgbe" && parts[1] !== "32-bit_rle_xyze")
-                        throw new Error("Incorrect encoding format!");
+                case 'FORMAT':
+                    if (parts[1] !== '32-bit_rle_rgbe' && parts[1] !== '32-bit_rle_xyze')
+                        throw new Error('Incorrect encoding format!');
                     break;
-                case "EXPOSURE":
+                case 'EXPOSURE':
                     header.exposure = parseFloat(parts[1]);
                     break;
-                case "COLORCORR":
-                    header.colorCorr = parts[1].replace(/^\s+|\s+$/g, "").split(" ").map(m => parseFloat(m));
+                case 'COLORCORR':
+                    header.colorCorr = parts[1]
+                        .replace(/^\s+|\s+$/g, '')
+                        .split(' ')
+                        .map(m => parseFloat(m));
                     break;
             }
         }
 
         line = this.readLine(stream);
 
-        const parts = line.split(" ");
+        const parts = line.split(' ');
         this.parseSize(parts[0], parseInt(parts[1]), header);
         this.parseSize(parts[2], parseInt(parts[3]), header);
 
@@ -119,28 +119,28 @@ export class HDRLoader {
 
     private parseSize(label: string, value: number, header: Header) {
         switch (label) {
-            case "+X":
+            case '+X':
                 header.width = value;
                 break;
-            case "-X":
+            case '-X':
                 header.width = value;
                 header.flipX = true;
                 break;
-            case "-Y":
+            case '-Y':
                 header.height = value;
                 header.flipY = true;
                 break;
-            case "+Y":
+            case '+Y':
                 header.height = value;
                 break;
         }
     }
 
     private readLine(stream: DataStream): string {
-        let ch, str = "";
+        let ch,
+            str = '';
 
-        while ((ch = stream.data.getUint8(stream.offset++)) !== 0x0a)
-            str += String.fromCharCode(ch);
+        while ((ch = stream.data.getUint8(stream.offset++)) !== 0x0a) str += String.fromCharCode(ch);
 
         return str;
     }
@@ -153,9 +153,8 @@ export class HDRLoader {
             data = this.parseNewRLE(stream, header);
             if (header.flipX) this.flipX(data, header);
             if (header.flipY) this.flipY(data, header);
-        }
-        else {
-            throw new Error("Obsolete HDR file version!");
+        } else {
+            throw new Error('Obsolete HDR file version!');
         }
 
         return data;
@@ -168,11 +167,9 @@ export class HDRLoader {
         let { offset, data } = stream;
 
         for (let y = 0; y < height; ++y) {
-            if (data.getUint16(offset) !== 0x0202)
-                throw new Error("Incorrect scanline start hash");
+            if (data.getUint16(offset) !== 0x0202) throw new Error('Incorrect scanline start hash');
 
-            if (data.getUint16(offset + 2) !== width)
-                throw new Error("Scanline doesn't match picture dimension!");
+            if (data.getUint16(offset + 2) !== width) throw new Error("Scanline doesn't match picture dimension!");
 
             offset += 4;
             const numComps = width * 4;
@@ -190,8 +187,7 @@ export class HDRLoader {
                     for (let rle = 0; rle < len; ++rle) {
                         comps[x++] = value;
                     }
-                }
-                else {
+                } else {
                     for (let n = 0; n < value; ++n) {
                         comps[x++] = data.getUint8(offset++);
                     }
@@ -212,7 +208,6 @@ export class HDRLoader {
                 tgt[i++] = b * e * colorCorr[2];
                 tgt[i++] = 1;
             }
-
         }
 
         return tgt;
@@ -260,5 +255,4 @@ export class HDRLoader {
             }
         }
     }
-
 }

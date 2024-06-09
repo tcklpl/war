@@ -1,5 +1,11 @@
+# Node Modules
 node_modules/
-out/
+
+# Temporary folders created when compiling the code
+build/
+dist/
+
+# Folders and files generated when running the project
 /config/
 public.key
 private.key

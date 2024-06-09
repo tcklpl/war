@@ -1,8 +1,7 @@
-import { IIdentifiable } from "../../data/traits/identifiable";
-import { IInteractable } from "../../data/traits/interactable";
+import { IIdentifiable } from '../../data/traits/identifiable';
+import { IInteractable } from '../../data/traits/interactable';
 
 export class InteractableManager {
-
     private _interactables: Map<number, IInteractable> = new Map();
 
     registerInteractable(i: IInteractable & IIdentifiable) {

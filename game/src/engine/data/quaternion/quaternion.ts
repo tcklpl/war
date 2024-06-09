@@ -1,15 +1,18 @@
-import { BadQuaternionLengthError } from "../../../errors/engine/data/bad_quaternion_length";
-import { MathUtils } from "../../../utils/math_utils";
-import { Mat4 } from "../mat/mat4";
-import { Vec3 } from "../vec/vec3";
+import { BadQuaternionLengthError } from '../../../errors/engine/data/bad_quaternion_length';
+import { MathUtils } from '../../../utils/math_utils';
+import { Mat4 } from '../mat/mat4';
+import { Vec3 } from '../vec/vec3';
 
 export class Quaternion {
-
-    constructor(public w: number, public x: number, public y: number, public z: number) {
-    }
+    constructor(
+        public w: number,
+        public x: number,
+        public y: number,
+        public z: number,
+    ) {}
 
     normalize() {
-        const d = Math.sqrt(this.w**2 + this.x**2 + this.y**2 + this.z**2);
+        const d = Math.sqrt(this.w ** 2 + this.x ** 2 + this.y ** 2 + this.z ** 2);
         this.w /= d;
         this.x /= d;
         this.y /= d;
@@ -41,10 +44,22 @@ export class Quaternion {
         const yz = this.y * this.z;
 
         return new Mat4([
-            1 - (2 * y2) - (2 * z2), (2 * xy) + (2 * wz)    , (2 * xz) - (2 * wy)    , 0,
-            (2 * xy) - (2 * wz)    , 1 - (2 * x2) - (2 * z2), (2 * yz) + (2 * wx)    , 0,
-            (2 * xz) + (2 * wy)    , (2 * yz) - (2 * wx)    , 1 - (2 * x2) - (2 * y2), 0,
-            0                      , 0                      , 0                      , 1
+            1 - 2 * y2 - 2 * z2,
+            2 * xy + 2 * wz,
+            2 * xz - 2 * wy,
+            0,
+            2 * xy - 2 * wz,
+            1 - 2 * x2 - 2 * z2,
+            2 * yz + 2 * wx,
+            0,
+            2 * xz + 2 * wy,
+            2 * yz - 2 * wx,
+            1 - 2 * x2 - 2 * y2,
+            0,
+            0,
+            0,
+            0,
+            1,
         ]);
     }
 
@@ -56,10 +71,10 @@ export class Quaternion {
     }
 
     multiplyByVec3(v: Vec3) {
-        const w = - (this.x * v.x) - (this.y * v.y) - (this.z * v.z);
-        const x =   (this.w * v.x) + (this.y * v.z) - (this.z * v.y);
-        const y =   (this.w * v.y) + (this.z * v.x) - (this.x * v.z);
-        const z =   (this.w * v.z) + (this.x * v.y) - (this.y * v.x);
+        const w = -(this.x * v.x) - this.y * v.y - this.z * v.z;
+        const x = this.w * v.x + this.y * v.z - this.z * v.y;
+        const y = this.w * v.y + this.z * v.x - this.x * v.z;
+        const z = this.w * v.z + this.x * v.y - this.y * v.x;
 
         this.w = w;
         this.x = x;
@@ -69,10 +84,10 @@ export class Quaternion {
     }
 
     multiplyByQuaternion(q: Quaternion) {
-        const w = (this.w * q.w) - (this.x * q.x) - (this.y * q.y) - (this.z * q.z);
-        const x = (this.x * q.w) + (this.w * q.x) + (this.y * q.z) - (this.z * q.y);
-        const y = (this.y * q.w) + (this.w * q.y) + (this.z * q.x) - (this.x * q.z);
-        const z = (this.z * q.w) - (this.w * q.z) + (this.x * q.y) - (this.y * q.x);
+        const w = this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z;
+        const x = this.x * q.w + this.w * q.x + this.y * q.z - this.z * q.y;
+        const y = this.y * q.w + this.w * q.y + this.z * q.x - this.x * q.z;
+        const z = this.z * q.w - this.w * q.z + this.x * q.y - this.y * q.x;
 
         this.w = w;
         this.x = x;
@@ -123,12 +138,16 @@ export class Quaternion {
             cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw,
             sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw,
             cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw,
-            cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw
+            cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw,
         );
     }
 
     static fromEulerAnglesDegrees(roll: number, pitch: number, yaw: number) {
-        return this.fromEulerAnglesRadians(MathUtils.degToRad(roll), MathUtils.degToRad(pitch), MathUtils.degToRad(yaw));
+        return this.fromEulerAnglesRadians(
+            MathUtils.degToRad(roll),
+            MathUtils.degToRad(pitch),
+            MathUtils.degToRad(yaw),
+        );
     }
 
     static fromAngleAxis(axis: Vec3, angle: number) {
@@ -138,17 +157,18 @@ export class Quaternion {
     }
 
     static fromArrayWXYZ(v: number[]) {
-        if (v.length !== 4) throw new BadQuaternionLengthError(`Trying to create quaternion from an array with ${v.length} values`);
+        if (v.length !== 4)
+            throw new BadQuaternionLengthError(`Trying to create quaternion from an array with ${v.length} values`);
         return new Quaternion(v[0], v[1], v[2], v[3]);
     }
 
     static fromArrayXYZW(v: number[]) {
-        if (v.length !== 4) throw new BadQuaternionLengthError(`Trying to create quaternion from an array with ${v.length} values`);
+        if (v.length !== 4)
+            throw new BadQuaternionLengthError(`Trying to create quaternion from an array with ${v.length} values`);
         return new Quaternion(v[3], v[0], v[1], v[2]);
     }
 
     static lookAt(source: Vec3, dest: Vec3, front: Vec3, up: Vec3) {
-
         const toVector = dest.subtract(source).normalize();
 
         let rotAxis = Vec3.cross(front, toVector).normalize();
@@ -163,10 +183,7 @@ export class Quaternion {
     }
 
     static dot(a: Quaternion, b: Quaternion) {
-        return a.x * b.x +
-        a.y * b.y +
-        a.z * b.z +
-        a.w * b.w
+        return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
     }
 
     /**
@@ -195,13 +212,15 @@ export class Quaternion {
             return a.clone().add(diff.multiplyByFactor(t)).normalize();
         }
 
-        dot = MathUtils.clamp(0, 1, dot);  // Robustness: Stay within domain of acos()
+        dot = MathUtils.clamp(0, 1, dot); // Robustness: Stay within domain of acos()
         const theta_0 = Math.acos(dot); // theta_0 = angle between input vectors
-        const theta = theta_0 * t;      // theta = angle between v0 and result
+        const theta = theta_0 * t; // theta = angle between v0 and result
 
         const c = b.clone().subtract(a.clone().multiplyByFactor(dot)).normalize();
 
-        return a.clone().multiplyByFactor(Math.cos(theta)).add(c.multiplyByFactor(Math.sin(theta)));
+        return a
+            .clone()
+            .multiplyByFactor(Math.cos(theta))
+            .add(c.multiplyByFactor(Math.sin(theta)));
     }
-
 }

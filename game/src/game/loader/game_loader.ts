@@ -1,7 +1,6 @@
-import { LoadStage } from "./load_stage";
+import { LoadStage } from './load_stage';
 
 export class GameLoader {
-
     private _loadStage = LoadStage.STARTING;
     private _loadListeners: ((ls: LoadStage) => void)[] = [];
 

@@ -1,7 +1,6 @@
-import { Mipmap2DShader } from "../../../shaders/util/mipmap/mipmap_shader";
+import { Mipmap2DShader } from '../../../shaders/util/mipmap/mipmap_shader';
 
 export class MipmapRenderer {
-    
     private _mipShader!: Mipmap2DShader;
     private _mipPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
@@ -9,7 +8,7 @@ export class MipmapRenderer {
         label: 'cubemap convolution sampler',
         magFilter: 'linear',
         minFilter: 'linear',
-        mipmapFilter: 'linear'
+        mipmapFilter: 'linear',
     });
 
     async initialize() {
@@ -26,19 +25,17 @@ export class MipmapRenderer {
             layout: 'auto',
             vertex: {
                 module: this._mipShader.module,
-                entryPoint: 'vertex'
+                entryPoint: 'vertex',
             },
             fragment: {
                 module: this._mipShader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: 'rgba16float' as GPUTextureFormat }
-                ]
+                targets: [{ format: 'rgba16float' as GPUTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'none'
-            }
+                cullMode: 'none',
+            },
         });
     }
 
@@ -49,9 +46,9 @@ export class MipmapRenderer {
                     // view: Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 1 },
                     loadOp: 'clear',
-                    storeOp: 'store'
-                } as GPURenderPassColorAttachment
-            ]
+                    storeOp: 'store',
+                } as GPURenderPassColorAttachment,
+            ],
         } as GPURenderPassDescriptor;
     }
 
@@ -66,19 +63,17 @@ export class MipmapRenderer {
     async generateMipMaps(source: GPUTexture) {
         // populate all mips starting on 1, as 0 is the texture itself
         for (let mip = 1; mip < source.mipLevelCount; mip++) {
-
             // considering textures with multiple layers, like cubes
             for (let face = 0; face < source.depthOrArrayLayers; face++) {
-
                 // pass source image, this will be the original image on the first mip and the previous mip elsewhere
                 const passSource = source.createView({
                     baseMipLevel: mip - 1,
                     mipLevelCount: 1,
                     baseArrayLayer: face,
                     arrayLayerCount: 1,
-                    dimension: '2d'
+                    dimension: '2d',
                 });
-                
+
                 // create a bind group to hold the source of this pass
                 const texBindGroup = device.createBindGroup({
                     label: 'cube mipmap texture bind group',
@@ -86,15 +81,15 @@ export class MipmapRenderer {
                     entries: [
                         { binding: 0, resource: this._sampler },
                         { binding: 1, resource: passSource },
-                    ]
+                    ],
                 });
-                
+
                 // render target as the current mip
                 const renderTarget = source.createView({
                     baseMipLevel: mip,
                     mipLevelCount: 1,
                     baseArrayLayer: face,
-                    arrayLayerCount: 1
+                    arrayLayerCount: 1,
                 });
 
                 // encode the mip render and submit it to the GPU queue
@@ -111,10 +106,7 @@ export class MipmapRenderer {
         }
 
         await device.queue.onSubmittedWorkDone();
-
     }
 
-    free() {
-    }
-
+    free() {}
 }

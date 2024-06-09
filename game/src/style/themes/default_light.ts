@@ -1,10 +1,9 @@
-import { createTheme } from "@mui/material";
-
+import { createTheme } from '@mui/material';
 
 const themeDefaultLight = createTheme({
     palette: {
-        mode: "light"
-    }
+        mode: 'light',
+    },
 });
 
 export default themeDefaultLight;

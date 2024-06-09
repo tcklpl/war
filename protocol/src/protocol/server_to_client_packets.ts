@@ -1,15 +1,47 @@
-import { LobbyState, LobbyListState } from "./data";
+import { LobbyState, LobbyListState, InitialGameStatePacket, RoundState, TurnAllowedActions, GameStage, TerritoryCode } from "./data";
+import { GameError } from "./data/ingame/game_error";
 
 export type LobbyCreationFailReason = "full" | "unavailable name" | "already owner" | "other";
 
 export interface ServerToClientPackets {
 
+    /*
+        ----------------------------------------------------------
+        Lobby List Packets
+        ----------------------------------------------------------
+    */
     lobbies: (lobbies: LobbyListState) => void;
     failedToCreateLobby: (reason: LobbyCreationFailReason) => void;
     failedToJoinLobby: () => void;
+
+    /*
+        ----------------------------------------------------------
+        Lobby Packets
+        ----------------------------------------------------------
+    */
     joinedLobby: (lobby: LobbyState) => void;
-    updateLobbyState: (lobby: LobbyState) => void;
-    leftLobby: () => void;
+    leftLobby: (kicked?: boolean) => void;
     chatMessage: (sender: string, msg: string) => void;
+    updateLobbyState: (lobby: LobbyState) => void;
+    lStartingGame: (countdown: number) => void;
+    lGameStartCancelled: () => void;
+
+    /*
+        ----------------------------------------------------------
+        Game Packets
+        ----------------------------------------------------------
+    */
+    // Global game state update
+    gInitialGameState: (state: InitialGameStatePacket) => void;
+    gUpdateGameStage: (stage: GameStage) => void;
+
+    // Territory selection
+    gInitialTerritorySelectionTurn: (currentPlayer: string, timeout: number) => void;
+    gInitialTerritorySelectionAllowedTerritories: (allowed: TerritoryCode[]) => void;
+    gInitialTerritorySelectionAssignment: (player: string, territory: TerritoryCode, reason: 'selected' | 'timeout') => void;
+
+    gUpdateRoundState: (state: RoundState) => void;
+    gTurnAllowedActions: (allowed: TurnAllowedActions) => void;
+    gGameError: (error: GameError) => void;
 
 }

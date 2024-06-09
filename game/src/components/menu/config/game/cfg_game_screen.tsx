@@ -1,14 +1,13 @@
-import React, { useEffect, useLayoutEffect, useState } from "react"
-import { Grid, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import CfgTooltip from "../tooltip/cfg_tooltip";
-import { useConfig } from "../../../../hooks/use_config";
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { Grid, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import CfgTooltip from '../tooltip/cfg_tooltip';
+import { useConfig } from '../../../../hooks/use_config';
 
 const CfgGameScreen: React.FC = () => {
-
     const { palette } = useTheme();
-    const [currentTooltip, setCurrentTooltip] = useState<{title: string, content: string} | undefined>();
-    const { t } = useTranslation(["config"]);
+    const [currentTooltip, setCurrentTooltip] = useState<{ title: string; content: string } | undefined>();
+    const { t } = useTranslation(['config']);
     const { gameConfig } = useConfig();
 
     const [usedStorage, setUsedStorage] = useState(-1);
@@ -23,7 +22,7 @@ const CfgGameScreen: React.FC = () => {
 
             const assetNumber = await game.engine.managers.asset.getCachedAssetCount();
             setUsedStorageAssetCount(assetNumber ?? -1);
-        }
+        };
         fetchUsage();
     }, []);
 
@@ -32,7 +31,7 @@ const CfgGameScreen: React.FC = () => {
         // save the config when this screen is closed
         return () => {
             gameConfig.cacheAssets = cacheAssets;
-        }
+        };
     }, [cacheAssets, gameConfig]);
 
     const convertBytesToName = (bytes: number) => {
@@ -44,44 +43,62 @@ const CfgGameScreen: React.FC = () => {
             unitIndex++;
         }
         return `${b.toFixed(b < 10 && unitIndex > 0 ? 1 : 0)} ${units[unitIndex]}`;
-    }
-    
+    };
+
     return (
-        <Grid container style={{ backgroundColor: palette.background.default }} className="cfg-display-screen">
-
+        <Grid container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
             <Grid item xs={8}>
-
-                <Typography variant="h5">{ t("config:game_loading") }</Typography>
+                <Typography variant='h5'>{t('config:game_loading')}</Typography>
                 <Table>
                     <TableBody>
-                        <TableRow 
-                            onMouseEnter={() => setCurrentTooltip({ 
-                                title: t("config:game_loading_cache_assets"), 
-                                content: t("config:game_loading_cache_assets_desc")
-                                    .replace('<USAGE>', usedStorage !== -1 ? `${convertBytesToName(usedStorage)}` : t("config:game_loading_cache_assets_desc_failed_to_calculate_usage"))
-                                    .replace('<ASSET_NO>', usedStorageAssetCount !== -1 ? `${usedStorageAssetCount}` : t("config:game_loading_cache_assets_desc_failed_to_calculate_usage"))
-                                    .replace('<ASSET_PLURAL>', usedStorageAssetCount > 1 ? t("config:game_loading_cache_assets_desc_asset_plural") : t("config:game_loading_cache_assets_desc_asset_singular"))
-                            })}
+                        <TableRow
+                            onMouseEnter={() =>
+                                setCurrentTooltip({
+                                    title: t('config:game_loading_cache_assets'),
+                                    content: t('config:game_loading_cache_assets_desc')
+                                        .replace(
+                                            '<USAGE>',
+                                            usedStorage !== -1
+                                                ? `${convertBytesToName(usedStorage)}`
+                                                : t('config:game_loading_cache_assets_desc_failed_to_calculate_usage'),
+                                        )
+                                        .replace(
+                                            '<ASSET_NO>',
+                                            usedStorageAssetCount !== -1
+                                                ? `${usedStorageAssetCount}`
+                                                : t('config:game_loading_cache_assets_desc_failed_to_calculate_usage'),
+                                        )
+                                        .replace(
+                                            '<ASSET_PLURAL>',
+                                            usedStorageAssetCount > 1
+                                                ? t('config:game_loading_cache_assets_desc_asset_plural')
+                                                : t('config:game_loading_cache_assets_desc_asset_singular'),
+                                        ),
+                                })
+                            }
                             onMouseLeave={() => setCurrentTooltip(undefined)}
                         >
-                            <TableCell><Typography variant="body1">{ t("config:game_loading_cache_assets") }</Typography></TableCell>
-                            <TableCell align="right">
-                                <Switch checked={cacheAssets} onChange={e => {
-                                    setCacheAssets(e.target.checked);
-                                }}/>
+                            <TableCell>
+                                <Typography variant='body1'>{t('config:game_loading_cache_assets')}</Typography>
+                            </TableCell>
+                            <TableCell align='right'>
+                                <Switch
+                                    checked={cacheAssets}
+                                    onChange={e => {
+                                        setCacheAssets(e.target.checked);
+                                    }}
+                                />
                             </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
-                
             </Grid>
 
             <Grid item xs={4}>
-                <CfgTooltip currentTooltip={currentTooltip}/>
+                <CfgTooltip currentTooltip={currentTooltip} />
             </Grid>
-
         </Grid>
     );
-}
+};
 
 export default CfgGameScreen;

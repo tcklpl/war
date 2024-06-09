@@ -1,9 +1,8 @@
-
 export abstract class Asset {
-
-    constructor(private _name: string, private _url: string) {
-
-    }
+    constructor(
+        private _name: string,
+        private _url: string,
+    ) {}
 
     get name() {
         return this._name;

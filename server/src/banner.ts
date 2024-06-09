@@ -8,7 +8,7 @@ export class WarServerBanner {
     readonly greetings = `
         War Server ${chalk.gray(this.version)} (${chalk.gray(this.version_type)})
         ${chalk.dim("Source available at " + chalk.underline(this.source_url))}
-        ${chalk.dim("Commands are not yet supported.")}
+        ${chalk.dim("Enter help to see the command list.")}
     `;
 
 

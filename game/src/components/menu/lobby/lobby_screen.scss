@@ -1,0 +1,9 @@
+.lobby-screen {
+    height: 100vh;
+}
+
+.lobby-growable-tab-panel {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    height: 0px;
+}

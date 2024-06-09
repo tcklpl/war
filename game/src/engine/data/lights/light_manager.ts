@@ -1,6 +1,4 @@
-import { Manager } from "../../manager";
-import { Light } from "./light";
+import { Manager } from '../../manager';
+import { Light } from './light';
 
-export class LightManager extends Manager<Light> {
-
-}
+export class LightManager extends Manager<Light> {}

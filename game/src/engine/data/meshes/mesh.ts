@@ -1,8 +1,7 @@
-import { Primitive } from "./primitive";
-import { PrimitiveDrawOptions } from "./primitive_draw_options";
+import { Primitive } from './primitive';
+import { PrimitiveDrawOptions } from './primitive_draw_options';
 
 export class Mesh {
-
     private _name: string;
     private _primitives: Primitive[];
 
@@ -22,5 +21,4 @@ export class Mesh {
     free() {
         this._primitives.forEach(p => p.free());
     }
-
 }

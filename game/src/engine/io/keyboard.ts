@@ -1,8 +1,6 @@
-
 type KeyEvent = 'up' | 'down';
 
 export class Keyboard {
-
     private _keyDownListeners: Map<string, (() => void)[]> = new Map();
     private _keyUpListeners: Map<string, (() => void)[]> = new Map();
 

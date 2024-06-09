@@ -1,7 +1,6 @@
-import { Vec2 } from "./data/vec/vec2";
+import { Vec2 } from './data/vec/vec2';
 
 export class Resolution {
-
     private _full!: Vec2;
     private _half!: Vec2;
     private _quarter!: Vec2;
@@ -47,5 +46,4 @@ export class Resolution {
     get aspectRatio() {
         return this._full.x / this._full.y;
     }
-
 }

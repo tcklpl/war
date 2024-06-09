@@ -1,5 +1,3 @@
-import { CachedAsset } from "./cached_asset";
+import { CachedAsset } from './cached_asset';
 
-export class HDRCachedAsset extends CachedAsset {
-
-}
+export class HDRCachedAsset extends CachedAsset {}

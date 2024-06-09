@@ -1,25 +1,24 @@
-import { AssetManager } from "./asset/asset_manager";
-import { ConfigManager } from "./config/cfg_manager";
-import { CameraManager } from "./data/camera/camera_manager";
-import { LightManager } from "./data/lights/light_manager";
-import { MaterialManager } from "./data/material/material_manager";
-import { MeshManager } from "./data/meshes/mesh_manager";
-import { SceneManager } from "./data/scene/scene_manager";
-import { IFrameListener } from "./data/traits/frame_listener";
-import { IDBWarConnection } from "./idb_war_connection";
-import { IdentifierPool } from "./identifier_pool";
-import { GameIO } from "./io/io";
-import { BRDFLUTRenderer } from "./render/brdf_lut/brdf_lut_renderer";
-import { CubemapPrefilterRenderer } from "./render/cubemap_prefilter/cubemap_prefilter_renderer";
-import { EquirectangularToCubemapRenderer } from "./render/equirec_to_cubemap/equirec_to_cubemap_renderer";
-import { MipmapRenderer } from "./render/mipmap/mipmap_renderer";
-import { Renderer } from "./render/renderer";
-import { TexturePackingRenderer } from "./render/texture_packing/texture_packing_renderer";
-import { VanillaRenderer } from "./render/vanilla/vanilla_renderer";
-import { Time } from "./time";
+import { AssetManager } from './asset/asset_manager';
+import { ConfigManager } from './config/cfg_manager';
+import { CameraManager } from './data/camera/camera_manager';
+import { LightManager } from './data/lights/light_manager';
+import { MaterialManager } from './data/material/material_manager';
+import { MeshManager } from './data/meshes/mesh_manager';
+import { SceneManager } from './data/scene/scene_manager';
+import { IFrameListener } from './data/traits/frame_listener';
+import { IDBWarConnection } from './idb_war_connection';
+import { IdentifierPool } from './identifier_pool';
+import { GameIO } from './io/io';
+import { BRDFLUTRenderer } from './render/brdf_lut/brdf_lut_renderer';
+import { CubemapPrefilterRenderer } from './render/cubemap_prefilter/cubemap_prefilter_renderer';
+import { EquirectangularToCubemapRenderer } from './render/equirec_to_cubemap/equirec_to_cubemap_renderer';
+import { MipmapRenderer } from './render/mipmap/mipmap_renderer';
+import { Renderer } from './render/renderer';
+import { TexturePackingRenderer } from './render/texture_packing/texture_packing_renderer';
+import { VanillaRenderer } from './render/vanilla/vanilla_renderer';
+import { Time } from './time';
 
 export class Engine {
-    
     private _renderer: Renderer = new VanillaRenderer();
     private _shouldRender: boolean = false;
 
@@ -34,7 +33,7 @@ export class Engine {
         mesh: new MeshManager(),
         scene: new SceneManager(),
         material: new MaterialManager(),
-        light: new LightManager()
+        light: new LightManager(),
     };
 
     private _utilRenderers = {
@@ -42,7 +41,7 @@ export class Engine {
         cubemapPrefilter: new CubemapPrefilterRenderer(),
         BRDF_LUT: new BRDFLUTRenderer(),
         mipmap: new MipmapRenderer(),
-        packing: new TexturePackingRenderer()
+        packing: new TexturePackingRenderer(),
     };
 
     private _frameListeners: IFrameListener[] = [];
@@ -59,7 +58,6 @@ export class Engine {
     }
 
     private async renderLoop(time: number) {
-
         const msDiff = time - this._lastFrameTime;
         const deltaTime = msDiff / 1000;
         Time.DeltaTime = deltaTime;
@@ -124,9 +122,6 @@ export class Engine {
         // prevent rendering while we destroy the whole engine
         this.pauseRender();
 
-        // TODO: Fix DB closing timing
-        // await this._db.closeConnection();
-
         // assets don't need any memory freeing
         // cameras also don't need any memory freeing
         this._managers.mesh.freeMeshes();
@@ -143,6 +138,17 @@ export class Engine {
         this._brdfLUT?.destroy();
 
         this._renderer.free();
+    }
+
+    async reinitializeRenderer() {
+        const wasRendering = this._shouldRender;
+        this.pauseRender();
+
+        await this._renderer.free();
+        this._renderer = new VanillaRenderer();
+        await this._renderer.initialize();
+
+        if (wasRendering) this.resumeRender();
     }
 
     get idPool() {
@@ -172,5 +178,4 @@ export class Engine {
     get brdfLUT() {
         return this._brdfLUT;
     }
-
 }

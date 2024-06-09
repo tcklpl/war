@@ -1,15 +1,18 @@
-import { ServerConnection } from "./server/connection/server_connection";
-import { ServerList } from "./server/server_list";
-import { WarServer } from "./server/war_server";
+import { ServerConnection } from './server/connection/server_connection';
+import { ServerList } from './server/server_list';
+import { WarServer } from './server/war_server';
 
 export class GameStateManager {
-
     private _serverList = new ServerList();
     private _currentServer?: WarServer;
     private _serverConnectionChangeListeners: ((connection?: WarServer) => void)[] = [];
 
     async initialize() {
         await this._serverList.initializeDB(game.engine.db);
+    }
+
+    cleanup() {
+        this._currentServer?.cleanup();
     }
 
     connectToServer(target: ServerConnection) {
@@ -28,5 +31,4 @@ export class GameStateManager {
     get server() {
         return this._currentServer;
     }
-
 }

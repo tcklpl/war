@@ -1,11 +1,10 @@
-import { PFXTonemapShader } from "../../../../shaders/post/pfx_tone_mapping/pfx_tone_mapping_shader";
-import { BufferUtils } from "../../../../utils/buffer_utils";
-import { RenderInitializationResources } from "../render_initialization_resources";
-import { RenderResourcePool } from "../render_resource_pool";
-import { RenderStage } from "./render_stage";
+import { PFXTonemapShader } from '../../../../shaders/post/pfx_tone_mapping/pfx_tone_mapping_shader';
+import { BufferUtils } from '../../../../utils/buffer_utils';
+import { RenderInitializationResources } from '../render_initialization_resources';
+import { RenderResourcePool } from '../render_resource_pool';
+import { RenderStage } from './render_stage';
 
 export class RenderStagePFXToneMapping implements RenderStage {
-
     private _shader!: PFXTonemapShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
@@ -15,11 +14,10 @@ export class RenderStagePFXToneMapping implements RenderStage {
 
     private _sampler = device.createSampler({
         addressModeU: 'clamp-to-edge',
-        addressModeV: 'clamp-to-edge'
+        addressModeV: 'clamp-to-edge',
     });
 
     async initialize(resources: RenderInitializationResources) {
-        
         await new Promise<void>(r => {
             this._shader = new PFXTonemapShader('pfx and tonemap shader', () => r());
         });
@@ -36,24 +34,22 @@ export class RenderStagePFXToneMapping implements RenderStage {
             vertex: {
                 module: this._shader.module,
                 entryPoint: 'vertex',
-                buffers: [] as GPUVertexBufferLayout[]
+                buffers: [] as GPUVertexBufferLayout[],
             },
             fragment: {
                 module: this._shader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: format }
-                ],
+                targets: [{ format: format }],
                 constants: {
                     bloom_strength: game.engine.config.graphics.useBloom ? 0.04 : 0,
                     motion_blur_amount: Math.max(0, game.engine.config.graphics.motionBlurAmount),
-                    use_film_grain: game.engine.config.graphics.useFilmGrain ? 1 : 0
-                }
+                    use_film_grain: game.engine.config.graphics.useFilmGrain ? 1 : 0,
+                },
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'none'
-            }
+                cullMode: 'none',
+            },
         });
     }
 
@@ -64,9 +60,9 @@ export class RenderStagePFXToneMapping implements RenderStage {
                     // view: Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 0 },
                     loadOp: 'clear',
-                    storeOp: 'store'
-                } as GPURenderPassColorAttachment
-            ]
+                    storeOp: 'store',
+                } as GPURenderPassColorAttachment,
+            ],
         } as GPURenderPassDescriptor;
     }
 
@@ -78,8 +74,8 @@ export class RenderStagePFXToneMapping implements RenderStage {
                 { binding: 0, resource: this._sampler },
                 { binding: 1, resource: pool.hdrBufferChain.current.view },
                 { binding: 2, resource: pool.bloomMips.texture.createView() },
-                { binding: 3, resource: pool.velocityTextureView }
-            ]
+                { binding: 3, resource: pool.velocityTextureView },
+            ],
         });
     }
 
@@ -87,9 +83,7 @@ export class RenderStagePFXToneMapping implements RenderStage {
         return device.createBindGroup({
             label: 'PFX Options',
             layout: this._pipeline.getBindGroupLayout(PFXTonemapShader.BINDING_GROUPS.OPTIONS),
-            entries: [
-                { binding: 0, resource: { buffer: this._optionsBuffer } }
-            ]
+            entries: [{ binding: 0, resource: { buffer: this._optionsBuffer } }],
         });
     }
 
@@ -98,7 +92,6 @@ export class RenderStagePFXToneMapping implements RenderStage {
     }
 
     render(pool: RenderResourcePool) {
-        
         pool.commandEncoder.pushDebugGroup('PFX and Tonemapper');
         pool.renderPostEffects.writeToBuffer(this._optionsBuffer);
         this.updateBindGroup(pool);
@@ -116,5 +109,4 @@ export class RenderStagePFXToneMapping implements RenderStage {
     free() {
         this._optionsBuffer?.destroy();
     }
-
 }

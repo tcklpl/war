@@ -2,7 +2,10 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "strictNullChecks": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "build"
   },
   "ts-node": {
     "swc": true

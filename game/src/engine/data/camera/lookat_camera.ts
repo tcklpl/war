@@ -1,9 +1,8 @@
-import { Mat4 } from "../mat/mat4";
-import { Vec3 } from "../vec/vec3";
-import { Camera } from "./camera";
+import { Mat4 } from '../mat/mat4';
+import { Vec3 } from '../vec/vec3';
+import { Camera } from './camera';
 
 export class LookAtCamera extends Camera {
-
     private _target: Vec3;
 
     constructor(pos: Vec3, target: Vec3, up: Vec3) {

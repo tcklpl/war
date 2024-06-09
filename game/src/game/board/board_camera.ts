@@ -1,15 +1,14 @@
-import { LookAtCamera } from "../../engine/data/camera/lookat_camera";
-import { frameListener } from "../../engine/data/traits/frame_listener";
-import { Vec2 } from "../../engine/data/vec/vec2";
-import { Vec3 } from "../../engine/data/vec/vec3";
-import { keyboardListener } from "../../engine/io/keyboard_listener";
-import { mouseListener } from "../../engine/io/mouse_listener";
-import { MathUtils } from "../../utils/math_utils";
+import { LookAtCamera } from '../../engine/data/camera/lookat_camera';
+import { frameListener } from '../../engine/data/traits/frame_listener';
+import { Vec2 } from '../../engine/data/vec/vec2';
+import { Vec3 } from '../../engine/data/vec/vec3';
+import { keyboardListener } from '../../engine/io/keyboard_listener';
+import { mouseListener } from '../../engine/io/mouse_listener';
+import { MathUtils } from '../../utils/math_utils';
 
 const BoardCameraBase = keyboardListener(mouseListener(frameListener(LookAtCamera)));
 
 export class BoardCamera extends BoardCameraBase {
-
     private _moveSpeed = 5;
     private _moveSpeedSlow = 5;
     private _moveSpeedFast = 10;
@@ -32,37 +31,37 @@ export class BoardCamera extends BoardCameraBase {
         const t = new Vec3(0, 0, 0);
         const u = new Vec3(0, 0, -1);
 
-        
         super(p, t, u);
         this._camTarget = t;
         this.registerKeyEvents();
     }
 
     private registerKeyEvents() {
+        this.onKeyDown('w', () => (this.deltaZ = this.deltaZ - 1));
+        this.onKeyUp('w', () => (this.deltaZ = this.deltaZ + 1));
 
-        this.onKeyDown('w', () => this.deltaZ = this.deltaZ - 1);
-        this.onKeyUp('w', () => this.deltaZ = this.deltaZ + 1);
+        this.onKeyDown('s', () => (this.deltaZ = this.deltaZ + 1));
+        this.onKeyUp('s', () => (this.deltaZ = this.deltaZ - 1));
 
-        this.onKeyDown('s', () => this.deltaZ = this.deltaZ + 1);
-        this.onKeyUp('s', () => this.deltaZ = this.deltaZ - 1);
+        this.onKeyDown('d', () => (this.deltaX = this.deltaX + 1));
+        this.onKeyUp('d', () => (this.deltaX = this.deltaX - 1));
 
-        this.onKeyDown('d', () => this.deltaX = this.deltaX + 1);
-        this.onKeyUp('d', () => this.deltaX = this.deltaX - 1);
+        this.onKeyDown('a', () => (this.deltaX = this.deltaX - 1));
+        this.onKeyUp('a', () => (this.deltaX = this.deltaX + 1));
 
-        this.onKeyDown('a', () => this.deltaX = this.deltaX - 1);
-        this.onKeyUp('a', () => this.deltaX = this.deltaX + 1);
-
-        this.onKeyDown('shift', () => this._moveSpeed = this._moveSpeedFast);
-        this.onKeyUp('shift', () => this._moveSpeed = this._moveSpeedSlow);
+        this.onKeyDown('shift', () => (this._moveSpeed = this._moveSpeedFast));
+        this.onKeyUp('shift', () => (this._moveSpeed = this._moveSpeedSlow));
     }
-    
+
     onEachFrame(deltaTime: number): void {
         if (this._deltaX === 0 && this._deltaY === 0 && this._deltaZ === 0) return;
-        this.position = this.position.add(new Vec3(
-            this._deltaX * this._moveSpeed * deltaTime,
-            this._deltaY * this._moveSpeed * deltaTime,
-            this._deltaZ * this._moveSpeed * deltaTime
-        ));
+        this.position = this.position.add(
+            new Vec3(
+                this._deltaX * this._moveSpeed * deltaTime,
+                this._deltaY * this._moveSpeed * deltaTime,
+                this._deltaZ * this._moveSpeed * deltaTime,
+            ),
+        );
 
         this.position = this.position.clamp(this._lBound, this._hBound);
 
@@ -70,12 +69,12 @@ export class BoardCamera extends BoardCameraBase {
         // this._camTarget.x += this._tDeltaX;
         // this._camTarget.z += this._tDeltaZ;
         this.target = this._camTarget;
-        
+
         this.generateCameraMatrix();
     }
 
     onMouseScroll(dy: number): void {
-        this._deltaY = MathUtils.clamp(-1, 1, dy) * this._moveSpeed / 50;
+        this._deltaY = (MathUtils.clamp(-1, 1, dy) * this._moveSpeed) / 50;
     }
 
     onMouseScrollStop(): void {
@@ -115,5 +114,4 @@ export class BoardCamera extends BoardCameraBase {
     private set deltaZ(d: number) {
         this._deltaZ = MathUtils.clamp(-1, 1, d);
     }
-
 }

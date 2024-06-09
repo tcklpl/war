@@ -1,7 +1,7 @@
-import { MappedAtlasRegion } from "../atlas/mapped_atlas_region";
-import { MappedRegionSize } from "../atlas/mapped_region_size";
-import { Mat4 } from "../mat/mat4";
-import { Vec3 } from "../vec/vec3";
+import { MappedAtlasRegion } from '../atlas/mapped_atlas_region';
+import { MappedRegionSize } from '../atlas/mapped_region_size';
+import { Mat4 } from '../mat/mat4';
+import { Vec3 } from '../vec/vec3';
 
 export interface LightProperties {
     name: string;
@@ -26,11 +26,10 @@ export interface LightProperties {
 }
 
 export abstract class Light {
-
     private _properties: LightProperties;
     /**
      * Shadow map atlas region if shadow mapping is enabled.
-     * 
+     *
      * If shadow mapping is enabled and this value is undefined (as it will be on the first frame),
      * the "light" render stage will try to allocate a spot on the shadow map atlas and overwrite this
      * attribute.
@@ -38,7 +37,10 @@ export abstract class Light {
     shadowAtlasMappedRegion?: MappedAtlasRegion;
     shadowMappingViewProj?: Mat4;
 
-    constructor(properties: LightProperties, private _enabled = true) {
+    constructor(
+        properties: LightProperties,
+        private _enabled = true,
+    ) {
         this._properties = properties;
         game.engine.managers.light.register(this);
     }
@@ -55,6 +57,5 @@ export abstract class Light {
         this._enabled = e;
     }
 
-    abstract writeToBuffer(buf: GPUBuffer, index: number, generalBufferOffset: number): void;    
-
+    abstract writeToBuffer(buf: GPUBuffer, index: number, generalBufferOffset: number): void;
 }

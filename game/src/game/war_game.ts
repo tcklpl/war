@@ -1,10 +1,9 @@
-import { Engine } from "../engine/engine";
-import { GameBoard } from "./board/board";
-import { GameStateManager } from "./game_state_manager";
-import { GameLoader } from "./loader/game_loader";
+import { Engine } from '../engine/engine';
+import { GameBoard } from './board/board';
+import { GameStateManager } from './game_state_manager';
+import { GameLoader } from './loader/game_loader';
 
 export class WarGame {
-
     private _loader = new GameLoader();
     private _engine = new Engine();
     private _state = new GameStateManager();
@@ -20,7 +19,6 @@ export class WarGame {
     }
 
     async initializeGame() {
-
         await this._state.initialize();
 
         this._gameBoard = new GameBoard();
@@ -28,8 +26,6 @@ export class WarGame {
         this._engine.managers.scene.register(this._gameBoard);
         this._engine.managers.scene.activeScene = this._gameBoard;
 
-        this._engine.resumeRender();
-        
         this._ready = true;
         this._toRunWhenReady.forEach(runnable => runnable());
         this._toRunWhenReady = [];
@@ -38,6 +34,7 @@ export class WarGame {
     async kill() {
         // free all engine gpu memory
         await this._engine.free();
+        this._state.cleanup();
     }
 
     runWhenReady(runnable: () => void) {
@@ -59,5 +56,4 @@ export class WarGame {
     get state() {
         return this._state;
     }
-
 }

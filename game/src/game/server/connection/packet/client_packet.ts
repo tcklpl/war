@@ -1,12 +1,14 @@
-import { ClientToServerPackets } from "../../../../../../protocol";
+import { ClientToServerPackets } from '../../../../../../protocol';
 
-export abstract class ClientPacket {
+type ClientPacketEventNames = keyof ClientToServerPackets;
+type ClientPacketEventParams<Event extends ClientPacketEventNames> = Parameters<ClientToServerPackets[Event]>;
 
-    private _params: Parameters<ClientToServerPackets[typeof this._key]>;
+export abstract class ClientPacket<E extends ClientPacketEventNames> {
+    private _params: ClientPacketEventParams<E>;
 
     constructor(
-        private _key: keyof ClientToServerPackets,
-        ...params: Parameters<ClientToServerPackets[typeof _key]>
+        private _key: E,
+        ...params: ClientPacketEventParams<E>
     ) {
         this._params = params;
     }

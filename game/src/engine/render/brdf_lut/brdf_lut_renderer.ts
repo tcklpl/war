@@ -1,20 +1,17 @@
-import { BRDFConvolutionIntegralShader } from "../../../shaders/util/brdf_convolution_integral/brdf_convolution_integral_shader";
+import { BRDFConvolutionIntegralShader } from '../../../shaders/util/brdf_convolution_integral/brdf_convolution_integral_shader';
 
 export class BRDFLUTRenderer {
-
     private _lutShader!: BRDFConvolutionIntegralShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
 
     async initialize() {
-
         await new Promise<void>(r => {
             this._lutShader = new BRDFConvolutionIntegralShader('BRDF LUT shader', () => r());
         });
 
         this._pipeline = await this.createPipeline();
         this._renderPassDescriptor = this.createRenderPassDescriptor();
-
     }
 
     private createPipeline() {
@@ -23,19 +20,17 @@ export class BRDFLUTRenderer {
             layout: 'auto',
             vertex: {
                 module: this._lutShader.module,
-                entryPoint: 'vertex'
+                entryPoint: 'vertex',
             },
             fragment: {
                 module: this._lutShader.module,
                 entryPoint: 'fragment',
-                targets: [
-                    { format: 'rg16float' as GPUTextureFormat }
-                ]
+                targets: [{ format: 'rg16float' as GPUTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
-                cullMode: 'none'
-            }
+                cullMode: 'none',
+            },
         });
     }
 
@@ -46,9 +41,9 @@ export class BRDFLUTRenderer {
                     // view: Assigned later
                     clearValue: { r: 0, g: 0, b: 0, a: 0 },
                     loadOp: 'clear',
-                    storeOp: 'store'
-                } as GPURenderPassColorAttachment
-            ]
+                    storeOp: 'store',
+                } as GPURenderPassColorAttachment,
+            ],
         } as GPURenderPassDescriptor;
     }
 
@@ -59,12 +54,12 @@ export class BRDFLUTRenderer {
             format: 'rg16float',
             dimension: '2d',
             size: [resolution, resolution],
-            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT,
         });
 
-        
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = renderTarget.createView();
-        
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view =
+            renderTarget.createView();
+
         const commandEncoder = device.createCommandEncoder();
         const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
@@ -82,7 +77,5 @@ export class BRDFLUTRenderer {
         return renderTarget;
     }
 
-    free() {
-        
-    }
+    free() {}
 }

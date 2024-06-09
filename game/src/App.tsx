@@ -1,16 +1,14 @@
 import { CssBaseline, Theme, ThemeProvider } from '@mui/material';
 import WarGameComponent from './components/war_game_component';
-import './style/globals.sass';
+import './style/globals.scss';
 import '@fontsource/roboto/400.css';
 import themeDefaultDark from './style/themes/default_dark';
 import { useConfig } from './hooks/use_config';
 import { useEffect, useState } from 'react';
 import themeDefaultLight from './style/themes/default_light';
-import { BrowserRouter } from 'react-router-dom';
-
+import { HashRouter } from 'react-router-dom';
 
 function App() {
-
     const { displayConfig } = useConfig();
     const [theme, setTheme] = useState(themeDefaultDark);
 
@@ -31,13 +29,13 @@ function App() {
     }, [displayConfig, theme]);
 
     return (
-        <div className="App">
+        <div className='App'>
             <ThemeProvider theme={theme}>
-                <BrowserRouter>
-                    <CssBaseline/>
-                    <WarGameComponent/>
-                </BrowserRouter>
-            </ThemeProvider> 
+                <HashRouter>
+                    <CssBaseline />
+                    <WarGameComponent />
+                </HashRouter>
+            </ThemeProvider>
         </div>
     );
 }

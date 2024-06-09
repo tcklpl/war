@@ -1,4 +1,1 @@
-
-export class OverLimitError extends Error {
-
-}
+export class OverLimitError extends Error {}

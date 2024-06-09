@@ -1,13 +1,16 @@
-import { MathUtils } from "../../../utils/math_utils";
-import { Mat4 } from "../mat/mat4";
-import { Quaternion } from "../quaternion/quaternion";
-import { Vec3 } from "../vec/vec3";
-import { Vec4 } from "../vec/vec4";
-import { Light, LightProperties } from "./light";
+import { MathUtils } from '../../../utils/math_utils';
+import { Mat4 } from '../mat/mat4';
+import { Quaternion } from '../quaternion/quaternion';
+import { Vec3 } from '../vec/vec3';
+import { Vec4 } from '../vec/vec4';
+import { Light, LightProperties } from './light';
 
 export class DirectionalLight extends Light {
-
-    constructor(props: LightProperties, public rotation: Quaternion, enabled: boolean = true) {
+    constructor(
+        props: LightProperties,
+        public rotation: Quaternion,
+        enabled: boolean = true,
+    ) {
         super(props, enabled);
     }
 
@@ -36,18 +39,21 @@ export class DirectionalLight extends Light {
             ▓: vec4f
         */
         device.queue.writeBuffer(buf, offset, this.properties.color.asF32Array);
-        device.queue.writeBuffer(buf, offset + Vec3.byteSize + 4, this.rotation.asDirectionVector.multiplyFactor(-1).normalize().asF32Array);
+        device.queue.writeBuffer(
+            buf,
+            offset + Vec3.byteSize + 4,
+            this.rotation.asDirectionVector.multiplyFactor(-1).normalize().asF32Array,
+        );
         device.queue.writeBuffer(buf, offset + Vec3.byteSize * 2 + 4, new Float32Array([this.properties.intensity]));
         const shadowMapUV = [
             this.shadowAtlasMappedRegion?.uvLowerCorner.x ?? -1,
             this.shadowAtlasMappedRegion?.uvLowerCorner.y ?? -1,
             this.shadowAtlasMappedRegion?.uvHigherCorner.x ?? -1,
-            this.shadowAtlasMappedRegion?.uvHigherCorner.y ?? -1
+            this.shadowAtlasMappedRegion?.uvHigherCorner.y ?? -1,
         ];
         device.queue.writeBuffer(buf, offset + 0x20, new Float32Array(shadowMapUV));
         if (this.shadowMappingViewProj) {
             device.queue.writeBuffer(buf, offset + 0x30, this.shadowMappingViewProj.asF32Array);
         }
     }
-
 }

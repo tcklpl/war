@@ -7,7 +7,7 @@ import { RouteServerInfo } from "./route_server_info";
 
 export class ExpressRoutes {
 
-    private _routes: ExpressRoute[];
+    private _routes!: ExpressRoute[];
 
     constructor(protected _configManager: ConfigManager, protected _cryptManager: CryptManager, protected _gameServer: GameServer) {
     }

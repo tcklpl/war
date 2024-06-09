@@ -1,4 +1,4 @@
-import { ConfigPage } from "./cfg_page";
+import { ConfigPage } from './cfg_page';
 
 export class ConfigGraphics implements ConfigPage {
     page = 'graphics';
@@ -13,6 +13,13 @@ export class ConfigGraphics implements ConfigPage {
      * 4    High        4096
      */
     shadowMapQuality: number = 3;
+
+    /**
+     * Shader quality
+     * 1    Low
+     * 2    Normal
+     */
+    shaderQuality: number = 2;
 
     // post processing
     useSSAO: boolean = true;

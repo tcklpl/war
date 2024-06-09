@@ -1,7 +1,6 @@
-import { MissingTextureError } from "../../../errors/engine/data/missing_texture";
+import { MissingTextureError } from '../../../errors/engine/data/missing_texture';
 
 export class Texture {
-
     private _view?: GPUTextureView;
 
     constructor(private _tex?: GPUTexture) {
@@ -35,5 +34,4 @@ export class Texture {
         this._tex = t;
         this._view = this._tex.createView();
     }
-
 }

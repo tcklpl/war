@@ -1,9 +1,8 @@
-import { GLTFAccessorValidTypes } from "gltf";
-import { BadGLTFFileError } from "../../../errors/engine/gltf/bad_gltf_file";
-import { GLTFBufferView } from "./gltf_buffer_view";
+import { GLTFAccessorValidTypes } from 'gltf';
+import { BadGLTFFileError } from '../../../errors/engine/gltf/bad_gltf_file';
+import { GLTFBufferView } from './gltf_buffer_view';
 
 export class GLTFAccessor {
-
     private _bufferView: GLTFBufferView;
     private _componentType: number; // gl.FLOAT or gl.UNSIGNED_SHORT
     private _count: number;
@@ -12,11 +11,19 @@ export class GLTFAccessor {
     private _min?: number | number[];
     private _max?: number | number[];
 
-    constructor(bufferView: GLTFBufferView, componentType: number, count: number, type: GLTFAccessorValidTypes, min?: number | number[], max?: number | number[]) {
-
+    constructor(
+        bufferView: GLTFBufferView,
+        componentType: number,
+        count: number,
+        type: GLTFAccessorValidTypes,
+        min?: number | number[],
+        max?: number | number[],
+    ) {
         const validComponentTypes: number[] = [gl.FLOAT, gl.UNSIGNED_SHORT];
         if (!validComponentTypes.includes(componentType)) {
-            throw new BadGLTFFileError(`Invalid accessor component type: ${componentType}, expecting one of [${validComponentTypes.join(', ')}]`);
+            throw new BadGLTFFileError(
+                `Invalid accessor component type: ${componentType}, expecting one of [${validComponentTypes.join(', ')}]`,
+            );
         }
 
         this._bufferView = bufferView;
@@ -50,5 +57,4 @@ export class GLTFAccessor {
     get max() {
         return this._max;
     }
-
 }

@@ -1,8 +1,8 @@
-import { PrincipledBSDFShader } from "../../../shaders/geometry/principled_bsdf/principled_bsdf_shader";
-import { TextureUtils } from "../../../utils/texture_utils";
-import { Texture } from "../texture/texture";
-import { Vec4 } from "../vec/vec4";
-import { Material } from "./material";
+import { PrincipledBSDFShader } from '../../../shaders/geometry/principled_bsdf/principled_bsdf_shader';
+import { TextureUtils } from '../../../utils/texture_utils';
+import { Texture } from '../texture/texture';
+import { Vec4 } from '../vec/vec4';
+import { Material } from './material';
 
 interface PBRMaterialProps {
     baseColor: Vec4;
@@ -12,7 +12,6 @@ interface PBRMaterialProps {
 }
 
 export class PBRMaterial extends Material {
-
     /*
         PBR Material Information:
 
@@ -40,7 +39,10 @@ export class PBRMaterial extends Material {
 
     private _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
 
-    constructor(name: string, private _props: PBRMaterialProps) {
+    constructor(
+        name: string,
+        private _props: PBRMaterialProps,
+    ) {
         super(name);
         this.constructTextures();
     }
@@ -57,19 +59,27 @@ export class PBRMaterial extends Material {
         this._normal_ao = await game.engine.utilRenderers.packing.pack_1rgb1a_rgba8unorm(normal, ao);
         [normal, ao].forEach(t => t.free());
 
-        const metallic = new Texture(TextureUtils.createTextureFromNormalizedVec4(Vec4.fromValue(this._props.metallic)));
-        const roughness = new Texture(TextureUtils.createTextureFromNormalizedVec4(Vec4.fromValue(this._props.roughness)));
+        const metallic = new Texture(
+            TextureUtils.createTextureFromNormalizedVec4(Vec4.fromValue(this._props.metallic)),
+        );
+        const roughness = new Texture(
+            TextureUtils.createTextureFromNormalizedVec4(Vec4.fromValue(this._props.roughness)),
+        );
         const transmission = new Texture(TextureUtils.createTextureFromNormalizedVec4(Vec4.fromValue(0)));
         const transmissionRoughness = new Texture(TextureUtils.createTextureFromNormalizedVec4(Vec4.fromValue(0)));
-        this._props1 = await game.engine.utilRenderers.packing.pack_4r_rgba8unorm(metallic, roughness, transmission, transmissionRoughness);
+        this._props1 = await game.engine.utilRenderers.packing.pack_4r_rgba8unorm(
+            metallic,
+            roughness,
+            transmission,
+            transmissionRoughness,
+        );
         [metallic, roughness, transmission, transmissionRoughness].forEach(t => t.free());
-        
+
         this._props2 = new Texture(TextureUtils.create1pxR16Texture(this._props.ior));
 
         this._sampler = device.createSampler({
-            label: `PBR Material '${this.name} sampler'`
+            label: `PBR Material '${this.name} sampler'`,
         });
-
     }
 
     getBindGroup(pipeline: GPURenderPipeline) {
@@ -84,8 +94,8 @@ export class PBRMaterial extends Material {
                 { binding: 1, resource: this._albedo.view },
                 { binding: 2, resource: this._normal_ao.view },
                 { binding: 3, resource: this._props1.view },
-                { binding: 4, resource: this._props2.view }
-            ]
+                { binding: 4, resource: this._props2.view },
+            ],
         });
         this._pipelineBindGroups.set(pipeline, newBindGroup);
         return newBindGroup;
@@ -97,5 +107,4 @@ export class PBRMaterial extends Material {
         this._props1.free();
         this._props2.free();
     }
-
 }
