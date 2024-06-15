@@ -1,9 +1,9 @@
-import { Player } from "../../../game/player/player";
+import { LobbyPlayer } from "../../../game/player/lobby_player";
 import { ServerPacket } from "../server_packet";
 
 export class ServerPacketChatMessage extends ServerPacket<"chatMessage"> {
     
-    constructor(sender: Player, msg: string) {
+    constructor(sender: LobbyPlayer, msg: string) {
         super("chatMessage", sender.username, msg);
     }
 }
