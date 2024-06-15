@@ -1,39 +1,46 @@
-import { LobbyState, LobbyPlayerState, GameConfig, GameParty, GameStage } from "../../../../protocol";
-import { Logger } from "../../log/logger";
-import { ServerPacketInitialGameState } from "../../socket/packet/game/initial_game_state";
-import { ServerPacketChatMessage } from "../../socket/packet/lobby/chat_message";
-import { ServerPacketGameStartCancelled } from "../../socket/packet/lobby/game_start_cancelled";
-import { ServerPacketStartingGame } from "../../socket/packet/lobby/starting_game";
-import { ServerPacketUpdateLobbyState } from "../../socket/packet/lobby/update_lobby_state";
-import { Game } from "../ingame/game";
-import { PartyAnarchism } from "../party/anarchism";
-import { PartyCapitalism } from "../party/capitalism";
-import { PartyFeudalism } from "../party/feudalism";
-import { PartyNotSet } from "../party/not_set";
-import { Party } from "../party/party";
-import { PartySocialism } from "../party/socialism";
-import { Player } from "../player/player";
+import { LobbyState, LobbyPlayerState, GameConfig, GameParty, LobbyStage } from '../../../../protocol';
+import { Logger } from '../../log/logger';
+import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
+import { ServerPacketChatMessage } from '../../socket/packet/lobby/chat_message';
+import { ServerPacketGameStartCancelled } from '../../socket/packet/lobby/game_start_cancelled';
+import { ServerPacketStartingGame } from '../../socket/packet/lobby/starting_game';
+import { ServerPacketUpdateLobbyState } from '../../socket/packet/lobby/update_lobby_state';
+import { Game } from '../ingame/game';
+import { PartyAnarchism } from '../party/anarchism';
+import { PartyCapitalism } from '../party/capitalism';
+import { PartyFeudalism } from '../party/feudalism';
+import { PartyNotSet } from '../party/not_set';
+import { Party } from '../party/party';
+import { PartySocialism } from '../party/socialism';
+import { LobbyPlayer } from '../player/lobby_player';
+import { LobbyManager } from './lobby_manager';
 
 export class Lobby {
-
-    private _status: GameStage = 'in lobby';
-    private _players: Player[] = [];
+    private _stage: LobbyStage = 'in lobby';
+    private _players: LobbyPlayer[] = [];
     joinable = true;
     private _parties: Party[] = [
         new PartyAnarchism(),
         new PartyFeudalism(),
         new PartySocialism(),
-        new PartyCapitalism()
+        new PartyCapitalism(),
     ];
 
     private _startGameTask?: NodeJS.Timeout;
     private _game?: Game;
 
-    constructor(private _owner: Player, private _name: string, private _gameConfig: GameConfig, private _gameStartCountdown: number, private _log: Logger) {
+    constructor(
+        private _owner: LobbyPlayer,
+        private _name: string,
+        private _gameConfig: GameConfig,
+        private _gameStartCountdown: number,
+        private _lobbyManager: LobbyManager,
+        private _log: Logger,
+    ) {
         this._players.push(this.owner);
     }
 
-    addPlayer(p: Player) {
+    addPlayer(p: LobbyPlayer) {
         if (!this._players.find(x => x === p)) {
             this._players.push(p);
             new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
@@ -41,7 +48,7 @@ export class Lobby {
         }
     }
 
-    removePlayer(p: Player) {
+    removePlayer(p: LobbyPlayer) {
         this._players = this._players.filter(x => x !== p);
         if (p === this._owner && this._players.length > 0) {
             this._owner = this._players[0];
@@ -60,13 +67,12 @@ export class Lobby {
         this._players.forEach(p => p.leaveCurrentLobby());
     }
 
-    broadcastChatMessage(sender: Player, msg: string) {
+    broadcastChatMessage(sender: LobbyPlayer, msg: string) {
         new ServerPacketChatMessage(sender, msg).dispatch(...this._players);
     }
 
-    changeOwnership(newOwner: Player) {
-
-        if (this._status !== 'in lobby') return;
+    changeOwnership(newOwner: LobbyPlayer) {
+        if (this._stage !== 'in lobby') return;
         if (!this._players.find(p => p === newOwner)) return;
 
         this._log.info(`Lobby ownership changed from ${this._owner.username} to ${newOwner.username}`);
@@ -75,8 +81,7 @@ export class Lobby {
     }
 
     replaceLobbyState(state: LobbyState) {
-
-        if (this._status !== 'in lobby') return;
+        if (this._stage !== 'in lobby') return;
 
         this.joinable = state.joinable;
         if (!this._gameConfig.is_immutable) {
@@ -84,9 +89,8 @@ export class Lobby {
         }
     }
 
-    setPlayerParty(player: Player, protocolParty: GameParty) {
-
-        if (this._status !== 'in lobby') return;
+    setPlayerParty(player: LobbyPlayer, protocolParty: GameParty) {
+        if (this._stage !== 'in lobby') return;
 
         const party = this._parties.find(p => p.protocolValue === protocolParty);
         if (!party || !(player.party instanceof PartyNotSet) || party.player) return;
@@ -96,12 +100,11 @@ export class Lobby {
         this._log.debug(`${player.username} selected the party ${protocolParty}`);
     }
 
-    deselectPlayerParty(player: Player) {
-
-        if (this._status !== 'in lobby') return;
+    deselectPlayerParty(player: LobbyPlayer) {
+        if (this._stage !== 'in lobby') return;
 
         player.party = new PartyNotSet();
-        this._parties.filter(p => p.player === player).forEach(p => p.player = undefined);
+        this._parties.filter(p => p.player === player).forEach(p => (p.player = undefined));
         new ServerPacketUpdateLobbyState(this).dispatch(...this.players);
         this._log.debug(`${player.username} deselected their current party`);
     }
@@ -110,13 +113,15 @@ export class Lobby {
         // validate if all players have selected a party
         if (this._players.some(p => p.party instanceof PartyNotSet)) return false;
         new ServerPacketStartingGame(this._gameStartCountdown).dispatch(...this._players);
-        this._status = 'starting';
+        this._stage = 'starting';
 
         // set a timeout to actually start the game
         this._startGameTask = setTimeout(() => {
-            this._game = new Game(this, (s) => this._status = s, this._log.createChildContext("In Game"));
+            this._game = new Game(this, this._log.createChildContext('In Game'));
             new ServerPacketInitialGameState(this._game.initialGameStatePacket).dispatch(...this._players);
             this._game.setupGame();
+            // remove this lobby from the managed list as it was consummated into a game
+            this._lobbyManager.removeLobby(this);
         }, this._gameStartCountdown * 1000);
 
         this._log.info(`Starting game`);
@@ -126,7 +131,7 @@ export class Lobby {
     cancelGameStart() {
         if (this._startGameTask) {
             clearTimeout(this._startGameTask);
-            this._status = 'in lobby';
+            this._stage = 'in lobby';
             new ServerPacketGameStartCancelled().dispatch(...this._players);
             this._log.info(`Game start cancelled`);
         }
@@ -157,21 +162,24 @@ export class Lobby {
         return this._game;
     }
 
-    get status() {
-        return this._status;
+    get stage() {
+        return this._stage;
     }
 
     get asProtocolLobbyState(): LobbyState {
         return {
             name: this._name,
             joinable: this.joinable,
-            players: this._players.map(p => <LobbyPlayerState> {
-                name: p.username,
-                is_lobby_owner: p === this._owner,
-                party: p.party?.protocolValue
-            }),
+            players: this._players.map(
+                p =>
+                    <LobbyPlayerState>{
+                        name: p.username,
+                        is_lobby_owner: p === this._owner,
+                        party: p.party?.protocolValue,
+                    },
+            ),
             game_config: this._gameConfig,
-            selectable_parties: this._parties.filter(p => !p.player).map(p => p.protocolValue)
-        }
+            selectable_parties: this._parties.filter(p => !p.player).map(p => p.protocolValue),
+        };
     }
 }
