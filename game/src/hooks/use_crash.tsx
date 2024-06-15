@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface ICrashContext {
     engineInitializationCrash?: Error;
@@ -10,11 +10,14 @@ const CrashContext = createContext<ICrashContext>({} as ICrashContext);
 const CrashProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const [engineInitializationCrash, setEngineInitializationCrash] = useState<Error>();
 
-    return (
-        <CrashContext.Provider value={{ engineInitializationCrash, setEngineInitializationCrash }}>
-            {children}
-        </CrashContext.Provider>
-    );
+    const crashMemo = useMemo<ICrashContext>(() => {
+        return {
+            engineInitializationCrash,
+            setEngineInitializationCrash,
+        };
+    }, [engineInitializationCrash, setEngineInitializationCrash]);
+
+    return <CrashContext.Provider value={crashMemo}>{children}</CrashContext.Provider>;
 };
 
 function useCrash(): ICrashContext {

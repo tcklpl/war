@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useConfig } from './use_config';
 import { ServerConnection } from '../game/server/connection/server_connection';
 import { useGame } from './use_game';
@@ -89,9 +89,9 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         [currentLobby, currentLobbyState],
     );
 
-    const cloneLobbyState = () => {
+    const cloneLobbyState = useCallback(() => {
         return currentLobbyState ? structuredClone(currentLobbyState) : undefined;
-    };
+    }, [currentLobbyState]);
 
     /*
         Auto update this hook if anything changes about the connection.
@@ -145,30 +145,45 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         await saveConfig();
     }, [username, token, sessionConfig, saveConfig]);
 
-    return (
-        <GameSessionContext.Provider
-            value={{
-                username,
-                setUsername,
-                token,
-                setToken,
-                connection,
-                setConnection,
-                saveGameSession,
-                lobbies,
-                currentLobby,
-                currentLobbyState,
-                modifyLobbyState,
-                cloneLobbyState,
-                chat,
-                gameStartingIn,
-                currentGameSession,
-                gTurnPlayerIndex,
-            }}
-        >
-            {children}
-        </GameSessionContext.Provider>
-    );
+    const gameSessionMemo = useMemo<IGameSessionContext>(() => {
+        return {
+            username,
+            setUsername,
+            token,
+            setToken,
+            connection,
+            setConnection,
+            saveGameSession,
+            lobbies,
+            currentLobby,
+            currentLobbyState,
+            modifyLobbyState,
+            cloneLobbyState,
+            chat,
+            gameStartingIn,
+            currentGameSession,
+            gTurnPlayerIndex,
+        };
+    }, [
+        username,
+        setUsername,
+        token,
+        setToken,
+        connection,
+        setConnection,
+        saveGameSession,
+        lobbies,
+        currentLobby,
+        currentLobbyState,
+        modifyLobbyState,
+        cloneLobbyState,
+        chat,
+        gameStartingIn,
+        currentGameSession,
+        gTurnPlayerIndex,
+    ]);
+
+    return <GameSessionContext.Provider value={gameSessionMemo}>{children}</GameSessionContext.Provider>;
 };
 
 function useGameSession(): IGameSessionContext {

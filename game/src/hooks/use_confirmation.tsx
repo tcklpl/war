@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 interface IConfirmationContext {
     confirmationQueue: ConfirmationRequestInfo[];
@@ -36,11 +36,15 @@ const ConfirmationProvider: React.FC<{ children?: React.ReactNode }> = ({ childr
         return first;
     }, [confirmationQueue]);
 
-    return (
-        <ConfirmationContext.Provider value={{ confirmationQueue, enqueueConfirmation, getCurrentConfirmation }}>
-            {children}
-        </ConfirmationContext.Provider>
-    );
+    const confirmationMemo = useMemo<IConfirmationContext>(() => {
+        return {
+            confirmationQueue,
+            enqueueConfirmation,
+            getCurrentConfirmation,
+        };
+    }, [confirmationQueue, enqueueConfirmation, getCurrentConfirmation]);
+
+    return <ConfirmationContext.Provider value={confirmationMemo}>{children}</ConfirmationContext.Provider>;
 };
 
 function useConfirmation(): IConfirmationContext {
