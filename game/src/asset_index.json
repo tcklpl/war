@@ -1,9 +1,9 @@
 {
     "gltf": {
-        "board": { "url": "/assets/gltf/board.gltf" },
-        "sphere": { "url": "/assets/gltf/sphere.glb" }
+        "board": { "url": "assets/gltf/board.gltf" },
+        "sphere": { "url": "assets/gltf/sphere.glb" }
     },
     "hdr": {
-        "thatch_chapel_4k": { "url": "/assets/hdr/thatch_chapel_4k.hdr" }
+        "thatch_chapel_4k": { "url": "assets/hdr/thatch_chapel_4k.hdr" }
     }
 }
