@@ -1,57 +1,32 @@
-import { AuthTokenBody } from "../../../../protocol";
-import { PlayerConnection } from "./player_connection";
-import { PlayerStatus } from "./player_status";
-import { GameSocket } from "../../@types/server_socket";
-import { Lobby } from "../lobby/lobby";
-import { Party } from "../party/party";
-import { PartyNotSet } from "../party/not_set";
+import { InvalidSecondAssignmentError } from '../../exceptions/generic/invalid_second_assignment_error';
+import { ServerClientPacketListeners } from '../../socket/routes/server_client_packet_listeners';
+import { PlayerConnection } from './player_connection';
 
-export class Player {
+export abstract class Player {
+    private _packetListeners!: ServerClientPacketListeners;
 
-    private _username: string;
-    private _ip: string;
-    private _connection: PlayerConnection;
-    private _status = PlayerStatus.IN_LOBBY_LIST;
-
-    private _lobby?: Lobby;
-    party: Party = new PartyNotSet();
-
-    constructor(authTokenBody: AuthTokenBody, socket: GameSocket) {
-        this._username = authTokenBody.username;
-        this._ip = authTokenBody.ip;
-        this._connection = new PlayerConnection(this, socket);
-    }
-
-    joinLobby(lobby: Lobby) {
-        this._status = PlayerStatus.IN_LOBBY;
-        this._lobby = lobby;
-        this._lobby.addPlayer(this);
-    }
-
-    leaveCurrentLobby() {
-        this._status = PlayerStatus.IN_LOBBY_LIST;
-        this._lobby?.removePlayer(this);
-        this._lobby = undefined;
-        this.party = new PartyNotSet();
-    }
+    constructor(
+        private readonly _username: string,
+        private readonly _connection: PlayerConnection,
+    ) {}
 
     get username() {
         return this._username;
-    }
-
-    get ip() {
-        return this._ip;
     }
 
     get connection() {
         return this._connection;
     }
 
-    get status() {
-        return this._status;
+    get packetListeners() {
+        return this._packetListeners;
     }
 
-    get lobby() {
-        return this._lobby;
+    set packetListeners(pl: ServerClientPacketListeners) {
+        if (this._packetListeners)
+            throw new InvalidSecondAssignmentError(
+                'Trying to assign a packet listener for a player that already has one',
+            );
+        this._packetListeners = pl;
     }
 }
