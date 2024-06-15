@@ -1,9 +1,9 @@
-import { Logger } from "../../log/logger";
-import { Player } from "./player";
-import { PlayerStatus } from "./player_status";
+import { Logger } from '../../log/logger';
+import { GamePlayer } from './game_player';
+import { LobbyPlayer } from './lobby_player';
+import { Player } from './player';
 
 export class PlayerManager {
-
     private _loggedPlayers: Player[] = [];
     private _onPlayerLogoff: ((player: Player) => void)[] = [];
 
@@ -13,10 +13,19 @@ export class PlayerManager {
         return !this._loggedPlayers.find(x => x.username === username);
     }
 
+    getPlayersInLobby() {
+        return this._loggedPlayers.filter(p => p instanceof LobbyPlayer);
+    }
+
+    getPlayersInGame() {
+        return this._loggedPlayers.filter(p => p instanceof GamePlayer);
+    }
+
     loginPlayer(player: Player) {
-        if (!this.isUsernameAvailable(player.username)) throw new Error(`Trying to login player with unavailable username "${player.username}"`);
+        if (!this.isUsernameAvailable(player.username))
+            throw new Error(`Trying to login player with unavailable username "${player.username}"`);
         this._loggedPlayers.push(player);
-        this._log.info(`${player.username} logged in. (from ${player.ip})`);
+        this._log.info(`${player.username} logged in. (from ${player.connection.socket.conn.remoteAddress})`);
     }
 
     logoffPlayer(player?: Player) {
@@ -36,10 +45,6 @@ export class PlayerManager {
         return result;
     }
 
-    getPlayersByStatus(status: PlayerStatus) {
-        return this._loggedPlayers.filter(p => p.status === status);
-    }
-
     onPlayerLogoff(l: (player: Player) => void) {
         this._onPlayerLogoff.push(l);
     }
@@ -47,5 +52,4 @@ export class PlayerManager {
     get loggedPlayers() {
         return this._loggedPlayers;
     }
-
 }
