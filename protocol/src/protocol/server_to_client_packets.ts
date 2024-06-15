@@ -1,10 +1,18 @@
-import { LobbyState, LobbyListState, InitialGameStatePacket, RoundState, TurnAllowedActions, GameStage, TerritoryCode } from "./data";
-import { GameError } from "./data/ingame/game_error";
+import {
+    LobbyState,
+    LobbyListState,
+    InitialGameStatePacket,
+    RoundState,
+    TurnAllowedActions,
+    GameStage,
+    TerritoryCode,
+    LobbyStage,
+} from './data';
+import { GameError } from './data/ingame/game_error';
 
-export type LobbyCreationFailReason = "full" | "unavailable name" | "already owner" | "other";
+export type LobbyCreationFailReason = 'full' | 'unavailable name' | 'already owner' | 'other';
 
 export interface ServerToClientPackets {
-
     /*
         ----------------------------------------------------------
         Lobby List Packets
@@ -25,6 +33,7 @@ export interface ServerToClientPackets {
     updateLobbyState: (lobby: LobbyState) => void;
     lStartingGame: (countdown: number) => void;
     lGameStartCancelled: () => void;
+    lUpdateLobbyStage: (stage: LobbyStage) => void;
 
     /*
         ----------------------------------------------------------
@@ -38,10 +47,13 @@ export interface ServerToClientPackets {
     // Territory selection
     gInitialTerritorySelectionTurn: (currentPlayer: string, timeout: number) => void;
     gInitialTerritorySelectionAllowedTerritories: (allowed: TerritoryCode[]) => void;
-    gInitialTerritorySelectionAssignment: (player: string, territory: TerritoryCode, reason: 'selected' | 'timeout') => void;
+    gInitialTerritorySelectionAssignment: (
+        player: string,
+        territory: TerritoryCode,
+        reason: 'selected' | 'timeout',
+    ) => void;
 
     gUpdateRoundState: (state: RoundState) => void;
     gTurnAllowedActions: (allowed: TurnAllowedActions) => void;
     gGameError: (error: GameError) => void;
-
 }
