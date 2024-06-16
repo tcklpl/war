@@ -8,6 +8,7 @@ import { GameSocketServer } from '../@types/server_socket';
 import { Logger } from '../log/logger';
 import { PlayerConnection } from '../game/player/player_connection';
 import { ServerClientPacketListeners } from './routes/server_client_packet_listeners';
+import { AuthTokenBody } from '../../../protocol';
 
 export class SocketServer {
     constructor(
@@ -43,7 +44,7 @@ export class SocketServer {
 
         this._io.on('connection', socket => {
             const token: string = socket.handshake.auth.token;
-            const authTokenBody = this._cryptManager.extractPayload(token);
+            const authTokenBody = this._cryptManager.extractPayload<AuthTokenBody>(token);
             const player = new LobbyPlayer(authTokenBody.username, new PlayerConnection(socket));
             this._gameServer.playerManager.loginPlayer(player);
 
