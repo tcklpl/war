@@ -58,7 +58,7 @@ const LobbySelectScreen: React.FC = () => {
                     </Stack>
 
                     <Grid container spacing={{ xs: 2 }}>
-                        {!!lobbies ? (
+                        {lobbies ? (
                             lobbies.lobbies.map(lobby => (
                                 <Grid item key={lobby.name} xs={4}>
                                     <LobbyCard
