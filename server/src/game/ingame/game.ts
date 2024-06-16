@@ -1,16 +1,20 @@
 import {
+    GameSessionConnectionInfo,
     GameStage,
     GameStatePlayerInfo,
     InitialGameStatePacket,
     TerritoryCode,
     TurnAction,
 } from '../../../../protocol';
+import { CryptManager } from '../../crypt/crypt_manager';
 import { LobbyNotReadyError } from '../../exceptions/lobby_not_ready_error';
 import { Logger } from '../../log/logger';
+import { ServerPacketGameSessionConnectionToken } from '../../socket/packet/game/game_session_connection_token';
 import { ServerPacketUpdateGameStage } from '../../socket/packet/game/update_game_stage';
 import { Board } from '../board/board';
 import { Lobby } from '../lobby/lobby';
 import { GamePlayer } from '../player/game_player';
+import { Player } from '../player/player';
 import { InitialTerritorySelectionManager } from './initial_territory_selection_manager';
 import { TurnManager } from './turn_manager';
 
@@ -31,6 +35,7 @@ export class Game {
 
     constructor(
         private _lobby: Lobby,
+        private _cryptManager: CryptManager,
         private _log: Logger,
     ) {
         if (_lobby.players.some(p => !p.party)) throw new LobbyNotReadyError();
@@ -72,6 +77,7 @@ export class Game {
      */
     setupGame() {
         this._log.debug(`Starting game ${this._lobby.name}`);
+        this.dispatchConnectionTokens();
         this.runInitialTerritorySelection();
     }
 
@@ -107,7 +113,17 @@ export class Game {
         new ServerPacketUpdateGameStage(gs).dispatch(...this._players);
     }
 
-    get initialGameStatePacket(): InitialGameStatePacket {
+    /**
+     * Generates and dispatches connection tokens for all players in a lobby.
+     * These token can be used to reconnect to the game.
+     */
+    private dispatchConnectionTokens() {
+        this._players.forEach(p => {
+            new ServerPacketGameSessionConnectionToken(this.generateGameSessionConnectionTokenForPlayer(p)).dispatch(p);
+        });
+    }
+
+    generateInitialGameStatePacket(): InitialGameStatePacket {
         return {
             territory_graph: this.board.asGraphTerritoryPacket,
             players: this._players.map(
@@ -120,6 +136,13 @@ export class Game {
                     },
             ),
         };
+    }
+
+    generateGameSessionConnectionTokenForPlayer(p: Player) {
+        return this._cryptManager.signTokenBody(<GameSessionConnectionInfo>{
+            game_id: this.id,
+            username: p.username,
+        });
     }
 
     get players() {
