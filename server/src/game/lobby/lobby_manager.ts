@@ -42,7 +42,6 @@ export class LobbyManager {
             if (p instanceof LobbyPlayer) {
                 this._lobbies.forEach(l => l.removePlayer(p));
             }
-            // TODO: Logic for when logging off when inside a game
             this.purgeEmptyLobbies();
         });
     }
@@ -67,6 +66,7 @@ export class LobbyManager {
             { ...this._cfgGame.default_game_config },
             this._cfgGame.game_start_countdown_seconds,
             this,
+            this._gameServer.gameManager,
             this._log.createChildContext(name),
         );
         owner.joinLobby(lobby);
@@ -79,10 +79,27 @@ export class LobbyManager {
         return lobby;
     }
 
+    /**
+     * Removes the lobby and notifies all players: kicking those still in the lobby and sending a new lobby list packet
+     * to all players in the lobby selection screen.
+     *
+     * @param lobby The lobby to be removed.
+     */
     removeLobby(lobby: Lobby) {
         lobby.cleanup();
-        this._lobbies = this._lobbies.filter(l => l !== lobby);
+        this.dropLobby(lobby);
         this.updateLobbyStatusForPlayers();
+    }
+
+    /**
+     * Drops the lobby form the manager, without further checks or updates.
+     * ! This function will not update connected players that the lobby has been removed.
+     *
+     * * To be used only by the GameManager when consummating a lobby into the game, so that we don't have duplicates of the same lobby
+     * @param lobby The lobby to be dropped.
+     */
+    dropLobby(lobby: Lobby) {
+        this._lobbies = this._lobbies.filter(l => l !== lobby);
     }
 
     getLobbyByName(name: string) {

@@ -5,7 +5,7 @@ import { ServerPacketChatMessage } from '../../socket/packet/lobby/chat_message'
 import { ServerPacketGameStartCancelled } from '../../socket/packet/lobby/game_start_cancelled';
 import { ServerPacketStartingGame } from '../../socket/packet/lobby/starting_game';
 import { ServerPacketUpdateLobbyState } from '../../socket/packet/lobby/update_lobby_state';
-import { Game } from '../ingame/game';
+import { GameManager } from '../ingame/game_manager';
 import { PartyAnarchism } from '../party/anarchism';
 import { PartyCapitalism } from '../party/capitalism';
 import { PartyFeudalism } from '../party/feudalism';
@@ -27,7 +27,6 @@ export class Lobby {
     ];
 
     private _startGameTask?: NodeJS.Timeout;
-    private _game?: Game;
 
     constructor(
         private _owner: LobbyPlayer,
@@ -35,6 +34,7 @@ export class Lobby {
         private _gameConfig: GameConfig,
         private _gameStartCountdown: number,
         private _lobbyManager: LobbyManager,
+        private _gameManager: GameManager,
         private _log: Logger,
     ) {
         this._players.push(this.owner);
@@ -117,11 +117,9 @@ export class Lobby {
 
         // set a timeout to actually start the game
         this._startGameTask = setTimeout(() => {
-            this._game = new Game(this, this._log.createChildContext('In Game'));
-            new ServerPacketInitialGameState(this._game.initialGameStatePacket).dispatch(...this._players);
-            this._game.setupGame();
-            // remove this lobby from the managed list as it was consummated into a game
-            this._lobbyManager.removeLobby(this);
+            const game = this._gameManager.consummateLobbyIntoGame(this, this._log.createChildContext('In Game'));
+            new ServerPacketInitialGameState(game.generateInitialGameStatePacket()).dispatch(...this._players);
+            game.setupGame();
         }, this._gameStartCountdown * 1000);
 
         this._log.info(`Starting game`);
@@ -156,10 +154,6 @@ export class Lobby {
 
     get gameConfig() {
         return this._gameConfig;
-    }
-
-    get game() {
-        return this._game;
     }
 
     get stage() {
