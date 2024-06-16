@@ -2,9 +2,9 @@
 
 War changelog, this file will be updated as the development continues.
 
-A lost of progress tracking was lost because I didn't think to do this sooner.
+A lot of progress tracking was lost because I didn't think to do this sooner.
 
-## [0.0.4]
+## [0.0.4] - CURRENTLY IN DEVELOPMENT
 
 ### 🔨 Fixed
 
@@ -14,6 +14,7 @@ A lost of progress tracking was lost because I didn't think to do this sooner.
 
 - 🖥 Reworked the server-side game handling logic to be better structured.
 - 🎮 Updated all game hooks to use `memo`s.
+- 🎮 The game will now always try to ping a server when connecting to it, even if the ping was already successful.
 
 ## [0.0.3]
 
