@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useGame } from '../../../hooks/use_game';
 import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
 import ServerSelectAddServerScreen from './server_select_add_server';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ServerSelectPasswordPrompt from './server_select_password_prompt';
 import ServerSelectConnectionInfo from './server_select_connection_info';
 
@@ -45,6 +45,7 @@ const ServerSelectScreen: React.FC = () => {
     const { gameInstance } = useGame();
     const { username, setToken, saveGameSession } = useGameSession();
     const navigate = useNavigate();
+    const { action } = useParams();
 
     const [servers, setServers] = useState<ServerConnectionCandidate[]>([]);
     const [selectedServer, setSelectedServer] = useState<ServerConnectionCandidate | undefined>(undefined);
@@ -145,22 +146,15 @@ const ServerSelectScreen: React.FC = () => {
         setServerConTitle(t('server_list:connecting'));
         setServerConMessage(t('server_list:connecting'));
 
-        // if the user doesn't have the patience to wait for a ping
-        if (selectedServer.status !== 'ready' || !selectedServer.serverInfo) {
-            // the user will wait anyways, fuck you
-            setServerConMessage(t('server_list:fetching_data'));
-            selectedServer.cancelPing();
-            await selectedServer.ping();
+        selectedServer.cancelPing();
+        await selectedServer.ping();
 
-            // server still didn't respond
-            if (selectedServer.status !== 'ready' || !selectedServer.serverInfo) {
-                setServerConTitle(
-                    `${t('server_list:failed_to_connect')}: ${t('server_list:error_failed_to_fetch_data')}`,
-                );
-                setServerConMessage(t('server_list:error_failed_to_fetch_data_desc'));
-                setServerConCloseable(true);
-                return;
-            }
+        // server still didn't respond
+        if (selectedServer.status !== 'ready' || !selectedServer.serverInfo) {
+            setServerConTitle(`${t('server_list:failed_to_connect')}: ${t('server_list:error_failed_to_fetch_data')}`);
+            setServerConMessage(t('server_list:error_failed_to_fetch_data_desc'));
+            setServerConCloseable(true);
+            return;
         }
 
         if (selectedServer.serverInfo.hasPassword) {
@@ -169,6 +163,12 @@ const ServerSelectScreen: React.FC = () => {
             connectToServer();
         }
     }, [selectedServer, connectToServer, t]);
+
+    useEffect(() => {
+        if (action === 'reconnect') {
+            // TODO: Reconnect to the server
+        }
+    }, [action]);
 
     const [addServerOpen, setAddServerOpen] = useState(false);
     const [passPromptOpen, setPassPromptOpen] = useState(false);
