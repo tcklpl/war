@@ -8,6 +8,7 @@ import { PLLeftLobby } from './lobby/pl_left_lobby';
 import { PLLobbies } from './lobby_list/pl_lobbies';
 import { PLStartingGame } from './lobby/pl_starting_game';
 import { PLUpdateLobbyState } from './lobby/pl_update_lobby_state';
+import { PLGameConnectionToken } from './game/pl_game_connection_token';
 
 export const registerPacketListeners = (socket: GameSocket, server: WarServer) => {
     return [
@@ -24,5 +25,6 @@ export const registerPacketListeners = (socket: GameSocket, server: WarServer) =
 
         // game
         new PLInitialGameState(socket, server),
+        new PLGameConnectionToken(socket, server),
     ];
 };
