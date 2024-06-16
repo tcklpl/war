@@ -8,6 +8,8 @@ export class WarGameSession {
     private _ping = new ListenableProperty<number>(0);
     private _pingTask = -1;
 
+    readonly token = new ListenableProperty<string>();
+
     constructor(public readonly initialGameState: InitialGameStatePacket) {
         this.measurePing();
         game.engine.resumeRender();

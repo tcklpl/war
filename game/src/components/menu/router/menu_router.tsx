@@ -13,7 +13,7 @@ const MenuRouter: React.FC = () => {
     return (
         <Routes>
             <Route path='/' Component={MainMenu} />
-            <Route path='/servers' Component={ServerSelectScreen} />
+            <Route path='/servers/:action?' Component={ServerSelectScreen} />
             <Route path='/config' Component={CfgMenu} />
             <Route path='/credits' Component={CreditsScreen} />
 

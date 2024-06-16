@@ -105,7 +105,13 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
             if (!gameInstance.state.server) return;
 
             gameInstance.state.server.lobbies.listen(lobbies => setLobbies(lobbies));
-            gameInstance.state.server.currentLobby.listen(lobby => {
+            gameInstance.state.server.currentLobby.listen(lobby => updateForCurrentLobby(lobby));
+
+            gameInstance.state.server.lastLobbyExitReason.listen(reason => {
+                updateForLobbyExit(reason);
+            });
+
+            const updateForCurrentLobby = (lobby?: WarGameLobby) => {
                 setCurrentLobby(lobby);
                 setCurrentLobbyState(lobby?.state.value);
                 lobby?.state.listen(state => setCurrentLobbyState(state));
@@ -115,15 +121,9 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
                 lobby?.gameSession.listen(gs => {
                     setCurrentGameSession(gs);
                     gs?.currentTurnPlayerIndex.listen(pi => setGTurnPlayerIndex(pi ?? 0));
+                    gs?.token.listen(tk => setToken(tk ?? ''));
                 });
-            });
-            gameInstance.state.server.currentLobby.value?.state.listen(() =>
-                setCurrentLobby(gameInstance.state.server?.currentLobby.value),
-            );
-
-            gameInstance.state.server.lastLobbyExitReason.listen(reason => {
-                updateForLobbyExit(reason);
-            });
+            };
         });
     }, [gameInstance, updateForLobbyExit]);
 
@@ -132,6 +132,7 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     */
     useEffect(() => {
         setUsername(sessionConfig.username);
+        setToken(token => token ?? sessionConfig.token);
     }, [sessionConfig]);
 
     // TODO: Try to connect if token is valid and there's no connection
@@ -144,6 +145,10 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         sessionConfig.token = token;
         await saveConfig();
     }, [username, token, sessionConfig, saveConfig]);
+
+    useEffect(() => {
+        saveGameSession();
+    }, [token, saveGameSession]);
 
     const gameSessionMemo = useMemo<IGameSessionContext>(() => {
         return {
