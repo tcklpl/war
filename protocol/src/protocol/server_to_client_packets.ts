@@ -43,6 +43,7 @@ export interface ServerToClientPackets {
     // Global game state update
     gInitialGameState: (state: InitialGameStatePacket) => void;
     gUpdateGameStage: (stage: GameStage) => void;
+    gGameSessionConnectionToken: (token: string) => void;
 
     // Territory selection
     gInitialTerritorySelectionTurn: (currentPlayer: string, timeout: number) => void;
