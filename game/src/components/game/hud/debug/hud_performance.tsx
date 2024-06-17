@@ -35,8 +35,8 @@ const HUDPerformance: React.FC = () => {
                 setFps(Time.FPS);
                 if (display.showPerformanceCharts) setFpsHistory([...fpsHistory, Time.FPS]);
 
-                setPing(currentGameSession.ping.value ?? 0);
-                if (display.showPerformanceCharts) setPingHistory([...pingHistory, currentGameSession.ping.value ?? 0]);
+                setPing(currentGameSession.ping ?? 0);
+                if (display.showPerformanceCharts) setPingHistory([...pingHistory, currentGameSession.ping ?? 0]);
             },
         });
     }, [gameInstance, fpsHistory, pingHistory, currentGameSession, display.showPerformanceCharts]);

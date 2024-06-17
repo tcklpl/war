@@ -1,14 +1,13 @@
 import { InitialGameStatePacket } from '../../../../protocol';
 import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';
-import { ListenableProperty } from '../server/listenable_property';
 
 export class WarGameSession {
-    private _currentTurnPlayerIndex = new ListenableProperty(0);
+    private _currentTurnPlayerIndex = 0;
 
-    private _ping = new ListenableProperty<number>(0);
+    private _ping = 0;
     private _pingTask = -1;
 
-    readonly token = new ListenableProperty<string>();
+    private _token: string = '';
 
     constructor(public readonly initialGameState: InitialGameStatePacket) {
         this.measurePing();
@@ -19,7 +18,7 @@ export class WarGameSession {
         const start = Date.now();
         new ClientPacketPing(() => {
             const duration = Date.now() - start;
-            this._ping.value = duration;
+            this.ping = duration;
         }).dispatch();
         window.setTimeout(() => this.measurePing(), 1000);
     }
@@ -32,7 +31,25 @@ export class WarGameSession {
         return this._currentTurnPlayerIndex;
     }
 
+    set currentTurnPlayerIndex(i: number) {
+        this._currentTurnPlayerIndex = i;
+        game.state.reactState.useGameSession.setGTurnPlayerIndex(i);
+    }
+
     get ping() {
         return this._ping;
+    }
+
+    private set ping(p: number) {
+        this._ping = p;
+    }
+
+    get token() {
+        return this._token;
+    }
+
+    set token(token: string) {
+        this._token = token;
+        game.state.reactState.useGameSession.setToken(token);
     }
 }

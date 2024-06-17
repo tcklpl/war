@@ -14,6 +14,7 @@ export class PLCreateLobby extends PacketListener {
             try {
                 const lobby = this._data.gameServer.lobbyManager.createLobby(this._data.player, name, joinable);
                 new ServerPacketJoinedLobby(lobby).dispatch(this._data.player);
+                this._data.player.joinLobby(lobby);
             } catch (e) {
                 let errorReason: LobbyCreationFailReason;
                 if (e instanceof OverLimitError) {

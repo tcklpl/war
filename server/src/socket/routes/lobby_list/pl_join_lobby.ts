@@ -34,8 +34,8 @@ export class PLJoinLobby extends PacketListener {
                 return;
             }
 
-            this._data.player.joinLobby(lobby);
             new ServerPacketJoinedLobby(lobby).dispatch(this._data.player);
+            this._data.player.joinLobby(lobby);
             this._data.logger.info(`${this._data.player.username} joined lobby "${lobbyName}"`);
         });
     }

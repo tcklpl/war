@@ -5,19 +5,18 @@ import { ClientPacketCreateLobby } from './connection/packet/to_send/lobby_list/
 import { ClientPacketJoinLobby } from './connection/packet/to_send/lobby_list/join_lobby';
 import { ClientPacketRequireLobbies } from './connection/packet/to_send/lobby_list/req_lobbies';
 import { ServerConnection } from './connection/server_connection';
-import { ListenableProperty } from './listenable_property';
 
 export class WarServer {
-    private _lobbies = new ListenableProperty<LobbyListState>();
-    private _currentLobby = new ListenableProperty<WarGameLobby>();
-    private _lastLobbyExitReason = new ListenableProperty<'left' | 'kicked' | ''>('');
+    private _lobbies?: LobbyListState;
+    private _currentLobby?: WarGameLobby;
+    private _lastLobbyExitReason: 'left' | 'kicked' | '' = '';
 
     constructor(private _connection: ServerConnection) {
         registerPacketListeners(_connection.socket, this);
     }
 
     cleanup() {
-        this._currentLobby.value?.cleanup();
+        this._currentLobby?.cleanup();
     }
 
     requestLobbies() {
@@ -40,11 +39,26 @@ export class WarServer {
         return this._lobbies;
     }
 
+    set lobbies(l: LobbyListState | undefined) {
+        this._lobbies = l;
+        game.state.reactState.useGameSession.setLobbies(l);
+    }
+
     get currentLobby() {
         return this._currentLobby;
     }
 
+    set currentLobby(l: WarGameLobby | undefined) {
+        this._currentLobby = l;
+        game.state.reactState.useGameSession.setCurrentLobby(l);
+    }
+
     get lastLobbyExitReason() {
         return this._lastLobbyExitReason;
+    }
+
+    set lastLobbyExitReason(reason: 'left' | 'kicked' | '') {
+        this._lastLobbyExitReason = reason;
+        game.state.reactState.useGameSession.updateForLobbyExit(reason);
     }
 }

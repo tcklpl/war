@@ -36,9 +36,7 @@ export class Lobby {
         private _lobbyManager: LobbyManager,
         private _gameManager: GameManager,
         private _log: Logger,
-    ) {
-        this._players.push(this.owner);
-    }
+    ) {}
 
     addPlayer(p: LobbyPlayer) {
         if (!this._players.find(x => x === p)) {

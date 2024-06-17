@@ -74,7 +74,7 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
                     content: t('lobby:kicked'),
                 });
             }
-            gameInstance.state.server.lastLobbyExitReason.value = '';
+            gameInstance.state.server.lastLobbyExitReason = '';
         },
         [gameInstance, enqueueAlert, t],
     );
@@ -92,40 +92,6 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     const cloneLobbyState = useCallback(() => {
         return currentLobbyState ? structuredClone(currentLobbyState) : undefined;
     }, [currentLobbyState]);
-
-    /*
-        Auto update this hook if anything changes about the connection.
-    */
-    useEffect(() => {
-        if (!gameInstance) return;
-
-        gameInstance.state.onServerConnectionChange(conn => {
-            setConnection(conn?.connection);
-            if (!conn) return;
-            if (!gameInstance.state.server) return;
-
-            gameInstance.state.server.lobbies.listen(lobbies => setLobbies(lobbies));
-            gameInstance.state.server.currentLobby.listen(lobby => updateForCurrentLobby(lobby));
-
-            gameInstance.state.server.lastLobbyExitReason.listen(reason => {
-                updateForLobbyExit(reason);
-            });
-
-            const updateForCurrentLobby = (lobby?: WarGameLobby) => {
-                setCurrentLobby(lobby);
-                setCurrentLobbyState(lobby?.state.value);
-                lobby?.state.listen(state => setCurrentLobbyState(state));
-                lobby?.chat.onUpdate(msgs => setChat([...msgs]));
-                lobby?.gameStartCountdown.listen(cd => setGameStartingIn(cd));
-
-                lobby?.gameSession.listen(gs => {
-                    setCurrentGameSession(gs);
-                    gs?.currentTurnPlayerIndex.listen(pi => setGTurnPlayerIndex(pi ?? 0));
-                    gs?.token.listen(tk => setToken(tk ?? ''));
-                });
-            };
-        });
-    }, [gameInstance, updateForLobbyExit]);
 
     /*
         Fetch the username from the config as soon as it's loaded.
@@ -149,6 +115,40 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     useEffect(() => {
         saveGameSession();
     }, [token, saveGameSession]);
+
+    useEffect(() => {
+        if (!gameInstance) return;
+        const s = gameInstance.state.reactState.useGameSession;
+        s.setUsername = setUsername;
+        s.setToken = setToken;
+        s.setConnection = setConnection;
+
+        s.setLobbies = setLobbies;
+        s.setCurrentLobby = setCurrentLobby;
+        s.setCurrentLobbyState = setCurrentLobbyState;
+        s.setChat = setChat;
+        s.setGameStartingIn = setGameStartingIn;
+
+        s.setCurrentGameSession = setCurrentGameSession;
+        s.setGTurnPlayerIndex = setGTurnPlayerIndex;
+
+        s.updateForLobbyExit = updateForLobbyExit;
+    }, [
+        gameInstance,
+        setUsername,
+        setToken,
+        connection,
+        setConnection,
+        setLobbies,
+        currentLobby,
+        setCurrentLobby,
+        setCurrentLobbyState,
+        setChat,
+        setGameStartingIn,
+        setCurrentGameSession,
+        setGTurnPlayerIndex,
+        updateForLobbyExit,
+    ]);
 
     const gameSessionMemo = useMemo<IGameSessionContext>(() => {
         return {

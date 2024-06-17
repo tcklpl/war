@@ -69,7 +69,6 @@ export class LobbyManager {
             this._gameServer.gameManager,
             this._log.createChildContext(name),
         );
-        owner.joinLobby(lobby);
         lobby.joinable = joinable;
         this._lobbies.push(lobby);
         this.updateLobbyStatusForPlayers();
