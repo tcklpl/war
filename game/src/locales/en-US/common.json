@@ -10,5 +10,12 @@
     "hp": "HP",
     "hp_desc": "Unit starting HP",
     "max_hp": "Max HP",
-    "max_hp_desc": "Unit maximum HP"
+    "max_hp_desc": "Unit maximum HP",
+
+    "reconnect": "Reconnect to your last game",
+    "delete_last_session": "Delete last session reconnection entry?",
+    "delete_last_session_desc": "You'll not be able to reconnect to the same session again. Only delete if your rejoin token has expired or the session has ended.",
+    
+    "failed_to_rejoin": "Failed to Rejoin Game Session",
+    "error_failed_to_rejoin_socket": "Failed to reconnect to your last server, this can either be a connection error or your session has expired since you left the game."
 }
