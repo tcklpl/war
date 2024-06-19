@@ -1,5 +1,6 @@
 import { InitialGameStatePacket } from '../../../../protocol';
 import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';
+import { ReconnectionInfo } from '../server/connection/reconnection_info';
 
 export class WarGameSession {
     private _currentTurnPlayerIndex = 0;
@@ -50,6 +51,12 @@ export class WarGameSession {
 
     set token(token: string) {
         this._token = token;
-        game.state.reactState.useGameSession.setToken(token);
+        const reconnectionInfo = {
+            serverIp: game.state.server?.connection.address,
+            serverAuthToken: game.state.server?.connection.token,
+            sessionToken: token,
+        } as ReconnectionInfo;
+        game.state.reactState.useGameSession.setReconnectionInfo(reconnectionInfo);
+        console.log(reconnectionInfo);
     }
 }

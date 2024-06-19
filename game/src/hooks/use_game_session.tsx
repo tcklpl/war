@@ -8,14 +8,14 @@ import { LobbyChatMessage } from '../game/lobby/lobby_chat';
 import { useAlert } from './use_alert';
 import { useTranslation } from 'react-i18next';
 import { WarGameSession } from '../game/lobby/war_game_session';
+import { ReconnectionInfo } from '../game/server/connection/reconnection_info';
 
 interface IGameSessionContext {
     // Server states
     username: string;
     setUsername(name: string): void;
-
-    token: string;
-    setToken(token: string): void;
+    reconnectionInfo?: ReconnectionInfo;
+    setReconnectionInfo(ri?: ReconnectionInfo): void;
 
     /**
      * Saves the username and token of the current session to indexed db.
@@ -50,7 +50,7 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
 
     // Server connection and user states
     const [username, setUsername] = useState(sessionConfig.username);
-    const [token, setToken] = useState(sessionConfig.token);
+    const [reconnectionInfo, setReconnectionInfo] = useState(sessionConfig.reconnectionInfo);
     const [connection, setConnection] = useState<ServerConnection>();
 
     // Lobby states
@@ -98,30 +98,28 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     */
     useEffect(() => {
         setUsername(sessionConfig.username);
-        setToken(token => token ?? sessionConfig.token);
+        setReconnectionInfo(sessionConfig.reconnectionInfo);
     }, [sessionConfig]);
-
-    // TODO: Try to connect if token is valid and there's no connection
 
     /*
         Callback to save important values about the game session to the local storage.
     */
     const saveGameSession = useCallback(async () => {
         sessionConfig.username = username;
-        sessionConfig.token = token;
+        sessionConfig.reconnectionInfo = reconnectionInfo;
         await saveConfig();
-    }, [username, token, sessionConfig, saveConfig]);
+    }, [username, sessionConfig, reconnectionInfo, saveConfig]);
 
     useEffect(() => {
         saveGameSession();
-    }, [token, saveGameSession]);
+    }, [saveGameSession]);
 
     useEffect(() => {
         if (!gameInstance) return;
         const s = gameInstance.state.reactState.useGameSession;
         s.setUsername = setUsername;
-        s.setToken = setToken;
         s.setConnection = setConnection;
+        s.setReconnectionInfo = setReconnectionInfo;
 
         s.setLobbies = setLobbies;
         s.setCurrentLobby = setCurrentLobby;
@@ -136,7 +134,7 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     }, [
         gameInstance,
         setUsername,
-        setToken,
+        setReconnectionInfo,
         connection,
         setConnection,
         setLobbies,
@@ -154,8 +152,8 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         return {
             username,
             setUsername,
-            token,
-            setToken,
+            reconnectionInfo,
+            setReconnectionInfo,
             connection,
             setConnection,
             saveGameSession,
@@ -172,8 +170,8 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     }, [
         username,
         setUsername,
-        token,
-        setToken,
+        reconnectionInfo,
+        setReconnectionInfo,
         connection,
         setConnection,
         saveGameSession,

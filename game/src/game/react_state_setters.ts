@@ -5,6 +5,7 @@ import { WarGameLobby } from './lobby/war_game_lobby';
 import { LobbyChatMessage } from './lobby/lobby_chat';
 import { ServerConnection } from './server/connection/server_connection';
 import { WarGameSession } from './lobby/war_game_session';
+import { ReconnectionInfo } from './server/connection/reconnection_info';
 
 type Dispatcher<T> = React.Dispatch<React.SetStateAction<T>>;
 type UndefinedDispatcher<T> = React.Dispatch<React.SetStateAction<T | undefined>>;
@@ -20,7 +21,7 @@ class ReactStateUseGame {
 
 class ReactStateUseGameSession {
     setUsername!: Dispatcher<string>;
-    setToken!: Dispatcher<string>;
+    setReconnectionInfo!: UndefinedDispatcher<ReconnectionInfo>;
     setConnection!: UndefinedDispatcher<ServerConnection>;
 
     // Lobby states
