@@ -4,11 +4,12 @@ War changelog, this file will be updated as the development continues.
 
 A lot of progress tracking was lost because I didn't think to do this sooner.
 
-## [0.0.4] - CURRENTLY IN DEVELOPMENT
+## [Unreleased]
 
 ### 🔨 Fixed
 
 - 🎮 Fixed the assets not being loaded correctly if the URL had an `/#/`.
+- 🎮🖥 Connection can now be established on different socket ports.
 
 ### 🔧 Modified
 
