@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useGame } from '../../../hooks/use_game';
 import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
 import ServerSelectAddServerScreen from './server_select_add_server';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ServerSelectPasswordPrompt from './server_select_password_prompt';
 import ServerSelectConnectionInfo from './server_select_connection_info';
 
@@ -38,18 +38,18 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useGameSession } from '../../../hooks/use_game_session';
 import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
 import { UsernameNotAvailableError } from '../../../errors/game/connection/username_not_available';
+import { ServerListEntry } from './server_list_entry';
 
 const ServerSelectScreen: React.FC = () => {
     const { palette } = useTheme();
     const { t } = useTranslation(['server_list', 'common']);
     const { gameInstance } = useGame();
-    const { username, setToken, saveGameSession } = useGameSession();
+    const { username, saveGameSession } = useGameSession();
     const navigate = useNavigate();
-    const { action } = useParams();
 
-    const [servers, setServers] = useState<ServerConnectionCandidate[]>([]);
-    const [selectedServer, setSelectedServer] = useState<ServerConnectionCandidate | undefined>(undefined);
-    const [serverBeingEdited, setServerBeingEdited] = useState<ServerConnectionCandidate | undefined>(undefined);
+    const [servers, setServers] = useState<ServerListEntry[]>([]);
+    const [selectedServer, setSelectedServer] = useState<ServerListEntry | undefined>(undefined);
+    const [serverBeingEdited, setServerBeingEdited] = useState<ServerListEntry | undefined>(undefined);
 
     /*
         Fetches all saved servers from the local server storage.
@@ -57,7 +57,14 @@ const ServerSelectScreen: React.FC = () => {
     const updateServerList = useCallback(() => {
         gameInstance?.runWhenReady(async () => {
             const servers = await gameInstance.state.serverList.getAllServers();
-            setServers(servers.map(sv => new ServerConnectionCandidate(sv)));
+            setServers(
+                servers.map(sv => {
+                    return {
+                        info: sv,
+                        connectionCandidate: new ServerConnectionCandidate(sv.address),
+                    } as ServerListEntry;
+                }),
+            );
         });
     }, [gameInstance]);
 
@@ -88,8 +95,8 @@ const ServerSelectScreen: React.FC = () => {
     useEffect(() => {
         servers.forEach(sv => {
             (async () => {
-                if (sv.status === 'loading') {
-                    await sv.ping();
+                if (sv.connectionCandidate.status === 'loading') {
+                    await sv.connectionCandidate.ping();
                     setServers([...servers]);
                 }
             })();
@@ -103,14 +110,17 @@ const ServerSelectScreen: React.FC = () => {
     */
     const connectToServer = useCallback(
         async (password?: string) => {
-            if (!selectedServer?.serverInfo) return;
+            if (!selectedServer?.connectionCandidate.serverInfo) return;
 
             setServerConMessage(t('server_list:connecting'));
 
             try {
-                const connection = await selectedServer.connect(username, password);
-                gameInstance?.state.connectToServer(connection);
-                setToken(connection.token);
+                const connection = await selectedServer.connectionCandidate.login(username, password);
+                if (!connection) {
+                    // TODO: Error alert
+                    return;
+                }
+                gameInstance?.state.setActiveServerConnection(connection);
                 await saveGameSession();
 
                 setServerConInfoOpen(false);
@@ -131,7 +141,7 @@ const ServerSelectScreen: React.FC = () => {
                 setServerConCloseable(true);
             }
         },
-        [selectedServer, t, username, setToken, saveGameSession, navigate, gameInstance?.state],
+        [selectedServer, t, username, saveGameSession, navigate, gameInstance?.state],
     );
 
     /*
@@ -146,29 +156,23 @@ const ServerSelectScreen: React.FC = () => {
         setServerConTitle(t('server_list:connecting'));
         setServerConMessage(t('server_list:connecting'));
 
-        selectedServer.cancelPing();
-        await selectedServer.ping();
+        selectedServer.connectionCandidate.cancelPing();
+        await selectedServer.connectionCandidate.ping();
 
         // server still didn't respond
-        if (selectedServer.status !== 'ready' || !selectedServer.serverInfo) {
+        if (selectedServer.connectionCandidate.status !== 'ready' || !selectedServer.connectionCandidate.serverInfo) {
             setServerConTitle(`${t('server_list:failed_to_connect')}: ${t('server_list:error_failed_to_fetch_data')}`);
             setServerConMessage(t('server_list:error_failed_to_fetch_data_desc'));
             setServerConCloseable(true);
             return;
         }
 
-        if (selectedServer.serverInfo.hasPassword) {
+        if (selectedServer.connectionCandidate.serverInfo.hasPassword) {
             setPassPromptOpen(true);
         } else {
-            connectToServer();
+            await connectToServer();
         }
     }, [selectedServer, connectToServer, t]);
-
-    useEffect(() => {
-        if (action === 'reconnect') {
-            // TODO: Reconnect to the server
-        }
-    }, [action]);
 
     const [addServerOpen, setAddServerOpen] = useState(false);
     const [passPromptOpen, setPassPromptOpen] = useState(false);
@@ -228,10 +232,10 @@ const ServerSelectScreen: React.FC = () => {
                         <Table>
                             <TableBody>
                                 {servers
-                                    .sort((a, b) => a.listInfo.listPosition - b.listInfo.listPosition)
+                                    .sort((a, b) => a.info.listPosition - b.info.listPosition)
                                     .map(sv => (
                                         <TableRow
-                                            key={sv.listInfo.id}
+                                            key={sv.info.id}
                                             onClick={() => setSelectedServer(sv)}
                                             selected={selectedServer === sv}
                                             onDoubleClick={() => startConnectionAttempt()}
@@ -239,42 +243,52 @@ const ServerSelectScreen: React.FC = () => {
                                             <TableCell>
                                                 <Stack spacing={3}>
                                                     <Typography>
-                                                        {sv.status === 'ready'
-                                                            ? `${sv.serverInfo?.name} (${sv.listInfo.localName})`
-                                                            : sv.listInfo.localName}
+                                                        {sv.connectionCandidate.status === 'ready'
+                                                            ? `${sv.connectionCandidate.serverInfo?.name} (${sv.info.localName})`
+                                                            : sv.info.localName}
                                                     </Typography>
                                                     <Typography
                                                         color={
-                                                            sv.status === 'error'
+                                                            sv.connectionCandidate.status === 'error'
                                                                 ? palette.error.main
                                                                 : palette.primary.main
                                                         }
                                                     >
-                                                        {sv.status === 'ready' ? (
-                                                            sv.serverInfo?.description
-                                                        ) : sv.status === 'error' ? (
-                                                            <>
-                                                                <CloseIcon style={{ verticalAlign: 'middle' }} />
-                                                                {t('server_list:failed_to_connect')}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <CircularProgress
-                                                                    size='1em'
-                                                                    style={{
-                                                                        verticalAlign: 'middle',
-                                                                        marginRight: '0.5em',
-                                                                    }}
-                                                                />
-                                                                {t('server_list:connecting')}
-                                                            </>
-                                                        )}
+                                                        {(() => {
+                                                            switch (sv.connectionCandidate.status) {
+                                                                case 'ready':
+                                                                    return sv.connectionCandidate.serverInfo
+                                                                        ?.description;
+                                                                case 'error':
+                                                                    return (
+                                                                        <>
+                                                                            <CloseIcon
+                                                                                style={{ verticalAlign: 'middle' }}
+                                                                            />
+                                                                            {t('server_list:failed_to_connect')}
+                                                                        </>
+                                                                    );
+                                                                default:
+                                                                    return (
+                                                                        <>
+                                                                            <CircularProgress
+                                                                                size='1em'
+                                                                                style={{
+                                                                                    verticalAlign: 'middle',
+                                                                                    marginRight: '0.5em',
+                                                                                }}
+                                                                            />
+                                                                            {t('server_list:connecting')}
+                                                                        </>
+                                                                    );
+                                                            }
+                                                        })()}
                                                     </Typography>
                                                 </Stack>
                                             </TableCell>
                                             <TableCell>
-                                                {sv.status === 'ready' ? (
-                                                    sv.serverInfo?.hasPassword ? (
+                                                {sv.connectionCandidate.status === 'ready' &&
+                                                    (sv.connectionCandidate.serverInfo?.hasPassword ? (
                                                         <Tooltip title={t('server_list:requires_password')}>
                                                             <HttpsIcon style={{ verticalAlign: 'middle' }} />
                                                         </Tooltip>
@@ -282,18 +296,18 @@ const ServerSelectScreen: React.FC = () => {
                                                         <Tooltip title={t('server_list:no_password')}>
                                                             <NoEncryptionIcon style={{ verticalAlign: 'middle' }} />
                                                         </Tooltip>
-                                                    )
-                                                ) : undefined}
+                                                    ))}
                                             </TableCell>
                                             <TableCell align='center'>
-                                                {sv.status === 'ready' ? (
+                                                {sv.connectionCandidate.status === 'ready' && (
                                                     <>
                                                         <PeopleIcon
                                                             style={{ verticalAlign: 'middle', marginRight: '0.5em' }}
                                                         />
-                                                        {sv.serverInfo?.playerCount} / {sv.serverInfo?.playerLimit}
+                                                        {sv.connectionCandidate.serverInfo?.playerCount} /{' '}
+                                                        {sv.connectionCandidate.serverInfo?.playerLimit}
                                                     </>
-                                                ) : undefined}
+                                                )}
                                             </TableCell>
                                             <TableCell align='right'>
                                                 <Button
@@ -307,10 +321,8 @@ const ServerSelectScreen: React.FC = () => {
 
                                                 <Button
                                                     onClick={async () => {
-                                                        sv.cancelPing();
-                                                        await gameInstance?.state.serverList.deleteServer(
-                                                            sv.listInfo.id,
-                                                        );
+                                                        sv.connectionCandidate.cancelPing();
+                                                        await gameInstance?.state.serverList.deleteServer(sv.info.id);
                                                         if (selectedServer === sv) setSelectedServer(undefined);
                                                         updateServerList();
                                                     }}

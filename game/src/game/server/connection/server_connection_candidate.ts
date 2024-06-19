@@ -3,12 +3,11 @@ import {
     ServerToClientPackets,
     cl_LoginRequest,
     sv_LoginResponseOK,
-    sv_ServerInfo,
+    ResponseServerInfoBody,
 } from '../../../../../protocol';
 import { UnknownConnectionError } from '../../../errors/game/connection/unknown_connection_error';
 import { UsernameNotAvailableError } from '../../../errors/game/connection/username_not_available';
 import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
-import { ServerListSelectInfo } from '../server_list_select_info';
 import { Socket, io } from 'socket.io-client';
 import { ServerConnection } from './server_connection';
 
@@ -18,11 +17,11 @@ export class ServerConnectionCandidate {
     private TIMEOUT = 5; // timeout in seconds
 
     private _status: ServerConnectionCandidateStatus = 'loading';
-    private _serverInfo?: sv_ServerInfo;
+    private _serverInfo?: ResponseServerInfoBody;
 
     private _pingAbortController?: AbortController;
 
-    constructor(private _listInfo: ServerListSelectInfo) {}
+    constructor(private _address: string) {}
 
     /**
      * Tries to ping this server's remote address.
@@ -36,7 +35,7 @@ export class ServerConnectionCandidate {
         window.setTimeout(() => this._pingAbortController?.abort(), this.TIMEOUT * 1000); // 20 sec timeout
 
         try {
-            const result = await fetch(this._listInfo.address, { signal: this._pingAbortController.signal });
+            const result = await fetch(this._address, { signal: this._pingAbortController.signal });
 
             // fetch doesn't throw an error for any valid response code, so we need to check if the response is ok
             if (!result.ok) {
@@ -45,7 +44,7 @@ export class ServerConnectionCandidate {
             }
 
             // try to get the json response, if this fails we still end up on the catch statement below
-            const responseBody = (await result.json()) as sv_ServerInfo;
+            const responseBody = (await result.json()) as ResponseServerInfoBody;
             this._serverInfo = responseBody;
             this.status = 'ready';
         } catch (e) {
@@ -57,8 +56,13 @@ export class ServerConnectionCandidate {
         this._pingAbortController?.abort();
     }
 
-    async connect(username: string, password?: string) {
-        const loginResult = await fetch(`${this._listInfo.address}login`, {
+    async login(username: string, password?: string) {
+        if (!this._serverInfo) {
+            console.warn('Trying to connect to a server we have no info');
+            return;
+        }
+
+        const loginResult = await fetch(`${this._address}login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,17 +80,30 @@ export class ServerConnectionCandidate {
         }
 
         const response = (await loginResult.json()) as sv_LoginResponseOK;
-        const socketURI = new URL(this._listInfo.address);
-        socketURI.port = '36876';
+        return await this.connect(response.token);
+    }
+
+    async connect(token: string) {
+        if (!this._serverInfo) {
+            console.warn('Trying to connect to a server we have no info');
+            return;
+        }
+
+        const socketURI = new URL(this._address);
+        socketURI.port = this._serverInfo.socketPort.toString();
 
         const socket: Socket<ServerToClientPackets, ClientToServerPackets> = io(socketURI.toString(), {
             auth: {
-                token: response.token,
+                token,
             },
         });
-        await this.waitForServerConnection(socket);
+        try {
+            await this.waitForServerConnection(socket);
+        } catch (_) {
+            return;
+        }
 
-        const connection = new ServerConnection(socket, response.token);
+        const connection = new ServerConnection(this._address, socket, token);
         return connection;
     }
 
@@ -97,7 +114,7 @@ export class ServerConnectionCandidate {
             });
 
             socket.on('connect_error', () => {
-                return rej();
+                return rej(new Error('Failed to connect to server'));
             });
         });
     }
@@ -114,7 +131,7 @@ export class ServerConnectionCandidate {
         return this._serverInfo;
     }
 
-    get listInfo() {
-        return this._listInfo;
+    get address() {
+        return this._address;
     }
 }
