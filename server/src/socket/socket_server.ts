@@ -46,7 +46,12 @@ export class SocketServer {
             const token: string = socket.handshake.auth.token;
             const authTokenBody = this._cryptManager.extractPayload<AuthTokenBody>(token);
             const player = new LobbyPlayer(authTokenBody.username, new PlayerConnection(socket));
-            this._gameServer.playerManager.loginPlayer(player);
+            try {
+                this._gameServer.playerManager.loginPlayer(player);
+            } catch (e) {
+                socket.disconnect();
+                return;
+            }
 
             // register all socket routes
             const packetListeners = new ServerClientPacketListeners(
