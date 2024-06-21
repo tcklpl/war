@@ -8,7 +8,6 @@ import { ClientPacketDeselectParty } from '../server/connection/packet/to_send/l
 import { ClientPacketLeaveLobby } from '../server/connection/packet/to_send/lobby/common/leave_lobby';
 import { ClientPacketSelectParty } from '../server/connection/packet/to_send/lobby/common/select_party';
 import { LobbyChat } from './lobby_chat';
-import { WarGameSession } from './war_game_session';
 
 export class WarGameLobby {
     private _state?: LobbyState;
@@ -16,8 +15,6 @@ export class WarGameLobby {
 
     private _gameStartCountdown = 0;
     private _taskGameStartCountdown?: number;
-
-    private _gameSession?: WarGameSession;
 
     constructor(state: LobbyState) {
         this._state = state;
@@ -30,7 +27,6 @@ export class WarGameLobby {
 
     cleanup() {
         this.cancelGameStartCountdown();
-        this._gameSession?.cleanup();
         this._chat.eraseHistory();
     }
 
@@ -103,14 +99,5 @@ export class WarGameLobby {
     private set gameStartCountdown(cd: number) {
         this._gameStartCountdown = cd;
         game.state.reactState.useGameSession.setGameStartingIn(cd);
-    }
-
-    get gameSession() {
-        return this._gameSession;
-    }
-
-    set gameSession(s: WarGameSession | undefined) {
-        this._gameSession = s;
-        game.state.reactState.useGameSession.setCurrentGameSession(s);
     }
 }

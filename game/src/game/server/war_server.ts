@@ -1,6 +1,7 @@
 import { LobbyListState } from '../../../../protocol';
 import { ReconnectionStatus } from '../../../../protocol/src/protocol/data/ingame/reconnection_status';
 import { WarGameLobby } from '../lobby/war_game_lobby';
+import { WarGameSession } from '../lobby/war_game_session';
 import { registerPacketListeners } from './connection/packet/listeners/packet_listeners';
 import { ClientPacketReconnectToGame } from './connection/packet/to_send/ingame/reconnect';
 import { ClientPacketCreateLobby } from './connection/packet/to_send/lobby_list/create_lobby';
@@ -11,6 +12,7 @@ import { ServerConnection } from './connection/server_connection';
 export class WarServer {
     private _lobbies?: LobbyListState;
     private _currentLobby?: WarGameLobby;
+    private _currentGameSession?: WarGameSession;
     private _lastLobbyExitReason: 'left' | 'kicked' | '' = '';
 
     constructor(private _connection: ServerConnection) {
@@ -19,6 +21,7 @@ export class WarServer {
 
     cleanup() {
         this._currentLobby?.cleanup();
+        this._currentGameSession?.cleanup();
     }
 
     requestLobbies() {
@@ -57,6 +60,15 @@ export class WarServer {
     set currentLobby(l: WarGameLobby | undefined) {
         this._currentLobby = l;
         game.state.reactState.useGameSession.setCurrentLobby(l);
+    }
+
+    get currentGameSession() {
+        return this._currentGameSession;
+    }
+
+    set currentGameSession(s: WarGameSession | undefined) {
+        this._currentGameSession = s;
+        game.state.reactState.useGameSession.setCurrentGameSession(s);
     }
 
     get lastLobbyExitReason() {
