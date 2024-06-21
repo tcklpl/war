@@ -98,7 +98,7 @@ export class Game {
         this._playerManager.switchPlayerInstance(p, previousConnection);
         previousConnection.online = true;
 
-        new ServerPacketInitialGameState(this.generateInitialGameStatePacket()).dispatch(previousConnection);
+        new ServerPacketInitialGameState(this.generateInitialGameStatePacket()).dispatch(p);
 
         this._log.info(`${p.username} has rejoined the game ${this.id}`);
         return this.generateGameSessionConnectionTokenForPlayer(previousConnection);
