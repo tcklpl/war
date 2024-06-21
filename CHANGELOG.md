@@ -6,6 +6,10 @@ A lot of progress tracking was lost because I didn't think to do this sooner.
 
 ## [Unreleased]
 
+### ✨ New
+
+- 🎮🖥 Clients can now reconnect to the game if their token hasn't expired.
+
 ### 🔨 Fixed
 
 - 🎮 Fixed the assets not being loaded correctly if the URL had an `/#/`.
