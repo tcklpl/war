@@ -53,12 +53,13 @@ export class SocketServer {
                 player,
                 this._gameServer,
                 this._configManager,
+                this._cryptManager,
                 this._log.createChildContext('Listeners'),
             );
             player.packetListeners = packetListeners;
 
             socket.on('disconnect', () => {
-                this._gameServer.playerManager.logoffPlayer(player);
+                this._gameServer.playerManager.logoffPlayer(authTokenBody.username);
             });
         });
     }

@@ -28,11 +28,21 @@ export class PlayerManager {
         this._log.info(`${player.username} logged in. (from ${player.connection.socket.conn.remoteAddress})`);
     }
 
-    logoffPlayer(player?: Player) {
+    logoffPlayer(playerName: string) {
+        const player = this._loggedPlayers.find(p => p.username === playerName);
         if (!player) return;
         this._loggedPlayers = this._loggedPlayers.filter(x => x.username !== player.username);
         this._onPlayerLogoff.forEach(l => l(player));
         this._log.info(`${player.username} logged off`);
+    }
+
+    switchPlayerInstance(oldPlayer: Player, newPlayer: Player) {
+        if (oldPlayer.username !== newPlayer.username) return;
+        const currentPlayerCount = this._loggedPlayers.length;
+        const withoutOld = this._loggedPlayers.filter(x => x.username !== oldPlayer.username);
+        if (withoutOld.length === currentPlayerCount) return;
+        this._loggedPlayers = [...withoutOld, newPlayer];
+        this._log.debug(`Switched player instance for ${newPlayer.username}`);
     }
 
     getPlayerByName(name: string): Player | undefined {
