@@ -10,6 +10,7 @@ A lot of progress tracking was lost because I didn't think to do this sooner.
 
 - 🎮 Fixed the assets not being loaded correctly if the URL had an `/#/`.
 - 🎮🖥 Connection can now be established on different socket ports.
+- 🎮🖥 Synchronized version across game, server and protocol.
 
 ### 🔧 Modified
 
