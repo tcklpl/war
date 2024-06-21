@@ -24,8 +24,7 @@ export class LobbyPlayer extends Player {
     transformIntoGamePlayer(game: Game) {
         if (!this.party || this.party instanceof PartyNotSet) throw new PlayerPartyNotSetError(game, this);
         const gamePlayer = new GamePlayer(this.username, this.connection, this.party, game);
-        gamePlayer.packetListeners = this.packetListeners;
-        this.packetListeners.updatePlayerInstance(gamePlayer);
+        this.morphInto(gamePlayer);
         return gamePlayer;
     }
 

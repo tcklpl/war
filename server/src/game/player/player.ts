@@ -10,6 +10,23 @@ export abstract class Player {
         private readonly _connection: PlayerConnection,
     ) {}
 
+    /**
+     * Updates all packet listeners to point to the target Player entity.
+     *
+     * @param target Target Player entity.
+     * @returns The target entity.
+     */
+    morphInto(target: Player) {
+        target.packetListeners = this._packetListeners;
+        target.packetListeners.updatePlayerInstance(target);
+        return target;
+    }
+
+    unregisterPacketListeners() {
+        if (!this.packetListeners) return;
+        this.packetListeners.unregisterPacketListeners();
+    }
+
     get username() {
         return this._username;
     }
@@ -23,7 +40,7 @@ export abstract class Player {
     }
 
     set packetListeners(pl: ServerClientPacketListeners) {
-        if (this._packetListeners)
+        if (this._packetListeners?.active)
             throw new InvalidSecondAssignmentError(
                 'Trying to assign a packet listener for a player that already has one',
             );
