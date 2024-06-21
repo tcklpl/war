@@ -4,17 +4,19 @@ War changelog, this file will be updated as the development continues.
 
 A lot of progress tracking was lost because I didn't think to do this sooner.
 
-## [Unreleased]
+## [0.1.0] - 2024-06-21
 
 ### ✨ New
 
 - 🎮🖥 Clients can now reconnect to the game if their token hasn't expired.
+- 🔩 Release notes on the releases page.
 
 ### 🔨 Fixed
 
 - 🎮 Fixed the assets not being loaded correctly if the URL had an `/#/`.
 - 🎮🖥 Connection can now be established on different socket ports.
 - 🎮🖥 Synchronized version across game, server and protocol.
+- 🖥 Fixed server crashing when two sockets try to connect with the same username.
 
 ### 🔧 Modified
 
@@ -27,8 +29,8 @@ A lot of progress tracking was lost because I didn't think to do this sooner.
 
 ### ✨ New
 
-- GitHub pages deploy.
+- 🔩 GitHub pages deploy.
 
 ### 🔧 Modified
 
-- Improved the readme.
+- 🔩 Improved the readme.
