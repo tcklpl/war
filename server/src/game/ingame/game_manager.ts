@@ -24,8 +24,7 @@ export class GameManager {
     private registerEvents() {
         this._gameServer.playerManager.onPlayerLogoff(p => {
             if (p instanceof GamePlayer) {
-                p.online = false;
-                // TODO: Logic when a player leaves during a game
+                p.game.onPlayerLeave(p);
             }
         });
     }
@@ -40,9 +39,13 @@ export class GameManager {
      * @returns The created Game.
      */
     consummateLobbyIntoGame(lobby: Lobby, logger: Logger) {
-        const game = new Game(lobby, this._cryptManager, logger);
+        const game = new Game(lobby, this._cryptManager, this._gameServer.playerManager, logger);
         this._gameServer.lobbyManager.dropLobby(lobby);
         this._games.push(game);
         return game;
+    }
+
+    getGameById(id: string) {
+        return this._games.find(g => g.id === id);
     }
 }

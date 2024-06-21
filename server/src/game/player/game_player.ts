@@ -6,6 +6,7 @@ import { PlayerConnection } from './player_connection';
 
 export class GamePlayer extends Player {
     online = true;
+    discarded = false;
 
     constructor(
         _username: string,

@@ -8,13 +8,18 @@ import {
 } from '../../../../protocol';
 import { CryptManager } from '../../crypt/crypt_manager';
 import { LobbyNotReadyError } from '../../exceptions/lobby_not_ready_error';
+import { LobbyMovedOnError } from '../../exceptions/reconnection/lobby_moved_on_error';
+import { PlayerAlreadyInLobbyError } from '../../exceptions/reconnection/player_already_in_lobby_error';
+import { PlayerDoesntBelongOnLobbyError } from '../../exceptions/reconnection/player_doesnt_belong_on_lobby_error';
 import { Logger } from '../../log/logger';
 import { ServerPacketGameSessionConnectionToken } from '../../socket/packet/game/game_session_connection_token';
+import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
 import { ServerPacketUpdateGameStage } from '../../socket/packet/game/update_game_stage';
 import { Board } from '../board/board';
 import { Lobby } from '../lobby/lobby';
 import { GamePlayer } from '../player/game_player';
 import { Player } from '../player/player';
+import { PlayerManager } from '../player/player_manager';
 import { InitialTerritorySelectionManager } from './initial_territory_selection_manager';
 import { TurnManager } from './turn_manager';
 
@@ -36,12 +41,14 @@ export class Game {
     constructor(
         private _lobby: Lobby,
         private _cryptManager: CryptManager,
+        private _playerManager: PlayerManager,
         private _log: Logger,
     ) {
         if (_lobby.players.some(p => !p.party)) throw new LobbyNotReadyError();
 
         const consummatedPlayers = _lobby.players.map(p => {
             const consummated = p.transformIntoGamePlayer(this);
+            this._playerManager.switchPlayerInstance(p, consummated);
             if (_lobby.owner === p) this._owner = consummated;
             return consummated;
         });
@@ -79,6 +86,29 @@ export class Game {
         this._log.debug(`Starting game ${this._lobby.name}`);
         this.dispatchConnectionTokens();
         this.runInitialTerritorySelection();
+    }
+
+    reconnectPlayer(p: Player) {
+        const previousConnection = this._players.find(lp => lp.username === p.username);
+        if (!previousConnection) throw new PlayerDoesntBelongOnLobbyError();
+        if (previousConnection.online) throw new PlayerAlreadyInLobbyError();
+        if (previousConnection.discarded) throw new LobbyMovedOnError();
+
+        p.morphInto(previousConnection);
+        this._playerManager.switchPlayerInstance(p, previousConnection);
+        previousConnection.online = true;
+
+        new ServerPacketInitialGameState(this.generateInitialGameStatePacket()).dispatch(previousConnection);
+
+        this._log.info(`${p.username} has rejoined the game ${this.id}`);
+        return this.generateGameSessionConnectionTokenForPlayer(previousConnection);
+    }
+
+    onPlayerLeave(player: GamePlayer) {
+        player.online = false;
+        player.unregisterPacketListeners();
+        this._log.info(`${player.username} has left the game ${this.id}`);
+        // TODO: leave game
     }
 
     /**
