@@ -39,7 +39,10 @@
     "express": "^4.18.2",
     "json5": "^2.2.3",
     "jsonwebtoken": "^9.0.2",
-    "socket.io": "^4.7.4"
+    "reflect-metadata": "^0.2.2",
+    "socket.io": "^4.7.4",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.20"
   },
   "husky": {
     "hooks": {
