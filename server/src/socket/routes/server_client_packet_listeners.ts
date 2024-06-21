@@ -20,14 +20,18 @@ import { GameServer } from '../../game/game_server';
 import { ConfigManager } from '../../config/config_manager';
 import { PacketListener } from './packet_listener';
 import { Constructor } from '../../@types/utils';
+import { PLReconnectToGame } from './game/pl_reconnect_to_game';
+import { CryptManager } from '../../crypt/crypt_manager';
 
 export class ServerClientPacketListeners {
     private _routeData: SocketRouteData;
+    private _active = true;
 
     constructor(
         private _player: Player,
         gameServer: GameServer,
         configManager: ConfigManager,
+        cryptManager: CryptManager,
         private _logger: Logger,
     ) {
         this._routeData = {
@@ -35,6 +39,7 @@ export class ServerClientPacketListeners {
             socket: _player.connection.socket,
             gameServer,
             configManager,
+            cryptManager,
             logger: _logger,
         };
         this.initializePacketListeners();
@@ -47,6 +52,11 @@ export class ServerClientPacketListeners {
     updatePlayerInstance(newPlayer: Player) {
         this._routeData.player = newPlayer;
         this._routeData.socket = newPlayer.connection.socket;
+    }
+
+    unregisterPacketListeners() {
+        this._player.connection.socket.offAny();
+        this._active = false;
     }
 
     private _packetListenerRegistry: Constructor<PacketListener>[] = [
@@ -70,7 +80,16 @@ export class ServerClientPacketListeners {
         PLPing,
         PLSelectStartingTerritory,
         PLGameAction,
+        PLReconnectToGame,
     ];
 
     private _packetListeners: PacketListener[] = [];
+
+    get player() {
+        return this._player;
+    }
+
+    get active() {
+        return this._active;
+    }
 }
