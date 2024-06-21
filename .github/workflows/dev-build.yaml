@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-          cache-dependency-path: server/package-lock.json
+          cache-dependency-path: package-lock.json
       - name: Get Version
         id: version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
@@ -47,7 +47,7 @@ jobs:
         with:
           name: server-dist
           path: server/dist
-  
+
   build-game:
     name: Build Game
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-          cache-dependency-path: game/package-lock.json
+          cache-dependency-path: package-lock.json
       - name: Installing Dependencies
         working-directory: game
         run: npm ci
@@ -97,7 +97,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-          cache-dependency-path: game/package-lock.json
+          cache-dependency-path: package-lock.json
       - name: Installing Dependencies
         working-directory: game
         run: npm ci
@@ -105,7 +105,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: game-bundle
-          path: './game/build/'
+          path: "./game/build/"
       - name: Build Windows Binaries
         working-directory: game
         run: npm run electron-build-windows
@@ -123,10 +123,10 @@ jobs:
       contents: write
       pages: write
       id-token: write
-    concurrency: 
+    concurrency:
       group: "pages"
       cancel-in-progress: false
-    environment: 
+    environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
@@ -138,22 +138,26 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: server-dist
-          path: './binaries/'
+          path: "./binaries/"
       - name: Download Game Binaries
         uses: actions/download-artifact@v4
         with:
           name: game-dist
-          path: './binaries/'
+          path: "./binaries/"
       - name: Download Game Bundle
         uses: actions/download-artifact@v4
         with:
           name: game-bundle
-          path: './game-bundle/'
+          path: "./game-bundle/"
+      - name: Extract Release Notes
+        uses: ffurrer2/extract-release-notes@v2.2.0
+        id: extract-release-notes
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           name: In-Dev ${{ github.ref_name }}
           draft: false
+          body: ${{ steps.extract-release-notes.outputs.release_notes }}
           prerelease: true
           tag_name: ${{ github.ref_name }}
           files: ./binaries/*
@@ -162,7 +166,7 @@ jobs:
       - name: Upload Build to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './game-bundle/'
+          path: "./game-bundle/"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
