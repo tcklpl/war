@@ -1,6 +1,6 @@
 {
   "name": "war2-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "War2 Game Server",
   "main": "index.js",
   "scripts": {
