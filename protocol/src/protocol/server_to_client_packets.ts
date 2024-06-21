@@ -57,4 +57,7 @@ export interface ServerToClientPackets {
     gUpdateRoundState: (state: RoundState) => void;
     gTurnAllowedActions: (allowed: TurnAllowedActions) => void;
     gGameError: (error: GameError) => void;
+
+    gPlayerDisconnected: (player: string) => void;
+    gPlayerRejoined: (player: string, allPlayersOnline: boolean) => void;
 }
