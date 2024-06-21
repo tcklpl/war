@@ -9,3 +9,4 @@ dist/
 /config/
 public.key
 private.key
+gamedata.db
