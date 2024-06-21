@@ -65,7 +65,6 @@ export class LobbyManager {
             name,
             { ...this._cfgGame.default_game_config },
             this._cfgGame.game_start_countdown_seconds,
-            this,
             this._gameServer.gameManager,
             this._log.createChildContext(name),
         );

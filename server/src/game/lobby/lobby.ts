@@ -13,7 +13,6 @@ import { PartyNotSet } from '../party/not_set';
 import { Party } from '../party/party';
 import { PartySocialism } from '../party/socialism';
 import { LobbyPlayer } from '../player/lobby_player';
-import { LobbyManager } from './lobby_manager';
 
 export class Lobby {
     private _stage: LobbyStage = 'in lobby';
@@ -33,7 +32,6 @@ export class Lobby {
         private _name: string,
         private _gameConfig: GameConfig,
         private _gameStartCountdown: number,
-        private _lobbyManager: LobbyManager,
         private _gameManager: GameManager,
         private _log: Logger,
     ) {}
