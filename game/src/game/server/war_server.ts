@@ -1,6 +1,8 @@
 import { LobbyListState } from '../../../../protocol';
+import { ReconnectionStatus } from '../../../../protocol/src/protocol/data/ingame/reconnection_status';
 import { WarGameLobby } from '../lobby/war_game_lobby';
 import { registerPacketListeners } from './connection/packet/listeners/packet_listeners';
+import { ClientPacketReconnectToGame } from './connection/packet/to_send/ingame/reconnect';
 import { ClientPacketCreateLobby } from './connection/packet/to_send/lobby_list/create_lobby';
 import { ClientPacketJoinLobby } from './connection/packet/to_send/lobby_list/join_lobby';
 import { ClientPacketRequireLobbies } from './connection/packet/to_send/lobby_list/req_lobbies';
@@ -29,6 +31,10 @@ export class WarServer {
 
     joinLobby(name: string) {
         new ClientPacketJoinLobby(name).dispatch();
+    }
+
+    reconnectToGame(token: string, callback: (status: ReconnectionStatus) => void) {
+        new ClientPacketReconnectToGame(token, callback).dispatch();
     }
 
     get connection() {

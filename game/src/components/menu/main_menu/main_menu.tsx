@@ -1,5 +1,5 @@
-import { Box, Button, ButtonGroup, Grid, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Button, ButtonGroup, CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PlayerNameBox from '../config/player_name_box/player_name_box';
 import { useGameSession } from '../../../hooks/use_game_session';
@@ -22,15 +22,52 @@ const MainMenu: React.FC = () => {
     const navigate = useNavigate();
     const { t } = useTranslation(['server_list', 'config', 'credits', 'common']);
 
+    const [reconnecting, setReconnecting] = useState(false);
+
     const reconnectToLastSession = async () => {
+        if (!gameInstance) return;
         if (!reconnectionInfo) return;
-        const success = await gameInstance?.state.reconnectToServer(reconnectionInfo);
+        setReconnecting(true);
+
+        const success = await gameInstance.state.reconnectToServer(reconnectionInfo);
         if (!success) {
+            setReconnecting(false);
             enqueueAlert({
                 title: t('common:failed_to_rejoin'),
                 content: t('common:error_failed_to_rejoin_socket'),
             });
         }
+
+        gameInstance.state.server?.reconnectToGame(reconnectionInfo.sessionToken, result => {
+            setReconnecting(false);
+            if (result.result === 'error') {
+                let reason = t('common:error_failed_to_rejoin_other');
+                switch (result.reason) {
+                    case 'invalid token':
+                        reason = t('common:error_failed_to_rejoin_game_token_invalid');
+                        break;
+                    case 'game does not exist':
+                        reason = t('common:error_failed_to_rejoin_game_doesnt_exist');
+                        break;
+                    case 'player wasnt in lobby':
+                        reason = t('common:error_failed_to_rejoin_player_wasnt_on_lobby');
+                        break;
+                    case 'player still playing':
+                        reason = t('common:error_failed_to_rejoin_still_playing');
+                        break;
+                    case 'game moved on':
+                        reason = t('common:error_failed_to_rejoin_moved_on');
+                        break;
+                }
+                navigate('/lobbies');
+                enqueueAlert({
+                    title: t('common:failed_to_rejoin'),
+                    content: reason,
+                });
+            } else {
+                navigate('/game');
+            }
+        });
     };
 
     const deleteLastSession = () => {
@@ -48,8 +85,12 @@ const MainMenu: React.FC = () => {
             <Stack spacing={2}>
                 <PlayerNameBox />
                 {reconnectionInfo && (
-                    <ButtonGroup variant='outlined' sx={{ display: 'flex' }}>
-                        <Button startIcon={<RestoreIcon />} sx={{ flex: '1' }} onClick={() => reconnectToLastSession()}>
+                    <ButtonGroup variant='outlined' sx={{ display: 'flex' }} disabled={reconnecting}>
+                        <Button
+                            startIcon={reconnecting ? <CircularProgress size='1em' color='inherit' /> : <RestoreIcon />}
+                            sx={{ flex: '1' }}
+                            onClick={() => reconnectToLastSession()}
+                        >
                             {t('common:reconnect')}
                         </Button>
                         <Button onClick={() => deleteLastSession()}>
