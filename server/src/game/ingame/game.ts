@@ -123,6 +123,10 @@ export class Game {
         this._log.trace(`Running initial territory selection`);
     }
 
+    isOwner(p: GamePlayer) {
+        return p === this._owner;
+    }
+
     /**
      * To be called AFTER the initial territory selection, when the game is actually ready to start.
      *
