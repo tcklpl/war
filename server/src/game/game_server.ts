@@ -4,6 +4,7 @@ import { PlayerManager } from './player/player_manager';
 import { LobbyManager } from './lobby/lobby_manager';
 import { Logger } from '../log/logger';
 import { GameManager } from './ingame/game_manager';
+import { PersistenceManager } from '../persistence/persistence_manager';
 
 export class GameServer {
     private _playerManager = new PlayerManager(this._log.createChildContext('Player Manager'));
@@ -14,6 +15,7 @@ export class GameServer {
     constructor(
         private _configManager: ConfigManager,
         private _cryptManager: CryptManager,
+        private _persistenceManager: PersistenceManager,
         private _log: Logger,
     ) {}
 
@@ -24,6 +26,7 @@ export class GameServer {
             this._configManager,
             this._cryptManager,
             this,
+            this._persistenceManager,
             this._log.createChildContext('Game Manager'),
         );
     }

@@ -2,6 +2,7 @@ import { ConfigManager } from '../../config/config_manager';
 import { CfgGame } from '../../config/default/cfg_game';
 import { CryptManager } from '../../crypt/crypt_manager';
 import { Logger } from '../../log/logger';
+import { PersistenceManager } from '../../persistence/persistence_manager';
 import { GameServer } from '../game_server';
 import { Lobby } from '../lobby/lobby';
 import { GamePlayer } from '../player/game_player';
@@ -15,6 +16,7 @@ export class GameManager {
         private _configManager: ConfigManager,
         private _cryptManager: CryptManager,
         private _gameServer: GameServer,
+        private _persistenceManager: PersistenceManager,
         private _log: Logger,
     ) {
         this._cfgGame = _configManager.getConfig(CfgGame);
@@ -39,7 +41,13 @@ export class GameManager {
      * @returns The created Game.
      */
     consummateLobbyIntoGame(lobby: Lobby, logger: Logger) {
-        const game = new Game(lobby, this._cryptManager, this._gameServer.playerManager, logger);
+        const game = new Game(
+            lobby,
+            this._cryptManager,
+            this._gameServer.playerManager,
+            this._persistenceManager.services.gameSave,
+            logger,
+        );
         this._gameServer.lobbyManager.dropLobby(lobby);
         this._games.push(game);
         return game;

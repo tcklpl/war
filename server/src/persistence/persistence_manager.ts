@@ -18,19 +18,21 @@ export class PersistenceManager {
     constructor(private _log: Logger) {}
 
     async initialize() {
-        this._log.info('Initializing DB');
+        this._log.info('Initializing');
+        this._log.trace('Initializing DB');
         this._dataSource = await ServerDataSource.initialize();
-        this._log.info('DB Initialized');
-        this._log.info('Initializing DAOs');
+        this._log.trace('DB Initialized');
+        this._log.trace('Initializing DAOs');
         this._dao = {
             gameSave: new GameSaveDao(this._dataSource),
         };
-        this._log.info('DAOs Initialized');
-        this._log.info('Initializing Services');
+        this._log.trace('DAOs Initialized');
+        this._log.trace('Initializing Services');
         this._services = {
             gameSave: new GameSaveService(this),
         };
-        this._log.info('Services Initialized');
+        this._log.trace('Services Initialized');
+        this._log.info('Initialized');
     }
 
     get dao() {
