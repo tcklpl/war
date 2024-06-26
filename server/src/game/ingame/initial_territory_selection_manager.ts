@@ -59,6 +59,8 @@ export class InitialTerritorySelectionManager {
     private _curPlayerIndex = 0;
     private _curSelectionTimeout?: NodeJS.Timeout;
     private _curAllowedTerritories: TerritoryCode[] = [];
+    private _finished = false;
+    private _paused = false;
 
     constructor(
         private _game: Game,
@@ -112,6 +114,12 @@ export class InitialTerritorySelectionManager {
             this._log.warn(`player ${player.username} is trying to pick a starting territory on another players turn`);
             return;
         }
+        if (this._paused) {
+            this._log.warn(
+                `player ${player.username} is trying to pick a starting territory while the selection is paused`,
+            );
+            return;
+        }
 
         clearTimeout(this._curSelectionTimeout);
         this._curSelectionTimeout = undefined;
@@ -141,6 +149,7 @@ export class InitialTerritorySelectionManager {
         // If it's the last player
         if (this._curPlayerIndex >= this._game.players.length - 1) {
             this._log.debug(`Territory selection has finished`);
+            this._finished = true;
             this.onSelectionFinished?.();
         } else {
             this._log.debug(`Selecting territory for next player`);
@@ -153,7 +162,42 @@ export class InitialTerritorySelectionManager {
         this.selectPlayerTerritory();
     }
 
+    pauseSelection() {
+        if (this._finished) {
+            this._log.trace('Trying to pause a territory selection that has already ended');
+            return;
+        }
+        if (this._paused) {
+            this._log.trace('Initial territory selection is already paused');
+            return;
+        }
+        this._paused = true;
+        clearTimeout(this._curSelectionTimeout);
+        this._curSelectionTimeout = undefined;
+    }
+
+    resumeSelection() {
+        if (this._finished) {
+            this._log.trace('Trying to resume a territory selection that has already ended');
+            return;
+        }
+        if (!this._paused) {
+            this._log.trace(`Trying to resume a territory selection that wasn't paused`);
+            return;
+        }
+        this._paused = false;
+        this.selectPlayerTerritory();
+    }
+
     private get currentPlayer() {
         return this._game.players[this._curPlayerIndex];
+    }
+
+    get hasFinished() {
+        return this._finished;
+    }
+
+    get isPaused() {
+        return this._paused;
     }
 }
