@@ -21,6 +21,7 @@ export class WarServer {
     private _gameServer = new GameServer(
         this._configManager,
         this._cryptManager,
+        this._persistenceManager,
         this._log.createChildContext('Game Server'),
     );
     private _expressServer = new ExpressServer(
@@ -45,6 +46,9 @@ export class WarServer {
         this._log.info(`Initializing server`);
 
         await this._configManager.loadConfig();
+        const logLvl = Logger.parseLogLevelFromString(this._configManager.getConfig(CfgServer).log_level);
+        Logger.setLogLevel(logLvl);
+
         await this._cryptManager.initialize();
         await this._persistenceManager.initialize();
 
@@ -54,9 +58,6 @@ export class WarServer {
 
         const loadTime = Date.now() - startTime;
         this._log.info(`Server started ${chalk.green('successfully')} in ${loadTime}ms`);
-
-        const logLvl = Logger.parseLogLevelFromString(this._configManager.getConfig(CfgServer).log_level);
-        Logger.setLogLevel(logLvl);
 
         this._commandProcessor.parseCommands();
     }
