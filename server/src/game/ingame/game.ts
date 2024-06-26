@@ -12,8 +12,14 @@ import { LobbyMovedOnError } from '../../exceptions/reconnection/lobby_moved_on_
 import { PlayerAlreadyInLobbyError } from '../../exceptions/reconnection/player_already_in_lobby_error';
 import { PlayerDoesntBelongOnLobbyError } from '../../exceptions/reconnection/player_doesnt_belong_on_lobby_error';
 import { Logger } from '../../log/logger';
+import { GameSaveService } from '../../persistence/service/game_save_service';
+import { SvPktGGamePaused } from '../../socket/packet/game/game_paused';
+import { SvPktGGameResumed } from '../../socket/packet/game/game_resumed';
 import { ServerPacketGameSessionConnectionToken } from '../../socket/packet/game/game_session_connection_token';
 import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
+import { SvPktGPlayerDisconnected } from '../../socket/packet/game/player_disconnected';
+import { SvPktGPlayerReconnected } from '../../socket/packet/game/player_reconnected';
+import { SvPktGPrematureGameEnd } from '../../socket/packet/game/premature_game_end';
 import { ServerPacketUpdateGameStage } from '../../socket/packet/game/update_game_stage';
 import { Board } from '../board/board';
 import { Lobby } from '../lobby/lobby';
@@ -42,6 +48,7 @@ export class Game {
         private _lobby: Lobby,
         private _cryptManager: CryptManager,
         private _playerManager: PlayerManager,
+        private _gameSaveService: GameSaveService,
         private _log: Logger,
     ) {
         if (_lobby.players.some(p => !p.party)) throw new LobbyNotReadyError();
@@ -88,6 +95,11 @@ export class Game {
         this.runInitialTerritorySelection();
     }
 
+    saveGame() {
+        this._log.debug(`Saving game ${this.id}`);
+        this._gameSaveService.save(this);
+    }
+
     reconnectPlayer(p: Player) {
         const previousConnection = this._players.find(lp => lp.username === p.username);
         if (!previousConnection) throw new PlayerDoesntBelongOnLobbyError();
@@ -99,6 +111,15 @@ export class Game {
         previousConnection.online = true;
 
         new ServerPacketInitialGameState(this.generateInitialGameStatePacket()).dispatch(p);
+        new SvPktGPlayerReconnected(previousConnection).dispatch(...this.players);
+
+        const allPlayersOnline = !this.players.find(x => !x.online);
+        if (allPlayersOnline) {
+            if (this.stage === 'selecting starting territory') {
+                this._initialTerritorySelectionManager.resumeSelection();
+            }
+            new SvPktGGameResumed().dispatch(...this.players);
+        }
 
         this._log.info(`${p.username} has rejoined the game ${this.id}`);
         return this.generateGameSessionConnectionTokenForPlayer(previousConnection);
@@ -108,7 +129,19 @@ export class Game {
         player.online = false;
         player.unregisterPacketListeners();
         this._log.info(`${player.username} has left the game ${this.id}`);
-        // TODO: leave game
+        this.saveGame();
+
+        if (this.isOwner(player)) {
+            new SvPktGPrematureGameEnd('owner left').dispatch(...this.players);
+            return;
+        }
+
+        new SvPktGGamePaused().dispatch(...this.players);
+        new SvPktGPlayerDisconnected(player).dispatch(...this.players);
+
+        if (this.stage === 'selecting starting territory') {
+            this._initialTerritorySelectionManager.pauseSelection();
+        }
     }
 
     /**
