@@ -4,6 +4,16 @@ War changelog, this file will be updated as the development continues.
 
 A lot of progress tracking was lost because I didn't think to do this sooner.
 
+## [Unreleased]
+
+### ✨ New
+
+- 🖥 Initial territory selection can now be paused and resumed.
+
+### 🔨 Fixed
+
+- 🖥 Fixed server logging only being configured after the initialization was complete.
+
 ## [0.1.0] - 2024-06-21
 
 ### ✨ New
