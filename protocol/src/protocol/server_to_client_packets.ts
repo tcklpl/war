@@ -7,6 +7,7 @@ import {
     GameStage,
     TerritoryCode,
     LobbyStage,
+    PrematureGameEndReason,
 } from './data';
 import { GameError } from './data/ingame/game_error';
 
@@ -59,5 +60,9 @@ export interface ServerToClientPackets {
     gGameError: (error: GameError) => void;
 
     gPlayerDisconnected: (player: string) => void;
-    gPlayerRejoined: (player: string, allPlayersOnline: boolean) => void;
+    gPlayerReconnected: (player: string, allPlayersOnline: boolean) => void;
+    gPrematureGameEnd: (reason: PrematureGameEndReason) => void;
+    gGameSaved: () => void;
+    gGamePaused: () => void;
+    gGameResumed: () => void;
 }
