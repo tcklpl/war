@@ -13,6 +13,7 @@ A lot of progress tracking was lost because I didn't think to do this sooner.
 ### 🔨 Fixed
 
 - 🖥 Fixed server logging only being configured after the initialization was complete.
+- 🔩 Fixed game dev server unnecessarily reloading the whole page.
 
 ## [0.1.0] - 2024-06-21
 
