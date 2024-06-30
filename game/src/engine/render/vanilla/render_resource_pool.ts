@@ -215,7 +215,7 @@ export class RenderResourcePool {
     free() {
         this.freeTextures();
         this._viewProjBuffer?.destroy();
-        this._shadowMapAtlas.free();
+        this._shadowMapAtlas?.free();
     }
 
     get hasTextures() {
