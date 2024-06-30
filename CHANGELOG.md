@@ -15,6 +15,11 @@ A lot of progress tracking was lost because I didn't think to do this sooner.
 - 🖥 Fixed server logging only being configured after the initialization was complete.
 - 🔩 Fixed game dev server unnecessarily reloading the whole page.
 
+### 🔧 Modified
+
+- 🎮🔩 Updated react to `18.3.1`.
+- 🎮🔩 Updated Material UI and Material Icons to `5.15.21`.
+
 ## [0.1.0] - 2024-06-21
 
 ### ✨ New
