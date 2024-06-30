@@ -3,13 +3,16 @@ import { BufferUtils } from '../../../utils/buffer_utils';
 import { GLTFBuffer } from './gltf_buffer';
 
 export class GLTFBufferView {
+    private readonly ARRAY_BUFFER = 34962;
+    private readonly ELEMENT_ARRAY_BUFFER = 34963;
+
     private _buffer: GLTFBuffer;
     private _length: number;
     private _offset: number;
     private _target?: number; // gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER or undefined
 
     constructor(buffer: GLTFBuffer, length: number, offset: number, target?: number) {
-        const validTargetTypes: number[] = [gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER];
+        const validTargetTypes: number[] = [this.ARRAY_BUFFER, this.ELEMENT_ARRAY_BUFFER];
         if (!!target && !validTargetTypes.includes(target)) {
             throw new BadGLTFFileError(`Invalid buffer view target type: ${target}`);
         }
@@ -44,9 +47,9 @@ export class GLTFBufferView {
         const slice = this.getSlicedBufferData();
         const bufferUsage = () => {
             switch (this._target) {
-                case gl.ARRAY_BUFFER:
+                case this.ARRAY_BUFFER:
                     return GPUBufferUsage.VERTEX;
-                case gl.ELEMENT_ARRAY_BUFFER:
+                case this.ELEMENT_ARRAY_BUFFER:
                     return GPUBufferUsage.INDEX;
                 default:
                     throw new TypeError(`Trying to build buffer for non-mesh buffer view`);
