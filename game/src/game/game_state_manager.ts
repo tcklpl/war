@@ -6,9 +6,14 @@ import { ServerList } from './server/server_list';
 import { WarServer } from './server/war_server';
 
 export class GameStateManager {
+    static readonly INSTANCE = new GameStateManager();
+
     private _serverList = new ServerList();
     private _currentServer?: WarServer;
     readonly reactState = new ReactStateSetters();
+
+    // No instantiation
+    private constructor() {}
 
     async initialize() {
         await this._serverList.initializeDB(game.engine.db);

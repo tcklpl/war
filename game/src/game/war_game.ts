@@ -6,7 +6,7 @@ import { GameLoader } from './loader/game_loader';
 export class WarGame {
     private _loader = new GameLoader();
     private _engine = new Engine();
-    private _state = new GameStateManager();
+    private _state = GameStateManager.INSTANCE;
 
     private _gameBoard!: GameBoard;
     private _toRunWhenReady: (() => void)[] = [];
@@ -34,7 +34,6 @@ export class WarGame {
     async kill() {
         // free all engine gpu memory
         await this._engine.free();
-        this._state.cleanup();
     }
 
     runWhenReady(runnable: () => void) {
