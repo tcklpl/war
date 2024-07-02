@@ -8,20 +8,21 @@ A lot of progress tracking was lost because I didn't think to do this sooner.
 
 ### ✨ New
 
-- 🖥 Initial territory selection can now be paused and resumed.
+- 🖥 Support for Initial territory selection to be paused and resumed.
 
 ### 🔨 Fixed
 
 - 🖥 Fixed server logging only being configured after the initialization was complete.
 - 🎮🔩 Fixed game dev server unnecessarily reloading the whole page.
 - 🎮 Fixed a couple of bugs that caused some errors when destructing the engine.
+- 🎮🔩 Game no longer loses connection to the server when the page is hot-reloaded.
 
 ### 🔧 Modified
 
 - 🎮🔩 Updated React to `18.3.1`.
 - 🎮🔩 Updated Material UI and Material Icons to `5.15.21`.
 - 🎮🔩 Updated Socket.io to `4.7.5`.
-- 🎮🔩 Asset loading no longer depends on an instance of WEbGL2 to get some constants.
+- 🎮🔩 Asset loading no longer depends on an instance of WebGL2 to get some constants.
 
 ## [0.1.1] - 2024-06-21
 
