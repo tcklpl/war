@@ -1,0 +1,33 @@
+@import "../../../../style/constants.scss";
+
+.pause-screen-outer {
+    width: 100vw;
+    height: 100vh;
+    z-index: $z-index-game-paused;
+    position: fixed;
+    backdrop-filter: grayscale(1) blur(10px);
+}
+
+.pause-screen-container {
+    height: 100%;
+}
+
+.pause-screen-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pause-screen-buttons {
+    margin: 1em;
+}
+
+.pause-screen-info {
+    height: 3em;
+    width: 50em;
+    margin: 1em;
+    text-align: center;
+}
