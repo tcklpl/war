@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import MainMenu from '../main_menu/main_menu';
 import ServerSelectScreen from '../server_select/server_select_screen';
-import CfgMenu from '../config/cfg_menu';
+import CfgMenu from '../config/menu/cfg_menu';
 import LobbySelectScreen from '../lobby_select/lobby_select_screen';
 import GameControlledRoute from './control/game_controlled_route';
 import LobbyScreen from '../lobby/lobby_screen';

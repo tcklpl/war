@@ -1,6 +1,6 @@
 import { Button, Grid, Stack } from '@mui/material';
 import React from 'react';
-import CfgScreen from './cfg_screen';
+import CfgScreen from '../screen/cfg_screen';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
