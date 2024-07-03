@@ -1,8 +1,25 @@
 # War Changelog
 
-War changelog, this file will be updated as the development continues.
+<!--
+    Changelog Sections:
+        Added       for new features.
+        Changed     for changes in existing functionality.
+        Deprecated  for soon-to-be removed features.
+        Removed     for now removed features.
+        Fixed       for any bug fixes.
+        Security    in case of vulnerabilities.
+-->
+
+War changelog, according to [Keep a Changelog](https://keepachangelog.com) and [Semantic Versioning](https://semver.org/). This file will be updated as the development continues.
 
 A lot of progress tracking was lost because I didn't think to do this sooner.
+
+Icons:
+
+- 🎮 Game-related.
+- 🖥 Server-related.
+- 🔩 Dev-related.
+- ⬆️ Package or dependency update.
 
 ## [Unreleased]
 
@@ -19,10 +36,17 @@ A lot of progress tracking was lost because I didn't think to do this sooner.
 
 ### 🔧 Modified
 
-- 🎮🔩 Updated React to `18.3.1`.
-- 🎮🔩 Updated Material UI and Material Icons to `5.15.21`.
-- 🎮🔩 Updated Socket.io to `4.7.5`.
 - 🎮🔩 Asset loading no longer depends on an instance of WebGL2 to get some constants.
+- 🎮🔩⬆️ Updated React to `18.3.1`.
+- 🎮🔩⬆️ Updated Material UI and Material Icons to `5.15.21`.
+- 🎮🔩⬆️ Updated Socket.io to `4.7.5`.
+- 🎮🔩⬆️ Updated Typescript to `5.5.3`.
+- 🎮🔩⬆️ Updated Jest and all its relations to `29.7.0`.
+- 🎮🔩⬆️ Updated Testing Library: Jest DOM to `6.4.6`.
+- 🎮🔩⬆️ Updated Testing Library: React to `16.0.0`.
+- 🎮🔩⬆️ Updated Testing Library: User Event to `14.5.2`.
+- 🎮🔩⬆️ Updated i18next to `22.5.1`.
+- 🎮🔩⬆️ Updated react-i18next to `12.3.1`.
 
 ## [0.1.1] - 2024-06-21
 
