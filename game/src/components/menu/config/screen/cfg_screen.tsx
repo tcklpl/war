@@ -2,15 +2,15 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { Alert, Box, Stack, ToggleButton, ToggleButtonGroup, useTheme } from '@mui/material';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import MonitorIcon from '@mui/icons-material/Monitor';
-import CfgDisplayScreen from '../config/display/cfg_display_screen';
-import './cfg_screen.scss';
+import CfgDisplayScreen from '../display/cfg_display_screen';
+import style from './cfg_screen.module.scss';
 import { useTranslation } from 'react-i18next';
-import CfgGraphicsScreen from './graphics/cfg_graphics_screen';
-import CfgGameScreen from './game/cfg_game_screen';
+import CfgGraphicsScreen from '../graphics/cfg_graphics_screen';
+import CfgGameScreen from '../game/cfg_game_screen';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import CfgScreenDefaultBackground from './cfg_default_background';
-import { useGame } from '../../../hooks/use_game';
-import { useConfig } from '../../../hooks/use_config';
+import CfgScreenDefaultBackground from '../default_background/cfg_default_background';
+import { useGame } from '../../../../hooks/use_game';
+import { useConfig } from '../../../../hooks/use_config';
 
 const CfgScreen: React.FC = () => {
     const { palette } = useTheme();
@@ -30,10 +30,10 @@ const CfgScreen: React.FC = () => {
     return (
         <Box
             style={{ backgroundColor: palette.background.default }}
-            className='cfg-screen'
+            className={style.screen}
             sx={{ flexDirection: 'column', display: 'flex' }}
         >
-            <Box className='cfg-screen-header'>
+            <Box className={style.header}>
                 <Stack spacing={2}>
                     <ToggleButtonGroup
                         color='primary'
