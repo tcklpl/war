@@ -1,12 +1,16 @@
-.lobby-select-screen {
+.screen {
     height: 100vh;
 }
 
-.lobby-card-icon {
+.topMenu {
+    margin-top: 1em;
+}
+
+.cardIcon {
     font-size: 1.1em !important;
     vertical-align: middle;
 }
 
-.lobby-card {
+.card {
     cursor: pointer;
 }
