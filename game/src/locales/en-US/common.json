@@ -12,6 +12,8 @@
     "max_hp": "Max HP",
     "max_hp_desc": "Unit maximum HP",
 
+    "disconnect": "Disconnect",
+    "disconnect_desc": "Are you sure you want to disconnect from the server?",
     "reconnect": "Reconnect to your last game",
     "delete_last_session": "Delete last session reconnection entry?",
     "delete_last_session_desc": "You'll not be able to reconnect to the same session again. Only delete if your rejoin token has expired or the session has ended.",
