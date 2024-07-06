@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { WarGame } from '../game/war_game';
 
-interface IGameContext {
+export interface IGameContext {
     gameInstance?: WarGame;
     setGameInstance(game: WarGame | undefined): void;
 }
