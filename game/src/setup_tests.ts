@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { useTranslation } from 'react-i18next';
 
 jest.mock('react-i18next');
