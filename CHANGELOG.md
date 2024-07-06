@@ -26,10 +26,13 @@ Icons:
 ### ✨ New
 
 - 🖥 Support for Initial territory selection to be paused and resumed.
+- 🎮 Reworked the lobby selection screen to look better.
+- 🎮🔩 Started implementing smoke-screen tests to UI components and menus.
 
 ### 🔨 Fixed
 
 - 🖥 Fixed server logging only being configured after the initialization was complete.
+- 🎮 Game browser-related components (like scroll bars) now properly follow the theme.
 - 🎮🔩 Fixed game dev server unnecessarily reloading the whole page.
 - 🎮 Fixed a couple of bugs that caused some errors when destructing the engine.
 - 🎮🔩 Game no longer loses connection to the server when the page is hot-reloaded.
