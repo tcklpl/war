@@ -15,6 +15,10 @@ export class ServerConnection {
         this._socket.emit(pkt.key, ...pkt.params);
     }
 
+    closeConnection() {
+        this._socket.disconnect();
+    }
+
     get address() {
         return this._address;
     }

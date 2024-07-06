@@ -23,8 +23,9 @@ export class GameStateManager {
         this._currentServer?.cleanup();
     }
 
-    setActiveServerConnection(target: ServerConnection) {
-        this._currentServer = new WarServer(target);
+    setActiveServerConnection(target: ServerConnection | undefined) {
+        if (target) this._currentServer = new WarServer(target);
+        else this._currentServer = undefined;
         this.reactState.useGameSession.setConnection(target);
     }
 
@@ -35,6 +36,11 @@ export class GameStateManager {
         if (!connection) return false;
         this.setActiveServerConnection(connection);
         return true;
+    }
+
+    disconnectFromCurrentServer() {
+        this._currentServer?.disconnect();
+        this.setActiveServerConnection(undefined);
     }
 
     get serverList() {

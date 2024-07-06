@@ -40,6 +40,10 @@ export class WarServer {
         new ClientPacketReconnectToGame(token, callback).dispatch();
     }
 
+    disconnect() {
+        this._connection.closeConnection();
+    }
+
     get connection() {
         return this._connection;
     }
