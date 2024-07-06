@@ -34,7 +34,7 @@ const WarGameComponent: React.FC = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
+            <CssBaseline enableColorScheme />
             <FailedToStartEngineScreen />
             <LoadingScreen />
             <MenuRouter />
