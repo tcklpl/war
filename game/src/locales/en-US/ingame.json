@@ -1,4 +1,20 @@
 {
     "turn": "Turn",
-    "round": "Round"
+    "round": "Round",
+
+    "paused": "The game was paused",
+    "pause_reason_disconnect": "A player has disconnected from the game",
+    "pause_reason_disconnect_desc_others": "The lobby owner will decide what to do",
+    "pause_reason_disconnect_desc_owner": "Please choose what to do, the game will remain paused until you make your choice",
+
+    "pause_action_keep_paused": "Keep Paused",
+    "pause_action_keep_paused_desc": "The game will be kept paused until the player reconnects",
+    "pause_action_save_and_exit": "Save and Exit",
+    "pause_action_save_and_exit_desc": "The game will be saved on the server and the room will be closed. You can choose this so that you can resume the game later on together with the player that has disconnected",
+    "pause_action_move_on": "Move on",
+    "pause_action_move_on_desc": "The disconnected player will be discarded and all their territories will become available. This action is irreversible",
+
+    "pause_action_confirm": "Confirm Action",
+    "pause_action_confirm_save": "The game will be saved under your name, you can choose to resume the game at a later point when the disconnected player is able to play again",
+    "pause_action_confirm_move_on": "The player will be discarded and will NOT be able to rejoin the game"
 }
