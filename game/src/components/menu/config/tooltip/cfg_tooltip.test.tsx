@@ -16,6 +16,6 @@ it('render with info', () => {
             }}
         />,
     );
-    expect(screen.getByText(title));
-    expect(screen.getByText(content));
+    expect(screen.getByText(title)).toBeInTheDocument();
+    expect(screen.getByText(content)).toBeInTheDocument();
 });
