@@ -22,6 +22,8 @@ import { PacketListener } from './packet_listener';
 import { Constructor } from '../../@types/utils';
 import { PLReconnectToGame } from './game/pl_reconnect_to_game';
 import { CryptManager } from '../../crypt/crypt_manager';
+import { PLGPause } from './game/pl_pause';
+import { PLGResume } from './game/pl_resume';
 
 export class ServerClientPacketListeners {
     private _routeData: SocketRouteData;
@@ -81,6 +83,9 @@ export class ServerClientPacketListeners {
         PLSelectStartingTerritory,
         PLGameAction,
         PLReconnectToGame,
+
+        PLGPause,
+        PLGResume,
     ];
 
     private _packetListeners: PacketListener[] = [];
