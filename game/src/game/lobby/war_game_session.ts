@@ -1,14 +1,17 @@
-import { InitialGameStatePacket } from '../../../../protocol';
+import { GamePauseReason, InitialGameStatePacket } from '../../../../protocol';
+import { ClientPacketGPause } from '../server/connection/packet/to_send/ingame/pause';
 import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';
+import { ClientPacketGResume } from '../server/connection/packet/to_send/ingame/resume';
 import { ReconnectionInfo } from '../server/connection/reconnection_info';
 
 export class WarGameSession {
-    private _currentTurnPlayerIndex = 0;
-
     private _ping = 0;
     private _pingTask = -1;
 
     private _token: string = '';
+
+    private _pauseReason?: GamePauseReason;
+    private _currentTurnPlayerIndex = 0;
 
     constructor(public readonly initialGameState: InitialGameStatePacket) {
         this.measurePing();
@@ -26,6 +29,26 @@ export class WarGameSession {
 
     cleanup() {
         window.clearTimeout(this._pingTask);
+    }
+
+    pauseGame() {
+        new ClientPacketGPause().dispatch();
+    }
+
+    resumeGame() {
+        new ClientPacketGResume().dispatch();
+    }
+
+    notifyGamePaused(reason: GamePauseReason) {
+        this._pauseReason = reason;
+        game.state.reactState.useGameSession.setGPauseReason(reason);
+        game.engine.pauseRender();
+    }
+
+    notifyGameResumed() {
+        this._pauseReason = undefined;
+        game.state.reactState.useGameSession.setGPauseReason(undefined);
+        game.engine.resumeRender();
     }
 
     get currentTurnPlayerIndex() {
@@ -47,6 +70,14 @@ export class WarGameSession {
 
     get token() {
         return this._token;
+    }
+
+    get isPaused() {
+        return !!this._pauseReason;
+    }
+
+    get pauseReason() {
+        return this._pauseReason;
     }
 
     set token(token: string) {

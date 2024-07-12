@@ -1,4 +1,5 @@
 import {
+    GamePauseReason,
     GameSessionConnectionInfo,
     GameStage,
     GameStatePlayerInfo,
@@ -35,6 +36,7 @@ export class Game {
     private readonly _players: GamePlayer[];
     private _owner!: GamePlayer;
     private _stage: GameStage = 'starting';
+    private _pauseReason?: GamePauseReason;
 
     // game managers
     readonly board = new Board(this._log.createChildContext('Board'));
@@ -100,6 +102,24 @@ export class Game {
         this._gameSaveService.save(this);
     }
 
+    private pauseGame(reason: GamePauseReason) {
+        this._pauseReason = reason;
+        new SvPktGGamePaused(reason).dispatch(...this.players);
+
+        if (this.stage === 'selecting starting territory') {
+            this._initialTerritorySelectionManager.pauseSelection();
+        }
+    }
+
+    private resumeGame() {
+        this._pauseReason = undefined;
+        if (this.stage === 'selecting starting territory') {
+            this._initialTerritorySelectionManager.resumeSelection();
+        }
+
+        new SvPktGGameResumed().dispatch(...this.players);
+    }
+
     reconnectPlayer(p: Player) {
         const previousConnection = this._players.find(lp => lp.username === p.username);
         if (!previousConnection) throw new PlayerDoesntBelongOnLobbyError();
@@ -115,10 +135,7 @@ export class Game {
 
         const allPlayersOnline = !this.players.find(x => !x.online);
         if (allPlayersOnline) {
-            if (this.stage === 'selecting starting territory') {
-                this._initialTerritorySelectionManager.resumeSelection();
-            }
-            new SvPktGGameResumed().dispatch(...this.players);
+            this.resumeGame();
         }
 
         this._log.info(`${p.username} has rejoined the game ${this.id}`);
@@ -136,12 +153,24 @@ export class Game {
             return;
         }
 
-        new SvPktGGamePaused().dispatch(...this.players);
         new SvPktGPlayerDisconnected(player).dispatch(...this.players);
+        this.pauseGame('player disconnected');
+    }
 
-        if (this.stage === 'selecting starting territory') {
-            this._initialTerritorySelectionManager.pauseSelection();
+    ownerPausedGame() {
+        this.pauseGame('owner paused');
+    }
+
+    ownerResumedGame() {
+        if (!this._pauseReason) {
+            this._log.warn(`Trying to manually resume a game that wasn't paused`);
+            return;
         }
+        if (this._pauseReason !== 'owner paused') {
+            this._log.warn(`Trying to manually resume a game that wasn't paused by the owner`);
+            return;
+        }
+        this.resumeGame();
     }
 
     /**
