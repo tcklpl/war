@@ -84,7 +84,8 @@
     "test": "node scripts/test.js",
     "lint": "eslint src",
     "format": "eslint src --fix",
-    "electron-build-windows": "electron-builder --windows nsis portable"
+    "electron-build-windows": "electron-builder --windows nsis portable",
+    "electron-build-linux": "electron-builder --linux AppImage"
   },
   "eslintConfig": {
     "extends": [
@@ -110,7 +111,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@webgpu/types": "^0.1.43",
-    "electron": "^30.0.1",
+    "electron": "31.2.0",
     "electron-builder": "^24.13.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

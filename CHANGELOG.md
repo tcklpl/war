@@ -52,6 +52,7 @@ Icons:
 - 🎮🔩⬆️ Updated Testing Library: User Event to `14.5.2`.
 - 🎮🔩⬆️ Updated i18next to `22.5.1`.
 - 🎮🔩⬆️ Updated react-i18next to `12.3.1`.
+- 🎮🔩⬆️ Updated electron to `31.2.0`.
 
 ## [0.1.1] - 2024-06-21
 
