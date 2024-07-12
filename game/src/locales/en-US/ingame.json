@@ -2,10 +2,14 @@
     "turn": "Turn",
     "round": "Round",
 
+    "pause": "Pause game",
     "paused": "The game was paused",
     "pause_reason_disconnect": "A player has disconnected from the game",
     "pause_reason_disconnect_desc_others": "The lobby owner will decide what to do",
     "pause_reason_disconnect_desc_owner": "Please choose what to do, the game will remain paused until you make your choice",
+    "pause_reason_owner": "The owner paused the game",
+    "pause_reason_owner_desc_others": "The game will be resumed when the lobby owner decides to do so",
+    "pause_reason_owner_desc_owner": "You can resume the game by pressing the button below",
 
     "pause_action_keep_paused": "Keep Paused",
     "pause_action_keep_paused_desc": "The game will be kept paused until the player reconnects",
@@ -16,5 +20,6 @@
 
     "pause_action_confirm": "Confirm Action",
     "pause_action_confirm_save": "The game will be saved under your name, you can choose to resume the game at a later point when the disconnected player is able to play again",
-    "pause_action_confirm_move_on": "The player will be discarded and will NOT be able to rejoin the game"
+    "pause_action_confirm_move_on": "The player will be discarded and will NOT be able to rejoin the game",
+    "pause_action_resume": "Resume game"
 }

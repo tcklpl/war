@@ -1,13 +1,21 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGameSession } from '../../../../../hooks/use_game_session';
 
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+
 interface HUDCommonTopInfoProps {}
 
 const HUDCommonTopInfo: FunctionComponent<HUDCommonTopInfoProps> = () => {
-    const { username, currentLobbyState } = useGameSession();
+    const { username, currentLobbyState, currentGameSession } = useGameSession();
     const { t } = useTranslation(['common']);
+    const isLobbyOwner =
+        currentGameSession?.initialGameState.players.find(p => p.name === username)?.is_lobby_owner ?? false;
+
+    const handlePauseGame = () => {
+        currentGameSession?.pauseGame();
+    };
 
     if (!currentLobbyState) return <></>;
     return (
@@ -19,7 +27,18 @@ const HUDCommonTopInfo: FunctionComponent<HUDCommonTopInfoProps> = () => {
                     </Typography>
                 </Box>
 
-                <Box width='25%' marginRight='1em' textAlign='right'></Box>
+                <Box width='25%' marginRight='1em' textAlign='right'>
+                    {isLobbyOwner && (
+                        <Button
+                            variant='outlined'
+                            startIcon={<HourglassEmptyIcon />}
+                            onClick={handlePauseGame}
+                            sx={{ pointerEvents: 'all' }}
+                        >
+                            {t('ingame:pause')}
+                        </Button>
+                    )}
+                </Box>
             </Box>
         </Box>
     );
