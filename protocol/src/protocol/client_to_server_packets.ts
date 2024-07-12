@@ -39,4 +39,8 @@ export interface ClientToServerPackets {
     gReconnectToGame: (token: string, result: (status: ReconnectionStatus) => void) => void;
     gSelectStartingTerritory: (code: TerritoryCode) => void;
     gGameAction: (action: TurnAction) => void;
+
+    // Admin Packets
+    gPause: () => void;
+    gResume: () => void;
 }
