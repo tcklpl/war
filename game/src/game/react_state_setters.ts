@@ -1,6 +1,6 @@
 import React from 'react';
 import { WarGame } from './war_game';
-import { LobbyListState, LobbyState } from '../../../protocol';
+import { GamePauseReason, LobbyListState, LobbyState } from '../../../protocol';
 import { WarGameLobby } from './lobby/war_game_lobby';
 import { LobbyChatMessage } from './lobby/lobby_chat';
 import { ServerConnection } from './server/connection/server_connection';
@@ -34,6 +34,7 @@ class ReactStateUseGameSession {
     // Game states
     setCurrentGameSession!: UndefinedDispatcher<WarGameSession>;
     setGTurnPlayerIndex!: Dispatcher<number>;
+    setGPauseReason!: UndefinedDispatcher<GamePauseReason>;
 
     updateForLobbyExit!: (reason: '' | 'kicked' | 'left' | undefined) => void;
 }

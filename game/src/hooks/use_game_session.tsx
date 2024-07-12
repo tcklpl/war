@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { useConfig } from './use_config';
 import { ServerConnection } from '../game/server/connection/server_connection';
 import { useGame } from './use_game';
-import { LobbyListState, LobbyState } from '../../../protocol';
+import { GamePauseReason, LobbyListState, LobbyState } from '../../../protocol';
 import { WarGameLobby } from '../game/lobby/war_game_lobby';
 import { LobbyChatMessage } from '../game/lobby/lobby_chat';
 import { useAlert } from './use_alert';
@@ -37,6 +37,8 @@ interface IGameSessionContext {
     // Game states
     currentGameSession?: WarGameSession;
     gTurnPlayerIndex: number;
+    gPauseReason?: GamePauseReason;
+    gIsPaused: boolean;
 }
 
 const GameSessionContext = createContext<IGameSessionContext>({} as IGameSessionContext);
@@ -63,6 +65,8 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     // game states
     const [currentGameSession, setCurrentGameSession] = useState<WarGameSession | undefined>();
     const [gTurnPlayerIndex, setGTurnPlayerIndex] = useState(0);
+    const [gPauseReason, setGPauseReason] = useState<GamePauseReason | undefined>();
+    const gIsPaused = !!gPauseReason;
 
     const updateForLobbyExit = useCallback(
         (reason: '' | 'kicked' | 'left' | undefined) => {
@@ -114,6 +118,10 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         saveGameSession();
     }, [saveGameSession]);
 
+    /**
+     * Pass react state setters to the non-component classes (plain ts files).
+     * I decided to do this as it's simpler than importing a whole ass state management library.
+     */
     useEffect(() => {
         if (!gameInstance) return;
         const s = gameInstance.state.reactState.useGameSession;
@@ -129,6 +137,7 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
 
         s.setCurrentGameSession = setCurrentGameSession;
         s.setGTurnPlayerIndex = setGTurnPlayerIndex;
+        s.setGPauseReason = setGPauseReason;
 
         s.updateForLobbyExit = updateForLobbyExit;
     }, [
@@ -145,6 +154,7 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         setGameStartingIn,
         setCurrentGameSession,
         setGTurnPlayerIndex,
+        setGPauseReason,
         updateForLobbyExit,
     ]);
 
@@ -166,6 +176,8 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
             gameStartingIn,
             currentGameSession,
             gTurnPlayerIndex,
+            gPauseReason,
+            gIsPaused,
         };
     }, [
         username,
@@ -184,6 +196,8 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         gameStartingIn,
         currentGameSession,
         gTurnPlayerIndex,
+        gPauseReason,
+        gIsPaused,
     ]);
 
     return <GameSessionContext.Provider value={gameSessionMemo}>{children}</GameSessionContext.Provider>;
