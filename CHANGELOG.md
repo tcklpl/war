@@ -39,7 +39,7 @@ Icons:
 - 🎮 Fixed a couple of bugs that caused some errors when destructing the engine.
 - 🎮🔩 Game no longer loses connection to the server when the page is hot-reloaded.
 
-### 🔧 Modified
+### 🔧 Changed
 
 - 🎮🔩 Asset loading no longer depends on an instance of WebGL2 to get some constants.
 - 🎮🔩⬆️ Updated React to `18.3.1`.
@@ -74,7 +74,7 @@ Icons:
 - 🎮🖥 Synchronized version across game, server and protocol.
 - 🖥 Fixed server crashing when two sockets try to connect with the same username.
 
-### 🔧 Modified
+### 🔧 Changed
 
 - 🖥 Reworked the server-side game handling logic to be better structured.
 - 🎮 Updated all game hooks to use `memo`s.
@@ -87,6 +87,6 @@ Icons:
 
 - 🔩 GitHub pages deploy.
 
-### 🔧 Modified
+### 🔧 Changed
 
 - 🔩 Improved the readme.
