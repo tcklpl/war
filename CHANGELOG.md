@@ -25,6 +25,8 @@ Icons:
 
 ### ✨ New
 
+- 🎮🖥 The game owner can now pause the game at any point.
+- 🎮🖥 The game will be automatically paused if any player leaves.
 - 🖥 Support for Initial territory selection to be paused and resumed.
 - 🎮 Reworked the lobby selection screen to look better.
 - 🎮🔩 Started implementing smoke-screen tests to UI components and menus.
