@@ -5,7 +5,9 @@
   "homepage": "./",
   "description": "War2 Game Client",
   "author": {
-    "name": "tcklpl"
+    "name": "tcklpl",
+    "email": "noemail@mail.com",
+    "url": "https://github.com/tcklpl"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
@@ -85,7 +87,8 @@
     "lint": "eslint src",
     "format": "eslint src --fix",
     "electron-build-windows": "electron-builder --windows nsis portable",
-    "electron-build-linux": "electron-builder --linux AppImage"
+    "electron-build-linux": "electron-builder --linux AppImage snap deb rpm freebsd",
+    "electron-build-mac": "electron-builder --mac mas pkg"
   },
   "eslintConfig": {
     "extends": [

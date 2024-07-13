@@ -106,12 +106,79 @@ jobs:
       - name: Sharing Executables
         uses: actions/upload-artifact@v4
         with:
-          name: game-dist
+          name: game-dist-win
           path: game/dist/*.exe
+
+  game-compile-linux:
+    name: Compile Linux Binaries
+    needs: [build-game]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+      - name: Installing Dependencies
+        working-directory: game
+        run: npm ci
+      - name: Download Game Pre-Compiled Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: game-bundle
+          path: "./game/build/"
+      - name: Build Linux Binaries
+        working-directory: game
+        run: npm run electron-build-linux
+      - name: Sharing Executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-dist-linux
+          path: game/dist/War2*
+
+  game-compile-mac:
+    name: Compile Mac Binaries
+    needs: [build-game]
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+      - name: Installing Dependencies
+        working-directory: game
+        run: npm ci
+      - name: Download Game Pre-Compiled Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: game-bundle
+          path: "./game/build/"
+      - name: Build Mac Binaries
+        working-directory: game
+        run: npm run electron-build-mac
+      - name: Sharing Executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-dist-mac
+          path: game/dist/War2*
 
   generate-release:
     name: Generate Release
-    needs: [build-server, game-compile-windows]
+    needs:
+      [build-server, game-compile-windows, game-compile-linux, game-compile-mac]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -131,10 +198,20 @@ jobs:
         with:
           name: server-dist
           path: "./binaries/"
-      - name: Download Game Binaries
+      - name: Download Game Windows Binaries
         uses: actions/download-artifact@v4
         with:
-          name: game-dist
+          name: game-dist-win
+          path: "./binaries/"
+      - name: Download Game Linux Binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: game-dist-linux
+          path: "./binaries/"
+      - name: Download Game Mac Binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: game-dist-mac
           path: "./binaries/"
       - name: Download Game Bundle
         uses: actions/download-artifact@v4
@@ -147,7 +224,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          name: In-Dev ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           draft: false
           body: ${{ steps.extract-release-notes.outputs.release_notes }}
           prerelease: true

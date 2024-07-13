@@ -30,6 +30,8 @@ Icons:
 - 🖥 Support for Initial territory selection to be paused and resumed.
 - 🎮 Reworked the lobby selection screen to look better.
 - 🎮🔩 Started implementing smoke-screen tests to UI components and menus.
+- 🎮🔩 New game compilation targets: `AppImage`, `snap`, `deb`, `rpm` and `freebsd` for linux and `mas` and `pkg` for macOS.
+- 🔩 GitHub workflow now also compiles for linux and mac.
 
 ### 🔨 Fixed
 
@@ -53,6 +55,7 @@ Icons:
 - 🎮🔩⬆️ Updated i18next to `22.5.1`.
 - 🎮🔩⬆️ Updated react-i18next to `12.3.1`.
 - 🎮🔩⬆️ Updated electron to `31.2.0`.
+- 🔩 Dev-build GitHub workflow now checkouts from master.
 
 ## [0.1.1] - 2024-06-21
 
