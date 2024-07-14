@@ -25,13 +25,14 @@ Icons:
 
 ### ✨ New
 
-- 🎮🖥 The game owner can now pause the game at any point.
+- 🎮🖥 The game owner can now **pause** the game at any point.
 - 🎮🖥 The game will be automatically paused if any player leaves.
 - 🖥 Support for Initial territory selection to be paused and resumed.
 - 🎮 Reworked the lobby selection screen to look better.
 - 🎮🔩 Started implementing smoke-screen tests to UI components and menus.
 - 🎮🔩 New game compilation targets: `AppImage`, `snap`, `deb`, `rpm` and `freebsd` for linux and `mas` and `pkg` for macOS.
 - 🔩 GitHub workflow now also compiles for linux and mac.
+- 🎮🖥 The game owner can now **save** the game at any point.
 
 ### 🔨 Fixed
 
@@ -56,6 +57,11 @@ Icons:
 - 🎮🔩⬆️ Updated react-i18next to `12.3.1`.
 - 🎮🔩⬆️ Updated electron to `31.2.0`.
 - 🔩 Dev-build GitHub workflow now checkouts from master.
+- 🔩 Renamed some variables to be more consistent throughout the project.
+
+### ❌ Removed
+
+- 🎮🔩 The game no longer has a global `gl` WebGL2 instance, as it was only used to get some constants during the asset loading and initialization.
 
 ## [0.1.1] - 2024-06-21
 
