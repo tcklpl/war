@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { IAlertInfo, useAlert } from '../../hooks/use_alert';
 
 const HUDAlert: React.FC = () => {
-    const [isOpen, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const [currentAlert, setCurrentAlert] = useState<IAlertInfo | undefined>();
     const { alertQueue, getAlert } = useAlert();
     const { t } = useTranslation(['common']);
@@ -24,7 +24,7 @@ const HUDAlert: React.FC = () => {
     };
 
     return (
-        <Dialog open={isOpen} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose}>
             <DialogTitle>{currentAlert?.title}</DialogTitle>
             <DialogContent>
                 <DialogContentText>{currentAlert?.content}</DialogContentText>
