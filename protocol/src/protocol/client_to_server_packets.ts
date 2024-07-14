@@ -41,6 +41,7 @@ export interface ClientToServerPackets {
     gGameAction: (action: TurnAction) => void;
 
     // Admin Packets
+    gSave: () => void;
     gPause: () => void;
     gResume: () => void;
 }
