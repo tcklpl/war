@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useGameSession } from '../../../../../hooks/use_game_session';
 
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface HUDCommonTopInfoProps {}
 
@@ -15,6 +16,10 @@ const HUDCommonTopInfo: FunctionComponent<HUDCommonTopInfoProps> = () => {
 
     const handlePauseGame = () => {
         currentGameSession?.pauseGame();
+    };
+
+    const handleSaveGame = () => {
+        currentGameSession?.saveGame();
     };
 
     if (!currentLobbyState) return <></>;
@@ -29,14 +34,24 @@ const HUDCommonTopInfo: FunctionComponent<HUDCommonTopInfoProps> = () => {
 
                 <Box width='25%' marginRight='1em' textAlign='right'>
                     {isLobbyOwner && (
-                        <Button
-                            variant='outlined'
-                            startIcon={<HourglassEmptyIcon />}
-                            onClick={handlePauseGame}
-                            sx={{ pointerEvents: 'all' }}
-                        >
-                            {t('ingame:pause')}
-                        </Button>
+                        <>
+                            <Button
+                                variant='outlined'
+                                startIcon={<SaveIcon />}
+                                onClick={handleSaveGame}
+                                sx={{ pointerEvents: 'all' }}
+                            >
+                                {t('ingame:save')}
+                            </Button>
+                            <Button
+                                variant='outlined'
+                                startIcon={<HourglassEmptyIcon />}
+                                onClick={handlePauseGame}
+                                sx={{ pointerEvents: 'all' }}
+                            >
+                                {t('ingame:pause')}
+                            </Button>
+                        </>
                     )}
                 </Box>
             </Box>

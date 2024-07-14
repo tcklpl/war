@@ -2,6 +2,7 @@
     "turn": "Turn",
     "round": "Round",
 
+    "save": "Save game",
     "pause": "Pause game",
     "paused": "The game was paused",
     "pause_reason_disconnect": "A player has disconnected from the game",

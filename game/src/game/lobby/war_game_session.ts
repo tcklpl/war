@@ -2,6 +2,7 @@ import { GamePauseReason, InitialGameStatePacket } from '../../../../protocol';
 import { ClientPacketGPause } from '../server/connection/packet/to_send/ingame/pause';
 import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';
 import { ClientPacketGResume } from '../server/connection/packet/to_send/ingame/resume';
+import { ClientPacketGSave } from '../server/connection/packet/to_send/ingame/save';
 import { ReconnectionInfo } from '../server/connection/reconnection_info';
 
 export class WarGameSession {
@@ -37,6 +38,10 @@ export class WarGameSession {
 
     resumeGame() {
         new ClientPacketGResume().dispatch();
+    }
+
+    saveGame() {
+        new ClientPacketGSave().dispatch();
     }
 
     notifyGamePaused(reason: GamePauseReason) {
