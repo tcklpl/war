@@ -16,6 +16,7 @@ import { Logger } from '../../log/logger';
 import { GameSaveService } from '../../persistence/service/game_save_service';
 import { SvPktGGamePaused } from '../../socket/packet/game/game_paused';
 import { SvPktGGameResumed } from '../../socket/packet/game/game_resumed';
+import { SvPktGGameSaved } from '../../socket/packet/game/game_saved';
 import { ServerPacketGameSessionConnectionToken } from '../../socket/packet/game/game_session_connection_token';
 import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
 import { SvPktGPlayerDisconnected } from '../../socket/packet/game/player_disconnected';
@@ -97,9 +98,10 @@ export class Game {
         this.runInitialTerritorySelection();
     }
 
-    saveGame() {
+    async saveGame() {
         this._log.debug(`Saving game ${this.id}`);
-        this._gameSaveService.save(this);
+        await this._gameSaveService.save(this);
+        new SvPktGGameSaved().dispatch(...this.players);
     }
 
     private pauseGame(reason: GamePauseReason) {
