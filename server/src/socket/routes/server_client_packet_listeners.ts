@@ -24,6 +24,7 @@ import { PLReconnectToGame } from './game/pl_reconnect_to_game';
 import { CryptManager } from '../../crypt/crypt_manager';
 import { PLGPause } from './game/pl_pause';
 import { PLGResume } from './game/pl_resume';
+import { PLGSave } from './game/pl_save';
 
 export class ServerClientPacketListeners {
     private _routeData: SocketRouteData;
@@ -86,6 +87,7 @@ export class ServerClientPacketListeners {
 
         PLGPause,
         PLGResume,
+        PLGSave,
     ];
 
     private _packetListeners: PacketListener[] = [];
