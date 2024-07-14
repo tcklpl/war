@@ -7,7 +7,7 @@ export class GameSave {
     @PrimaryColumn()
     id!: string;
 
-    @OneToMany(() => GamePlayerSave, player => player.game)
+    @OneToMany(() => GamePlayerSave, player => player.game, { cascade: true })
     players!: GamePlayerSave[];
 
     fromGame(game: Game) {
