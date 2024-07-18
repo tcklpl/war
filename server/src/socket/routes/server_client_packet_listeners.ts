@@ -25,6 +25,8 @@ import { CryptManager } from '../../crypt/crypt_manager';
 import { PLGPause } from './game/pl_pause';
 import { PLGResume } from './game/pl_resume';
 import { PLGSave } from './game/pl_save';
+import { PLGSaveAndQuit } from './game/pl_save_and_quit';
+import { PLGMoveOnGame } from './game/pl_move_on_game';
 
 export class ServerClientPacketListeners {
     private _routeData: SocketRouteData;
@@ -88,6 +90,8 @@ export class ServerClientPacketListeners {
         PLGPause,
         PLGResume,
         PLGSave,
+        PLGSaveAndQuit,
+        PLGMoveOnGame,
     ];
 
     private _packetListeners: PacketListener[] = [];
