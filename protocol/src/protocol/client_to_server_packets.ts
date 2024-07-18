@@ -44,4 +44,6 @@ export interface ClientToServerPackets {
     gSave: () => void;
     gPause: () => void;
     gResume: () => void;
+    gSaveAndQuit: () => void;
+    gMoveOn: () => void;
 }
