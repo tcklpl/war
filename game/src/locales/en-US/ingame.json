@@ -5,6 +5,7 @@
     "save": "Save game",
     "pause": "Pause game",
     "paused": "The game was paused",
+    "saved": "The game was saved",
     "pause_reason_disconnect": "A player has disconnected from the game",
     "pause_reason_disconnect_desc_others": "The lobby owner will decide what to do",
     "pause_reason_disconnect_desc_owner": "Please choose what to do, the game will remain paused until you make your choice",

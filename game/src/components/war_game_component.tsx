@@ -11,6 +11,7 @@ import { useConfig } from '../hooks/use_config';
 import themeDefaultDark from '../style/themes/default_dark';
 import { CssBaseline, Theme, ThemeProvider } from '@mui/material';
 import themeDefaultLight from '../style/themes/default_light';
+import { SnackbarProvider } from 'notistack';
 
 const WarGameComponent: React.FC = () => {
     const { displayConfig } = useConfig();
@@ -39,6 +40,8 @@ const WarGameComponent: React.FC = () => {
             <LoadingScreen />
             <MenuRouter />
             <EscMenu />
+
+            <SnackbarProvider />
             <HUDAlert />
             <HUDConfirmation />
             <HUDPerformance />
