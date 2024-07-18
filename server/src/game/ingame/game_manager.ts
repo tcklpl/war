@@ -31,6 +31,10 @@ export class GameManager {
         });
     }
 
+    getGameById(id: string) {
+        return this._games.find(g => g.id === id);
+    }
+
     /**
      * Consummates a Lobby into a Game.
      *
@@ -43,6 +47,7 @@ export class GameManager {
     consummateLobbyIntoGame(lobby: Lobby, logger: Logger) {
         const game = new Game(
             lobby,
+            this,
             this._cryptManager,
             this._gameServer.playerManager,
             this._persistenceManager.services.gameSave,
@@ -53,7 +58,12 @@ export class GameManager {
         return game;
     }
 
-    getGameById(id: string) {
-        return this._games.find(g => g.id === id);
+    /**
+     * Removes a game from the manager, meant to be called when a game room is closed.
+     *
+     * @param game The game to be removed.
+     */
+    removeGame(game: Game) {
+        this._games = this._games.filter(x => x !== game);
     }
 }

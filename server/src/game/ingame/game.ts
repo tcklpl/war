@@ -4,6 +4,7 @@ import {
     GameStage,
     GameStatePlayerInfo,
     InitialGameStatePacket,
+    PrematureGameEndReason,
     TerritoryCode,
     TurnAction,
 } from '../../../../protocol';
@@ -28,6 +29,7 @@ import { Lobby } from '../lobby/lobby';
 import { GamePlayer } from '../player/game_player';
 import { Player } from '../player/player';
 import { PlayerManager } from '../player/player_manager';
+import { GameManager } from './game_manager';
 import { InitialTerritorySelectionManager } from './initial_territory_selection_manager';
 import { TurnManager } from './turn_manager';
 
@@ -49,6 +51,7 @@ export class Game {
 
     constructor(
         private _lobby: Lobby,
+        private _gameManager: GameManager,
         private _cryptManager: CryptManager,
         private _playerManager: PlayerManager,
         private _gameSaveService: GameSaveService,
@@ -114,12 +117,55 @@ export class Game {
     }
 
     private resumeGame() {
+        if (!this._pauseReason) {
+            this._log.warn(`Trying to resume a game that isn't paused`);
+            return;
+        }
         this._pauseReason = undefined;
         if (this.stage === 'selecting starting territory') {
             this._initialTerritorySelectionManager.resumeSelection();
         }
 
         new SvPktGGameResumed().dispatch(...this.players);
+    }
+
+    /**
+     * Closes the room early and removes it from the game manager.
+     *
+     * ! This function is only meant to be called when an early end is needed.
+     * ! Does NOT save the game.
+     *
+     * @param reason Reason to close the room, defined in the protocol.
+     */
+    closeRoomEarly(reason: PrematureGameEndReason) {
+        // Clear territory selection timeouts if we're in this stage
+        if (this.stage === 'selecting starting territory') {
+            this._initialTerritorySelectionManager.pauseSelection();
+        }
+        new SvPktGPrematureGameEnd(reason).dispatch(...this.players);
+        this._gameManager.removeGame(this);
+    }
+
+    /**
+     * Marks all disconnected players as discarded and resumes the game.
+     */
+    moveOnGame() {
+        if (!this._pauseReason) {
+            this._log.warn(`Trying to move on game a game that isn't paused`);
+            return;
+        }
+        const disconnectedPlayers = this._players.filter(p => p.online && !p.discarded);
+        if (disconnectedPlayers.length === 0) {
+            this._log.warn(`Trying to move on lobby with no disconnected non-discarded players`);
+            return;
+        }
+        const remainingOnlinePlayers = this._players.filter(p => p.online);
+        if (remainingOnlinePlayers.length === 0) {
+            this._log.warn(`Trying to move on lobby that would end up having no online players`);
+            return;
+        }
+        disconnectedPlayers.forEach(p => (p.discarded = true));
+        this.resumeGame();
     }
 
     reconnectPlayer(p: Player) {
