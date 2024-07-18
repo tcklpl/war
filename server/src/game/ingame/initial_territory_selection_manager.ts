@@ -147,7 +147,7 @@ export class InitialTerritorySelectionManager {
         this.removeFromTerritoryPool(selected);
 
         // If it's the last player
-        if (this._curPlayerIndex >= this._game.players.length - 1) {
+        if (this._curPlayerIndex >= this.playersToSelect.length - 1) {
             this._log.debug(`Territory selection has finished`);
             this._finished = true;
             this.onSelectionFinished?.();
@@ -189,8 +189,12 @@ export class InitialTerritorySelectionManager {
         this.selectPlayerTerritory();
     }
 
+    private get playersToSelect() {
+        return this._game.players.filter(p => !p.discarded);
+    }
+
     private get currentPlayer() {
-        return this._game.players[this._curPlayerIndex];
+        return this.playersToSelect[this._curPlayerIndex];
     }
 
     get hasFinished() {
