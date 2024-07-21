@@ -58,14 +58,18 @@ const PauseScreen: FunctionComponent<PauseScreenProps> = () => {
                 enqueueConfirmation({
                     title: t('ingame:pause_action_confirm'),
                     description: t('ingame:pause_action_confirm_save'),
-                    onConfirm() {},
+                    onConfirm() {
+                        currentGameSession?.pauseActionSaveAndQuit();
+                    },
                 });
                 break;
             case 'move on':
                 enqueueConfirmation({
                     title: t('ingame:pause_action_confirm'),
                     description: t('ingame:pause_action_confirm_move_on'),
-                    onConfirm() {},
+                    onConfirm() {
+                        currentGameSession?.pauseActionMoveOn();
+                    },
                 });
                 break;
         }

@@ -1,8 +1,10 @@
 import { GamePauseReason, InitialGameStatePacket } from '../../../../protocol';
+import { ClientPacketGMoveOn } from '../server/connection/packet/to_send/ingame/move_on';
 import { ClientPacketGPause } from '../server/connection/packet/to_send/ingame/pause';
 import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';
 import { ClientPacketGResume } from '../server/connection/packet/to_send/ingame/resume';
 import { ClientPacketGSave } from '../server/connection/packet/to_send/ingame/save';
+import { ClientPacketGSaveAndQuit } from '../server/connection/packet/to_send/ingame/save_and_quit';
 import { ReconnectionInfo } from '../server/connection/reconnection_info';
 
 export class WarGameSession {
@@ -42,6 +44,14 @@ export class WarGameSession {
 
     saveGame() {
         new ClientPacketGSave().dispatch();
+    }
+
+    pauseActionSaveAndQuit() {
+        new ClientPacketGSaveAndQuit().dispatch();
+    }
+
+    pauseActionMoveOn() {
+        new ClientPacketGMoveOn().dispatch();
     }
 
     notifyGamePaused(reason: GamePauseReason) {
