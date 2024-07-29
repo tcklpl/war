@@ -38,7 +38,7 @@ const MenuRouter: React.FC = () => {
             <Route
                 path='/game'
                 element={
-                    <GameControlledRoute redirectPath='/lobbies'>
+                    <GameControlledRoute requiresActiveGameSession redirectPath='/lobbies'>
                         <GameHud />
                     </GameControlledRoute>
                 }
