@@ -10,5 +10,20 @@
     "hp": "HP",
     "hp_desc": "Unit starting HP",
     "max_hp": "Max HP",
-    "max_hp_desc": "Unit maximum HP"
+    "max_hp_desc": "Unit maximum HP",
+
+    "disconnect": "Disconnect",
+    "disconnect_desc": "Are you sure you want to disconnect from the server?",
+    "reconnect": "Reconnect to your last game",
+    "delete_last_session": "Delete last session reconnection entry?",
+    "delete_last_session_desc": "You'll not be able to reconnect to the same session again. Only delete if your rejoin token has expired or the session has ended.",
+    
+    "failed_to_rejoin": "Failed to Rejoin Game Session",
+    "error_failed_to_rejoin_socket": "Failed to reconnect to your last server, this can either be a connection error or your session has expired since you left the game.",
+    "error_failed_to_rejoin_game_token_invalid": "Failed to join the lobby: Your game session token is invalid or has expired.",
+    "error_failed_to_rejoin_game_doesnt_exist": "Failed to join the lobby: The lobby doesn't exist anymore, the owner may have closed it.",
+    "error_failed_to_rejoin_player_wasnt_on_lobby": "Failed to join the lobby: You weren't even on this lobby.",
+    "error_failed_to_rejoin_still_playing": "Failed to join the lobby: A player with this name is still online on this game.",
+    "error_failed_to_rejoin_moved_on": "Failed to join the lobby: The lobby owner decided to move on with the game without you, such is life man.",
+    "error_failed_to_rejoin_other": "Failed to join the lobby: Unknown reason."
 }

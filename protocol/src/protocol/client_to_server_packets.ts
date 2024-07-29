@@ -1,7 +1,7 @@
-import { GameParty, LobbyState, TerritoryCode, TurnAction } from "./data";
+import { GameParty, LobbyState, TerritoryCode, TurnAction } from './data';
+import { ReconnectionStatus } from './data/ingame/reconnection_status';
 
 export interface ClientToServerPackets {
-
     /*
         ----------------------------------------------------------
         Lobby List Packets
@@ -29,13 +29,21 @@ export interface ClientToServerPackets {
     kickPlayer: (player: string) => void;
     startGame: () => void;
     lCancelGameStart: () => void;
-    
+
     /*
         ----------------------------------------------------------
         Game Packets
         ----------------------------------------------------------
     */
     gPing: (pong: () => void) => void;
+    gReconnectToGame: (token: string, result: (status: ReconnectionStatus) => void) => void;
     gSelectStartingTerritory: (code: TerritoryCode) => void;
     gGameAction: (action: TurnAction) => void;
+
+    // Admin Packets
+    gSave: () => void;
+    gPause: () => void;
+    gResume: () => void;
+    gSaveAndQuit: () => void;
+    gMoveOn: () => void;
 }

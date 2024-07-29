@@ -10,18 +10,19 @@ import {
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import './server_select.scss';
-import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
 import { useGame } from '../../../hooks/use_game';
 import { URLUtils } from '../../../utils/url_utils';
 import { useTranslation } from 'react-i18next';
+import { ServerListEntry } from './server_list_entry';
+import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
 
 const ServerSelectAddServerScreen: React.FC<{
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    servers: ServerConnectionCandidate[];
-    setServers: React.Dispatch<React.SetStateAction<ServerConnectionCandidate[]>>;
-    serverBeingEdited: ServerConnectionCandidate | undefined;
-    setServerBeingEdited: React.Dispatch<React.SetStateAction<ServerConnectionCandidate | undefined>>;
+    servers: ServerListEntry[];
+    setServers: React.Dispatch<React.SetStateAction<ServerListEntry[]>>;
+    serverBeingEdited: ServerListEntry | undefined;
+    setServerBeingEdited: React.Dispatch<React.SetStateAction<ServerListEntry | undefined>>;
 }> = ({ open, setOpen, servers, setServers, serverBeingEdited, setServerBeingEdited }) => {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
@@ -38,8 +39,8 @@ const ServerSelectAddServerScreen: React.FC<{
         setAddressError('');
 
         if (serverBeingEdited) {
-            setName(serverBeingEdited.listInfo.localName);
-            setAddress(serverBeingEdited.listInfo.address);
+            setName(serverBeingEdited.info.localName);
+            setAddress(serverBeingEdited.info.address);
         }
     }, [open, serverBeingEdited]);
 
@@ -52,7 +53,13 @@ const ServerSelectAddServerScreen: React.FC<{
             (async () => {
                 const newServerInfo = await gameInstance.state.serverList.addServer(name, address);
                 await gameInstance.state.serverList.updateListPositions();
-                setServers([...servers, new ServerConnectionCandidate(newServerInfo)]);
+                setServers([
+                    ...servers,
+                    {
+                        info: newServerInfo,
+                        connectionCandidate: new ServerConnectionCandidate(newServerInfo.address),
+                    },
+                ]);
             })();
         },
         [gameInstance, servers, setServers],
@@ -69,9 +76,9 @@ const ServerSelectAddServerScreen: React.FC<{
                 return;
             }
             (async () => {
-                serverBeingEdited.listInfo.localName = name;
-                serverBeingEdited.listInfo.address = address;
-                await gameInstance.state.serverList.editServer(serverBeingEdited.listInfo);
+                serverBeingEdited.info.localName = name;
+                serverBeingEdited.info.address = address;
+                await gameInstance.state.serverList.editServer(serverBeingEdited.info);
                 await gameInstance.state.serverList.updateListPositions();
                 setServers([...servers]);
             })();
@@ -98,17 +105,17 @@ const ServerSelectAddServerScreen: React.FC<{
         const actualAddress = URLUtils.prepareServerURL(trimmedAddress);
 
         for (const sv of servers) {
-            if (sv.listInfo.localName === name && serverBeingEdited?.listInfo.id !== sv.listInfo.id) {
+            if (sv.info.localName === name && serverBeingEdited?.info.id !== sv.info.id) {
                 setNameError(t('server_list:add_server_error_name_already_exists'));
                 return;
             }
-            if (sv.listInfo.address === actualAddress && serverBeingEdited?.listInfo.id !== sv.listInfo.id) {
+            if (sv.info.address === actualAddress && serverBeingEdited?.info.id !== sv.info.id) {
                 setAddressError(t('server_list:add_server_error_address_already_exists'));
                 return;
             }
         }
 
-        if (!!serverBeingEdited) {
+        if (serverBeingEdited) {
             saveCurrentServer(trimmedName, actualAddress);
         } else {
             registerNewServer(trimmedName, actualAddress);

@@ -7,21 +7,17 @@ import { ClientPacketTransferLobbyOwnership } from '../server/connection/packet/
 import { ClientPacketDeselectParty } from '../server/connection/packet/to_send/lobby/common/deselect_current_party';
 import { ClientPacketLeaveLobby } from '../server/connection/packet/to_send/lobby/common/leave_lobby';
 import { ClientPacketSelectParty } from '../server/connection/packet/to_send/lobby/common/select_party';
-import { ListenableProperty } from '../server/listenable_property';
 import { LobbyChat } from './lobby_chat';
-import { WarGameSession } from './war_game_session';
 
 export class WarGameLobby {
-    private _state: ListenableProperty<LobbyState>;
+    private _state?: LobbyState;
     private _chat = new LobbyChat();
 
-    private readonly _gameStartCountdown = new ListenableProperty<number>();
+    private _gameStartCountdown = 0;
     private _taskGameStartCountdown?: number;
 
-    readonly gameSession = new ListenableProperty<WarGameSession>();
-
     constructor(state: LobbyState) {
-        this._state = new ListenableProperty(state);
+        this._state = state;
     }
 
     leave() {
@@ -31,7 +27,6 @@ export class WarGameLobby {
 
     cleanup() {
         this.cancelGameStartCountdown();
-        this.gameSession.value?.cleanup();
         this._chat.eraseHistory();
     }
 
@@ -66,11 +61,11 @@ export class WarGameLobby {
     setGameStartingCountdown(cd: number) {
         if (this._taskGameStartCountdown) this.cancelGameStartCountdown();
 
-        this._gameStartCountdown.value = cd;
+        this.gameStartCountdown = cd;
         const decrease = () => {
             this._taskGameStartCountdown = window.setTimeout(() => {
-                if (this._gameStartCountdown.value && this._gameStartCountdown.value > 0) {
-                    this._gameStartCountdown.value = this._gameStartCountdown.value - 1;
+                if (this.gameStartCountdown > 0) {
+                    this.gameStartCountdown = this.gameStartCountdown - 1;
                     decrease();
                 }
             }, 1000);
@@ -81,11 +76,16 @@ export class WarGameLobby {
 
     cancelGameStartCountdown() {
         clearTimeout(this._taskGameStartCountdown);
-        this._gameStartCountdown.value = undefined;
+        this._gameStartCountdown = 0;
     }
 
     get state() {
         return this._state;
+    }
+
+    set state(s: LobbyState | undefined) {
+        this._state = s;
+        game.state.reactState.useGameSession.setCurrentLobbyState(s);
     }
 
     get chat() {
@@ -94,5 +94,10 @@ export class WarGameLobby {
 
     get gameStartCountdown() {
         return this._gameStartCountdown;
+    }
+
+    private set gameStartCountdown(cd: number) {
+        this._gameStartCountdown = cd;
+        game.state.reactState.useGameSession.setGameStartingIn(cd);
     }
 }

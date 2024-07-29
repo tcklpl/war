@@ -1,11 +1,11 @@
 import { GameParty, TerritoryCode, TurnAllowedActionMoveTroops, TurnAllowedActions, TurnPhase } from "../../../../protocol";
-import { Player } from "../player/player";
+import { LobbyPlayer } from "../player/lobby_player";
 import { Territory } from "../territory/territory";
 import * as crypto from 'crypto';
 
 export abstract class Party {
 
-    player?: Player;
+    player?: LobbyPlayer;
     private _territories: Territory[] = [];
     availableTroops = 0;
     readonly turnPhaseSequence: TurnPhase[] = [ "troop positioning", "attack", "over" ]

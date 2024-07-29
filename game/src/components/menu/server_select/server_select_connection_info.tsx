@@ -2,12 +2,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import React, { useCallback } from 'react';
 import './server_select.scss';
 import { useTranslation } from 'react-i18next';
-import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
+import { ServerListEntry } from './server_list_entry';
 
 const ServerSelectConnectionInfo: React.FC<{
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    server?: ServerConnectionCandidate;
+    server?: ServerListEntry;
     title: string;
     serverConMessage: string;
     closeable: boolean;

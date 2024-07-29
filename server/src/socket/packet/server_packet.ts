@@ -1,11 +1,10 @@
-import { ServerToClientPackets } from "../../../../protocol";
-import { Player } from "../../game/player/player";
+import { ServerToClientPackets } from '../../../../protocol';
+import { Player } from '../../game/player/player';
 
 export type ServerPacketEventNames = keyof ServerToClientPackets;
 export type ServerPacketEventParams<Event extends ServerPacketEventNames> = Parameters<ServerToClientPackets[Event]>;
 
 export abstract class ServerPacket<E extends ServerPacketEventNames> {
-
     private _params: ServerPacketEventParams<E>;
 
     constructor(
@@ -28,5 +27,4 @@ export abstract class ServerPacket<E extends ServerPacketEventNames> {
     get params() {
         return this._params;
     }
-
 }

@@ -1,9 +1,8 @@
-import { Lobby } from "../../../game/lobby/lobby";
-import { ServerPacket } from "../server_packet";
+import { Lobby } from '../../../game/lobby/lobby';
+import { ServerPacket } from '../server_packet';
 
-export class ServerPacketUpdateLobbyState extends ServerPacket<"updateLobbyState"> {
-    
+export class ServerPacketUpdateLobbyState extends ServerPacket<'updateLobbyState'> {
     constructor(lobby: Lobby) {
-        super("updateLobbyState", lobby.asProtocolLobbyState);
+        super('updateLobbyState', lobby.asProtocolLobbyState);
     }
 }

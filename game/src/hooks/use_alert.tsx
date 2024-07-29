@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 interface IAlertContext {
     alertQueue: IAlertInfo[];
@@ -32,7 +32,15 @@ const AlertProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) =
         return first;
     }, [alertQueue]);
 
-    return <AlertContext.Provider value={{ alertQueue, enqueueAlert, getAlert }}>{children}</AlertContext.Provider>;
+    const alertMemo = useMemo<IAlertContext>(() => {
+        return {
+            alertQueue,
+            enqueueAlert,
+            getAlert,
+        };
+    }, [alertQueue, enqueueAlert, getAlert]);
+
+    return <AlertContext.Provider value={alertMemo}>{children}</AlertContext.Provider>;
 };
 
 function useAlert(): IAlertContext {

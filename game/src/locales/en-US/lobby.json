@@ -10,6 +10,9 @@
     "lobby_name": "Lobby name",
     "create_lobby_desc": "Create a game lobby. Input the name for the lobby and if it'll be joinable upon creation (you can change everything later).",
 
+    "no_lobbies": "No lobbies",
+    "no_lobbies_desc": "There are currently no lobbies on this server. You can create one through the button on the top-right corner.",
+
     "loading_lobby_data": "Loading lobby data...",
     "player_list": "Player List",
     "leave_lobby": "Leave lobby",

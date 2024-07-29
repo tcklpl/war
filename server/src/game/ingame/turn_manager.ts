@@ -1,16 +1,12 @@
-import { GameConfig, RoundState, TurnAction, TurnAllowedAction, TurnPhase } from "../../../../protocol";
-import { Logger } from "../../log/logger";
-import { ServerPacketGameError } from "../../socket/packet/game/game_error";
-import { ServerPacketTurnAllowedActions } from "../../socket/packet/game/turn_allowed_actions";
-import { ServerPacketUpdateRoundState } from "../../socket/packet/game/update_round_state";
-import { Board } from "../board/board";
-import { Party } from "../party/party";
-import { Player } from "../player/player";
-
-type PlayerWithParty = Player & {party: Party};
+import { GameConfig, RoundState, TurnAction, TurnAllowedAction, TurnPhase } from '../../../../protocol';
+import { Logger } from '../../log/logger';
+import { ServerPacketGameError } from '../../socket/packet/game/game_error';
+import { ServerPacketTurnAllowedActions } from '../../socket/packet/game/turn_allowed_actions';
+import { ServerPacketUpdateRoundState } from '../../socket/packet/game/update_round_state';
+import { Board } from '../board/board';
+import { GamePlayer } from '../player/game_player';
 
 export class TurnManager {
-
     /**
      * Round count, the round is a collection of all player turns.
      */
@@ -22,20 +18,20 @@ export class TurnManager {
     private _turn = 0;
     private _turnTimeoutTask?: NodeJS.Timeout;
 
-    private _turnPhase: TurnPhase = "over";
+    private _turnPhase: TurnPhase = 'over';
     private _turnAllowedActions: Map<string, TurnAllowedAction> = new Map();
 
     constructor(
-        private _players: PlayerWithParty[],
+        private _players: GamePlayer[],
         private _board: Board,
         private _gameConfig: GameConfig,
-        private _log: Logger
+        private _log: Logger,
     ) {}
 
     startFirstTurn() {
         this.sendPacketsForCurrentTurn();
     }
-    
+
     nextTurn() {
         // Update turn end for the current player
         this.currentTurnPlayer.party.onTurnEnd();
@@ -48,7 +44,7 @@ export class TurnManager {
         }
 
         this._turn = (this._turn + 1) % this._players.length;
-        
+
         this.sendPacketsForCurrentTurn();
     }
 
@@ -59,24 +55,24 @@ export class TurnManager {
         this._turnPhase = this.currentTurnPlayer.party.turnPhaseSequence[0];
         const allowedActions = this.currentTurnPlayer.party.calculateAllowedTurnActionsForPhase(this._turnPhase);
         new ServerPacketTurnAllowedActions(allowedActions).dispatch(this.currentTurnPlayer);
-        
+
         this._turnAllowedActions = new Map();
         allowedActions.allowed_actions.forEach(aa => this._turnAllowedActions.set(aa.id, aa));
     }
 
-    onTurnAction(player: Player, action: TurnAction) {
-
+    onTurnAction(player: GamePlayer, action: TurnAction) {
         if (!this._turnAllowedActions.has(action.allowed_action_id)) {
-            new ServerPacketGameError("invalid action").dispatch(player);
+            new ServerPacketGameError('invalid action').dispatch(player);
             return;
         }
+        // TODO: Process game action
     }
 
     private dispatchUpdateRoundState() {
         const state = {
             round: this._round,
             turn: this._turn,
-            timeout: this._gameConfig.turn_timeout_seconds
+            timeout: this._gameConfig.turn_timeout_seconds,
         } as RoundState;
         new ServerPacketUpdateRoundState(state).dispatch(...this._players);
     }
@@ -92,5 +88,4 @@ export class TurnManager {
     get turn() {
         return this._turn;
     }
-
 }

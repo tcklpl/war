@@ -1,6 +1,9 @@
 const path = require('path');
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { readFile } = require("fs/promises");
+const { readFile } = require('fs/promises');
+
+app.commandLine.appendArgument('enable-unsafe-webgpu');
+app.commandLine.appendArgument('enable-features=Vulkan');
 
 function createWindow() {
     // Create the browser window.
@@ -9,9 +12,9 @@ function createWindow() {
         height: 720,
         webPreferences: {
             nodeIntegration: true,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
         },
-        autoHideMenuBar: true
+        autoHideMenuBar: true,
     });
 
     // and load the index.html of the app.

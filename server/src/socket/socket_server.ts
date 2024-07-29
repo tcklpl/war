@@ -3,10 +3,12 @@ import { ConfigManager } from '../config/config_manager';
 import { CfgServer } from '../config/default/cfg_server';
 import { CryptManager } from '../crypt/crypt_manager';
 import { GameServer } from '../game/game_server';
-import { Player } from '../game/player/player';
+import { LobbyPlayer } from '../game/player/lobby_player';
 import { GameSocketServer } from '../@types/server_socket';
-import { registerPacketListeners } from './routes/packet_listeners';
 import { Logger } from '../log/logger';
+import { PlayerConnection } from '../game/player/player_connection';
+import { ServerClientPacketListeners } from './routes/server_client_packet_listeners';
+import { AuthTokenBody } from '../../../protocol';
 
 export class SocketServer {
     constructor(
@@ -42,23 +44,27 @@ export class SocketServer {
 
         this._io.on('connection', socket => {
             const token: string = socket.handshake.auth.token;
-            const authTokenBody = this._cryptManager.extractPayload(token);
-            const player = new Player(authTokenBody, socket);
-            this._gameServer.playerManager.loginPlayer(player);
+            const authTokenBody = this._cryptManager.extractPayload<AuthTokenBody>(token);
+            const player = new LobbyPlayer(authTokenBody.username, new PlayerConnection(socket));
+            try {
+                this._gameServer.playerManager.loginPlayer(player);
+            } catch (e) {
+                socket.disconnect();
+                return;
+            }
 
             // register all socket routes
-            registerPacketListeners(
-                {
-                    socket,
-                    player,
-                    gameServer: this._gameServer,
-                    configManager: this._configManager,
-                },
+            const packetListeners = new ServerClientPacketListeners(
+                player,
+                this._gameServer,
+                this._configManager,
+                this._cryptManager,
                 this._log.createChildContext('Listeners'),
             );
+            player.packetListeners = packetListeners;
 
             socket.on('disconnect', () => {
-                this._gameServer.playerManager.logoffPlayer(player);
+                this._gameServer.playerManager.logoffPlayer(authTokenBody.username);
             });
         });
     }

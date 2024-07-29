@@ -90,6 +90,7 @@ export class ConfigManager {
         this.assertConfigFolder();
         this.assertConfigFiles();
         this.assertConfigCompletion();
+        this._log.info(`Configs loaded`);
     }
 
     getConfig<T extends Config>(type: new () => T): T {

@@ -7,7 +7,7 @@ import { useGameSession } from '../../../../hooks/use_game_session';
 const PlayerNameBox: React.FC = () => {
     const { username, setUsername, saveGameSession } = useGameSession();
 
-    const [isEditing, setEditing] = useState(false);
+    const [editing, setEditing] = useState(false);
     const inputRef = useRef<HTMLInputElement>();
 
     const edit = useCallback(() => {
@@ -32,13 +32,13 @@ const PlayerNameBox: React.FC = () => {
             <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder='Name'
-                disabled={!isEditing}
+                disabled={!editing}
                 ref={inputRef}
                 value={username}
                 onChange={e => setUsername(e.currentTarget.value)}
             />
             <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
-            <IconButton color='primary' sx={{ p: '10px' }} onClick={() => (isEditing ? save : edit)()}>
+            <IconButton color='primary' sx={{ p: '10px' }} onClick={() => (editing ? save : edit)()}>
                 <EditIcon />
             </IconButton>
         </Paper>

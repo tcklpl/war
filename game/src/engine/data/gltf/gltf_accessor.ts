@@ -3,6 +3,9 @@ import { BadGLTFFileError } from '../../../errors/engine/gltf/bad_gltf_file';
 import { GLTFBufferView } from './gltf_buffer_view';
 
 export class GLTFAccessor {
+    private readonly FLOAT = 5126;
+    private readonly UNSIGNED_SHORT = 5123;
+
     private _bufferView: GLTFBufferView;
     private _componentType: number; // gl.FLOAT or gl.UNSIGNED_SHORT
     private _count: number;
@@ -19,7 +22,7 @@ export class GLTFAccessor {
         min?: number | number[],
         max?: number | number[],
     ) {
-        const validComponentTypes: number[] = [gl.FLOAT, gl.UNSIGNED_SHORT];
+        const validComponentTypes: number[] = [this.FLOAT, this.UNSIGNED_SHORT];
         if (!validComponentTypes.includes(componentType)) {
             throw new BadGLTFFileError(
                 `Invalid accessor component type: ${componentType}, expecting one of [${validComponentTypes.join(', ')}]`,

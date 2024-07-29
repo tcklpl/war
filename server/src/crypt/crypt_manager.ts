@@ -4,9 +4,9 @@ import * as jwt from 'jsonwebtoken';
 import { ConfigManager } from '../config/config_manager';
 import { CfgCrypt } from '../config/default/cfg_crypt';
 import { CryptoUtils } from '../utils/crypto_utils';
-import { AuthTokenBody } from '../../../protocol';
 import { CfgServer } from '../config/default/cfg_server';
 import { Logger } from '../log/logger';
+import { TokenBody } from '../../../protocol/src/auth/token_body';
 
 export class CryptManager {
     constructor(
@@ -67,7 +67,7 @@ export class CryptManager {
         this.validateAlgo();
     }
 
-    signTokenBody(tokenBody: AuthTokenBody) {
+    signTokenBody(tokenBody: TokenBody) {
         return jwt.sign(tokenBody, this._privateKey, {
             algorithm: this._algo,
             expiresIn: this._signExpiration,
@@ -82,8 +82,8 @@ export class CryptManager {
         }
     }
 
-    extractPayload(token: string) {
-        return jwt.decode(token) as AuthTokenBody;
+    extractPayload<T extends TokenBody>(token: string) {
+        return jwt.decode(token) as T;
     }
 
     get publicKey() {

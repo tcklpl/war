@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, Typography, useTheme } from '@mui/materi
 import SixtyFpsSelectIcon from '@mui/icons-material/SixtyFpsSelect';
 import NetworkPingIcon from '@mui/icons-material/NetworkPing';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import './debug_huds.scss';
+import style from './debug_huds.module.scss';
 import { HUDPerformanceColor } from './hud_performance_colors';
 import { LineChart, Line, YAxis, ReferenceLine } from 'recharts';
 import { useConfig } from '../../../../hooks/use_config';
@@ -35,8 +35,8 @@ const HUDPerformance: React.FC = () => {
                 setFps(Time.FPS);
                 if (display.showPerformanceCharts) setFpsHistory([...fpsHistory, Time.FPS]);
 
-                setPing(currentGameSession.ping.value ?? 0);
-                if (display.showPerformanceCharts) setPingHistory([...pingHistory, currentGameSession.ping.value ?? 0]);
+                setPing(currentGameSession.ping ?? 0);
+                if (display.showPerformanceCharts) setPingHistory([...pingHistory, currentGameSession.ping ?? 0]);
             },
         });
     }, [gameInstance, fpsHistory, pingHistory, currentGameSession, display.showPerformanceCharts]);
@@ -65,7 +65,7 @@ const HUDPerformance: React.FC = () => {
     }, [fps, fpsHistory, ping, pingHistory, palette, display.showPerformanceCharts]);
 
     return !!gameInstance && !!currentGameSession && display.showPerformance ? (
-        <Card className='hud-debug-performance'>
+        <Card className={style.hud}>
             <CardHeader title='Performance' avatar={<AnalyticsIcon />} />
             <CardContent>
                 <Typography color={fpsColor}>

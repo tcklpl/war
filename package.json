@@ -1,0 +1,12 @@
+{
+  "name": "war",
+  "version": "0.1.0",
+  "description": "War",
+  "author": "tcklpl",
+  "license": "GPL-3.0-or-later",
+  "workspaces": [
+    "./game",
+    "./protocol",
+    "./server"
+  ]
+}
