@@ -30,7 +30,7 @@ Icons:
 - 🖥 Support for Initial territory selection to be paused and resumed.
 - 🎮 Reworked the lobby selection screen to look better.
 - 🎮🔩 Started implementing smoke-screen tests to UI components and menus.
-- 🎮🔩 New game compilation targets: `AppImage`, `snap`, `deb`, `rpm` and `freebsd` for linux and `mas` and `pkg` for macOS.
+- 🎮🔩 New game compilation targets: `AppImage` and `snap` for linux and `mas` for macOS.
 - 🔩 GitHub workflow now also compiles for linux and mac.
 - 🎮🖥 The game owner can now **save** the game at any point.
 
