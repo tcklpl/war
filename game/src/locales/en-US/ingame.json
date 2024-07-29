@@ -6,6 +6,8 @@
     "pause": "Pause game",
     "paused": "The game was paused",
     "saved": "The game was saved",
+    "room_closed": "The room was closed",
+    "room_closed_desc": "The owner closed the room",
     "pause_reason_disconnect": "A player has disconnected from the game",
     "pause_reason_disconnect_desc_others": "The lobby owner will decide what to do",
     "pause_reason_disconnect_desc_owner": "Please choose what to do, the game will remain paused until you make your choice",
