@@ -87,9 +87,9 @@
     "test": "node scripts/test.js",
     "lint": "eslint src",
     "format": "eslint src --fix",
-    "electron-build-windows": "electron-builder --windows nsis portable",
-    "electron-build-linux": "electron-builder --linux AppImage snap",
-    "electron-build-mac": "electron-builder -c.mac.identity=null --mac mas"
+    "electron-build-windows": "electron-builder --windows nsis portable zip",
+    "electron-build-linux": "electron-builder --linux AppImage zip",
+    "electron-build-mac": "electron-builder -c.mac.identity=null --mac mas zip"
   },
   "eslintConfig": {
     "extends": [
