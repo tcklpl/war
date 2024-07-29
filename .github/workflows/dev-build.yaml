@@ -133,6 +133,8 @@ jobs:
         with:
           name: game-bundle
           path: "./game/build/"
+      - name: Install Snapcraft
+        uses: samuelmeuli/action-snapcraft@v2
       - name: Build Linux Binaries
         working-directory: game
         run: npm run electron-build-linux
