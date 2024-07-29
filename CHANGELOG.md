@@ -21,7 +21,7 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
-## [Unreleased]
+## [0.2.0] - 2024-07-29
 
 ### ✨ New
 
@@ -41,6 +41,7 @@ Icons:
 - 🎮🔩 Fixed game dev server unnecessarily reloading the whole page.
 - 🎮 Fixed a couple of bugs that caused some errors when destructing the engine.
 - 🎮🔩 Game no longer loses connection to the server when the page is hot-reloaded.
+- 🎮 Game now properly returns to lobby list when the game context is lost/invalidated.
 
 ### 🔧 Changed
 
