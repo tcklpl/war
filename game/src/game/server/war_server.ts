@@ -9,11 +9,13 @@ import { ClientPacketJoinLobby } from './connection/packet/to_send/lobby_list/jo
 import { ClientPacketRequireLobbies } from './connection/packet/to_send/lobby_list/req_lobbies';
 import { ServerConnection } from './connection/server_connection';
 
+export type LobbyExitReason = 'left' | 'kicked' | 'room closed' | '';
+
 export class WarServer {
     private _lobbies?: LobbyListState;
     private _currentLobby?: WarGameLobby;
     private _currentGameSession?: WarGameSession;
-    private _lastLobbyExitReason: 'left' | 'kicked' | '' = '';
+    private _lastLobbyExitReason: LobbyExitReason = '';
 
     constructor(private _connection: ServerConnection) {
         registerPacketListeners(_connection.socket, this);
@@ -79,7 +81,7 @@ export class WarServer {
         return this._lastLobbyExitReason;
     }
 
-    set lastLobbyExitReason(reason: 'left' | 'kicked' | '') {
+    set lastLobbyExitReason(reason: LobbyExitReason) {
         this._lastLobbyExitReason = reason;
         game.state.reactState.useGameSession.updateForLobbyExit(reason);
     }

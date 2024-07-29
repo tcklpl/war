@@ -6,6 +6,7 @@ import { LobbyChatMessage } from './lobby/lobby_chat';
 import { ServerConnection } from './server/connection/server_connection';
 import { WarGameSession } from './lobby/war_game_session';
 import { ReconnectionInfo } from './server/connection/reconnection_info';
+import { LobbyExitReason } from './server/war_server';
 
 type Dispatcher<T> = React.Dispatch<React.SetStateAction<T>>;
 type UndefinedDispatcher<T> = React.Dispatch<React.SetStateAction<T | undefined>>;
@@ -36,5 +37,5 @@ class ReactStateUseGameSession {
     setGTurnPlayerIndex!: Dispatcher<number>;
     setGPauseReason!: UndefinedDispatcher<GamePauseReason>;
 
-    updateForLobbyExit!: (reason: '' | 'kicked' | 'left' | undefined) => void;
+    updateForLobbyExit!: (reason: LobbyExitReason | undefined) => void;
 }

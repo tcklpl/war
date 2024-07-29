@@ -9,6 +9,7 @@ import { useAlert } from './use_alert';
 import { useTranslation } from 'react-i18next';
 import { WarGameSession } from '../game/lobby/war_game_session';
 import { ReconnectionInfo } from '../game/server/connection/reconnection_info';
+import { LobbyExitReason } from '../game/server/war_server';
 
 interface IGameSessionContext {
     // Server states
@@ -69,14 +70,25 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
     const gIsPaused = !!gPauseReason;
 
     const updateForLobbyExit = useCallback(
-        (reason: '' | 'kicked' | 'left' | undefined) => {
+        (reason?: LobbyExitReason) => {
             if (!gameInstance) return;
             if (!gameInstance.state.server) return;
-            if (reason === '') return;
-            if (reason === 'kicked') {
-                enqueueAlert({
-                    content: t('lobby:kicked'),
-                });
+            switch (reason) {
+                case '':
+                    return;
+                case 'left':
+                    break;
+                case 'kicked':
+                    enqueueAlert({
+                        content: t('lobby:kicked'),
+                    });
+                    break;
+                case 'room closed':
+                    enqueueAlert({
+                        title: t('ingame:room_closed'),
+                        content: t('ingame:room_closed_desc'),
+                    });
+                    break;
             }
             gameInstance.state.server.lastLobbyExitReason = '';
         },
