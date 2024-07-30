@@ -1,0 +1,51 @@
+name: Build Server
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      node-version:
+        required: true
+        type: string
+
+jobs:
+  build-server:
+    name: Build Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - name: Use Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+      - name: Get Version
+        id: version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: server
+      - name: Installing Dependencies
+        working-directory: server
+        run: npm ci
+      - name: Verify Lint
+        working-directory: server
+        run: npm run lint
+      - name: Build Server
+        working-directory: server
+        run: npm run build
+      - name: Pack Server Executables
+        working-directory: server
+        run: npm run pack
+      - name: Rename Executables
+        working-directory: server/dist
+        run: for file in *; do mv "$file" $(echo "$file" | sed -E "s/war2-server-(.+)/War2-Server-${{ steps.version.outputs.current-version }}-\1/"); done
+      - name: Sharing Executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-dist
+          path: server/dist

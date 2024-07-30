@@ -1,0 +1,81 @@
+name: Create Release
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      prerelease:
+        required: true
+        type: boolean
+      unreleased-changelog:
+        required: false
+        type: boolean
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - name: Download Server Binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: server-dist
+          path: "./binaries/"
+      - name: Download Game Windows Binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: game-dist-win
+          path: "./binaries/"
+      - name: Download Game Linux Binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: game-dist-linux
+          path: "./binaries/"
+      - name: Download Game Mac Binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: game-dist-mac
+          path: "./binaries/"
+      - name: Download Game Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: game-bundle
+          path: "./game-bundle/"
+      - name: Extract Release Notes
+        uses: ffurrer2/extract-release-notes@v2.2.0
+        id: extract-release-notes
+        with:
+          prerelease: ${{ inputs.unreleased-changelog }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          draft: false
+          body: ${{ steps.extract-release-notes.outputs.release_notes }}
+          prerelease: ${{ inputs.prerelease }}
+          tag_name: ${{ github.ref_name }}
+          files: ./binaries/*
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Build to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./game-bundle/"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
