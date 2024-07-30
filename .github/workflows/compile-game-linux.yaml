@@ -1,0 +1,44 @@
+name: Compile Game - Linux
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      node-version:
+        required: true
+        type: string
+
+jobs:
+  game-compile-linux:
+    name: Compile Linux Binaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+      - name: Use Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+      - name: Installing Dependencies
+        working-directory: game
+        run: npm ci
+      - name: Download Game Pre-Compiled Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: game-bundle
+          path: "./game/build/"
+      - name: Install Snapcraft
+        uses: samuelmeuli/action-snapcraft@v2
+      - name: Build Linux Binaries
+        working-directory: game
+        run: npm run electron-build-linux
+      - name: Sharing Executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-dist-linux
+          path: game/dist/War2*

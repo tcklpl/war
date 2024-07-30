@@ -1,0 +1,21 @@
+name: Dev Build for Closed Versions
+on:
+  push:
+    tags:
+      - v0.[0-9]+.[0-9]+ # Will trigger on all zero-leading closed tags, eg. v0.9.0 or v0.87.12, not triggering on open tags like v1.0.0 or v1.0.0-rc1
+    tags-ignore:
+      - v0.[0-9]+.[0-9]+-*
+
+jobs:
+  build-project:
+    uses: ./.github/workflows/dispatch-build.yaml
+    with:
+      branch: master
+      node-version: 22.x
+
+  create-release:
+    uses: ./.github/workflows/create-release.yaml
+    needs: [build-project]
+    with:
+      branch: master
+      prerelease: true
