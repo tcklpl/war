@@ -4,10 +4,10 @@
   "description": "War2 Game Server",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/start.mjs",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "build": "tsc --build && copyfiles -u 1 src/**/*.json5 build",
     "pack": "npx pkg --compress GZip ."
   },
   "author": "tcklpl",
@@ -22,12 +22,14 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
+    "fs-jetpack": "^5.1.0",
     "globals": "^15.6.0",
     "husky": "^9.0.11",
     "nodemon": "^3.1.4",
     "pkg": "^5.8.1",
     "prettier": "^3.3.2",
     "regenerator-runtime": "^0.14.1",
+    "replace-in-file": "^8.1.0",
     "ts-node": "^10.9.2",
     "typescript-eslint": "^7.14.1"
   },

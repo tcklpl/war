@@ -21,6 +21,16 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
+## [Unreleased]
+
+### ✨ New
+
+- 🔩 Wrote build and dev scripts for the server.
+
+### 🔨 Fixed
+
+- 🖥 Server now properly shows the current version on the banner.
+
 ## [0.2.0] - 2024-07-29
 
 ### ✨ New
