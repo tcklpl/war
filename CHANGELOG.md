@@ -26,6 +26,7 @@ Icons:
 ### ✨ New
 
 - 🔩 Wrote build and dev scripts for the server.
+- 🎮🔩 Animation builder through `AnimationBuilder`.
 
 ### 🔨 Fixed
 
