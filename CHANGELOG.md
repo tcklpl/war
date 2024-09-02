@@ -30,6 +30,11 @@ Icons:
 ### 🔨 Fixed
 
 - 🖥 Server now properly shows the current version on the banner.
+- 🖥🔩 Server now also validates if it can find the config defaults when extracting.
+
+### 🔧 Changed
+
+- 🔩 Renamed Protocol's output folder to `out`.
 
 ## [0.2.0] - 2024-07-29
 

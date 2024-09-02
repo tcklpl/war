@@ -54,6 +54,11 @@ export class ConfigManager {
         }
         const fileContents = fs.readFileSync(cfgPath, { encoding: 'utf-8' });
 
+        if (!fs.existsSync(config.DEFAULT_PATH)) {
+            this._log.fatal(`Default config path "${config.DEFAULT_PATH}" doesn't exist for config "${config.NAME}"`);
+            process.exit(1);
+        }
+
         try {
             const parsed = json5.parse(fileContents);
             return parsed;
