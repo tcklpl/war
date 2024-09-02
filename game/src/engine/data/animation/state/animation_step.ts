@@ -1,13 +1,14 @@
 import { DuplicateAnimationDeltasError } from '../../../../errors/engine/data/animation/duplicate_animation_deltas';
 import { Animatable, EncodedAnimationTarget } from '../animatable';
 import { Animation } from '../animation';
+import { AnimationBuilder } from '../animation_builder';
 
 export class AnimationStep<T extends Animatable> {
     private _offset = 0;
     private _deltas: EncodedAnimationTarget[] = [];
 
     constructor(
-        private _parentAnimation: Animation<T>,
+        private _parentAnimationBuilder: AnimationBuilder<T>,
         private _registerNewStep: (step: AnimationStep<T>) => void,
         private _buildAnimation: () => Animation<T>,
     ) {}
@@ -16,13 +17,13 @@ export class AnimationStep<T extends Animatable> {
         return this._offset;
     }
 
-    do(deltaDefinition: (encoders: any) => EncodedAnimationTarget[]) {
-        const newDeltas = deltaDefinition(this._parentAnimation.target.animation.encoders);
+    do(deltaDefinition: (encoders: T['animation']['encoders']) => EncodedAnimationTarget[]) {
+        const newDeltas = deltaDefinition(this._parentAnimationBuilder.target.animation.encoders);
         if (!this.validateDeltas(newDeltas))
             throw new DuplicateAnimationDeltasError(
-                `Trying to define duplicate deltas on animation ${this._parentAnimation.name}`,
+                `Trying to define duplicate deltas on animation ${this._parentAnimationBuilder.name}`,
             );
-        this._deltas = [...this._deltas, ...deltaDefinition(this._parentAnimation.target.animation.encoders)];
+        this._deltas = [...this._deltas, ...deltaDefinition(this._parentAnimationBuilder.target.animation.encoders)];
         return this;
     }
 
@@ -37,7 +38,11 @@ export class AnimationStep<T extends Animatable> {
     }
 
     nextStep() {
-        const nextStep = new AnimationStep<T>(this._parentAnimation, this._registerNewStep, this._buildAnimation);
+        const nextStep = new AnimationStep<T>(
+            this._parentAnimationBuilder,
+            this._registerNewStep,
+            this._buildAnimation,
+        );
         this._registerNewStep(nextStep);
         return nextStep;
     }
