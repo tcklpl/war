@@ -1,11 +1,12 @@
 import { BufferUtils } from '../../../utils/buffer_utils';
 import { MathUtils } from '../../../utils/math_utils';
+import { Animatable, EncodedAnimationTarget } from '../animation/animatable';
 import { Mat4 } from '../mat/mat4';
 import { Quaternion } from '../quaternion/quaternion';
 import { Vec3 } from '../vec/vec3';
 import { Vec4 } from '../vec/vec4';
 
-export class MatrixTransformative {
+export class MatrixTransformative implements Animatable {
     private _parent?: MatrixTransformative;
     private _children: MatrixTransformative[] = [];
 
@@ -143,4 +144,28 @@ export class MatrixTransformative {
     get windingOrder() {
         return this._windingOrder;
     }
+
+    readonly animation = {
+        encoders: {
+            translate(by: Vec3) {
+                return {
+                    target: 'translate',
+                    value: by,
+                } as EncodedAnimationTarget;
+            },
+            scale(by: Vec3) {
+                return {
+                    target: 'scale',
+                    value: by,
+                } as EncodedAnimationTarget;
+            },
+            rotate(by: Quaternion) {
+                return {
+                    target: 'rotate',
+                    value: by,
+                } as EncodedAnimationTarget;
+            },
+        },
+        setters: {},
+    };
 }
