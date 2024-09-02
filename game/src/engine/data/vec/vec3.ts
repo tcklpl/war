@@ -76,6 +76,10 @@ export class Vec3 extends Vec2 {
         return this.multiplyFactor(-1);
     }
 
+    clone() {
+        return new Vec3(this.x, this.y, this.z);
+    }
+
     // -----------------[ SWIZZLES ]-----------------
 
     get xyz() {
