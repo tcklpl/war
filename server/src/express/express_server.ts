@@ -9,16 +9,18 @@ import { Server } from 'http';
 import { Logger } from '../log/logger';
 
 export class ExpressServer {
+    private _app!: express.Application;
+    private _server!: Server;
+    private _routes!: ExpressRoutes;
+
     constructor(
         private _configManager: ConfigManager,
         private _cryptManager: CryptManager,
         private _gameServer: GameServer,
         private _log: Logger,
-    ) {}
-
-    private _app!: express.Application;
-    private _server!: Server;
-    private _routes = new ExpressRoutes(this._configManager, this._cryptManager, this._gameServer);
+    ) {
+        this._routes = new ExpressRoutes(this._configManager, this._cryptManager, this._gameServer);
+    }
 
     private startServer() {
         this._app = express();

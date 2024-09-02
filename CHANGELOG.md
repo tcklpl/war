@@ -31,6 +31,7 @@ Icons:
 
 - 🖥 Server now properly shows the current version on the banner.
 - 🖥🔩 Server now also validates if it can find the config defaults when extracting.
+- 🔩 Removed a few inline initializations from the server.
 
 ### 🔧 Changed
 

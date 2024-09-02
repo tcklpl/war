@@ -7,11 +7,7 @@ import { CommandStop } from './default_commands/stop';
 import * as readLine from 'readline';
 
 export class CommandProcessor {
-    private _commands: Command[] = [
-        new CommandHelp(this._log.createChildContext('Help')),
-        new CommandStop(this._log.createChildContext('Stop')),
-        new CommandConfig(this._log.createChildContext('Config')),
-    ];
+    private _commands: Command[] = [];
 
     private _commandInterface!: readLine.Interface;
     private _shouldParseNextCommand = true;
@@ -19,7 +15,17 @@ export class CommandProcessor {
     constructor(
         private _server: WarServer,
         private _log: Logger,
-    ) {}
+    ) {
+        this.registerCommands();
+    }
+
+    private registerCommands() {
+        this._commands = [
+            new CommandHelp(this._log.createChildContext('Help')),
+            new CommandStop(this._log.createChildContext('Stop')),
+            new CommandConfig(this._log.createChildContext('Config')),
+        ];
+    }
 
     stop() {
         this._shouldParseNextCommand = false;

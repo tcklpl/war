@@ -7,8 +7,7 @@ import { GameManager } from './ingame/game_manager';
 import { PersistenceManager } from '../persistence/persistence_manager';
 
 export class GameServer {
-    private _playerManager = new PlayerManager(this._log.createChildContext('Player Manager'));
-
+    private _playerManager!: PlayerManager;
     private _lobbyManager!: LobbyManager;
     private _gameManager!: GameManager;
 
@@ -17,7 +16,9 @@ export class GameServer {
         private _cryptManager: CryptManager,
         private _persistenceManager: PersistenceManager,
         private _log: Logger,
-    ) {}
+    ) {
+        this._playerManager = new PlayerManager(this._log.createChildContext('Player Manager'));
+    }
 
     async initialize() {
         this._log.info('Game server started');
