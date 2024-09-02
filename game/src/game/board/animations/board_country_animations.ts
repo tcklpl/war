@@ -1,9 +1,9 @@
-import { Animation } from '../../../engine/data/animation/animation';
+import { AnimationBuilder } from '../../../engine/data/animation/animation_builder';
 import { Vec3 } from '../../../engine/data/vec/vec3';
 import { BoardCountry } from '../board_country';
 
 export const BoardCountryAnimationHoverOn = (country: BoardCountry) =>
-    new Animation('board hover on', country)
+    new AnimationBuilder('board hover on', country)
         .startingAtCurrent()
         .nextStep()
         .offsetSeconds(0.2)
