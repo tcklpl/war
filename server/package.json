@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "start": "node scripts/start.mjs",
+    "clean": "node scripts/clean.mjs",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
     "pack": "npx pkg --compress GZip ."
