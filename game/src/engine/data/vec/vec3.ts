@@ -80,6 +80,10 @@ export class Vec3 extends Vec2 {
         return new Vec3(this.x, this.y, this.z);
     }
 
+    hadamardProduct(other: Vec3) {
+        return new Vec3(this.x * other.x, this.y * other.y, this.z * other.z);
+    }
+
     // -----------------[ SWIZZLES ]-----------------
 
     get xyz() {
