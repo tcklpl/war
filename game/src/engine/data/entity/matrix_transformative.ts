@@ -80,6 +80,10 @@ export class MatrixTransformative implements Animatable {
         this.buildModelMatrix();
     }
 
+    translate(by: Vec3) {
+        this.translation = this._translation.add(by);
+    }
+
     get rotationQuaternion() {
         return this._rotation;
     }
@@ -114,6 +118,10 @@ export class MatrixTransformative implements Animatable {
         this._scale = s;
         this.buildScaleMatrix();
         this.buildModelMatrix();
+    }
+
+    scaleBy(by: Vec3) {
+        this.scale = this.scale.hadamardProduct(by);
     }
 
     get modelMatrix() {
@@ -166,6 +174,16 @@ export class MatrixTransformative implements Animatable {
                 } as EncodedAnimationTarget;
             },
         },
-        setters: {},
+        setters: {
+            translate: (by: Vec3) => {
+                this.translate(by);
+            },
+            scale: (by: Vec3) => {
+                this.scaleBy(by);
+            },
+            rotate: (by: Quaternion) => {
+                // TODO: rotate quaternions
+            },
+        },
     };
 }
