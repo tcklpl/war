@@ -1,6 +1,6 @@
 import { BufferUtils } from '../../../utils/buffer_utils';
 import { MathUtils } from '../../../utils/math_utils';
-import { Animatable, EncodedAnimationTarget } from '../animation/animatable';
+import { Animatable, AnimationInterpolation, EncodedAnimationTarget } from '../animation/animatable';
 import { Mat4 } from '../mat/mat4';
 import { Quaternion } from '../quaternion/quaternion';
 import { Vec3 } from '../vec/vec3';
@@ -155,34 +155,43 @@ export class MatrixTransformative implements Animatable {
 
     readonly animation = {
         encoders: {
-            translate(by: Vec3) {
+            translate(by: Vec3, interpolation: AnimationInterpolation = 'linear') {
                 return {
                     target: 'translate',
                     value: by,
+                    type: 'incrementor',
+                    setter: 'translate',
+                    interpolation,
                 } as EncodedAnimationTarget;
             },
-            scale(by: Vec3) {
+            scale(by: Vec3, interpolation: AnimationInterpolation = 'linear') {
                 return {
                     target: 'scale',
                     value: by,
+                    type: 'incrementor',
+                    setter: 'scale',
+                    interpolation,
                 } as EncodedAnimationTarget;
             },
-            rotate(by: Quaternion) {
+            rotate(by: Quaternion, interpolation: AnimationInterpolation = 'linear') {
                 return {
                     target: 'rotate',
                     value: by,
+                    type: 'incrementor',
+                    setter: 'rotate',
+                    interpolation,
                 } as EncodedAnimationTarget;
             },
         },
         setters: {
             translate: (by: Vec3) => {
-                this.translate(by);
+                this.translation = by;
             },
             scale: (by: Vec3) => {
-                this.scaleBy(by);
+                this.scale = by;
             },
             rotate: (by: Quaternion) => {
-                // TODO: rotate quaternions
+                this.rotationQuaternion = by;
             },
         },
     };
