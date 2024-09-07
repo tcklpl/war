@@ -37,6 +37,9 @@ Icons:
 ### 🔧 Changed
 
 - 🔩 Renamed Protocol's output folder to `out`.
+- 🎮🔩⬆️ Updated `@emotion/react` to `11.13.3`.
+- 🎮🔩⬆️ Updated `@emotion/styled` to `11.13.0`.
+- 🎮🔩⬆️ Updated `@mui/material` to `6.0.2`.
 
 ## [0.2.0] - 2024-07-29
 
