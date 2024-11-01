@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { FunctionComponent } from 'react';
-import { Box, Container, Grid, IconButton, Link, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Container, Grid2, IconButton, Link, Stack, Typography, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -68,7 +68,7 @@ const CreditsScreen: FunctionComponent<CreditsScreenProps> = () => {
     return (
         <Box sx={{ height: '100%', overflowY: 'auto' }}>
             <Container>
-                <Grid
+                <Grid2
                     container
                     className='server-select-screen'
                     style={{ backgroundColor: palette.background.default }}
@@ -239,7 +239,7 @@ const CreditsScreen: FunctionComponent<CreditsScreenProps> = () => {
                             </Stack>
                         </Box>
                     </Stack>
-                </Grid>
+                </Grid2>
             </Container>
         </Box>
     );

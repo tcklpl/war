@@ -41,6 +41,7 @@ Icons:
 - 🎮🔩⬆️ Updated `@emotion/styled` to `11.13.0`.
 - 🎮🔩⬆️ Updated `@mui/material` to `6.0.2`.
 - 🎮🔩 Quaternion functions now return a new Quaternion instead of modifying.
+- 🎮🔩 Changed credits screen MUI `Grid` to `Grid2`.
 
 ## [0.2.0] - 2024-07-29
 
