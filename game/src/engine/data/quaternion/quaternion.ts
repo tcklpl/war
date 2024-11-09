@@ -83,6 +83,10 @@ export class Quaternion {
         return new Quaternion(this.w * f, this.x * f, this.y * f, this.z * f);
     }
 
+    divideByFactor(f: number) {
+        return new Quaternion(this.w / f, this.x / f, this.y / f, this.z / f);
+    }
+
     add(q: Quaternion) {
         return new Quaternion(this.w + q.w, this.x + q.x, this.y + q.y, this.z + q.z);
     }
