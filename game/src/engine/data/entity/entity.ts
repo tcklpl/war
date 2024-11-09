@@ -4,23 +4,24 @@ import { Mat4 } from '../mat/mat4';
 import { Mesh } from '../meshes/mesh';
 import { PrimitiveDrawOptions } from '../meshes/primitive_draw_options';
 import { identifiable } from '../traits/identifiable';
+import { puppet } from '../traits/puppet';
 import { Vec3 } from '../vec/vec3';
 import { Vec4 } from '../vec/vec4';
 import { FrameListenerMatrixTransformative } from './frame_listener_matrix_transformative';
 import { MatrixTransformative } from './matrix_transformative';
 
-const EntityBase = identifiable(FrameListenerMatrixTransformative);
+const EntityBase = identifiable(puppet(FrameListenerMatrixTransformative));
 
 export class Entity extends EntityBase {
     visible: boolean = true;
 
-    private _name: string;
-    private _mesh: Mesh;
+    private readonly _name: string;
+    private readonly _mesh: Mesh;
 
     private _overlayColor = Vec3.fromValue(0);
     private _overlayIntensity = 0;
 
-    private _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
+    private readonly _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
 
     constructor(data: { name: string; mesh: Mesh }) {
         super();
