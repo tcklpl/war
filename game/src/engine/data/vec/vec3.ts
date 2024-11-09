@@ -123,10 +123,14 @@ export class Vec3 extends Vec2 {
         return accumulated.divideFactor(v.length);
     }
 
-    static interpolate(a: Vec3, b: Vec3, n: number) {
+    static interpolateLinear(a: Vec3, b: Vec3, n: number) {
         const xDiff = a.x - b.x;
         const yDiff = a.y - b.y;
         const zDiff = a.z - b.z;
         return new Vec3(a.x + xDiff * n, a.y + yDiff * n, a.z + zDiff * n);
+    }
+
+    static interpolateStep(a: Vec3, b: Vec3, n: number) {
+        return n >= 1 ? b : a;
     }
 }
