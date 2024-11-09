@@ -1,11 +1,10 @@
-import { useTranslation } from 'react-i18next';
-import { FunctionComponent } from 'react';
 import { Box, Container, Grid2, IconButton, Link, Stack, Typography, useTheme } from '@mui/material';
+import { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 import { CreditScreenEntry } from './credit_screen_entry';
 
 interface CreditsScreenProps {}
@@ -93,17 +92,6 @@ const CreditsScreen: FunctionComponent<CreditsScreenProps> = () => {
                                 <IconButton color='inherit' sx={{ flexDirection: 'column' }} disableRipple>
                                     <GitHubIcon />
                                     <Typography variant='caption'>GitHub</Typography>
-                                </IconButton>
-                            </Link>
-                            <Link
-                                href='https://trello.com/b/qBpWkPcw/war'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                color='inherit'
-                            >
-                                <IconButton color='inherit' sx={{ flexDirection: 'column' }} disableRipple>
-                                    <ViewKanbanIcon />
-                                    <Typography variant='caption'>Trello</Typography>
                                 </IconButton>
                             </Link>
                         </Box>
