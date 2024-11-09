@@ -1,6 +1,6 @@
 # War Game
 
-[![Trello](https://img.shields.io/badge/Trello-7b357f?logo=trello)](https://trello.com/b/qBpWkPcw/war)
+[![GitHub Project](https://img.shields.io/badge/Github-Project-blue?logo=github)](https://github.com/users/tcklpl/projects/1)
 [![Changelog Badge](https://img.shields.io/badge/Changelog-8A2BE2)](./CHANGELOG.md)
 [![GitHub Pages Deploy](https://img.shields.io/badge/Github%20Pages-Latest%20Dev%20Build-blue?logo=github)](https://tcklpl.github.io/war/)
 
