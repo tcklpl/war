@@ -6,15 +6,20 @@ import { AnimationBuilder } from '../animation_builder';
 export class AnimationStep<T extends Animatable> {
     private _offset = 0;
     private _deltas: EncodedAnimationTarget[] = [];
+    readonly stepType: 'custom' | 'current' = 'custom';
 
     constructor(
-        private _parentAnimationBuilder: AnimationBuilder<T>,
-        private _registerNewStep: (step: AnimationStep<T>) => void,
-        private _buildAnimation: () => Animation<T>,
+        private readonly _parentAnimationBuilder: AnimationBuilder<T>,
+        private readonly _registerNewStep: (step: AnimationStep<T>) => void,
+        private readonly _buildAnimation: () => Animation<T>,
     ) {}
 
     get offset() {
         return this._offset;
+    }
+
+    get deltas() {
+        return this._deltas;
     }
 
     do(deltaDefinition: (encoders: T['animation']['encoders']) => EncodedAnimationTarget[]) {
