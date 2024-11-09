@@ -1,6 +1,9 @@
 import { Quaternion } from '../quaternion/quaternion';
 import { Vec3 } from '../vec/vec3';
 
+export type AnimationValue = number | Vec3 | Quaternion;
+export type AnimationInterpolation = 'step' | 'linear';
+
 /**
  * Interface for animatable stuff.
  *
@@ -17,12 +20,13 @@ export interface Animatable {
             [key: string]: () => any;
         };
         setters: {
-            [key: string]: (...args: any[]) => void;
+            [key: string]: (value: any) => void;
+        };
+        accumulators: {
+            [key: string]: (value: any) => void;
         };
     };
 }
-
-export type AnimationValue = number | Vec3 | Quaternion;
 
 export interface EncodedAnimationTarget {
     target: string;
@@ -32,5 +36,3 @@ export interface EncodedAnimationTarget {
     setter: string;
     interpolation: AnimationInterpolation;
 }
-
-export type AnimationInterpolation = 'step' | 'linear';
