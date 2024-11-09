@@ -20,14 +20,14 @@ export class MatrixTransformative implements Animatable {
 
     private _modelMatrix = Mat4.identity();
     private _modelMatrixInverse = Mat4.identity();
-    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(
         3 * Mat4.byteSize + Vec4.byteSize + 4,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );
 
     private _windingOrder: 'cw' | 'ccw' = 'ccw';
 
-    private _transformListeners: (() => void)[] = [];
+    private readonly _transformListeners: (() => void)[] = [];
 
     private buildModelMatrix() {
         this._modelMatrix = Mat4.identity()
@@ -160,6 +160,17 @@ export class MatrixTransformative implements Animatable {
                     target: 'translate',
                     value: by,
                     type: 'incrementor',
+                    getter: 'translation',
+                    setter: 'translate',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+            setTranslation(target: Vec3, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'translate',
+                    value: target,
+                    type: 'setter',
+                    getter: 'translation',
                     setter: 'translate',
                     interpolation,
                 } as EncodedAnimationTarget;
@@ -169,6 +180,17 @@ export class MatrixTransformative implements Animatable {
                     target: 'scale',
                     value: by,
                     type: 'incrementor',
+                    getter: 'scale',
+                    setter: 'scale',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+            setScale(target: Vec3, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'scale',
+                    value: target,
+                    type: 'setter',
+                    getter: 'scale',
                     setter: 'scale',
                     interpolation,
                 } as EncodedAnimationTarget;
@@ -178,9 +200,31 @@ export class MatrixTransformative implements Animatable {
                     target: 'rotate',
                     value: by,
                     type: 'incrementor',
+                    getter: 'rotation',
                     setter: 'rotate',
                     interpolation,
                 } as EncodedAnimationTarget;
+            },
+            setRotation(target: Quaternion, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'rotate',
+                    value: target,
+                    type: 'setter',
+                    getter: 'rotation',
+                    setter: 'rotate',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+        },
+        getters: {
+            translation: () => {
+                return this._translation;
+            },
+            scale: () => {
+                return this._scale;
+            },
+            rotation: () => {
+                return this._rotation;
             },
         },
         setters: {
@@ -192,6 +236,17 @@ export class MatrixTransformative implements Animatable {
             },
             rotate: (by: Quaternion) => {
                 this.rotationQuaternion = by;
+            },
+        },
+        accumulators: {
+            translate: (by: Vec3) => {
+                this.translation = this.translation.add(by);
+            },
+            scale: (by: Vec3) => {
+                this.scale = this.scale.add(by);
+            },
+            rotate: (by: Quaternion) => {
+                this.rotationQuaternion = this.rotationQuaternion.add(by);
             },
         },
     };
