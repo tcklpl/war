@@ -27,12 +27,15 @@ Icons:
 
 - 🔩 Wrote build and dev scripts for the server.
 - 🎮🔩 Animation builder through `AnimationBuilder`.
+- 🎮🔩 Animation engine initial implementation.
+- 🎮 Country animations for hovering on and off.
 
 ### 🔨 Fixed
 
 - 🖥 Server now properly shows the current version on the banner.
 - 🖥🔩 Server now also validates if it can find the config defaults when extracting.
 - 🔩 Removed a few inline initializations from the server.
+- 🔩 Made a bunch of stuff `readonly`.
 
 ### 🔧 Changed
 
@@ -42,6 +45,20 @@ Icons:
 - 🎮🔩⬆️ Updated `@mui/material` to `6.0.2`.
 - 🎮🔩 Quaternion functions now return a new Quaternion instead of modifying.
 - 🎮🔩 Changed credits screen MUI `Grid` to `Grid2`.
+- 🖥🔩⬆️ Updated `@eslint/js` to `9.12.0`.
+- 🖥🔩⬆️ Updated `@swc/core` to `1.7.26`.
+- 🖥🔩⬆️ Updated `@swc/helpers` to `0.5.13`.
+- 🖥🔩⬆️ Updated `@types/jsonwebtoken` to `9.0.7`.
+- 🖥🔩⬆️ Updated `eslint` to `9.12.0`.
+- 🖥🔩⬆️ Updated `eslint-plugin-prettier` to `5.2.1`.
+- 🖥🔩⬆️ Updated `globals` to `15.10.0`.
+- 🖥🔩⬆️ Updated `husky` to `9.1.6`.
+- 🖥🔩⬆️ Updated `nodemon` to `3.1.7`.
+- 🖥🔩⬆️ Updated `prettier` to `3.3.3`.
+- 🖥🔩⬆️ Updated `replace-in-file` to `8.2.0`.
+- 🖥🔩⬆️ Updated `typescript-eslint` to `8.8.1`.
+- 🖥🔩⬆️ Updated `express` to `4.21.0`.
+- 🖥🔩⬆️ Updated `socket.io` to `4.8.0`.
 
 ## [0.2.0] - 2024-07-29
 
