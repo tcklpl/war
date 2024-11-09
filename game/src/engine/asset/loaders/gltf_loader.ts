@@ -53,7 +53,8 @@ export class GLTFLoader {
         const cameras = this.constructCameras(gltfSave);
         const lights = this.constructLights(gltfSave);
         const nodes = this.constructNodes(gltfSave, meshes, cameras, lights);
-        const animations = this.constructAnimations(gltfSave, accessors, nodes);
+        // TODO: Transform animations into engine ones
+        //const animations = this.constructAnimations(gltfSave, accessors, nodes);
         const scenes = this.constructScenes(gltfSave, nodes);
 
         return new GLTFFile(

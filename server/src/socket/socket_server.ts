@@ -48,7 +48,7 @@ export class SocketServer {
             const player = new LobbyPlayer(authTokenBody.username, new PlayerConnection(socket));
             try {
                 this._gameServer.playerManager.loginPlayer(player);
-            } catch (e) {
+            } catch {
                 socket.disconnect();
                 return;
             }

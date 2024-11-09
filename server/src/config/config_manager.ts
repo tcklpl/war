@@ -19,7 +19,7 @@ export class ConfigManager {
         try {
             fs.accessSync(__dirname, fs.constants.R_OK || fs.constants.W_OK);
             return true;
-        } catch (err) {
+        } catch {
             return false;
         }
     }
@@ -62,7 +62,7 @@ export class ConfigManager {
         try {
             const parsed = json5.parse(fileContents);
             return parsed;
-        } catch (err) {
+        } catch {
             this._log.warn(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
             fs.copyFileSync(config.DEFAULT_PATH, path.join(this._configFolder, config.PATH));
             return this.parseConfigFile(config);

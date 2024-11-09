@@ -77,7 +77,7 @@ export class CryptManager {
     validateToken(token: string) {
         try {
             return !!jwt.verify(token, this._publicKey);
-        } catch (e) {
+        } catch {
             return false;
         }
     }
