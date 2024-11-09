@@ -2,7 +2,7 @@
 
 <!--
     Changelog Sections:
-        Added       for new features.
+        New         for new features.
         Changed     for changes in existing functionality.
         Deprecated  for soon-to-be removed features.
         Removed     for now removed features.
@@ -59,6 +59,12 @@ Icons:
 - 🖥🔩⬆️ Updated `typescript-eslint` to `8.8.1`.
 - 🖥🔩⬆️ Updated `express` to `4.21.0`.
 - 🖥🔩⬆️ Updated `socket.io` to `4.8.0`.
+- 🎮 Moved pause menu button text alignment to the right.
+- 🎮 Moved the button to go back to the main menu into the config screen.
+
+### ❌ Removed
+
+- 🎮 Removed Trello link, as the project is now on Github Projects.
 
 ## [0.2.0] - 2024-07-29
 
