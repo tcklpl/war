@@ -1,4 +1,5 @@
 import {
+    Box,
     Grid2,
     MenuItem,
     Select,
@@ -195,8 +196,8 @@ const CfgGraphicsScreen: React.FC = () => {
                                 <Typography variant='body1'>{t('config:graphics_post_effects_motion_blur')}</Typography>
                             </TableCell>
                             <TableCell align='right'>
-                                <Grid2 container alignItems='center'>
-                                    <Grid2>
+                                <Box display={'flex'}>
+                                    <Box flexGrow={1}>
                                         <Slider
                                             size='small'
                                             min={0}
@@ -207,13 +208,13 @@ const CfgGraphicsScreen: React.FC = () => {
                                                 setMotionBlurAmount(val as number);
                                             }}
                                         />
-                                    </Grid2>
-                                    <Grid2 paddingLeft={1}>
+                                    </Box>
+                                    <Box paddingLeft={1}>
                                         <Typography variant='body1' width='4em'>
                                             {(motionBlurAmount * 100).toFixed(0)}%
                                         </Typography>
-                                    </Grid2>
-                                </Grid2>
+                                    </Box>
+                                </Box>
                             </TableCell>
                         </TableRow>
 

@@ -26,23 +26,22 @@ const EscMenu: React.FC = () => {
     }, [open]);
 
     return open ? (
-        <Grid2 container className={style.screen}>
+        <Grid2 container className={style.screen} width={'100%'}>
             <Grid2
-                container
                 size={{ xs: 4, md: 2 }}
                 className={style.categories}
                 style={{ backgroundColor: palette.background.default }}
                 direction='column'
                 justifyContent='center'
             >
-                <Stack spacing={1}>
+                <Stack spacing={1} paddingX={'1em'}>
                     <Button
                         color='primary'
                         onClick={() => {
                             setOpen(false);
                         }}
                         fullWidth={true}
-                        style={{ justifyContent: 'flex-start' }}
+                        style={{ justifyContent: 'flex-end' }}
                         startIcon={<KeyboardBackspaceIcon />}
                     >
                         Resume
@@ -53,7 +52,7 @@ const EscMenu: React.FC = () => {
                             setCurrentRightScreen(<CfgScreen />);
                         }}
                         fullWidth={true}
-                        style={{ justifyContent: 'flex-start' }}
+                        style={{ justifyContent: 'flex-end' }}
                         startIcon={<SettingsIcon />}
                     >
                         Settings
