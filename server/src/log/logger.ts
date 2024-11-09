@@ -33,7 +33,7 @@ export class Logger {
         this._logLevel = l;
     }
 
-    private _contextStack: string[] = [];
+    private readonly _contextStack: string[] = [];
 
     constructor(...contextStack: string[]) {
         if (!!contextStack && contextStack.length > 0) {

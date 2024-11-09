@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './ssao_blur.wgsl';
 
 export class SSAOBlurShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         TEXTURES: 0,
     };
 

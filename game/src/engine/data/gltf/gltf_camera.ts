@@ -11,19 +11,19 @@ interface GLTFCameraConstructorOptionalArgs {
 }
 
 export class GLTFCamera {
-    private _name: string;
-    private _type: GLTFCameraTypes;
+    private readonly _name: string;
+    private readonly _type: GLTFCameraTypes;
 
-    private _znear: number;
-    private _zfar: number;
+    private readonly _znear: number;
+    private readonly _zfar: number;
 
     // perspective
-    private _aspectRatio?: number;
-    private _yfov?: number;
+    private readonly _aspectRatio?: number;
+    private readonly _yfov?: number;
 
     // orthographic
-    private _xmag?: number;
-    private _ymag?: number;
+    private readonly _xmag?: number;
+    private readonly _ymag?: number;
 
     constructor(
         name: string,

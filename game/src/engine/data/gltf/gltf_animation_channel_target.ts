@@ -3,8 +3,8 @@ import { GLTFNode } from './gltf_node';
 
 export class GLTFAnimationChannelTarget {
     constructor(
-        private _node: GLTFNode,
-        private _path: GLTFAnimationChannelTargetPath,
+        private readonly _node: GLTFNode,
+        private readonly _path: GLTFAnimationChannelTargetPath,
     ) {}
 
     get node() {

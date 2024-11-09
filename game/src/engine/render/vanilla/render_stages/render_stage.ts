@@ -4,5 +4,5 @@ import { RenderResourcePool } from '../render_resource_pool';
 export interface RenderStage {
     initialize: (resources: RenderInitializationResources) => Promise<void>;
     render: (pool: RenderResourcePool) => void;
-    free: () => void;
+    free?: () => void;
 }

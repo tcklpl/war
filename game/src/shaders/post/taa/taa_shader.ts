@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './taa.wgsl';
 
 export class TAAShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         TEXTURES: 0,
     };
 

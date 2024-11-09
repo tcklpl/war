@@ -3,9 +3,9 @@ import { GLTFAccessor } from './gltf_accessor';
 
 export class GLTFAnimationSampler {
     constructor(
-        private _seconds: GLTFAccessor,
-        private _values: GLTFAccessor,
-        private _interpolation: GLTFAnimationSamplerInterpolation,
+        private readonly _seconds: GLTFAccessor,
+        private readonly _values: GLTFAccessor,
+        private readonly _interpolation: GLTFAnimationSamplerInterpolation,
     ) {}
 
     get seconds() {

@@ -5,9 +5,9 @@ import { Player } from './player';
 
 export class PlayerManager {
     private _loggedPlayers: Player[] = [];
-    private _onPlayerLogoff: ((player: Player) => void)[] = [];
+    private readonly _onPlayerLogoff: ((player: Player) => void)[] = [];
 
-    constructor(private _log: Logger) {}
+    constructor(private readonly _log: Logger) {}
 
     isUsernameAvailable(username: string) {
         return !this._loggedPlayers.find(x => x.username === username);

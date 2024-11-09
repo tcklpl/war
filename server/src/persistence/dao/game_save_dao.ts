@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { GameSave } from '../model/game_save';
 
 export class GameSaveDao {
-    private _repo: Repository<GameSave>;
+    private readonly _repo: Repository<GameSave>;
 
     constructor(ds: DataSource) {
         this._repo = ds.getRepository(GameSave);

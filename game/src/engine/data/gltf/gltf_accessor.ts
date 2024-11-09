@@ -6,13 +6,13 @@ export class GLTFAccessor {
     private readonly FLOAT = 5126;
     private readonly UNSIGNED_SHORT = 5123;
 
-    private _bufferView: GLTFBufferView;
-    private _componentType: number; // gl.FLOAT or gl.UNSIGNED_SHORT
-    private _count: number;
-    private _type: GLTFAccessorValidTypes;
+    private readonly _bufferView: GLTFBufferView;
+    private readonly _componentType: number; // gl.FLOAT or gl.UNSIGNED_SHORT
+    private readonly _count: number;
+    private readonly _type: GLTFAccessorValidTypes;
 
-    private _min?: number | number[];
-    private _max?: number | number[];
+    private readonly _min?: number | number[];
+    private readonly _max?: number | number[];
 
     constructor(
         bufferView: GLTFBufferView,

@@ -11,7 +11,7 @@ import { LobbyChat } from './lobby_chat';
 
 export class WarGameLobby {
     private _state?: LobbyState;
-    private _chat = new LobbyChat();
+    private readonly _chat = new LobbyChat();
 
     private _gameStartCountdown = 0;
     private _taskGameStartCountdown?: number;

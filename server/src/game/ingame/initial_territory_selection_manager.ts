@@ -55,7 +55,7 @@ export class InitialTerritorySelectionManager {
         'japan',
     ];
 
-    private _timeoutDurationSeconds = 60;
+    private readonly _timeoutDurationSeconds = 60;
     private _curPlayerIndex = 0;
     private _curSelectionTimeout?: NodeJS.Timeout;
     private _curAllowedTerritories: TerritoryCode[] = [];
@@ -63,8 +63,8 @@ export class InitialTerritorySelectionManager {
     private _paused = false;
 
     constructor(
-        private _game: Game,
-        private _log: Logger,
+        private readonly _game: Game,
+        private readonly _log: Logger,
     ) {}
 
     private removeFromTerritoryPool(code: TerritoryCode) {

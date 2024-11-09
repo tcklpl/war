@@ -1,25 +1,25 @@
 import * as fs from 'fs';
+import * as json5 from 'json5';
 import * as path from 'path';
 import { exit } from 'process';
-import { CfgServer } from './default/cfg_server';
+import { Logger } from '../log/logger';
 import { Config } from './config';
-import * as json5 from 'json5';
 import { CfgCrypt } from './default/cfg_crypt';
 import { CfgGame } from './default/cfg_game';
-import { Logger } from '../log/logger';
+import { CfgServer } from './default/cfg_server';
 
 export class ConfigManager {
-    constructor(private _log: Logger) {}
+    constructor(private readonly _log: Logger) {}
 
-    private _configFolder = path.join(process.cwd(), 'config');
-    private _configs = [new CfgServer(), new CfgCrypt(), new CfgGame()];
-    private _loadedConfigs: Map<(typeof Config)['name'], Config> = new Map();
+    private readonly _configFolder = path.join(process.cwd(), 'config');
+    private readonly _configs = [new CfgServer(), new CfgCrypt(), new CfgGame()];
+    private readonly _loadedConfigs: Map<(typeof Config)['name'], Config> = new Map();
 
     private checkPermissions() {
         try {
             fs.accessSync(__dirname, fs.constants.R_OK || fs.constants.W_OK);
             return true;
-        } catch (err) {
+        } catch {
             return false;
         }
     }
@@ -54,10 +54,15 @@ export class ConfigManager {
         }
         const fileContents = fs.readFileSync(cfgPath, { encoding: 'utf-8' });
 
+        if (!fs.existsSync(config.DEFAULT_PATH)) {
+            this._log.fatal(`Default config path "${config.DEFAULT_PATH}" doesn't exist for config "${config.NAME}"`);
+            process.exit(1);
+        }
+
         try {
             const parsed = json5.parse(fileContents);
             return parsed;
-        } catch (err) {
+        } catch {
             this._log.warn(`Corrupted config "${config.NAME}" at "${cfgPath}", replacing it with the default one`);
             fs.copyFileSync(config.DEFAULT_PATH, path.join(this._configFolder, config.PATH));
             return this.parseConfigFile(config);

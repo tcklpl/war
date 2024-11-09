@@ -13,11 +13,7 @@ export class Quaternion {
 
     normalize() {
         const d = Math.sqrt(this.w ** 2 + this.x ** 2 + this.y ** 2 + this.z ** 2);
-        this.w /= d;
-        this.x /= d;
-        this.y /= d;
-        this.z /= d;
-        return this;
+        return new Quaternion(this.w / d, this.x / d, this.y / d, this.z / d);
     }
 
     clone() {
@@ -25,10 +21,7 @@ export class Quaternion {
     }
 
     inverse() {
-        this.x *= -1;
-        this.y *= -1;
-        this.z *= -1;
-        return this;
+        return new Quaternion(this.w, -this.x, -this.y, -this.z);
     }
 
     get asMat4() {
@@ -75,12 +68,7 @@ export class Quaternion {
         const x = this.w * v.x + this.y * v.z - this.z * v.y;
         const y = this.w * v.y + this.z * v.x - this.x * v.z;
         const z = this.w * v.z + this.x * v.y - this.y * v.x;
-
-        this.w = w;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        return this;
+        return new Quaternion(w, x, y, z);
     }
 
     multiplyByQuaternion(q: Quaternion) {
@@ -88,36 +76,23 @@ export class Quaternion {
         const x = this.x * q.w + this.w * q.x + this.y * q.z - this.z * q.y;
         const y = this.y * q.w + this.w * q.y + this.z * q.x - this.x * q.z;
         const z = this.z * q.w - this.w * q.z + this.x * q.y - this.y * q.x;
-
-        this.w = w;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        return this;
+        return new Quaternion(w, x, y, z);
     }
 
     multiplyByFactor(f: number) {
-        this.w *= f;
-        this.x *= f;
-        this.y *= f;
-        this.z *= f;
-        return this;
+        return new Quaternion(this.w * f, this.x * f, this.y * f, this.z * f);
+    }
+
+    divideByFactor(f: number) {
+        return new Quaternion(this.w / f, this.x / f, this.y / f, this.z / f);
     }
 
     add(q: Quaternion) {
-        this.w += q.w;
-        this.x += q.x;
-        this.y += q.y;
-        this.z += q.z;
-        return this;
+        return new Quaternion(this.w + q.w, this.x + q.x, this.y + q.y, this.z + q.z);
     }
 
     subtract(q: Quaternion) {
-        this.w -= q.w;
-        this.x -= q.x;
-        this.y -= q.y;
-        this.z -= q.z;
-        return this;
+        return new Quaternion(this.w - q.w, this.x - q.x, this.y - q.y, this.z - q.z);
     }
 
     /**
@@ -208,19 +183,16 @@ export class Quaternion {
         if (dot > DOT_THRESHOLD) {
             // If the inputs are too close for comfort, linearly interpolate
             // and normalize the result.
-            const diff = b.clone().subtract(a);
-            return a.clone().add(diff.multiplyByFactor(t)).normalize();
+            const diff = b.subtract(a);
+            return a.add(diff.multiplyByFactor(t)).normalize();
         }
 
         dot = MathUtils.clamp(0, 1, dot); // Robustness: Stay within domain of acos()
         const theta_0 = Math.acos(dot); // theta_0 = angle between input vectors
         const theta = theta_0 * t; // theta = angle between v0 and result
 
-        const c = b.clone().subtract(a.clone().multiplyByFactor(dot)).normalize();
+        const c = b.subtract(a.multiplyByFactor(dot)).normalize();
 
-        return a
-            .clone()
-            .multiplyByFactor(Math.cos(theta))
-            .add(c.multiplyByFactor(Math.sin(theta)));
+        return a.multiplyByFactor(Math.cos(theta)).add(c.multiplyByFactor(Math.sin(theta)));
     }
 }

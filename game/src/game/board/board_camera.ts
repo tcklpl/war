@@ -10,8 +10,8 @@ const BoardCameraBase = keyboardListener(mouseListener(frameListener(LookAtCamer
 
 export class BoardCamera extends BoardCameraBase {
     private _moveSpeed = 5;
-    private _moveSpeedSlow = 5;
-    private _moveSpeedFast = 10;
+    private readonly _moveSpeedSlow = 5;
+    private readonly _moveSpeedFast = 10;
 
     private _deltaX = 0;
     private _deltaY = 0;
@@ -21,9 +21,9 @@ export class BoardCamera extends BoardCameraBase {
     private _tDeltaX = 0;
     private _tDeltaZ = 0;
 
-    private _startPosition = new Vec3(0, 5, 0);
-    private _lBound = new Vec3(-5, -20, -3);
-    private _hBound = new Vec3(5, 10, 3);
+    private readonly _startPosition = new Vec3(0, 5, 0);
+    private readonly _lBound = new Vec3(-5, -20, -3);
+    private readonly _hBound = new Vec3(5, 10, 3);
 
     constructor() {
         // const camera = game.engine.managers.asset.getGLTFAsset('board').gltfFile.defaultScene.cameras[0];

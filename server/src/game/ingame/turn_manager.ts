@@ -16,16 +16,16 @@ export class TurnManager {
      * playing their turn.
      */
     private _turn = 0;
-    private _turnTimeoutTask?: NodeJS.Timeout;
+    private readonly _turnTimeoutTask?: NodeJS.Timeout;
 
     private _turnPhase: TurnPhase = 'over';
     private _turnAllowedActions: Map<string, TurnAllowedAction> = new Map();
 
     constructor(
-        private _players: GamePlayer[],
-        private _board: Board,
-        private _gameConfig: GameConfig,
-        private _log: Logger,
+        private readonly _players: GamePlayer[],
+        private readonly _board: Board,
+        private readonly _gameConfig: GameConfig,
+        private readonly _log: Logger,
     ) {}
 
     startFirstTurn() {

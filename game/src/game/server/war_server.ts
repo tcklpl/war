@@ -17,7 +17,7 @@ export class WarServer {
     private _currentGameSession?: WarGameSession;
     private _lastLobbyExitReason: LobbyExitReason = '';
 
-    constructor(private _connection: ServerConnection) {
+    constructor(private readonly _connection: ServerConnection) {
         registerPacketListeners(_connection.socket, this);
     }
 

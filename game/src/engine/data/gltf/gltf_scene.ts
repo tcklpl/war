@@ -1,8 +1,8 @@
 import { GLTFNode, GLTFNodeCamera, GLTFNodeLight, GLTFNodeMesh } from './gltf_node';
 
 export class GLTFScene {
-    private _name: string;
-    private _nodes: GLTFNode[];
+    private readonly _name: string;
+    private readonly _nodes: GLTFNode[];
 
     constructor(name: string, nodes: GLTFNode[]) {
         this._name = name;
@@ -18,14 +18,14 @@ export class GLTFScene {
     }
 
     get meshes(): GLTFNodeMesh[] {
-        return this._nodes.filter(x => x instanceof GLTFNodeMesh) as GLTFNodeMesh[];
+        return this._nodes.filter(x => x instanceof GLTFNodeMesh);
     }
 
     get cameras(): GLTFNodeCamera[] {
-        return this._nodes.filter(x => x instanceof GLTFNodeCamera) as GLTFNodeCamera[];
+        return this._nodes.filter(x => x instanceof GLTFNodeCamera);
     }
 
     get lights(): GLTFNodeLight[] {
-        return this._nodes.filter(x => x instanceof GLTFNodeLight) as GLTFNodeLight[];
+        return this._nodes.filter(x => x instanceof GLTFNodeLight);
     }
 }

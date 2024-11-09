@@ -3,22 +3,22 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box, Button, Switch, Tab, Typography } from '@mui/material';
 import { ReactElement, useEffect, useState } from 'react';
-import LobbyPartyPageAnarchism from './party_pages/lobby_party_page_anarchism';
 import { useTranslation } from 'react-i18next';
-import { useGameSession } from '../../../../hooks/use_game_session';
 import { GameParty } from '../../../../../../protocol';
+import { useGameSession } from '../../../../hooks/use_game_session';
 import '../lobby_screen.scss';
+import LobbyPartyPageAnarchism from './party_pages/lobby_party_page_anarchism';
 
 import InfoIcon from '@mui/icons-material/Info';
 import AnarchismIcon from '../../../../images/icons/anarchism/anarchism_icon';
+import CapitalismIcon from '../../../../images/icons/capitalism/capitalism_ison';
 import FeudalismIcon from '../../../../images/icons/feudalism/feudalism_ison';
 import SocialismIcon from '../../../../images/icons/socialism/socialism_ison';
-import CapitalismIcon from '../../../../images/icons/capitalism/capitalism_ison';
 import { TSXUtils } from '../../../../utils/tsx_utils';
 import LobbyPageInfo from './party_pages/lobby_page_info';
+import LobbyPartyPageCapitalism from './party_pages/lobby_party_page_capitalism';
 import LobbyPartyPageFeudalism from './party_pages/lobby_party_page_feudalism';
 import LobbyPartyPageSocialism from './party_pages/lobby_party_page_socialism';
-import LobbyPartyPageCapitalism from './party_pages/lobby_party_page_capitalism';
 
 const LobbyPartySelectorScreen = () => {
     const { t } = useTranslation(['lobby', 'parties']);
@@ -29,6 +29,16 @@ const LobbyPartySelectorScreen = () => {
     const [partyPage, setPartyPage] = useState<GameParty | 'none'>('none');
     const isPartyAvailable = !currentLobbyState?.players.find(p => p.party === partyPage);
     const partyPagePlayer = currentLobbyState?.players.find(p => p.party === partyPage);
+
+    const getButtonText = () => {
+        if (playerParty !== 'not_set') {
+            return `${t('lobby:locked_as')} ${partyDecoratorMap.get(playerParty)?.name}`;
+        }
+        if (partyPage !== 'none') {
+            return `${t('lobby:select')} ${partyDecoratorMap.get(partyPage)?.name}`;
+        }
+        return '?';
+    };
 
     useEffect(() => {
         if (isGameStarting) {
@@ -145,11 +155,7 @@ const LobbyPartySelectorScreen = () => {
                                     }
                                 }}
                             >
-                                {playerParty !== 'not_set'
-                                    ? `${t('lobby:locked_as')} ${partyDecoratorMap.get(playerParty)?.name}`
-                                    : partyPage !== 'none'
-                                      ? `${t('lobby:select')} ${partyDecoratorMap.get(partyPage)?.name}`
-                                      : `?`}
+                                {getButtonText()}
                                 <Switch disabled checked={playerParty !== 'not_set'} />
                             </Button>
                         </Box>

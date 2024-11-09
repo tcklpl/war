@@ -11,8 +11,8 @@ export class EquirectangularToCubemapRenderer {
     private _pipeline32f!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
 
-    private _projectionMat = Mat4.perspective(MathUtils.degToRad(90), 1, 0.1, 10);
-    private _cameraMatrices = [
+    private readonly _projectionMat = Mat4.perspective(MathUtils.degToRad(90), 1, 0.1, 10);
+    private readonly _cameraMatrices = [
         Mat4.lookAt(Vec3.zero, new Vec3(1, 0, 0), new Vec3(0, 1, 0)), // + X
         Mat4.lookAt(Vec3.zero, new Vec3(-1, 0, 0), new Vec3(0, 1, 0)), // - X
         Mat4.lookAt(Vec3.zero, new Vec3(0, 1, 0), new Vec3(0, 0, 1)), // + Y
@@ -20,7 +20,7 @@ export class EquirectangularToCubemapRenderer {
         Mat4.lookAt(Vec3.zero, new Vec3(0, 0, -1), new Vec3(0, 1, 0)), // - Z
         Mat4.lookAt(Vec3.zero, new Vec3(0, 0, 1), new Vec3(0, 1, 0)), // + Z
     ];
-    private _uniformBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _uniformBuffer = BufferUtils.createEmptyBuffer(
         2 * Mat4.byteSize,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );

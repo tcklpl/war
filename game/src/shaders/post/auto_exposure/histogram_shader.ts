@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './histogram.wgsl';
 
 export class HistogramShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         DATA: 0,
     };
 

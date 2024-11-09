@@ -7,8 +7,8 @@ export interface IIdentifiable {
 
 export function identifiable<T extends Constructor>(base: T): Constructor<IIdentifiable> & T {
     return class extends base {
-        private _id: number;
-        private _idUint32: Uint32Array;
+        private readonly _id: number;
+        private readonly _idUint32: Uint32Array;
 
         constructor(...args: any[]) {
             super(...args);

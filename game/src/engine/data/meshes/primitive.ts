@@ -11,10 +11,10 @@ type PrimitiveBuffers = {
 };
 
 export class Primitive {
-    private _indicesSize: number;
-    private _buffers: PrimitiveBuffers;
+    private readonly _indicesSize: number;
+    private readonly _buffers: PrimitiveBuffers;
+    private readonly _material: Material;
     private _available = true;
-    private _material: Material;
 
     constructor(buffers: PrimitiveBuffers, indicesSize: number, material: Material) {
         this._indicesSize = indicesSize;

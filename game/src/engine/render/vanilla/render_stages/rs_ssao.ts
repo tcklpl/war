@@ -1,3 +1,4 @@
+import { Float16Array } from '@petamoriken/float16';
 import { SSAOBlurShader } from '../../../../shaders/post/ssao/ssao_blur_shader';
 import { SSAOShader } from '../../../../shaders/post/ssao/ssao_shader';
 import { Shader } from '../../../../shaders/shader';
@@ -9,27 +10,26 @@ import { Vec3 } from '../../../data/vec/vec3';
 import { RenderInitializationResources } from '../render_initialization_resources';
 import { RenderResourcePool } from '../render_resource_pool';
 import { RenderStage } from './render_stage';
-import { Float16Array } from '@petamoriken/float16';
 
 export class RenderStageSSAO implements RenderStage {
-    private _bias = 0.0025;
-    private _kernelSize = 64;
-    private _kernelRadius = 1.0;
+    private readonly _bias = 0.0025;
+    private readonly _kernelSize = 64;
+    private readonly _kernelRadius = 1.0;
     private _kernel: Vec3[] = [];
-    private _kernelBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _kernelBuffer = BufferUtils.createEmptyBuffer(
         4 + 4 + (Vec3.byteSize + 4) * this._kernelSize,
         GPUBufferUsage.COPY_DST | GPUBufferUsage.UNIFORM,
     );
 
     private _noise: Vec2[] = [];
     private _noiseTexture!: GPUTexture;
-    private _samplerRepeat = device.createSampler({
+    private readonly _samplerRepeat = device.createSampler({
         addressModeU: 'repeat',
         addressModeV: 'repeat',
         minFilter: 'nearest',
         magFilter: 'nearest',
     });
-    private _samplerClamp = device.createSampler({
+    private readonly _samplerClamp = device.createSampler({
         addressModeU: 'clamp-to-edge',
         addressModeV: 'clamp-to-edge',
         minFilter: 'linear',
@@ -38,7 +38,7 @@ export class RenderStageSSAO implements RenderStage {
 
     private _ssaoShader!: SSAOShader;
     private _ssaoPipeline!: GPURenderPipeline;
-    private _ssaoOptionsBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _ssaoOptionsBuffer = BufferUtils.createEmptyBuffer(
         2 * Mat4.byteSize + 4,
         GPUBufferUsage.COPY_DST | GPUBufferUsage.UNIFORM,
     );

@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './mipmap.wgsl';
 
 export class Mipmap2DShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         TEXTURE: 0,
     };
 

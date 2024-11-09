@@ -61,4 +61,9 @@ export abstract class Camera {
         this._pos = pos;
         this.generateCameraMatrix();
     }
+
+    set up(up: Vec3) {
+        this._up = up;
+        this.generateCameraMatrix();
+    }
 }

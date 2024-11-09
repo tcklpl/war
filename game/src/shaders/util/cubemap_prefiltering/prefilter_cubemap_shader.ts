@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './prefilter_cubemap.wgsl';
 
 export class PrefilterCubemapShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         VIEWPROJ: 0,
         TEXTURE: 1,
     };

@@ -5,7 +5,7 @@ export class GLTFAsset extends Asset {
     constructor(
         name: string,
         url: string,
-        private _gltfFile: GLTFFile,
+        private readonly _gltfFile: GLTFFile,
     ) {
         super(name, url);
     }

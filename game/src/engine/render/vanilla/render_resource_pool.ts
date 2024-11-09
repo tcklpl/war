@@ -12,7 +12,7 @@ import { RenderPostEffects } from './render_post_effects';
 import { RenderProjection } from './render_projection';
 
 export class RenderResourcePool {
-    private _hdrTextureFormat: GPUTextureFormat = 'rgba16float';
+    private readonly _hdrTextureFormat: GPUTextureFormat = 'rgba16float';
 
     private _commandEncoder!: GPUCommandEncoder;
     private _scene!: Scene;
@@ -22,21 +22,21 @@ export class RenderResourcePool {
     private _renderPostEffects!: RenderPostEffects;
     private _jitter!: Vec2;
 
-    private _depthTexture = new Texture();
-    private _velocityTexture = new Texture();
+    private readonly _depthTexture = new Texture();
+    private readonly _velocityTexture = new Texture();
 
-    private _hdrBufferChain!: RenderHDRBufferChain;
+    private readonly _hdrBufferChain!: RenderHDRBufferChain;
 
-    private _bloomMips = new Texture();
-    private _bloomMipsLength = 7;
+    private readonly _bloomMips = new Texture();
+    private readonly _bloomMipsLength = 7;
 
-    private _normalTexture = new Texture();
-    private _ssaoTextureNoisy = new Texture();
-    private _ssaoTextureBlurred = new Texture();
-    private _specularTexture = new Texture();
+    private readonly _normalTexture = new Texture();
+    private readonly _ssaoTextureNoisy = new Texture();
+    private readonly _ssaoTextureBlurred = new Texture();
+    private readonly _specularTexture = new Texture();
 
     private _canvasTextureView!: GPUTextureView;
-    private _viewProjBuffer!: GPUBuffer;
+    private readonly _viewProjBuffer!: GPUBuffer;
 
     private _shadowMapAtlas!: ShadowMapAtlas;
 

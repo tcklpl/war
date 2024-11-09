@@ -1,5 +1,5 @@
 export enum MappedRegionSize {
-    BIG = 1 / 2,
-    MEDIUM = 1 / 4,
-    SMALL = 1 / 8,
+    BIG = 0.5,
+    MEDIUM = 0.25,
+    SMALL = 0.125,
 }

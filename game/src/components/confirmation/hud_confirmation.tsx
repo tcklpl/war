@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Skeleton } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfirmationRequestInfo, useConfirmation } from '../../hooks/use_confirmation';
 
 const HUDConfirmation: React.FC = () => {
-    const [isOpen, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const [currentConfirmation, setCurrentConfirmation] = useState<ConfirmationRequestInfo | undefined>();
     const { confirmationQueue, getCurrentConfirmation } = useConfirmation();
     const { t } = useTranslation(['common']);
@@ -34,7 +34,7 @@ const HUDConfirmation: React.FC = () => {
     }, [currentConfirmation]);
 
     return (
-        <Dialog open={isOpen} onClose={cancel}>
+        <Dialog open={open} onClose={cancel}>
             <DialogTitle>
                 {currentConfirmation?.title ?? <Skeleton variant='text' sx={{ fontSize: '1rem' }} />}
             </DialogTitle>

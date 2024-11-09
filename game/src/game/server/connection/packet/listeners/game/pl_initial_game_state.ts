@@ -4,7 +4,6 @@ import { PacketListener } from '../packet_listener';
 export class PLInitialGameState extends PacketListener {
     register(): void {
         this.socket.on('gInitialGameState', state => {
-            console.log(state);
             this.server.currentGameSession = new WarGameSession(state);
         });
     }

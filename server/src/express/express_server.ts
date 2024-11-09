@@ -1,24 +1,26 @@
-import { ConfigManager } from '../config/config_manager';
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
+import { Server } from 'http';
+import { ConfigManager } from '../config/config_manager';
 import { CfgServer } from '../config/default/cfg_server';
-import { ExpressRoutes } from './routes/routes';
 import { CryptManager } from '../crypt/crypt_manager';
 import { GameServer } from '../game/game_server';
-import { Server } from 'http';
 import { Logger } from '../log/logger';
+import { ExpressRoutes } from './routes/routes';
 
 export class ExpressServer {
-    constructor(
-        private _configManager: ConfigManager,
-        private _cryptManager: CryptManager,
-        private _gameServer: GameServer,
-        private _log: Logger,
-    ) {}
-
     private _app!: express.Application;
     private _server!: Server;
-    private _routes = new ExpressRoutes(this._configManager, this._cryptManager, this._gameServer);
+    private readonly _routes!: ExpressRoutes;
+
+    constructor(
+        private readonly _configManager: ConfigManager,
+        private readonly _cryptManager: CryptManager,
+        private readonly _gameServer: GameServer,
+        private readonly _log: Logger,
+    ) {
+        this._routes = new ExpressRoutes(this._configManager, this._cryptManager, this._gameServer);
+    }
 
     private startServer() {
         this._app = express();

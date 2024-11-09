@@ -7,9 +7,9 @@ interface GLTFAssetInfo {
 }
 
 export class GLTFFile {
-    private _assetInfo: GLTFAssetInfo;
-    private _scenes: GLTFScene[];
-    private _defaultScene: GLTFScene;
+    private readonly _assetInfo: GLTFAssetInfo;
+    private readonly _scenes: GLTFScene[];
+    private readonly _defaultScene: GLTFScene;
 
     constructor(assetInfo: GLTFAssetInfo, scenes: GLTFScene[], defaultSceneIndex: number) {
         if (defaultSceneIndex < 0 || defaultSceneIndex >= scenes.length)

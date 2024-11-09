@@ -1,22 +1,22 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import * as jwt from 'jsonwebtoken';
+import * as path from 'path';
+import { TokenBody } from '../../../protocol/src/auth/token_body';
 import { ConfigManager } from '../config/config_manager';
 import { CfgCrypt } from '../config/default/cfg_crypt';
-import { CryptoUtils } from '../utils/crypto_utils';
 import { CfgServer } from '../config/default/cfg_server';
 import { Logger } from '../log/logger';
-import { TokenBody } from '../../../protocol/src/auth/token_body';
+import { CryptoUtils } from '../utils/crypto_utils';
 
 export class CryptManager {
     constructor(
-        private _configManager: ConfigManager,
-        private _log: Logger,
+        private readonly _configManager: ConfigManager,
+        private readonly _log: Logger,
     ) {}
 
-    private _keyFolder = process.cwd();
-    private _publicKeyFile = path.join(this._keyFolder, 'public.key');
-    private _privateKeyFile = path.join(this._keyFolder, 'private.key');
+    private readonly _keyFolder = process.cwd();
+    private readonly _publicKeyFile = path.join(this._keyFolder, 'public.key');
+    private readonly _privateKeyFile = path.join(this._keyFolder, 'private.key');
 
     private _publicKey!: string;
     private _privateKey!: string;
@@ -77,7 +77,7 @@ export class CryptManager {
     validateToken(token: string) {
         try {
             return !!jwt.verify(token, this._publicKey);
-        } catch (e) {
+        } catch {
             return false;
         }
     }

@@ -1,27 +1,27 @@
+import { Socket, io } from 'socket.io-client';
 import {
     ClientToServerPackets,
+    ResponseServerInfoBody,
     ServerToClientPackets,
     cl_LoginRequest,
     sv_LoginResponseOK,
-    ResponseServerInfoBody,
 } from '../../../../../protocol';
 import { UnknownConnectionError } from '../../../errors/game/connection/unknown_connection_error';
 import { UsernameNotAvailableError } from '../../../errors/game/connection/username_not_available';
 import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
-import { Socket, io } from 'socket.io-client';
 import { ServerConnection } from './server_connection';
 
 type ServerConnectionCandidateStatus = 'loading' | 'pinging' | 'error' | 'ready' | 'connecting';
 
 export class ServerConnectionCandidate {
-    private TIMEOUT = 5; // timeout in seconds
+    private readonly TIMEOUT = 5; // timeout in seconds
 
     private _status: ServerConnectionCandidateStatus = 'loading';
     private _serverInfo?: ResponseServerInfoBody;
 
     private _pingAbortController?: AbortController;
 
-    constructor(private _address: string) {}
+    constructor(private readonly _address: string) {}
 
     /**
      * Tries to ping this server's remote address.

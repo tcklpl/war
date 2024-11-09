@@ -42,20 +42,17 @@ export class Game {
     private _pauseReason?: GamePauseReason;
 
     // game managers
-    readonly board = new Board(this._log.createChildContext('Board'));
-    private _turnManager: TurnManager;
-    private _initialTerritorySelectionManager = new InitialTerritorySelectionManager(
-        this,
-        this._log.createChildContext('Initial Territory Selection'),
-    );
+    private readonly _board: Board;
+    private readonly _turnManager: TurnManager;
+    private readonly _initialTerritorySelectionManager: InitialTerritorySelectionManager;
 
     constructor(
-        private _lobby: Lobby,
-        private _gameManager: GameManager,
-        private _cryptManager: CryptManager,
-        private _playerManager: PlayerManager,
-        private _gameSaveService: GameSaveService,
-        private _log: Logger,
+        private readonly _lobby: Lobby,
+        private readonly _gameManager: GameManager,
+        private readonly _cryptManager: CryptManager,
+        private readonly _playerManager: PlayerManager,
+        private readonly _gameSaveService: GameSaveService,
+        private readonly _log: Logger,
     ) {
         if (_lobby.players.some(p => !p.party)) throw new LobbyNotReadyError();
 
@@ -68,6 +65,12 @@ export class Game {
 
         // shuffle the player list, this will be the play order
         this._players = consummatedPlayers.sort(() => Math.random() - 0.5);
+
+        this._board = new Board(this._log.createChildContext('Board'));
+        this._initialTerritorySelectionManager = new InitialTerritorySelectionManager(
+            this,
+            this._log.createChildContext('Initial Territory Selection'),
+        );
 
         this._turnManager = new TurnManager(
             this._players,
@@ -287,6 +290,10 @@ export class Game {
             game_id: this.id,
             username: p.username,
         });
+    }
+
+    get board() {
+        return this._board;
     }
 
     get players() {

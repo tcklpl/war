@@ -97,8 +97,4 @@ export class RenderStageSkybox implements RenderStage {
         rpe.end();
         pool.commandEncoder.popDebugGroup();
     }
-
-    free() {
-        // TODO
-    }
 }

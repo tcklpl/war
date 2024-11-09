@@ -14,7 +14,7 @@ export class SceneInfoBindGroupOptions {
 
     private _extras: GPUBindGroupEntry[] = [];
 
-    constructor(private _layoutIndex: number) {}
+    constructor(private readonly _layoutIndex: number) {}
 
     includeDirectionalLights(index: number) {
         this._directionalLights = { use: true, index };

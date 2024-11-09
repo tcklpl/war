@@ -4,7 +4,7 @@ import { Material } from './material';
 export class MaterialManager extends Manager<Material> {
     private _materialId = 0;
 
-    private _activeMaterial?: Material;
+    private readonly _activeMaterial?: Material;
 
     requestMaterialId() {
         return this._materialId++;

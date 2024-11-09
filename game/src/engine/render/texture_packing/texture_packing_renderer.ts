@@ -12,7 +12,7 @@ export class TexturePackingRenderer {
     private _pipelineVec3f32!: GPURenderPipeline;
 
     private _renderPassDescriptor!: GPURenderPassDescriptor;
-    private _sampler = device.createSampler({
+    private readonly _sampler = device.createSampler({
         label: 'texture packing sampler',
         magFilter: 'linear',
         minFilter: 'linear',
@@ -132,5 +132,7 @@ export class TexturePackingRenderer {
         await device.queue.onSubmittedWorkDone();
     }
 
-    free() {}
+    free() {
+        // Nothing to free here
+    }
 }

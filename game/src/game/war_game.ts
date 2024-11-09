@@ -4,9 +4,9 @@ import { GameStateManager } from './game_state_manager';
 import { GameLoader } from './loader/game_loader';
 
 export class WarGame {
-    private _loader = new GameLoader();
-    private _engine = new Engine();
-    private _state = GameStateManager.INSTANCE;
+    private readonly _loader = new GameLoader();
+    private readonly _engine = new Engine();
+    private readonly _state = GameStateManager.INSTANCE;
 
     private _gameBoard!: GameBoard;
     private _toRunWhenReady: (() => void)[] = [];

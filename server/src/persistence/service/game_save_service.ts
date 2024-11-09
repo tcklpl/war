@@ -4,7 +4,7 @@ import { GameSave } from '../model/game_save';
 import { PersistenceManager } from '../persistence_manager';
 
 export class GameSaveService {
-    private _gsDao: GameSaveDao;
+    private readonly _gsDao: GameSaveDao;
 
     constructor(pm: PersistenceManager) {
         this._gsDao = pm.dao.gameSave;

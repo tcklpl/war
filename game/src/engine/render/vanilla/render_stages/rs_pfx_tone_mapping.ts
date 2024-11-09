@@ -9,10 +9,13 @@ export class RenderStagePFXToneMapping implements RenderStage {
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _texturesBindGroup!: GPUBindGroup;
-    private _optionsBuffer = BufferUtils.createEmptyBuffer(7 * 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private readonly _optionsBuffer = BufferUtils.createEmptyBuffer(
+        7 * 4,
+        GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    );
     private _optionsBindGroup!: GPUBindGroup;
 
-    private _sampler = device.createSampler({
+    private readonly _sampler = device.createSampler({
         addressModeU: 'clamp-to-edge',
         addressModeV: 'clamp-to-edge',
     });

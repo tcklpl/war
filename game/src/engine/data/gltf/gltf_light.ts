@@ -3,11 +3,11 @@ import { BadGLTFFileError } from '../../../errors/engine/gltf/bad_gltf_file';
 import { InvalidGLTFProperty } from '../../../errors/engine/gltf/invalid_gltf_property';
 
 export class GLTFLight {
-    private _name: string;
-    private _type: KHR_lights_punctual_Types;
-    private _color: number[];
-    private _intensity: number;
-    private _range?: number;
+    private readonly _name: string;
+    private readonly _type: KHR_lights_punctual_Types;
+    private readonly _color: number[];
+    private readonly _intensity: number;
+    private readonly _range?: number;
 
     constructor(name: string, type: KHR_lights_punctual_Types, color: number[], intensity: number, range?: number) {
         if (color.length !== 3)

@@ -2,7 +2,7 @@ import { LoadStage } from './load_stage';
 
 export class GameLoader {
     private _loadStage = LoadStage.STARTING;
-    private _loadListeners: ((ls: LoadStage) => void)[] = [];
+    private readonly _loadListeners: ((ls: LoadStage) => void)[] = [];
 
     onLoadStageChange(cb: (ls: LoadStage) => void) {
         this._loadListeners.push(cb);

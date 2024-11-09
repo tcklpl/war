@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './ssao.wgsl';
 
 export class SSAOShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         TEXTURES: 0,
         OPT_KERNEL: 1,
     };

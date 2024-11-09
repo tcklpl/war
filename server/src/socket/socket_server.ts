@@ -1,21 +1,21 @@
 import { Server } from 'socket.io';
+import { AuthTokenBody } from '../../../protocol';
+import { GameSocketServer } from '../@types/server_socket';
 import { ConfigManager } from '../config/config_manager';
 import { CfgServer } from '../config/default/cfg_server';
 import { CryptManager } from '../crypt/crypt_manager';
 import { GameServer } from '../game/game_server';
 import { LobbyPlayer } from '../game/player/lobby_player';
-import { GameSocketServer } from '../@types/server_socket';
-import { Logger } from '../log/logger';
 import { PlayerConnection } from '../game/player/player_connection';
+import { Logger } from '../log/logger';
 import { ServerClientPacketListeners } from './routes/server_client_packet_listeners';
-import { AuthTokenBody } from '../../../protocol';
 
 export class SocketServer {
     constructor(
-        private _configManager: ConfigManager,
-        private _cryptManager: CryptManager,
-        private _gameServer: GameServer,
-        private _log: Logger,
+        private readonly _configManager: ConfigManager,
+        private readonly _cryptManager: CryptManager,
+        private readonly _gameServer: GameServer,
+        private readonly _log: Logger,
     ) {}
 
     private _io!: GameSocketServer;
@@ -48,7 +48,7 @@ export class SocketServer {
             const player = new LobbyPlayer(authTokenBody.username, new PlayerConnection(socket));
             try {
                 this._gameServer.playerManager.loginPlayer(player);
-            } catch (e) {
+            } catch {
                 socket.disconnect();
                 return;
             }

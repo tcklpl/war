@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './pfx_tone_mapping.wgsl';
 
 export class PFXTonemapShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         TEXTURES: 0,
         OPTIONS: 1,
     };

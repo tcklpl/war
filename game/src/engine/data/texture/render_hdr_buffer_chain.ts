@@ -2,12 +2,12 @@ import { Vec2 } from '../vec/vec2';
 import { Texture } from './texture';
 
 export class RenderHDRBufferChain {
-    private _textures = [new Texture(), new Texture(), new Texture()];
+    private readonly _textures = [new Texture(), new Texture(), new Texture()];
     private _previous = 2;
     private _current = 0;
     private _available = 1;
 
-    constructor(private _hdrFormat: GPUTextureFormat) {}
+    constructor(private readonly _hdrFormat: GPUTextureFormat) {}
 
     private createHDRTexture(resolution: Vec2, label: string) {
         return device.createTexture({

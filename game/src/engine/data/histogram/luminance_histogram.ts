@@ -2,8 +2,8 @@ import { BufferUtils } from '../../../utils/buffer_utils';
 
 export class LuminanceHistogram {
     readonly bins = 256;
-    private _rawData: Uint32Array = new Uint32Array(new Array(this.bins).fill(0));
-    private _buffer = BufferUtils.createEmptyBuffer(
+    private readonly _rawData: Uint32Array = new Uint32Array(new Array(this.bins).fill(0));
+    private readonly _buffer = BufferUtils.createEmptyBuffer(
         this.bins * 4,
         GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
         'Luminance histogram',

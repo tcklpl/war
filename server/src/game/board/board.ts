@@ -395,7 +395,7 @@ export class Board {
         }
     }
 
-    constructor(private _log: Logger) {
+    constructor(private readonly _log: Logger) {
         this.mapTerritoriesToNodes();
         this.registerGraphEdges();
         this.validateGraph();

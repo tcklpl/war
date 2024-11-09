@@ -7,8 +7,8 @@ export interface IDBControllerInfo {
 
 export class IDBController<T> {
     constructor(
-        private _connection: IDBConnector,
-        private _info: IDBControllerInfo,
+        private readonly _connection: IDBConnector,
+        private readonly _info: IDBControllerInfo,
     ) {}
 
     private createTransaction(mode: IDBTransactionMode) {

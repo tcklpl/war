@@ -14,7 +14,7 @@ export class RenderStageBloom implements RenderStage {
 
     private _renderPassDescriptor!: GPURenderPassDescriptor;
 
-    private _sampler = device.createSampler({
+    private readonly _sampler = device.createSampler({
         addressModeU: 'clamp-to-edge',
         addressModeV: 'clamp-to-edge',
         minFilter: 'linear',
@@ -146,9 +146,5 @@ export class RenderStageBloom implements RenderStage {
         pool.commandEncoder.popDebugGroup();
 
         pool.commandEncoder.popDebugGroup();
-    }
-
-    free() {
-        // TODO
     }
 }

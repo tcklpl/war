@@ -5,7 +5,7 @@ import { MatrixTransformative } from './matrix_transformative';
 const EntityBase = identifiable(FrameListenerMatrixTransformative);
 
 export class EmptyEntity extends EntityBase {
-    private _name: string;
+    private readonly _name: string;
 
     constructor(data: { name: string }) {
         super();

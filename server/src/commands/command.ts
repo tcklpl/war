@@ -3,7 +3,7 @@ import { Logger } from '../log/logger';
 import { CommandExecutionData } from './command_execution_data';
 
 export abstract class Command {
-    private _subroutes: Command[] = [];
+    private readonly _subroutes: Command[] = [];
 
     constructor(
         public readonly command: string,

@@ -1,25 +1,31 @@
+import * as readLine from 'readline';
 import { Logger } from '../log/logger';
 import { WarServer } from '../war_server';
 import { Command } from './command';
 import { CommandConfig } from './default_commands/config';
 import { CommandHelp } from './default_commands/help';
 import { CommandStop } from './default_commands/stop';
-import * as readLine from 'readline';
 
 export class CommandProcessor {
-    private _commands: Command[] = [
-        new CommandHelp(this._log.createChildContext('Help')),
-        new CommandStop(this._log.createChildContext('Stop')),
-        new CommandConfig(this._log.createChildContext('Config')),
-    ];
+    private _commands: Command[] = [];
 
     private _commandInterface!: readLine.Interface;
     private _shouldParseNextCommand = true;
 
     constructor(
-        private _server: WarServer,
-        private _log: Logger,
-    ) {}
+        private readonly _server: WarServer,
+        private readonly _log: Logger,
+    ) {
+        this.registerCommands();
+    }
+
+    private registerCommands() {
+        this._commands = [
+            new CommandHelp(this._log.createChildContext('Help')),
+            new CommandStop(this._log.createChildContext('Stop')),
+            new CommandConfig(this._log.createChildContext('Config')),
+        ];
+    }
 
     stop() {
         this._shouldParseNextCommand = false;

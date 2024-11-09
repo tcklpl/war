@@ -26,7 +26,7 @@ export interface LightProperties {
 }
 
 export abstract class Light {
-    private _properties: LightProperties;
+    private readonly _properties: LightProperties;
     /**
      * Shadow map atlas region if shadow mapping is enabled.
      *

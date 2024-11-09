@@ -1,11 +1,12 @@
 import { BufferUtils } from '../../../utils/buffer_utils';
 import { MathUtils } from '../../../utils/math_utils';
+import { Animatable, AnimationInterpolation, EncodedAnimationTarget } from '../animation/animatable';
 import { Mat4 } from '../mat/mat4';
 import { Quaternion } from '../quaternion/quaternion';
 import { Vec3 } from '../vec/vec3';
 import { Vec4 } from '../vec/vec4';
 
-export class MatrixTransformative {
+export class MatrixTransformative implements Animatable {
     private _parent?: MatrixTransformative;
     private _children: MatrixTransformative[] = [];
 
@@ -19,14 +20,14 @@ export class MatrixTransformative {
 
     private _modelMatrix = Mat4.identity();
     private _modelMatrixInverse = Mat4.identity();
-    private _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(
         3 * Mat4.byteSize + Vec4.byteSize + 4,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );
 
     private _windingOrder: 'cw' | 'ccw' = 'ccw';
 
-    private _transformListeners: (() => void)[] = [];
+    private readonly _transformListeners: (() => void)[] = [];
 
     private buildModelMatrix() {
         this._modelMatrix = Mat4.identity()
@@ -79,6 +80,10 @@ export class MatrixTransformative {
         this.buildModelMatrix();
     }
 
+    translate(by: Vec3) {
+        this.translation = this._translation.add(by);
+    }
+
     get rotationQuaternion() {
         return this._rotation;
     }
@@ -115,6 +120,10 @@ export class MatrixTransformative {
         this.buildModelMatrix();
     }
 
+    scaleBy(by: Vec3) {
+        this.scale = this.scale.hadamardProduct(by);
+    }
+
     get modelMatrix() {
         return this._modelMatrix;
     }
@@ -143,4 +152,102 @@ export class MatrixTransformative {
     get windingOrder() {
         return this._windingOrder;
     }
+
+    readonly animation = {
+        encoders: {
+            translate(by: Vec3, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'translate',
+                    value: by,
+                    type: 'incrementor',
+                    getter: 'translation',
+                    setter: 'translate',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+            setTranslation(target: Vec3, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'translate',
+                    value: target,
+                    type: 'setter',
+                    getter: 'translation',
+                    setter: 'translate',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+            scale(by: Vec3, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'scale',
+                    value: by,
+                    type: 'incrementor',
+                    getter: 'scale',
+                    setter: 'scale',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+            setScale(target: Vec3, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'scale',
+                    value: target,
+                    type: 'setter',
+                    getter: 'scale',
+                    setter: 'scale',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+            rotate(by: Quaternion, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'rotate',
+                    value: by,
+                    type: 'incrementor',
+                    getter: 'rotation',
+                    setter: 'rotate',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+            setRotation(target: Quaternion, interpolation: AnimationInterpolation = 'linear') {
+                return {
+                    target: 'rotate',
+                    value: target,
+                    type: 'setter',
+                    getter: 'rotation',
+                    setter: 'rotate',
+                    interpolation,
+                } as EncodedAnimationTarget;
+            },
+        },
+        getters: {
+            translation: () => {
+                return this._translation;
+            },
+            scale: () => {
+                return this._scale;
+            },
+            rotation: () => {
+                return this._rotation;
+            },
+        },
+        setters: {
+            translate: (by: Vec3) => {
+                this.translation = by;
+            },
+            scale: (by: Vec3) => {
+                this.scale = by;
+            },
+            rotate: (by: Quaternion) => {
+                this.rotationQuaternion = by;
+            },
+        },
+        accumulators: {
+            translate: (by: Vec3) => {
+                this.translation = this.translation.add(by);
+            },
+            scale: (by: Vec3) => {
+                this.scale = this.scale.add(by);
+            },
+            rotate: (by: Quaternion) => {
+                this.rotationQuaternion = this.rotationQuaternion.add(by);
+            },
+        },
+    };
 }

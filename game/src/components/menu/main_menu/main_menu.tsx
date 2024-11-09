@@ -1,17 +1,17 @@
-import { Box, Button, ButtonGroup, CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, CircularProgress, Grid2, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import PlayerNameBox from '../config/player_name_box/player_name_box';
-import { useGameSession } from '../../../hooks/use_game_session';
 import { useTranslation } from 'react-i18next';
-import { useGame } from '../../../hooks/use_game';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAlert } from '../../../hooks/use_alert';
+import { useGame } from '../../../hooks/use_game';
+import { useGameSession } from '../../../hooks/use_game_session';
+import PlayerNameBox from '../config/player_name_box/player_name_box';
 
-import PublicIcon from '@mui/icons-material/Public';
-import SettingsIcon from '@mui/icons-material/Settings';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import RestoreIcon from '@mui/icons-material/Restore';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import PublicIcon from '@mui/icons-material/Public';
+import RestoreIcon from '@mui/icons-material/Restore';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useConfirmation } from '../../../hooks/use_confirmation';
 
 const MainMenu: React.FC = () => {
@@ -81,7 +81,7 @@ const MainMenu: React.FC = () => {
     };
 
     return (
-        <Grid container style={{ height: '100vh' }} justifyContent='center' alignContent='center'>
+        <Grid2 container style={{ height: '100vh' }} justifyContent='center' alignContent='center'>
             <Stack spacing={2}>
                 <PlayerNameBox />
                 {reconnectionInfo && (
@@ -130,7 +130,7 @@ const MainMenu: React.FC = () => {
                     {process.env.REACT_APP_VERSION}
                 </Typography>
             </Box>
-        </Grid>
+        </Grid2>
     );
 };
 

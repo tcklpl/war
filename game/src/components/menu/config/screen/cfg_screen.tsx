@@ -1,22 +1,29 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { Alert, Box, Stack, ToggleButton, ToggleButtonGroup, useTheme } from '@mui/material';
-import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MonitorIcon from '@mui/icons-material/Monitor';
-import CfgDisplayScreen from '../display/cfg_display_screen';
-import style from './cfg_screen.module.scss';
-import { useTranslation } from 'react-i18next';
-import CfgGraphicsScreen from '../graphics/cfg_graphics_screen';
-import CfgGameScreen from '../game/cfg_game_screen';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import CfgScreenDefaultBackground from '../default_background/cfg_default_background';
-import { useGame } from '../../../../hooks/use_game';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import { Alert, Box, Stack, ToggleButton, ToggleButtonGroup, useTheme } from '@mui/material';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useConfig } from '../../../../hooks/use_config';
+import { useGame } from '../../../../hooks/use_game';
+import CfgScreenDefaultBackground from '../default_background/cfg_default_background';
+import CfgDisplayScreen from '../display/cfg_display_screen';
+import CfgGameScreen from '../game/cfg_game_screen';
+import CfgGraphicsScreen from '../graphics/cfg_graphics_screen';
+import style from './cfg_screen.module.scss';
 
-const CfgScreen: React.FC = () => {
+interface IPropsCfgScreen {
+    showReturnToMenu?: boolean;
+}
+
+const CfgScreen: React.FC<IPropsCfgScreen> = ({ showReturnToMenu }) => {
     const { palette } = useTheme();
+    const navigate = useNavigate();
     const [alignment, setAlignment] = React.useState('');
     const [currentConfigScreen, setCurrentConfigScreen] = useState<ReactNode>(<CfgScreenDefaultBackground />);
-    const { t } = useTranslation(['config']);
+    const { t } = useTranslation(['config', 'common']);
     const { gameInstance } = useGame();
     const { saveConfig } = useConfig();
 
@@ -34,13 +41,19 @@ const CfgScreen: React.FC = () => {
             sx={{ flexDirection: 'column', display: 'flex' }}
         >
             <Box className={style.header}>
-                <Stack spacing={2}>
+                <Stack spacing={2} alignItems={'center'}>
                     <ToggleButtonGroup
                         color='primary'
                         exclusive
                         onChange={(e, alignment) => setAlignment(alignment)}
                         value={alignment}
                     >
+                        {showReturnToMenu && (
+                            <ToggleButton value={'menu'} onClick={() => navigate('/')}>
+                                <ArrowBackIcon style={{ marginRight: '0.5em' }} /> {t('common:back_to_menu')}
+                            </ToggleButton>
+                        )}
+
                         <ToggleButton value={'display'} onClick={() => setCurrentConfigScreen(<CfgDisplayScreen />)}>
                             <MonitorIcon style={{ marginRight: '0.5em' }} /> {t('config:display')}
                         </ToggleButton>

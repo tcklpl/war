@@ -1,5 +1,6 @@
 import { AssetManager } from './asset/asset_manager';
 import { ConfigManager } from './config/cfg_manager';
+import { Orchestrator } from './data/animation/orchestrator';
 import { CameraManager } from './data/camera/camera_manager';
 import { LightManager } from './data/lights/light_manager';
 import { MaterialManager } from './data/material/material_manager';
@@ -22,11 +23,12 @@ export class Engine {
     private _renderer: Renderer = new VanillaRenderer();
     private _shouldRender: boolean = false;
 
-    private _idPool = new IdentifierPool();
-    private _db = new IDBWarConnection();
+    readonly idPool = new IdentifierPool();
+    readonly db = new IDBWarConnection();
+    readonly orchestrator = new Orchestrator();
     private _config!: ConfigManager;
 
-    private _managers = {
+    readonly managers = {
         io: new GameIO(),
         asset: new AssetManager(),
         camera: new CameraManager(),
@@ -36,7 +38,7 @@ export class Engine {
         light: new LightManager(),
     };
 
-    private _utilRenderers = {
+    readonly utilRenderers = {
         equirecToCubemap: new EquirectangularToCubemapRenderer(),
         cubemapPrefilter: new CubemapPrefilterRenderer(),
         BRDF_LUT: new BRDFLUTRenderer(),
@@ -44,7 +46,7 @@ export class Engine {
         packing: new TexturePackingRenderer(),
     };
 
-    private _frameListeners: IFrameListener[] = [];
+    private readonly _frameListeners: IFrameListener[] = [];
 
     private _brdfLUT!: GPUTexture;
 
@@ -60,11 +62,11 @@ export class Engine {
     private async renderLoop(time: number) {
         const msDiff = time - this._lastFrameTime;
         const deltaTime = msDiff / 1000;
-        Time.DeltaTime = deltaTime;
+        Time.updateDeltaTime(deltaTime);
         this._lastFrameTime = time;
         if (time - this._lastFullSecondTime >= 1000) {
             this._lastFullSecondTime = time;
-            Time.FPS = this._framesRenderedSinceLastSecond;
+            Time.updateFPS(this._framesRenderedSinceLastSecond);
             this._framesRenderedSinceLastSecond = 0;
             this._frameListeners.forEach(fl => {
                 if (fl.onEachSecond) fl.onEachSecond();
@@ -72,6 +74,10 @@ export class Engine {
         }
 
         if (this._shouldRender) {
+            // Update all animations
+            this.orchestrator.purgeFinishedAnimations();
+            this.orchestrator.update(deltaTime);
+            // Update all frame listeners before rendering
             this._frameListeners.forEach(fl => {
                 if (fl.onEachFrame) fl.onEachFrame(deltaTime);
             });
@@ -92,11 +98,11 @@ export class Engine {
     }
 
     private async initializeDB() {
-        await this._db.openConnection();
-        this._config = new ConfigManager(this._db);
+        await this.db.openConnection();
+        this._config = new ConfigManager(this.db);
         await this._config.loadConfig();
         await this._config.saveConfig();
-        await this._managers.asset.initializeDB(this._db);
+        await this.managers.asset.initializeDB(this.db);
     }
 
     private async initializeRenderers() {
@@ -124,10 +130,10 @@ export class Engine {
 
         // assets don't need any memory freeing
         // cameras also don't need any memory freeing
-        this._managers.mesh.freeMeshes();
+        this.managers.mesh.freeMeshes();
         // scenes also don't need any memory freeing
-        this._managers.material.freeMaterials();
-        this._managers.scene.freeScenes();
+        this.managers.material.freeMaterials();
+        this.managers.scene.freeScenes();
 
         this.utilRenderers.equirecToCubemap.free();
         this.utilRenderers.cubemapPrefilter.free();
@@ -151,28 +157,12 @@ export class Engine {
         if (wasRendering) this.resumeRender();
     }
 
-    get idPool() {
-        return this._idPool;
-    }
-
-    get managers() {
-        return this._managers;
-    }
-
-    get db() {
-        return this._db;
-    }
-
     get config() {
         return this._config;
     }
 
     get renderer() {
         return this._renderer;
-    }
-
-    get utilRenderers() {
-        return this._utilRenderers;
     }
 
     get brdfLUT() {

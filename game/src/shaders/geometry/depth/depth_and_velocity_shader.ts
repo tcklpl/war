@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './depth_and_velocity.wgsl';
 
 export class DepthAndVelocityShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         VIEWPROJ: 0,
         MODEL: 1,
     };

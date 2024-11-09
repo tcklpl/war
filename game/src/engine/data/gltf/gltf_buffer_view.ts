@@ -6,10 +6,10 @@ export class GLTFBufferView {
     private readonly ARRAY_BUFFER = 34962;
     private readonly ELEMENT_ARRAY_BUFFER = 34963;
 
-    private _buffer: GLTFBuffer;
-    private _length: number;
-    private _offset: number;
-    private _target?: number; // gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER or undefined
+    private readonly _buffer: GLTFBuffer;
+    private readonly _length: number;
+    private readonly _offset: number;
+    private readonly _target?: number; // gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER or undefined
 
     constructor(buffer: GLTFBuffer, length: number, offset: number, target?: number) {
         const validTargetTypes: number[] = [this.ARRAY_BUFFER, this.ELEMENT_ARRAY_BUFFER];

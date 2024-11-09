@@ -6,9 +6,9 @@ type ClientPacketEventNames = keyof ClientToServerPackets;
 
 export class ServerConnection {
     constructor(
-        private _address: string,
-        private _socket: Socket<ServerToClientPackets, ClientToServerPackets>,
-        private _token: string,
+        private readonly _address: string,
+        private readonly _socket: Socket<ServerToClientPackets, ClientToServerPackets>,
+        private readonly _token: string,
     ) {}
 
     emitPacket<T extends ClientPacketEventNames>(pkt: ClientPacket<T>) {

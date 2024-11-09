@@ -77,5 +77,7 @@ export class BRDFLUTRenderer {
         return renderTarget;
     }
 
-    free() {}
+    free() {
+        // Nothing to free here
+    }
 }

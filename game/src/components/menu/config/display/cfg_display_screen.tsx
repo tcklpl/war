@@ -1,6 +1,7 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import {
-    Grid,
+    Grid2,
     MenuItem,
     Select,
     Stack,
@@ -12,11 +13,10 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import CfgTooltip from '../tooltip/cfg_tooltip';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useConfig } from '../../../../hooks/use_config';
+import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgDisplayScreen: React.FC = () => {
     const { palette } = useTheme();
@@ -44,8 +44,8 @@ const CfgDisplayScreen: React.FC = () => {
     }, [showPerformance]);
 
     return (
-        <Grid container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
-            <Grid item xs={8}>
+        <Grid2 container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
+            <Grid2 size={{ xs: 8 }}>
                 <Typography variant='h5'>{t('config:visual')}</Typography>
                 <Table>
                     <TableBody>
@@ -170,12 +170,12 @@ const CfgDisplayScreen: React.FC = () => {
                         </TableRow>
                     </TableBody>
                 </Table>
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={4}>
+            <Grid2 size={{ xs: 4 }}>
                 <CfgTooltip currentTooltip={currentTooltip} />
-            </Grid>
-        </Grid>
+            </Grid2>
+        </Grid2>
     );
 };
 

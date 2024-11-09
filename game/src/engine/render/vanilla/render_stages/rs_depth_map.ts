@@ -11,7 +11,7 @@ export class RenderStageDepthMap implements RenderStage {
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
-    private _meshDrawOptions = new PrimitiveDrawOptions().includePosition(0);
+    private readonly _meshDrawOptions = new PrimitiveDrawOptions().includePosition(0);
 
     async initialize(resources: RenderInitializationResources) {
         await new Promise<void>(r => {
@@ -119,6 +119,4 @@ export class RenderStageDepthMap implements RenderStage {
         rpe.end();
         pool.commandEncoder.popDebugGroup();
     }
-
-    free() {}
 }

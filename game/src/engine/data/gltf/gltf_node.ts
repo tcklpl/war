@@ -7,11 +7,11 @@ import { GLTFLight } from './gltf_light';
 import { GLTFMesh } from './gltf_mesh';
 
 export abstract class GLTFNode {
-    private _name: string;
-    private _rotation: Quaternion;
-    private _translation: Vec3;
-    private _scale: Vec3;
-    private _animations: GLTFAnimation[] = []; // animations will always be registered after the nodes construction
+    private readonly _name: string;
+    private readonly _rotation: Quaternion;
+    private readonly _translation: Vec3;
+    private readonly _scale: Vec3;
+    private readonly _animations: GLTFAnimation[] = []; // animations will always be registered after the nodes construction
 
     constructor(name: string, rotation: number[], translation: number[], scale: number[]) {
         if (rotation.length !== 4)
@@ -47,7 +47,7 @@ export abstract class GLTFNode {
 }
 
 export class GLTFNodeMesh extends GLTFNode {
-    private _mesh: GLTFMesh;
+    private readonly _mesh: GLTFMesh;
 
     constructor(name: string, rotation: number[], translation: number[], scale: number[], mesh: GLTFMesh) {
         super(name, rotation, translation, scale);
@@ -60,7 +60,7 @@ export class GLTFNodeMesh extends GLTFNode {
 }
 
 export class GLTFNodeCamera extends GLTFNode {
-    private _camera: GLTFCamera;
+    private readonly _camera: GLTFCamera;
 
     constructor(name: string, rotation: number[], translation: number[], scale: number[], camera: GLTFCamera) {
         super(name, rotation, translation, scale);
@@ -73,7 +73,7 @@ export class GLTFNodeCamera extends GLTFNode {
 }
 
 export class GLTFNodeLight extends GLTFNode {
-    private _light: GLTFLight;
+    private readonly _light: GLTFLight;
 
     constructor(name: string, rotation: number[], translation: number[], scale: number[], light: GLTFLight) {
         super(name, rotation, translation, scale);

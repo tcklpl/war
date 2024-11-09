@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './depth.wgsl';
 
 export class DepthShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         VIEWPROJ: 0,
         MODEL: 1,
     };

@@ -1,6 +1,6 @@
-import React, { useLayoutEffect, useState } from 'react';
 import {
-    Grid,
+    Box,
+    Grid2,
     MenuItem,
     Select,
     Slider,
@@ -12,9 +12,10 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import React, { useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import CfgTooltip from '../tooltip/cfg_tooltip';
 import { useConfig } from '../../../../hooks/use_config';
+import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgGraphicsScreen: React.FC = () => {
     const { palette } = useTheme();
@@ -47,8 +48,8 @@ const CfgGraphicsScreen: React.FC = () => {
     }, [shadowQuality, shaderQuality, useSSAO, useBloom, useTAA, motionBlurAmount, useFilmGrain, graphicsConfig]);
 
     return (
-        <Grid container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
-            <Grid item xs={8}>
+        <Grid2 container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
+            <Grid2 size={{ xs: 8 }}>
                 <Typography variant='h5'>{t('config:graphics_rendering')}</Typography>
                 <Table>
                     <TableBody>
@@ -195,8 +196,8 @@ const CfgGraphicsScreen: React.FC = () => {
                                 <Typography variant='body1'>{t('config:graphics_post_effects_motion_blur')}</Typography>
                             </TableCell>
                             <TableCell align='right'>
-                                <Grid container alignItems='center'>
-                                    <Grid item xs>
+                                <Box display={'flex'}>
+                                    <Box flexGrow={1}>
                                         <Slider
                                             size='small'
                                             min={0}
@@ -207,13 +208,13 @@ const CfgGraphicsScreen: React.FC = () => {
                                                 setMotionBlurAmount(val as number);
                                             }}
                                         />
-                                    </Grid>
-                                    <Grid item paddingLeft={1}>
+                                    </Box>
+                                    <Box paddingLeft={1}>
                                         <Typography variant='body1' width='4em'>
                                             {(motionBlurAmount * 100).toFixed(0)}%
                                         </Typography>
-                                    </Grid>
-                                </Grid>
+                                    </Box>
+                                </Box>
                             </TableCell>
                         </TableRow>
 
@@ -240,12 +241,12 @@ const CfgGraphicsScreen: React.FC = () => {
                         </TableRow>
                     </TableBody>
                 </Table>
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={4}>
+            <Grid2 size={{ xs: 4 }}>
                 <CfgTooltip currentTooltip={currentTooltip} />
-            </Grid>
-        </Grid>
+            </Grid2>
+        </Grid2>
     );
 };
 

@@ -1,7 +1,7 @@
 export abstract class Asset {
     constructor(
-        private _name: string,
-        private _url: string,
+        private readonly _name: string,
+        private readonly _url: string,
     ) {}
 
     get name() {

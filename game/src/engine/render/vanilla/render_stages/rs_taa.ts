@@ -7,11 +7,11 @@ export class RenderStageTAA implements RenderStage {
     private _taaShader!: TAAShader;
     private _taaPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
-    private _samplerNearest = device.createSampler({
+    private readonly _samplerNearest = device.createSampler({
         minFilter: 'nearest',
         magFilter: 'nearest',
     });
-    private _samplerLinear = device.createSampler({
+    private readonly _samplerLinear = device.createSampler({
         minFilter: 'linear',
         magFilter: 'linear',
     });
@@ -93,9 +93,5 @@ export class RenderStageTAA implements RenderStage {
         pool.hdrBufferChain.swapCurrentBuffers();
 
         pool.commandEncoder.popDebugGroup();
-    }
-
-    free() {
-        // TODO
     }
 }

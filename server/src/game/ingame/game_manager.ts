@@ -10,14 +10,14 @@ import { Game } from './game';
 
 export class GameManager {
     private _games: Game[] = [];
-    private _cfgGame: CfgGame;
+    private readonly _cfgGame: CfgGame;
 
     constructor(
-        private _configManager: ConfigManager,
-        private _cryptManager: CryptManager,
-        private _gameServer: GameServer,
-        private _persistenceManager: PersistenceManager,
-        private _log: Logger,
+        private readonly _configManager: ConfigManager,
+        private readonly _cryptManager: CryptManager,
+        private readonly _gameServer: GameServer,
+        private readonly _persistenceManager: PersistenceManager,
+        private readonly _log: Logger,
     ) {
         this._cfgGame = _configManager.getConfig(CfgGame);
         this.registerEvents();

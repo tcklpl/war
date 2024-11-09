@@ -1,32 +1,32 @@
 import { BadPipelineError } from '../../../errors/engine/render/bad_pipeline';
+import { ConfigGraphics } from '../../config/cfg_graphics';
 import { RenderInitializationResources } from './render_initialization_resources';
 import { RenderResourcePool } from './render_resource_pool';
 import { RenderStage } from './render_stages/render_stage';
-import { RenderStageDepthMap } from './render_stages/rs_depth_map';
-import { RenderStageLights } from './render_stages/rs_lights';
-import { RenderStageSolidGeometry } from './render_stages/rs_solid_geometry';
-import { RenderStageSkybox } from './render_stages/rs_skybox';
-import { RenderStagePFXToneMapping } from './render_stages/rs_pfx_tone_mapping';
 import { RenderStageBloom } from './render_stages/rs_bloom';
-import { RenderStageSSAO } from './render_stages/rs_ssao';
-import { RenderStagePicking } from './render_stages/rs_picking';
+import { RenderStageDepthMap } from './render_stages/rs_depth_map';
 import { RenderStageEnvironment } from './render_stages/rs_environment';
-import { RenderStageTAA } from './render_stages/rs_taa';
-import { ConfigGraphics } from '../../config/cfg_graphics';
 import { RenderStageExposureCalculation } from './render_stages/rs_exposure_calculation';
+import { RenderStageLights } from './render_stages/rs_lights';
+import { RenderStagePFXToneMapping } from './render_stages/rs_pfx_tone_mapping';
+import { RenderStagePicking } from './render_stages/rs_picking';
+import { RenderStageSkybox } from './render_stages/rs_skybox';
+import { RenderStageSolidGeometry } from './render_stages/rs_solid_geometry';
+import { RenderStageSSAO } from './render_stages/rs_ssao';
+import { RenderStageTAA } from './render_stages/rs_taa';
 
 export class VanillaRenderPipeline {
-    private _rsDepthPass = new RenderStageDepthMap();
-    private _rsLights = new RenderStageLights();
-    private _rsSolidGeometry = new RenderStageSolidGeometry();
-    private _rsSkybox = new RenderStageSkybox();
-    private _rsExposureCalculation = new RenderStageExposureCalculation();
-    private _rsSSAO = new RenderStageSSAO();
-    private _rsEnvironment = new RenderStageEnvironment();
-    private _rsTAA = new RenderStageTAA();
-    private _rsBloom = new RenderStageBloom();
-    private _rs_pfx_tonemap = new RenderStagePFXToneMapping();
-    private _rsPicking = new RenderStagePicking();
+    private readonly _rsDepthPass = new RenderStageDepthMap();
+    private readonly _rsLights = new RenderStageLights();
+    private readonly _rsSolidGeometry = new RenderStageSolidGeometry();
+    private readonly _rsSkybox = new RenderStageSkybox();
+    private readonly _rsExposureCalculation = new RenderStageExposureCalculation();
+    private readonly _rsSSAO = new RenderStageSSAO();
+    private readonly _rsEnvironment = new RenderStageEnvironment();
+    private readonly _rsTAA = new RenderStageTAA();
+    private readonly _rsBloom = new RenderStageBloom();
+    private readonly _rs_pfx_tonemap = new RenderStagePFXToneMapping();
+    private readonly _rsPicking = new RenderStagePicking();
 
     private _currentPipeline: RenderStage[] = [];
 
@@ -61,7 +61,7 @@ export class VanillaRenderPipeline {
     }
 
     free() {
-        this._currentPipeline.forEach(stage => stage.free());
+        this._currentPipeline.forEach(stage => stage.free?.());
         this._currentPipeline = [];
     }
 }
