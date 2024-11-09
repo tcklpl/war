@@ -2,8 +2,8 @@ import { AssetType } from './asset_type';
 
 export class CachedAssetKey {
     constructor(
-        private _type: AssetType,
-        private _name: string,
+        private readonly _type: AssetType,
+        private readonly _name: string,
     ) {}
 
     get keyedName() {

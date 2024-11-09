@@ -11,18 +11,18 @@ export class RenderStageEnvironment implements RenderStage {
     private _shader!: EnvironmentShader;
     private _pipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
-    private _sampler = device.createSampler({
+    private readonly _sampler = device.createSampler({
         minFilter: 'linear',
         magFilter: 'linear',
         mipmapFilter: 'linear',
     });
 
-    private _variablesBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _variablesBuffer = BufferUtils.createEmptyBuffer(
         3 * Mat4.byteSize,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );
     private _variablesBindGroup!: GPUBindGroup;
-    private _sceneBindGroupOptions = new SceneInfoBindGroupOptions(EnvironmentShader.BINDING_GROUPS.SCENE)
+    private readonly _sceneBindGroupOptions = new SceneInfoBindGroupOptions(EnvironmentShader.BINDING_GROUPS.SCENE)
         .includePrefilteredSkybox(0)
         .includeBrdfLUT(1);
 

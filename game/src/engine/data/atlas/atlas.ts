@@ -7,10 +7,10 @@ import { MappedRegionRequest } from './mapped_region_request';
 import { MappedRegionSize } from './mapped_region_size';
 
 export class Atlas {
-    private _atlasTexture = new Texture();
-    private _resolution: number;
+    private readonly _atlasTexture = new Texture();
+    private readonly _resolution: number;
     private _mappedRegions: MappedAtlasRegion[] = [];
-    private _tree = new AtlasTree();
+    private readonly _tree = new AtlasTree();
 
     constructor(props: { resolution: number; format: GPUTextureFormat; usage: number; label?: string }) {
         const resolution = MathUtils.clamp(1, device.limits.maxTextureDimension2D, props.resolution);

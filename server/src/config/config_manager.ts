@@ -1,19 +1,19 @@
 import * as fs from 'fs';
+import * as json5 from 'json5';
 import * as path from 'path';
 import { exit } from 'process';
-import { CfgServer } from './default/cfg_server';
+import { Logger } from '../log/logger';
 import { Config } from './config';
-import * as json5 from 'json5';
 import { CfgCrypt } from './default/cfg_crypt';
 import { CfgGame } from './default/cfg_game';
-import { Logger } from '../log/logger';
+import { CfgServer } from './default/cfg_server';
 
 export class ConfigManager {
-    constructor(private _log: Logger) {}
+    constructor(private readonly _log: Logger) {}
 
-    private _configFolder = path.join(process.cwd(), 'config');
-    private _configs = [new CfgServer(), new CfgCrypt(), new CfgGame()];
-    private _loadedConfigs: Map<(typeof Config)['name'], Config> = new Map();
+    private readonly _configFolder = path.join(process.cwd(), 'config');
+    private readonly _configs = [new CfgServer(), new CfgCrypt(), new CfgGame()];
+    private readonly _loadedConfigs: Map<(typeof Config)['name'], Config> = new Map();
 
     private checkPermissions() {
         try {

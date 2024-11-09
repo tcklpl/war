@@ -14,15 +14,15 @@ import { RenderResourcePool } from '../render_resource_pool';
 import { RenderStage } from './render_stage';
 
 export class RenderStageLights implements RenderStage {
-    private _zMult = 1;
+    private readonly _zMult = 1;
 
     private _depthShader!: DepthShader;
     private _depthPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
-    private _primitiveDrawOptions = new PrimitiveDrawOptions().includePosition(0);
+    private readonly _primitiveDrawOptions = new PrimitiveDrawOptions().includePosition(0);
     private _viewProjBindGroup!: GPUBindGroup;
 
-    private _shadowCommonBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _shadowCommonBuffer = BufferUtils.createEmptyBuffer(
         Mat4.byteSize,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
         'shadow map common buffer',

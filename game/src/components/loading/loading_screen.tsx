@@ -1,9 +1,9 @@
-import { Box, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Grid2, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import style from './loading_screen.module.scss';
 import { useTranslation } from 'react-i18next';
-import { useGame } from '../../hooks/use_game';
 import { LoadStage } from '../../game/loader/load_stage';
+import { useGame } from '../../hooks/use_game';
+import style from './loading_screen.module.scss';
 
 const LoadingScreen: React.FC = () => {
     const { t } = useTranslation(['loading']);
@@ -47,7 +47,7 @@ const LoadingScreen: React.FC = () => {
     return loading ? (
         <Container maxWidth='sm'>
             <Box className={style.screen}>
-                <Grid container direction='column' justifyContent='center' alignItems='center' height='100%'>
+                <Grid2 container direction='column' justifyContent='center' alignItems='center' height='100%'>
                     <Stack spacing={2} alignItems='center'>
                         <Typography variant='h4' alignSelf='start'>
                             {t('loading:main_message')}
@@ -57,7 +57,7 @@ const LoadingScreen: React.FC = () => {
 
                         <Typography alignSelf='start'>{loadingStageMessage}</Typography>
                     </Stack>
-                </Grid>
+                </Grid2>
             </Box>
         </Container>
     ) : (

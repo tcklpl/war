@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Logger } from '../log/logger';
-import { ServerDataSource } from './data_source';
 import { GameSaveDao } from './dao/game_save_dao';
+import { ServerDataSource } from './data_source';
 import { GameSaveService } from './service/game_save_service';
 
 export class PersistenceManager {
@@ -15,7 +15,7 @@ export class PersistenceManager {
         gameSave: GameSaveService;
     };
 
-    constructor(private _log: Logger) {}
+    constructor(private readonly _log: Logger) {}
 
     async initialize() {
         this._log.info('Initializing');

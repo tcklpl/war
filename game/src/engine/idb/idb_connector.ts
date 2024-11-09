@@ -2,18 +2,17 @@ import { IDBStatus } from './idb_status';
 import { IDBVersionMigrator } from './idb_version_migrator';
 
 export class IDBConnector {
-    private _versionMigrator = new IDBVersionMigrator();
+    private readonly _versionMigrator = new IDBVersionMigrator();
     private _status = IDBStatus.STARTING;
     private _db?: IDBDatabase;
 
     constructor(
-        private _dbName: string,
-        private _dbVersion: number,
+        private readonly _dbName: string,
+        private readonly _dbVersion: number,
     ) {
         // if the browser doesn't support indexedDB
         if (!indexedDB) {
             this._status = IDBStatus.NOT_SUPPORTED;
-            return;
         }
     }
 

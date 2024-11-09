@@ -1,10 +1,10 @@
+import * as readLine from 'readline';
 import { Logger } from '../log/logger';
 import { WarServer } from '../war_server';
 import { Command } from './command';
 import { CommandConfig } from './default_commands/config';
 import { CommandHelp } from './default_commands/help';
 import { CommandStop } from './default_commands/stop';
-import * as readLine from 'readline';
 
 export class CommandProcessor {
     private _commands: Command[] = [];
@@ -13,8 +13,8 @@ export class CommandProcessor {
     private _shouldParseNextCommand = true;
 
     constructor(
-        private _server: WarServer,
-        private _log: Logger,
+        private readonly _server: WarServer,
+        private readonly _log: Logger,
     ) {
         this.registerCommands();
     }

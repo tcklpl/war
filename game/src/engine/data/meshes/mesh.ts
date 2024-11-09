@@ -2,8 +2,8 @@ import { Primitive } from './primitive';
 import { PrimitiveDrawOptions } from './primitive_draw_options';
 
 export class Mesh {
-    private _name: string;
-    private _primitives: Primitive[];
+    private readonly _name: string;
+    private readonly _primitives: Primitive[];
 
     constructor(name: string, primitives: Primitive[]) {
         this._name = name;

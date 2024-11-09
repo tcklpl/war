@@ -10,12 +10,26 @@ export class Time {
      *
      * Updated every frame.
      */
-    static DeltaTime = 0;
+    private static _deltaTime = 0;
+    static get DeltaTime() {
+        return this._deltaTime;
+    }
 
     /**
      * Frames rendered on the last second.
      *
      * Updated every second.
      */
-    static FPS = 0;
+    private static _fps = 0;
+    static get FPS() {
+        return this._fps;
+    }
+
+    static updateDeltaTime(deltaTime: number) {
+        this._deltaTime = deltaTime;
+    }
+
+    static updateFPS(fps: number) {
+        this._fps = fps;
+    }
 }

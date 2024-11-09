@@ -44,7 +44,7 @@ import { BCVietnam } from './board_countries/bc_vietnam';
 import { BCVladvostok } from './board_countries/bc_vladvostok';
 
 export class BoardCountriesIndex extends EmptyEntity {
-    private BoardCountries = {
+    private readonly BoardCountries = {
         Alaska: new BCAlaska(),
         Algeria: new BCAlgeria(),
         Aral: new BCAral(),

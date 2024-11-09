@@ -1,9 +1,9 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import style from './esc_menu.module.scss';
-import { Button, Grid, Stack, useTheme } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Button, Grid2, Stack, useTheme } from '@mui/material';
+import React, { ReactNode, useEffect, useState } from 'react';
 import CfgScreen from '../../../menu/config/screen/cfg_screen';
+import style from './esc_menu.module.scss';
 
 const EscMenu: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -26,12 +26,10 @@ const EscMenu: React.FC = () => {
     }, [open]);
 
     return open ? (
-        <Grid container className={style.screen}>
-            <Grid
-                item
+        <Grid2 container className={style.screen}>
+            <Grid2
                 container
-                xs={4}
-                md={2}
+                size={{ xs: 4, md: 2 }}
                 className={style.categories}
                 style={{ backgroundColor: palette.background.default }}
                 direction='column'
@@ -61,12 +59,10 @@ const EscMenu: React.FC = () => {
                         Settings
                     </Button>
                 </Stack>
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={8} md={10}>
-                {currentRightScreen}
-            </Grid>
-        </Grid>
+            <Grid2 size={{ xs: 8, md: 10 }}>{currentRightScreen}</Grid2>
+        </Grid2>
     ) : (
         <></>
     );

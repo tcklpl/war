@@ -6,18 +6,21 @@ import { Skybox } from '../skybox/skybox';
 import { SceneInfoBindGroupOptions } from './scene_info_bind_group_options';
 
 export class SceneInfo {
-    private _lights: Light[];
+    private readonly _lights: Light[];
     private _skybox: Skybox;
 
-    private _directionalLightBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _directionalLightBuffer = BufferUtils.createEmptyBuffer(
         DirectionalLight.byteSize * 2 + 16,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );
-    private _pointLightBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _pointLightBuffer = BufferUtils.createEmptyBuffer(
         PointLight.byteSize * 64 + 16,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );
-    private _pipelineBindGroups = new Map<GPURenderPipeline, { bg: GPUBindGroup; opt: SceneInfoBindGroupOptions }>();
+    private readonly _pipelineBindGroups = new Map<
+        GPURenderPipeline,
+        { bg: GPUBindGroup; opt: SceneInfoBindGroupOptions }
+    >();
 
     constructor(lights: Light[], skybox: Skybox) {
         this._lights = lights;

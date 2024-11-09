@@ -8,7 +8,9 @@ export class MathUtils {
     }
 
     static clamp(min: number, max: number, value: number) {
-        return value > max ? max : value < min ? min : value;
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 
     static ensurePadding(value: number, dividend = 16) {

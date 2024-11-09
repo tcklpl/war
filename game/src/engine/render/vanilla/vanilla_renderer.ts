@@ -1,29 +1,29 @@
-import { Renderer } from '../renderer';
-import { VanillaRenderPipeline } from './vanilla_render_pipeline';
-import { RenderResourcePool } from './render_resource_pool';
-import { Vec2 } from '../../data/vec/vec2';
-import { RenderProjection } from './render_projection';
 import { BufferUtils } from '../../../utils/buffer_utils';
 import { MathUtils } from '../../../utils/math_utils';
-import { RenderPostEffects } from './render_post_effects';
 import { LuminanceHistogram } from '../../data/histogram/luminance_histogram';
+import { Vec2 } from '../../data/vec/vec2';
+import { Renderer } from '../renderer';
+import { RenderPostEffects } from './render_post_effects';
+import { RenderProjection } from './render_projection';
+import { RenderResourcePool } from './render_resource_pool';
+import { VanillaRenderPipeline } from './vanilla_render_pipeline';
 
 export class VanillaRenderer extends Renderer {
     private _presentationFormat!: GPUTextureFormat;
-    private _renderProjection = new RenderProjection();
+    private readonly _renderProjection = new RenderProjection();
     private _renderPostEffects!: RenderPostEffects;
-    private _renderPipeline = new VanillaRenderPipeline();
-    private _renderResourcePool = new RenderResourcePool();
+    private readonly _renderPipeline = new VanillaRenderPipeline();
+    private readonly _renderResourcePool = new RenderResourcePool();
     private _luminanceHistogram!: LuminanceHistogram;
 
-    private _pickingBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _pickingBuffer = BufferUtils.createEmptyBuffer(
         4,
         GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
         'Picking',
     );
 
     // Jitter offsets - Needed for TAA, should be an array of zeroes if TAA is disabled
-    private _jitterOffsetCount = 16;
+    private readonly _jitterOffsetCount = 16;
     private _jitterOffsets: Vec2[] = [];
     private _currentJitter = 0;
 

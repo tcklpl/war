@@ -5,10 +5,10 @@ import { BoardLights } from './board_lights';
 import { BoardSkybox } from './board_skybox';
 
 export class GameBoard extends Scene {
-    private _mainCamera: BoardCamera;
-    private _countries: BoardCountriesIndex;
-    private _boardLights: BoardLights;
-    private _skybox: BoardSkybox;
+    private readonly _mainCamera: BoardCamera;
+    private readonly _countries: BoardCountriesIndex;
+    private readonly _boardLights: BoardLights;
+    private readonly _skybox: BoardSkybox;
 
     constructor() {
         const mainCamera = new BoardCamera();

@@ -1,19 +1,19 @@
+import assetIndex from '../../asset_index.json';
+import { IllegalNodeFetchError } from '../../errors/engine/asset/illegal_node_fetch';
+import { MissingAssetError } from '../../errors/engine/asset/missing_asset';
+import { BadGLTFFileError } from '../../errors/engine/gltf/bad_gltf_file';
+import { GLTFFile } from '../data/gltf/gltf_file';
+import { IDBConnector } from '../idb/idb_connector';
 import { Manager } from '../manager';
 import { Asset } from './asset';
-import assetIndex from '../../asset_index.json';
-import { MissingAssetError } from '../../errors/engine/asset/missing_asset';
-import { GLTFAsset } from './gltf_asset';
-import { GLTFLoader } from './loaders/gltf_loader';
-import { GLTFFile } from '../data/gltf/gltf_file';
-import { BadGLTFFileError } from '../../errors/engine/gltf/bad_gltf_file';
-import { HDRImageData, HDRLoader } from './loaders/hdr_loader';
-import { HDRAsset } from './hdr_asset';
 import { AssetCache } from './cache/asset_cache';
-import { IDBConnector } from '../idb/idb_connector';
-import { CachedAssetKey } from './cache/cached_asset_key';
 import { AssetType } from './cache/asset_type';
+import { CachedAssetKey } from './cache/cached_asset_key';
 import { HDRCachedAsset } from './cache/hdr_cached_asset';
-import { IllegalNodeFetchError } from '../../errors/engine/asset/illegal_node_fetch';
+import { GLTFAsset } from './gltf_asset';
+import { HDRAsset } from './hdr_asset';
+import { GLTFLoader } from './loaders/gltf_loader';
+import { HDRImageData, HDRLoader } from './loaders/hdr_loader';
 
 type AssetIndex = typeof assetIndex;
 type GLTFAssetName = keyof AssetIndex['gltf'];
@@ -21,9 +21,9 @@ type HDRAssetName = keyof AssetIndex['hdr'];
 type AddressableAsset = { url: string };
 
 export class AssetManager extends Manager<Asset> {
-    private _isInsideElectron = !!window.electron_api;
+    private readonly _isInsideElectron = !!window.electron_api;
 
-    private loaders = {
+    private readonly loaders = {
         gltf: new GLTFLoader(),
         hdr: new HDRLoader(),
     };

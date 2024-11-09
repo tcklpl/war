@@ -1,4 +1,4 @@
-import { LobbyState, LobbyPlayerState, GameConfig, GameParty, LobbyStage } from '../../../../protocol';
+import { GameConfig, GameParty, LobbyPlayerState, LobbyStage, LobbyState } from '../../../../protocol';
 import { Logger } from '../../log/logger';
 import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
 import { ServerPacketChatMessage } from '../../socket/packet/lobby/chat_message';
@@ -18,7 +18,7 @@ export class Lobby {
     private _stage: LobbyStage = 'in lobby';
     private _players: LobbyPlayer[] = [];
     joinable = true;
-    private _parties: Party[] = [
+    private readonly _parties: Party[] = [
         new PartyAnarchism(),
         new PartyFeudalism(),
         new PartySocialism(),
@@ -29,11 +29,11 @@ export class Lobby {
 
     constructor(
         private _owner: LobbyPlayer,
-        private _name: string,
+        private readonly _name: string,
         private _gameConfig: GameConfig,
-        private _gameStartCountdown: number,
-        private _gameManager: GameManager,
-        private _log: Logger,
+        private readonly _gameStartCountdown: number,
+        private readonly _gameManager: GameManager,
+        private readonly _log: Logger,
     ) {}
 
     addPlayer(p: LobbyPlayer) {

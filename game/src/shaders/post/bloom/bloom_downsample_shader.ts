@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './bloom_downsample.wgsl';
 
 export class BloomDownsampleShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         TEXTURE: 0,
     };
 

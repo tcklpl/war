@@ -12,10 +12,10 @@ export class RenderStageSolidGeometry implements RenderStage {
     private _renderPassDescriptor!: GPURenderPassDescriptor;
     private _viewProjBindGroupCW!: GPUBindGroup;
     private _viewProjBindGroupCCW!: GPUBindGroup;
-    private _meshDrawOptions = new PrimitiveDrawOptions().includeAll();
+    private readonly _meshDrawOptions = new PrimitiveDrawOptions().includeAll();
     private _sceneBindGroupOptions!: SceneInfoBindGroupOptions;
 
-    private _shadowMapSampler = device.createSampler({
+    private readonly _shadowMapSampler = device.createSampler({
         addressModeU: 'repeat',
         addressModeV: 'repeat',
     });
@@ -170,9 +170,5 @@ export class RenderStageSolidGeometry implements RenderStage {
 
         rpe.end();
         pool.commandEncoder.popDebugGroup();
-    }
-
-    free() {
-        // nothing to free here
     }
 }

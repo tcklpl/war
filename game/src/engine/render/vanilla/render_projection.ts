@@ -6,7 +6,7 @@ import { Resolution } from '../../resolution';
 export class RenderProjection {
     private _near = 0.9;
     private _far = 30;
-    private _resolution = new Resolution(new Vec2(gpuCtx.canvas.width, gpuCtx.canvas.height));
+    private readonly _resolution = new Resolution(new Vec2(gpuCtx.canvas.width, gpuCtx.canvas.height));
     private _fovY = 60;
 
     private _projectionMatrix!: Mat4;

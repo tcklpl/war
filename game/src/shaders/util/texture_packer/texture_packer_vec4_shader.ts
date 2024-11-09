@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './texture_packer_vec4.wgsl';
 
 export class TexturePackerVec4Shader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         TEXTURE: 0,
     };
 

@@ -1,5 +1,5 @@
 export class GLTFBuffer {
-    private _data: ArrayBuffer;
+    private readonly _data: ArrayBuffer;
 
     constructor(data: ArrayBuffer) {
         this._data = data;

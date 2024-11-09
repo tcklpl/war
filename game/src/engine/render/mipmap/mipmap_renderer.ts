@@ -4,7 +4,7 @@ export class MipmapRenderer {
     private _mipShader!: Mipmap2DShader;
     private _mipPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
-    private _sampler = device.createSampler({
+    private readonly _sampler = device.createSampler({
         label: 'cubemap convolution sampler',
         magFilter: 'linear',
         minFilter: 'linear',
@@ -108,5 +108,7 @@ export class MipmapRenderer {
         await device.queue.onSubmittedWorkDone();
     }
 
-    free() {}
+    free() {
+        // Nothing to free here
+    }
 }

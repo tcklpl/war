@@ -1,10 +1,10 @@
-import { GLTFAnimationSampler } from './gltf_animation_sampler';
 import { GLTFAnimationChannelTarget } from './gltf_animation_channel_target';
+import { GLTFAnimationSampler } from './gltf_animation_sampler';
 
 export class GLTFAnimationChannel {
     constructor(
-        private _sampler: GLTFAnimationSampler,
-        private _target: GLTFAnimationChannelTarget,
+        private readonly _sampler: GLTFAnimationSampler,
+        private readonly _target: GLTFAnimationChannelTarget,
     ) {}
 
     get sampler() {

@@ -15,7 +15,7 @@ import { Vec2 } from '../vec/vec2';
  * Depth 3: (leaves): holds 64 SMALL mapped regions.
  */
 export class AtlasTree {
-    private _trunk: AtlasTreeNode;
+    private readonly _trunk: AtlasTreeNode;
 
     constructor() {
         this._trunk = this.buildTree() as AtlasTreeNode;
@@ -88,12 +88,12 @@ export class AtlasTree {
  * Each node can have 0 or 4 children, depending on depth.
  */
 export class AtlasTreeNode {
-    private _children: AtlasTreeNode[];
+    private readonly _children: AtlasTreeNode[];
     private _available = true;
 
     constructor(
-        private _position: Vec2,
-        private _depth: number,
+        private readonly _position: Vec2,
+        private readonly _depth: number,
         children: AtlasTreeNode[],
     ) {
         if (children.length !== 4 && children.length !== 0) {

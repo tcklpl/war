@@ -1,7 +1,7 @@
 import { Mouse } from '../mouse';
 
 export class MouseInteractionManager {
-    constructor(private _mouse: Mouse) {
+    constructor(private readonly _mouse: Mouse) {
         _mouse.registerListener(this);
     }
 

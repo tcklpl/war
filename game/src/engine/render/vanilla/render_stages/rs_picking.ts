@@ -12,13 +12,13 @@ import { RenderStage } from './render_stage';
 
 export class RenderStagePicking implements RenderStage {
     private _shader!: PickingShader;
-    private _pickingTexture = new Texture();
+    private readonly _pickingTexture = new Texture();
     private _pickingProjectionMatrix!: Mat4;
     private _pickingPipeline!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
-    private _meshDrawOptions = new PrimitiveDrawOptions().includePosition(0);
+    private readonly _meshDrawOptions = new PrimitiveDrawOptions().includePosition(0);
 
-    private _viewProjBuffer = BufferUtils.createEmptyBuffer(
+    private readonly _viewProjBuffer = BufferUtils.createEmptyBuffer(
         2 * Mat4.byteSize,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );

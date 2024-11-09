@@ -6,23 +6,23 @@ import { Skybox } from '../skybox/skybox';
 import { SceneInfo } from './scene_info';
 
 export class Scene {
-    private _entities: Entity[];
-    private _cameras: Camera[];
-    private _lights: Light[];
-    private _skyboxes: Skybox[];
+    private readonly _entities: Entity[];
+    private readonly _cameras: Camera[];
+    private readonly _lights: Light[];
+    private readonly _skyboxes: Skybox[];
 
     private _activeCamera?: Camera;
     private _activeSkybox?: Skybox;
 
     private _sceneInfo!: SceneInfo;
 
-    private _entitiesPerWindingOrder = {
+    private readonly _entitiesPerWindingOrder = {
         cw: [] as Entity[],
         ccw: [] as Entity[],
     };
 
     constructor(
-        private _name: string,
+        private readonly _name: string,
         props: {
             entities: Entity[];
             cameras: Camera[];

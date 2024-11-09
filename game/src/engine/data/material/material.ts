@@ -1,9 +1,9 @@
 import { PrincipledBSDFShader } from '../../../shaders/geometry/principled_bsdf/principled_bsdf_shader';
 
 export abstract class Material {
-    private _id: number;
+    private readonly _id: number;
 
-    constructor(private _name: string) {
+    constructor(private readonly _name: string) {
         this._id = game.engine.managers.material.requestMaterialId();
     }
 

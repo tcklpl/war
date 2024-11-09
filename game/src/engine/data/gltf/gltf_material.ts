@@ -12,15 +12,15 @@ interface GLTFMaterialProperties {
 }
 
 export class GLTFMaterial {
-    private _name: string;
-    private _doubleSided: boolean;
+    private readonly _name: string;
+    private readonly _doubleSided: boolean;
 
-    private _baseColor: number[]; //vec4
-    private _metallic: number;
-    private _roughness: number;
-    private _ior: number;
-    private _specular: number[];
-    private _transmission: number;
+    private readonly _baseColor: number[]; //vec4
+    private readonly _metallic: number;
+    private readonly _roughness: number;
+    private readonly _ior: number;
+    private readonly _specular: number[];
+    private readonly _transmission: number;
 
     private _pbrMaterial?: PBRMaterial;
 

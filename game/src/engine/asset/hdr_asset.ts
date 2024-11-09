@@ -5,7 +5,7 @@ export class HDRAsset extends Asset {
     constructor(
         name: string,
         url: string,
-        private _data: HDRImageData,
+        private readonly _data: HDRImageData,
     ) {
         super(name, url);
     }

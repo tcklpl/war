@@ -12,13 +12,13 @@ import { Lobby } from './lobby';
 
 export class LobbyManager {
     private _lobbies: Lobby[] = [];
-    private _maxLobbies: number;
+    private readonly _maxLobbies: number;
     private readonly _cfgGame: CfgGame;
 
     constructor(
-        private _configManager: ConfigManager,
-        private _gameServer: GameServer,
-        private _log: Logger,
+        private readonly _configManager: ConfigManager,
+        private readonly _gameServer: GameServer,
+        private readonly _log: Logger,
     ) {
         this._maxLobbies = this._configManager.getConfig(CfgServer).max_lobbies;
         this._cfgGame = _configManager.getConfig(CfgGame);

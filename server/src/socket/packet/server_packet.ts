@@ -5,10 +5,10 @@ export type ServerPacketEventNames = keyof ServerToClientPackets;
 export type ServerPacketEventParams<Event extends ServerPacketEventNames> = Parameters<ServerToClientPackets[Event]>;
 
 export abstract class ServerPacket<E extends ServerPacketEventNames> {
-    private _params: ServerPacketEventParams<E>;
+    private readonly _params: ServerPacketEventParams<E>;
 
     constructor(
-        private _key: E,
+        private readonly _key: E,
         ...params: ServerPacketEventParams<E>
     ) {
         this._params = params;

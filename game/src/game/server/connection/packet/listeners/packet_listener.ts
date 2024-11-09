@@ -3,8 +3,8 @@ import { WarServer } from '../../../war_server';
 
 export abstract class PacketListener {
     constructor(
-        private _socket: GameSocket,
-        private _server: WarServer,
+        private readonly _socket: GameSocket,
+        private readonly _server: WarServer,
     ) {
         this.register();
     }

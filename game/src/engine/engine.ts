@@ -62,11 +62,11 @@ export class Engine {
     private async renderLoop(time: number) {
         const msDiff = time - this._lastFrameTime;
         const deltaTime = msDiff / 1000;
-        Time.DeltaTime = deltaTime;
+        Time.updateDeltaTime(deltaTime);
         this._lastFrameTime = time;
         if (time - this._lastFullSecondTime >= 1000) {
             this._lastFullSecondTime = time;
-            Time.FPS = this._framesRenderedSinceLastSecond;
+            Time.updateFPS(this._framesRenderedSinceLastSecond);
             this._framesRenderedSinceLastSecond = 0;
             this._frameListeners.forEach(fl => {
                 if (fl.onEachSecond) fl.onEachSecond();

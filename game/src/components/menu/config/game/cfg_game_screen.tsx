@@ -1,8 +1,8 @@
+import { Grid2, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Grid, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import CfgTooltip from '../tooltip/cfg_tooltip';
 import { useConfig } from '../../../../hooks/use_config';
+import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgGameScreen: React.FC = () => {
     const { palette } = useTheme();
@@ -46,8 +46,8 @@ const CfgGameScreen: React.FC = () => {
     };
 
     return (
-        <Grid container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
-            <Grid item xs={8}>
+        <Grid2 container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
+            <Grid2 size={{ xs: 8 }}>
                 <Typography variant='h5'>{t('config:game_loading')}</Typography>
                 <Table>
                     <TableBody>
@@ -92,12 +92,12 @@ const CfgGameScreen: React.FC = () => {
                         </TableRow>
                     </TableBody>
                 </Table>
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={4}>
+            <Grid2 size={{ xs: 4 }}>
                 <CfgTooltip currentTooltip={currentTooltip} />
-            </Grid>
-        </Grid>
+            </Grid2>
+        </Grid2>
     );
 };
 

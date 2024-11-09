@@ -3,8 +3,8 @@ import { Primitive } from '../meshes/primitive';
 import { GLTFMeshPrimitive } from './gltf_mesh_primitive';
 
 export class GLTFMesh {
-    private _name: string;
-    private _primitives: GLTFMeshPrimitive[];
+    private readonly _name: string;
+    private readonly _primitives: GLTFMeshPrimitive[];
 
     private _engineMesh?: Mesh;
 

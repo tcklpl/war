@@ -2,9 +2,8 @@ import { Vec2 } from '../data/vec/vec2';
 import { IMouseListener } from './mouse_listener';
 
 export class Mouse {
-    private _listeners: IMouseListener[] = [];
-
-    private _position = new Vec2(0, 0);
+    private readonly _listeners: IMouseListener[] = [];
+    private readonly _position = new Vec2(0, 0);
 
     private _scrollStopTimer: number = -1;
     private _mouseStopTimer: number = -1;

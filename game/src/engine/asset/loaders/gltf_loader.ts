@@ -1,22 +1,22 @@
 import { GLBChunk, GLTFFileFormat } from 'gltf';
-import { GLTFBuffer } from '../../data/gltf/gltf_buffer';
-import { FetchUtils } from '../../../utils/fetch_utils';
-import { GLTFBufferView } from '../../data/gltf/gltf_buffer_view';
 import { BadGLTFFileError } from '../../../errors/engine/gltf/bad_gltf_file';
+import { UnsupportedGLTFFeatureError } from '../../../errors/engine/gltf/unsupported_gltf_feature';
+import { FetchUtils } from '../../../utils/fetch_utils';
 import { GLTFAccessor } from '../../data/gltf/gltf_accessor';
-import { GLTFMesh } from '../../data/gltf/gltf_mesh';
+import { GLTFAnimation } from '../../data/gltf/gltf_animation';
+import { GLTFAnimationChannel } from '../../data/gltf/gltf_animation_channel';
+import { GLTFAnimationChannelTarget } from '../../data/gltf/gltf_animation_channel_target';
+import { GLTFAnimationSampler } from '../../data/gltf/gltf_animation_sampler';
+import { GLTFBuffer } from '../../data/gltf/gltf_buffer';
+import { GLTFBufferView } from '../../data/gltf/gltf_buffer_view';
+import { GLTFCamera } from '../../data/gltf/gltf_camera';
+import { GLTFFile } from '../../data/gltf/gltf_file';
+import { GLTFLight } from '../../data/gltf/gltf_light';
 import { GLTFMaterial } from '../../data/gltf/gltf_material';
+import { GLTFMesh } from '../../data/gltf/gltf_mesh';
 import { GLTFMeshPrimitive } from '../../data/gltf/gltf_mesh_primitive';
 import { GLTFNode, GLTFNodeCamera, GLTFNodeLight, GLTFNodeMesh } from '../../data/gltf/gltf_node';
 import { GLTFScene } from '../../data/gltf/gltf_scene';
-import { GLTFFile } from '../../data/gltf/gltf_file';
-import { GLTFCamera } from '../../data/gltf/gltf_camera';
-import { UnsupportedGLTFFeatureError } from '../../../errors/engine/gltf/unsupported_gltf_feature';
-import { GLTFLight } from '../../data/gltf/gltf_light';
-import { GLTFAnimationSampler } from '../../data/gltf/gltf_animation_sampler';
-import { GLTFAnimationChannel } from '../../data/gltf/gltf_animation_channel';
-import { GLTFAnimationChannelTarget } from '../../data/gltf/gltf_animation_channel_target';
-import { GLTFAnimation } from '../../data/gltf/gltf_animation';
 
 /**
  * GLTF Loader
@@ -36,7 +36,7 @@ import { GLTFAnimation } from '../../data/gltf/gltf_animation';
  *  [X] .glb  Support
  */
 export class GLTFLoader {
-    private _supportedGLTFExtensions = [
+    private readonly _supportedGLTFExtensions = [
         'KHR_materials_transmission',
         'KHR_materials_specular',
         'KHR_materials_ior',
@@ -44,6 +44,29 @@ export class GLTFLoader {
     ];
 
     async constructGLTFAsset(gltfSave: GLTFFileFormat, binaryBuffers?: ArrayBuffer[]) {
+        this.validateHeaders(gltfSave);
+        const buffers = await this.constructBuffers(gltfSave, binaryBuffers);
+        const bufferViews = this.constructBufferViews(gltfSave, buffers);
+        const accessors = this.constructAccessors(gltfSave, bufferViews);
+        const materials = this.constructMaterials(gltfSave);
+        const meshes = this.constructMeshes(gltfSave, accessors, materials);
+        const cameras = this.constructCameras(gltfSave);
+        const lights = this.constructLights(gltfSave);
+        const nodes = this.constructNodes(gltfSave, meshes, cameras, lights);
+        const animations = this.constructAnimations(gltfSave, accessors, nodes);
+        const scenes = this.constructScenes(gltfSave, nodes);
+
+        return new GLTFFile(
+            {
+                generator: gltfSave.asset.generator,
+                version: gltfSave.asset.version,
+            },
+            scenes,
+            gltfSave.scene,
+        );
+    }
+
+    private validateHeaders(gltfSave: GLTFFileFormat) {
         // validate header
         if (gltfSave.asset.version !== '2.0')
             throw new BadGLTFFileError(`Unsupported GLTF File version '${gltfSave.asset.version}', should be '2.0'`);
@@ -54,7 +77,9 @@ export class GLTFLoader {
             if (!this._supportedGLTFExtensions.includes(reqExt))
                 throw new UnsupportedGLTFFeatureError(`Unsupported extension: ${reqExt}`);
         });
+    }
 
+    private async constructBuffers(gltfSave: GLTFFileFormat, binaryBuffers?: ArrayBuffer[]) {
         // buffers
         const buffers: GLTFBuffer[] = [];
         for (let i = 0; i < gltfSave.buffers.length; i++) {
@@ -76,7 +101,10 @@ export class GLTFLoader {
 
             buffers.push(new GLTFBuffer(data));
         }
+        return buffers;
+    }
 
+    private constructBufferViews(gltfSave: GLTFFileFormat, buffers: GLTFBuffer[]) {
         // buffer views
         const bufferViews: GLTFBufferView[] = [];
         for (const bv of gltfSave.bufferViews) {
@@ -86,7 +114,10 @@ export class GLTFLoader {
                 );
             bufferViews.push(new GLTFBufferView(buffers[bv.buffer], bv.byteLength, bv.byteOffset, bv.target));
         }
+        return bufferViews;
+    }
 
+    private constructAccessors(gltfSave: GLTFFileFormat, bufferViews: GLTFBufferView[]) {
         // accessors
         const accessors: GLTFAccessor[] = [];
         for (const acc of gltfSave.accessors) {
@@ -98,7 +129,10 @@ export class GLTFLoader {
                 new GLTFAccessor(bufferViews[acc.bufferView], acc.componentType, acc.count, acc.type, acc.min, acc.max),
             );
         }
+        return accessors;
+    }
 
+    private constructMaterials(gltfSave: GLTFFileFormat) {
         // materials
         const materials: GLTFMaterial[] = [];
         for (const mat of gltfSave.materials) {
@@ -116,7 +150,10 @@ export class GLTFLoader {
                 }),
             );
         }
+        return materials;
+    }
 
+    private constructMeshes(gltfSave: GLTFFileFormat, accessors: GLTFAccessor[], materials: GLTFMaterial[]) {
         // meshes
         const meshes: GLTFMesh[] = [];
         for (const mesh of gltfSave.meshes) {
@@ -154,7 +191,10 @@ export class GLTFLoader {
             });
             meshes.push(new GLTFMesh(mesh.name, primitives));
         }
+        return meshes;
+    }
 
+    private constructCameras(gltfSave: GLTFFileFormat) {
         // cameras
         const cameras: GLTFCamera[] = [];
         if (gltfSave.cameras) {
@@ -175,7 +215,10 @@ export class GLTFLoader {
                 );
             }
         }
+        return cameras;
+    }
 
+    private constructLights(gltfSave: GLTFFileFormat) {
         // lights
         const lights: GLTFLight[] = [];
         if (gltfSave.extensions?.KHR_lights_punctual) {
@@ -186,7 +229,10 @@ export class GLTFLoader {
                 lights.push(new GLTFLight(light.name, light.type, color, intensity, light.range));
             }
         }
+        return lights;
+    }
 
+    private constructNodes(gltfSave: GLTFFileFormat, meshes: GLTFMesh[], cameras: GLTFCamera[], lights: GLTFLight[]) {
         // nodes
         const nodes: GLTFNode[] = [];
         for (const node of gltfSave.nodes) {
@@ -241,7 +287,10 @@ export class GLTFLoader {
             // unknown node
             throw new BadGLTFFileError(`Unrecognized node:\n\n${node}`);
         }
+        return nodes;
+    }
 
+    private constructAnimations(gltfSave: GLTFFileFormat, accessors: GLTFAccessor[], nodes: GLTFNode[]) {
         // animations
         const animations: GLTFAnimation[] = [];
         for (const animation of gltfSave.animations ?? []) {
@@ -294,7 +343,10 @@ export class GLTFLoader {
 
             animations.push(finalAnimation);
         }
+        return animations;
+    }
 
+    private constructScenes(gltfSave: GLTFFileFormat, nodes: GLTFNode[]) {
         // scenes
         const scenes: GLTFScene[] = [];
         for (const scene of gltfSave.scenes) {
@@ -308,15 +360,7 @@ export class GLTFLoader {
                 ),
             );
         }
-
-        return new GLTFFile(
-            {
-                generator: gltfSave.asset.generator,
-                version: gltfSave.asset.version,
-            },
-            scenes,
-            gltfSave.scene,
-        );
+        return scenes;
     }
 
     async loadGLBAsset(blob: ArrayBuffer) {

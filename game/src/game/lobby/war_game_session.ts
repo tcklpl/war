@@ -9,7 +9,7 @@ import { ReconnectionInfo } from '../server/connection/reconnection_info';
 
 export class WarGameSession {
     private _ping = 0;
-    private _pingTask = -1;
+    private readonly _pingTask = -1;
 
     private _token: string = '';
 

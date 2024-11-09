@@ -2,7 +2,7 @@ import {
     Button,
     CircularProgress,
     Container,
-    Grid,
+    Grid2,
     Paper,
     Stack,
     Table,
@@ -15,29 +15,29 @@ import {
     useTheme,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import './server_select.scss';
 import { useTranslation } from 'react-i18next';
-import { useGame } from '../../../hooks/use_game';
-import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
-import ServerSelectAddServerScreen from './server_select_add_server';
 import { Link, useNavigate } from 'react-router-dom';
-import ServerSelectPasswordPrompt from './server_select_password_prompt';
+import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
+import { useGame } from '../../../hooks/use_game';
+import './server_select.scss';
+import ServerSelectAddServerScreen from './server_select_add_server';
 import ServerSelectConnectionInfo from './server_select_connection_info';
+import ServerSelectPasswordPrompt from './server_select_password_prompt';
 
-import HttpsIcon from '@mui/icons-material/Https';
-import NoEncryptionIcon from '@mui/icons-material/NoEncryption';
+import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
-import PeopleIcon from '@mui/icons-material/People';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SendIcon from '@mui/icons-material/Send';
-import AddIcon from '@mui/icons-material/Add';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import HttpsIcon from '@mui/icons-material/Https';
+import NoEncryptionIcon from '@mui/icons-material/NoEncryption';
+import PeopleIcon from '@mui/icons-material/People';
 import PublicIcon from '@mui/icons-material/Public';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useGameSession } from '../../../hooks/use_game_session';
-import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SendIcon from '@mui/icons-material/Send';
 import { UsernameNotAvailableError } from '../../../errors/game/connection/username_not_available';
+import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
+import { useGameSession } from '../../../hooks/use_game_session';
 import { ServerListEntry } from './server_list_entry';
 
 const ServerSelectScreen: React.FC = () => {
@@ -188,7 +188,7 @@ const ServerSelectScreen: React.FC = () => {
                 if (e.target === e.currentTarget) setSelectedServer(undefined);
             }}
         >
-            <Grid
+            <Grid2
                 container
                 className='server-select-screen'
                 style={{ backgroundColor: palette.background.default }}
@@ -196,13 +196,13 @@ const ServerSelectScreen: React.FC = () => {
                 alignContent='center'
             >
                 <Stack spacing={5} width='100%'>
-                    <Grid>
+                    <Grid2>
                         <Typography variant='h4'>
                             <PublicIcon style={{ marginRight: '0.5em', fontSize: '1em', verticalAlign: 'middle' }} />
                             {t('server_list:server_list')}
                         </Typography>
                         <Typography variant='caption'>{`${t('common:playing_as')} ${username}`}</Typography>
-                    </Grid>
+                    </Grid2>
 
                     <ServerSelectConnectionInfo
                         open={serverConInfoOpen}
@@ -361,7 +361,7 @@ const ServerSelectScreen: React.FC = () => {
                         </Button>
                     </Stack>
                 </Stack>
-            </Grid>
+            </Grid2>
         </Container>
     );
 };

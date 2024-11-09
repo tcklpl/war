@@ -13,8 +13,8 @@ export abstract class Skybox {
         addressModeV: 'clamp-to-edge',
         addressModeW: 'clamp-to-edge',
     });
-    private _prefilteredSkybox = new Texture();
-    private _pipelineBindGroups = new Map<GPURenderPipeline, { skybox: GPUBindGroup }>();
+    private readonly _prefilteredSkybox = new Texture();
+    private readonly _pipelineBindGroups = new Map<GPURenderPipeline, { skybox: GPUBindGroup }>();
 
     abstract initialize(): Promise<void>;
 

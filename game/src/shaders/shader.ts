@@ -1,7 +1,7 @@
 import { ShaderError } from '../errors/engine/shader/shader_error';
 
 export abstract class Shader {
-    private _name: string;
+    private readonly _name: string;
     private _module!: GPUShaderModule;
 
     constructor(name: string) {

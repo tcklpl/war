@@ -2,7 +2,7 @@ import { Shader } from '../../shader';
 import shaderSource from './picking.wgsl';
 
 export class PickingShader extends Shader {
-    static BINDING_GROUPS = {
+    static readonly BINDING_GROUPS = {
         VIEWPROJ: 0,
         ENTITY: 1,
     };

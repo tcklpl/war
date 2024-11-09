@@ -30,18 +30,18 @@ export class PBRMaterial extends Material {
         Props 2         r16float        [r]¹                1: IOR
 
     */
-    private _albedo = new Texture();
+    private readonly _albedo = new Texture();
     private _normal_ao = new Texture();
     private _props1 = new Texture();
     private _props2 = new Texture();
 
     private _sampler!: GPUSampler;
 
-    private _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
+    private readonly _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
 
     constructor(
         name: string,
-        private _props: PBRMaterialProps,
+        private readonly _props: PBRMaterialProps,
     ) {
         super(name);
         this.constructTextures();

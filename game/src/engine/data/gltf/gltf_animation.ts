@@ -3,9 +3,9 @@ import { GLTFAnimationSampler } from './gltf_animation_sampler';
 
 export class GLTFAnimation {
     constructor(
-        private _name: string,
-        private _samplers: GLTFAnimationSampler[],
-        private _channels: GLTFAnimationChannel[],
+        private readonly _name: string,
+        private readonly _samplers: GLTFAnimationSampler[],
+        private readonly _channels: GLTFAnimationChannel[],
     ) {}
 
     get name() {

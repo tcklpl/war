@@ -24,7 +24,10 @@ export class RenderStageExposureCalculation implements RenderStage {
     private _histBindGroup!: GPUBindGroup;
     private _reduceBindGroups: { buffer: GPUBuffer; bindGroup: GPUBindGroup }[] = [];
 
-    private _optionsBuffer = BufferUtils.createEmptyBuffer(7 * 4, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
+    private readonly _optionsBuffer = BufferUtils.createEmptyBuffer(
+        7 * 4,
+        GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    );
 
     async initialize(resources: RenderInitializationResources) {
         await new Promise<void>(r => {

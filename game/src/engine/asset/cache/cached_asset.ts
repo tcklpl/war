@@ -3,8 +3,8 @@ import { CachedAssetKey } from './cached_asset_key';
 
 export class CachedAsset {
     constructor(
-        private _key: CachedAssetKey,
-        private _data: any,
+        private readonly _key: CachedAssetKey,
+        private readonly _data: any,
     ) {}
 
     get name() {

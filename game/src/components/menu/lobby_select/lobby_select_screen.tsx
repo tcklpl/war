@@ -1,16 +1,16 @@
-import { Box, Button, Container, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Container, Grid2, Stack, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGameSession } from '../../../hooks/use_game_session';
 import style from './lobby_select.module.scss';
 
-import PublicIcon from '@mui/icons-material/Public';
 import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
+import PublicIcon from '@mui/icons-material/Public';
+import { useNavigate } from 'react-router-dom';
+import { useConfirmation } from '../../../hooks/use_confirmation';
 import { useGame } from '../../../hooks/use_game';
 import LobbyCard from './lobby_card';
 import LobbySelectCreateLobby from './lobby_select_create_lobby';
-import { useNavigate } from 'react-router-dom';
-import { useConfirmation } from '../../../hooks/use_confirmation';
 
 const LobbySelectScreen: React.FC = () => {
     const { palette } = useTheme();
@@ -43,7 +43,7 @@ const LobbySelectScreen: React.FC = () => {
 
     return (
         <Container>
-            <Grid
+            <Grid2
                 container
                 className={style.screen}
                 style={{ backgroundColor: palette.background.default }}
@@ -80,16 +80,16 @@ const LobbySelectScreen: React.FC = () => {
 
                     <Box flex='1 1 auto'>
                         {lobbies?.lobbies.length ? (
-                            <Grid container spacing={{ xs: 2 }}>
+                            <Grid2 container spacing={{ xs: 2 }}>
                                 {lobbies.lobbies.map(lobby => (
-                                    <Grid item key={lobby.name} xs={4}>
+                                    <Grid2 key={lobby.name} size={{ xs: 4 }}>
                                         <LobbyCard
                                             lobby={lobby}
                                             onJoinAttempt={() => gameInstance?.state.server?.joinLobby(lobby.name)}
                                         />
-                                    </Grid>
+                                    </Grid2>
                                 ))}
-                            </Grid>
+                            </Grid2>
                         ) : (
                             <Box
                                 display='flex'
@@ -107,7 +107,7 @@ const LobbySelectScreen: React.FC = () => {
                         )}
                     </Box>
                 </Stack>
-            </Grid>
+            </Grid2>
         </Container>
     );
 };
