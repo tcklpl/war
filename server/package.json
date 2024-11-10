@@ -1,6 +1,6 @@
 {
   "name": "war2-server",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "War2 Game Server",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "@swc/helpers": "^0.5.13",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20.8.7",
+    "@types/sql.js": "^1.4.9",
     "copyfiles": "^2.4.1",
     "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
@@ -45,7 +46,7 @@
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.0",
-    "sqlite3": "^5.1.7",
+    "sql.js": "^1.12.0",
     "typeorm": "^0.3.20"
   },
   "husky": {
@@ -60,6 +61,9 @@
       "node16-linux-x64",
       "node16-win-x64",
       "node16-macos-x64"
+    ],
+    "assets": [
+      "../node_modules/sql.js/dist/sql-wasm.wasm"
     ],
     "outputPath": "dist"
   }

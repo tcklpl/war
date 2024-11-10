@@ -21,6 +21,12 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
+## [0.3.1] - 2024-11-10
+
+### 🔨 Fixed
+
+- 🖥 Fixed server not bundling with sqlite3 by replacing it with sql.js.
+
 ## [0.3.0] - 2024-11-09
 
 ### ✨ New

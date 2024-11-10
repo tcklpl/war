@@ -1,10 +1,14 @@
 import { DataSource } from 'typeorm';
-import { GameSave } from './model/game_save';
 import { GamePlayerSave } from './model/game_player_save';
+import { GameSave } from './model/game_save';
 
-export const ServerDataSource = new DataSource({
-    type: 'sqlite',
-    database: process.cwd() + '/gamedata.db',
-    synchronize: true,
-    entities: [GameSave, GamePlayerSave],
-});
+export function createDataSourceForDriver(db: Buffer | undefined, saveCallback: (data: Uint8Array) => void) {
+    return new DataSource({
+        type: 'sqljs',
+        database: db,
+        synchronize: true,
+        autoSave: true,
+        autoSaveCallback: saveCallback,
+        entities: [GameSave, GamePlayerSave],
+    });
+}
