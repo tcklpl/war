@@ -1,11 +1,11 @@
 import { SvgIconProps } from '@mui/material';
 import { FunctionComponent } from 'react';
 
-import { ReactComponent as IconSrc } from './spontaneous_spawn.svg';
 import CustomIcon from '../custom_icon';
+import IconSrc from './socialism.svg?react';
 
-const SpontaneousSpawnIcon: FunctionComponent<SvgIconProps> = ({ ...props }) => {
+const SocialismIcon: FunctionComponent<SvgIconProps> = ({ ...props }) => {
     return <CustomIcon svg={IconSrc} {...props} />;
 };
 
-export default SpontaneousSpawnIcon;
+export default SocialismIcon;

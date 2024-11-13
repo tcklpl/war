@@ -11,9 +11,9 @@ import LobbyPartyPageAnarchism from './party_pages/lobby_party_page_anarchism';
 
 import InfoIcon from '@mui/icons-material/Info';
 import AnarchismIcon from '../../../../images/icons/anarchism/anarchism_icon';
-import CapitalismIcon from '../../../../images/icons/capitalism/capitalism_ison';
-import FeudalismIcon from '../../../../images/icons/feudalism/feudalism_ison';
-import SocialismIcon from '../../../../images/icons/socialism/socialism_ison';
+import CapitalismIcon from '../../../../images/icons/capitalism/capitalism_icon';
+import FeudalismIcon from '../../../../images/icons/feudalism/feudalism_icon';
+import SocialismIcon from '../../../../images/icons/socialism/socialism_icon';
 import { TSXUtils } from '../../../../utils/tsx_utils';
 import LobbyPageInfo from './party_pages/lobby_page_info';
 import LobbyPartyPageCapitalism from './party_pages/lobby_party_page_capitalism';
