@@ -1,4 +1,4 @@
-import { GraphNodeTerritoryPacket, GraphTerritoryPacket } from '../../../../protocol';
+import { type GraphNodeTerritoryPacket, type GraphTerritoryPacket } from '../../../../protocol';
 import { Graph } from '../../graph/graph';
 import { Logger } from '../../log/logger';
 import { Territory } from '../territory/territory';

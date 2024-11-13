@@ -1,4 +1,10 @@
-import { GameConfig, GameParty, LobbyPlayerState, LobbyStage, LobbyState } from '../../../../protocol';
+import {
+    type GameConfig,
+    type GameParty,
+    type LobbyPlayerState,
+    type LobbyStage,
+    type LobbyState,
+} from '../../../../protocol';
 import { Logger } from '../../log/logger';
 import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
 import { ServerPacketChatMessage } from '../../socket/packet/lobby/chat_message';
@@ -25,7 +31,7 @@ export class Lobby {
         new PartyCapitalism(),
     ];
 
-    private _startGameTask?: NodeJS.Timeout;
+    private _startGameTask?: Timer;
 
     constructor(
         private _owner: LobbyPlayer,

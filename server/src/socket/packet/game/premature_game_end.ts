@@ -1,4 +1,4 @@
-import { PrematureGameEndReason } from '../../../../../protocol';
+import { type PrematureGameEndReason } from '../../../../../protocol';
 import { ServerPacket } from '../server_packet';
 
 export class SvPktGPrematureGameEnd extends ServerPacket<'gPrematureGameEnd'> {

@@ -1,4 +1,4 @@
-import { TerritoryCode } from '../../../../protocol';
+import { type TerritoryCode } from '../../../../protocol';
 import { Logger } from '../../log/logger';
 import { ServerPacketInitialTerritorySelectionAllowedTerritories } from '../../socket/packet/game/ini_territory_selection_allowed_territories';
 import { ServerPacketInitialTerritoryAssignment } from '../../socket/packet/game/ini_territory_selection_assignment';
@@ -57,7 +57,7 @@ export class InitialTerritorySelectionManager {
 
     private readonly _timeoutDurationSeconds = 60;
     private _curPlayerIndex = 0;
-    private _curSelectionTimeout?: NodeJS.Timeout;
+    private _curSelectionTimeout?: Timer;
     private _curAllowedTerritories: TerritoryCode[] = [];
     private _finished = false;
     private _paused = false;

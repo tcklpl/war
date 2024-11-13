@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
 import * as path from 'path';
-import { TokenBody } from '../../../protocol/src/auth/token_body';
+import { type TokenBody } from '../../../protocol/src/auth/token_body';
 import { ConfigManager } from '../config/config_manager';
 import { CfgCrypt } from '../config/default/cfg_crypt';
 import { CfgServer } from '../config/default/cfg_server';

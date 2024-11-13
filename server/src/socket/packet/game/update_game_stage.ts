@@ -1,9 +1,8 @@
-import { GameStage } from "../../../../../protocol";
-import { ServerPacket } from "../server_packet";
+import { type GameStage } from '../../../../../protocol';
+import { ServerPacket } from '../server_packet';
 
-export class ServerPacketUpdateGameStage extends ServerPacket<"gUpdateGameStage"> {
-
+export class ServerPacketUpdateGameStage extends ServerPacket<'gUpdateGameStage'> {
     constructor(pkt: GameStage) {
-        super("gUpdateGameStage", pkt);
+        super('gUpdateGameStage', pkt);
     }
 }

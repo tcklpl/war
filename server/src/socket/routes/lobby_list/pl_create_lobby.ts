@@ -1,4 +1,4 @@
-import { LobbyCreationFailReason } from '../../../../../protocol';
+import { type LobbyCreationFailReason } from '../../../../../protocol';
 import { OverLimitError } from '../../../exceptions/over_limit_error';
 import { PlayerAlreadyOwnsALobbyError } from '../../../exceptions/player_already_owns_a_lobby_error';
 import { UnavailableNameError } from '../../../exceptions/unavailable_name_error';

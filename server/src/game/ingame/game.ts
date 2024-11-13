@@ -1,12 +1,12 @@
 import {
-    GamePauseReason,
-    GameSessionConnectionInfo,
-    GameStage,
-    GameStatePlayerInfo,
-    InitialGameStatePacket,
-    PrematureGameEndReason,
-    TerritoryCode,
-    TurnAction,
+    type GamePauseReason,
+    type GameSessionConnectionInfo,
+    type GameStage,
+    type GameStatePlayerInfo,
+    type InitialGameStatePacket,
+    type PrematureGameEndReason,
+    type TerritoryCode,
+    type TurnAction,
 } from '../../../../protocol';
 import { CryptManager } from '../../crypt/crypt_manager';
 import { LobbyNotReadyError } from '../../exceptions/lobby_not_ready_error';
