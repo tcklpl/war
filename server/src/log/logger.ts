@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { blue, gray, red, yellow } from '../utils/color_utils';
 
 export enum LogLevel {
     FATAL = 0,
@@ -47,11 +47,11 @@ export class Logger {
 
     private getCurrentTimeString() {
         const time = new Date();
-        return chalk.gray(time.toTimeString().split(' ')[0]);
+        return gray(time.toTimeString().split(' ')[0]);
     }
 
     private getContextString() {
-        return `${this._contextStack.map(c => chalk.yellow(c)).join(chalk.gray(' > '))} ${chalk.gray('>>>')}`;
+        return `${this._contextStack.map(c => yellow(c)).join(gray(' > '))} ${gray('>>>')}`;
     }
 
     private printLogLine(severity: string, str: string) {
@@ -60,31 +60,31 @@ export class Logger {
 
     trace(str: string) {
         if (Logger._logLevel < LogLevel.TRACE) return;
-        this.printLogLine(chalk.gray('TRACE'), str);
+        this.printLogLine(gray('TRACE'), str);
     }
 
     debug(str: string) {
         if (Logger._logLevel < LogLevel.DEBUG) return;
-        this.printLogLine(chalk.gray('DEBUG'), str);
+        this.printLogLine(gray('DEBUG'), str);
     }
 
     info(str: string) {
         if (Logger._logLevel < LogLevel.INFO) return;
-        this.printLogLine(chalk.blueBright('INFO '), str);
+        this.printLogLine(blue('INFO '), str);
     }
 
     warn(str: string) {
         if (Logger._logLevel < LogLevel.WARN) return;
-        this.printLogLine(chalk.yellow('WARN '), str);
+        this.printLogLine(yellow('WARN '), str);
     }
 
     error(str: string) {
         if (Logger._logLevel < LogLevel.ERROR) return;
-        this.printLogLine(chalk.red('ERROR'), str);
+        this.printLogLine(red('ERROR'), str);
     }
 
     fatal(str: string) {
         if (Logger._logLevel < LogLevel.FATAL) return;
-        this.printLogLine(chalk.redBright('FATAL'), str);
+        this.printLogLine(red('FATAL'), str);
     }
 }
