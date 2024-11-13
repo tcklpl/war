@@ -1,13 +1,13 @@
-import fs from 'fs';
-import { DataSource } from 'typeorm';
+import { Database } from 'bun:sqlite';
+import { drizzle } from 'drizzle-orm/bun-sqlite';
 import { Logger } from '../log/logger';
 import { GameSaveDao } from './dao/game_save_dao';
-import { createDataSourceForDriver } from './data_source';
 import { GameSaveService } from './service/game_save_service';
 
 export class PersistenceManager {
-    private readonly _sqlFilePath = process.cwd() + '/gamedata.db';
-    private _dataSource!: DataSource;
+    private readonly _dbPath = process.cwd() + '/gamedata.db';
+    private _sqliteDb!: Database;
+    private _db;
 
     private _dao!: {
         gameSave: GameSaveDao;
@@ -23,13 +23,12 @@ export class PersistenceManager {
         this._log.info('Initializing');
 
         this._log.trace('Initializing DB');
-        this._dataSource = await createDataSourceForDriver(this.loadDbFile(), data =>
-            this.saveLocalDb(data),
-        ).initialize();
+        this._sqliteDb = new Database(this._dbPath, { create: true });
+        this._db = drizzle(this._sqliteDb);
 
         this._log.trace('Initializing DAOs');
         this._dao = {
-            gameSave: new GameSaveDao(this._dataSource),
+            gameSave: new GameSaveDao(),
         };
 
         this._log.trace('Initializing Services');
@@ -38,19 +37,6 @@ export class PersistenceManager {
         };
 
         this._log.info('Initialized');
-    }
-
-    private loadDbFile() {
-        if (fs.existsSync(this._sqlFilePath)) {
-            this._log.trace('Local DB found! loading it');
-            return fs.readFileSync(this._sqlFilePath);
-        }
-        this._log.trace('Local DB not found');
-    }
-
-    private saveLocalDb(data: Uint8Array) {
-        this._log.trace('Saving local DB');
-        fs.writeFileSync(this._sqlFilePath, data);
     }
 
     get dao() {
