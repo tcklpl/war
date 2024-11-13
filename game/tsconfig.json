@@ -18,12 +18,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "types": [
       "@webgpu/types",
-      "node",
-      "jest",
-      "@testing-library/jest-dom"
+      "@testing-library/jest-dom",
+      "vite-plugin-svgr/client"
     ],
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
