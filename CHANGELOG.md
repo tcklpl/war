@@ -28,11 +28,11 @@ Icons:
 - 🖥🔩 Added dependency `drizzle-orm`.
 - 🖥🔩 Added dev dependency `drizzle-kit`.
 - 🖥🔩 Added dev dependency `@types/bun`.
-- 🎮🔩 Added dependency `vite`.
-- 🎮🔩 Added dependency `@vitejs/plugin-react-swc`.
-- 🎮🔩 Added dependency `vite-tsconfig-paths`.
-- 🎮🔩 Added dependency `vite-plugin-svgr`.
-- 🎮🔩 Added dependency `vitest`.
+- 🎮🔩 Added dev dependency `vite`.
+- 🎮🔩 Added dev dependency `@vitejs/plugin-react-swc`.
+- 🎮🔩 Added dev dependency `vite-tsconfig-paths`.
+- 🎮🔩 Added dev dependency `vite-plugin-svgr`.
+- 🎮🔩 Added dev dependency `vitest`.
 
 ### 🔧 Changed
 
@@ -43,6 +43,7 @@ Icons:
 - 🖥🔩 Updated all server scripts to use bun.
 - 🎮🔩 Replaced `webpack` with `vite`.
 - 🎮🔩 Removed hack to get build version from env, as now we can use Vite to define variables.
+- 🎮🔩 Moved dependency `typescript` to dev dependencies.
 
 ### ❌ Removed
 
@@ -92,7 +93,6 @@ Icons:
 - 🎮🔩 Removed dependency `fs-extra`.
 - 🎮🔩 Removed dependency `bfj`.
 - 🎮🔩 Removed dependency `browserslist`.
-- 🎮🔩 Removed dependency `eslint`.
 - 🎮🔩 Removed dependency `eslint-config-react-app`.
 - 🎮🔩 Removed dependency `file-loader`.
 - 🎮🔩 Removed dependency `identity-obj-proxy`.
