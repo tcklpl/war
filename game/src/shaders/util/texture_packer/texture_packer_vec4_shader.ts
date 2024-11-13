@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './texture_packer_vec4.wgsl';
+import shaderSource from './texture_packer_vec4.wgsl?raw';
 
 export class TexturePackerVec4Shader extends Shader {
     static readonly BINDING_GROUPS = {

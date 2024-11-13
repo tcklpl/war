@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './ssao_blur.wgsl';
+import shaderSource from './ssao_blur.wgsl?raw';
 
 export class SSAOBlurShader extends Shader {
     static readonly BINDING_GROUPS = {

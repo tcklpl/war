@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './equirectangular.wgsl';
+import shaderSource from './equirectangular.wgsl?raw';
 
 export class EquirectangularShader extends Shader {
     static readonly BINDING_GROUPS = {

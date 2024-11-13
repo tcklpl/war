@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './depth.wgsl';
+import shaderSource from './depth.wgsl?raw';
 
 export class DepthShader extends Shader {
     static readonly BINDING_GROUPS = {

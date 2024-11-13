@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './picking.wgsl';
+import shaderSource from './picking.wgsl?raw';
 
 export class PickingShader extends Shader {
     static readonly BINDING_GROUPS = {

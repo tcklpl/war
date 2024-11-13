@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './taa.wgsl';
+import shaderSource from './taa.wgsl?raw';
 
 export class TAAShader extends Shader {
     static readonly BINDING_GROUPS = {

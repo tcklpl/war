@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './prefilter_cubemap.wgsl';
+import shaderSource from './prefilter_cubemap.wgsl?raw';
 
 export class PrefilterCubemapShader extends Shader {
     static readonly BINDING_GROUPS = {
