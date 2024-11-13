@@ -24,6 +24,6 @@ To start the server in development mode:
 
 ```
 cd server
-npm install
-npm start
+bun install
+bun start
 ```
