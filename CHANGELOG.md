@@ -21,6 +21,35 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
+## [Unreleased]
+
+### ✨ New
+
+- 🖥🔩 Added package `drizzle-orm`.
+- 🖥🔩 Added dev package `drizzle-kit`.
+- 🖥🔩 Added dev package `@types/bun`.
+
+### 🔧 Changed
+
+- 🖥🔩 Replaced `node` and `npm` with `bun`.
+- 🖥🔩 `json5` import changed from esm to cjs.
+- 🖥🔩 Replaced `sql.js + typeorm` with bun's own `sqlite3` and `drizzle-orm`.
+- 🖥🔩 Updated all server code to comply with `verbatimModuleSyntax`.
+- 🖥🔩 Updated all server scripts to use bun.
+
+### ❌ Removed
+
+- 🖥🔩 Removed package `typeorm`.
+- 🖥🔩 Removed package `reflect-metadata`.
+- 🖥🔩 Removed package `sql.js`.
+- 🖥🔩 Removed package `chalk`.
+- 🖥🔩 Removed dev package `nodemon`.
+- 🖥🔩 Removed dev package `ts-node`.
+- 🖥🔩 Removed dev package `pkg`.
+- 🖥🔩 Removed dev package `husky`.
+- 🖥🔩 Removed dev package `fs-jetpack`.
+- 🖥🔩 Removed dev package `copyfiles`.
+
 ## [0.3.1] - 2024-11-10
 
 ### 🔨 Fixed
