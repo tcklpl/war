@@ -127,7 +127,7 @@ const MainMenu: React.FC = () => {
                 sx={{ pointerEvents: 'none' }}
             >
                 <Typography variant='body2' color={'gray'}>
-                    {process.env.REACT_APP_VERSION}
+                    {__APP_VERSION__}
                 </Typography>
             </Box>
         </Grid2>
