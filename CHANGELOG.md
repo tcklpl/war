@@ -25,9 +25,14 @@ Icons:
 
 ### ✨ New
 
-- 🖥🔩 Added package `drizzle-orm`.
-- 🖥🔩 Added dev package `drizzle-kit`.
-- 🖥🔩 Added dev package `@types/bun`.
+- 🖥🔩 Added dependency `drizzle-orm`.
+- 🖥🔩 Added dev dependency `drizzle-kit`.
+- 🖥🔩 Added dev dependency `@types/bun`.
+- 🎮🔩 Added dependency `vite`.
+- 🎮🔩 Added dependency `@vitejs/plugin-react-swc`.
+- 🎮🔩 Added dependency `vite-tsconfig-paths`.
+- 🎮🔩 Added dependency `vite-plugin-svgr`.
+- 🎮🔩 Added dependency `vitest`.
 
 ### 🔧 Changed
 
@@ -36,19 +41,70 @@ Icons:
 - 🖥🔩 Replaced `sql.js + typeorm` with bun's own `sqlite3` and `drizzle-orm`.
 - 🖥🔩 Updated all server code to comply with `verbatimModuleSyntax`.
 - 🖥🔩 Updated all server scripts to use bun.
+- 🎮🔩 Replaced `webpack` with `vite`.
+- 🎮🔩 Removed hack to get build version from env, as now we can use Vite to define variables.
 
 ### ❌ Removed
 
-- 🖥🔩 Removed package `typeorm`.
-- 🖥🔩 Removed package `reflect-metadata`.
-- 🖥🔩 Removed package `sql.js`.
-- 🖥🔩 Removed package `chalk`.
-- 🖥🔩 Removed dev package `nodemon`.
-- 🖥🔩 Removed dev package `ts-node`.
-- 🖥🔩 Removed dev package `pkg`.
-- 🖥🔩 Removed dev package `husky`.
-- 🖥🔩 Removed dev package `fs-jetpack`.
-- 🖥🔩 Removed dev package `copyfiles`.
+- 🖥🔩 Removed dependency `typeorm`.
+- 🖥🔩 Removed dependency `reflect-metadata`.
+- 🖥🔩 Removed dependency `sql.js`.
+- 🖥🔩 Removed dependency `chalk`.
+- 🖥🔩 Removed dev dependency `nodemon`.
+- 🖥🔩 Removed dev dependency `ts-node`.
+- 🖥🔩 Removed dev dependency `pkg`.
+- 🖥🔩 Removed dev dependency `husky`.
+- 🖥🔩 Removed dev dependency `fs-jetpack`.
+- 🖥🔩 Removed dev dependency `copyfiles`.
+- 🎮🔩 Removed dependency `@babel/core`.
+- 🎮🔩 Removed dependency `babel-jest`.
+- 🎮🔩 Removed dependency `babel-loader`.
+- 🎮🔩 Removed dependency `babel-plugin-named-asset-import`.
+- 🎮🔩 Removed dependency `babel-preset-react-app`.
+- 🎮🔩 Removed dependency `@pmmmwh/react-refresh-webpack-plugin`.
+- 🎮🔩 Removed dependency `@svgr/webpack`.
+- 🎮🔩 Removed dependency `case-sensitive-paths-webpack-plugin`.
+- 🎮🔩 Removed dependency `css-minimizer-webpack-plugin`.
+- 🎮🔩 Removed dependency `eslint-webpack-plugin`.
+- 🎮🔩 Removed dependency `html-webpack-plugin`.
+- 🎮🔩 Removed dependency `terser-webpack-plugin`.
+- 🎮🔩 Removed dependency `webpack`.
+- 🎮🔩 Removed dependency `webpack-dev-server`.
+- 🎮🔩 Removed dependency `webpack-manifest-plugin`.
+- 🎮🔩 Removed dependency `workbox-webpack-plugin`.
+- 🎮🔩 Removed dependency `postcss`.
+- 🎮🔩 Removed dependency `postcss-flexbugs-fixes`.
+- 🎮🔩 Removed dependency `postcss-loader`.
+- 🎮🔩 Removed dependency `postcss-normalize`.
+- 🎮🔩 Removed dependency `postcss-preset-env`.
+- 🎮🔩 Removed dependency `resolve`.
+- 🎮🔩 Removed dependency `resolve-url-loader`.
+- 🎮🔩 Removed dependency `camelcase`.
+- 🎮🔩 Removed dependency `css-loader`.
+- 🎮🔩 Removed dependency `dotenv`.
+- 🎮🔩 Removed dependency `dotenv-expand`.
+- 🎮🔩 Removed dependency `mini-css-extract-plugin`.
+- 🎮🔩 Removed dependency `sass`.
+- 🎮🔩 Removed dependency `sass-loader`.
+- 🎮🔩 Removed dependency `style-loader`.
+- 🎮🔩 Removed dependency `source-map-loader`.
+- 🎮🔩 Removed dependency `tailwindcss`.
+- 🎮🔩 Removed dependency `fs-extra`.
+- 🎮🔩 Removed dependency `bfj`.
+- 🎮🔩 Removed dependency `browserslist`.
+- 🎮🔩 Removed dependency `eslint`.
+- 🎮🔩 Removed dependency `eslint-config-react-app`.
+- 🎮🔩 Removed dependency `file-loader`.
+- 🎮🔩 Removed dependency `identity-obj-proxy`.
+- 🎮🔩 Removed dependency `jest`.
+- 🎮🔩 Removed dependency `jest-environment-jsdom`.
+- 🎮🔩 Removed dependency `jest-resolve`.
+- 🎮🔩 Removed dependency `jest-watch-typeahead`.
+- 🎮🔩 Removed dependency `semver`.
+- 🎮🔩 Removed dependency `@types/node`.
+- 🎮🔩 Removed dependency `i18next-resources-to-backend`.
+- 🎮🔩 Removed dependency `prompts`.
+- 🎮🔩 Removed dev dependency `husky`.
 
 ## [0.3.1] - 2024-11-10
 
