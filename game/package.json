@@ -15,7 +15,8 @@
         "test": "vitest",
         "coverage": "vitest run --coverage",
         "lint": "eslint src",
-        "format": "eslint src --fix"
+        "format": "eslint src --fix",
+        "compile": "bunx tauri build"
     },
     "dependencies": {
         "@emotion/react": "^11.13.3",
