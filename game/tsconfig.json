@@ -26,7 +26,11 @@
       "vite-plugin-svgr/client",
       "vitest/globals"
     ],
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "paths": {
+      ":protocol": ["./../protocol/index.ts"],
+      ":engine/*": ["./src/engine/*"]
+    }
   },
   "include": [
     "src"
