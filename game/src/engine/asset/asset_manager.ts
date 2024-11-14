@@ -1,5 +1,4 @@
 import assetIndex from '../../asset_index.json';
-import { IllegalNodeFetchError } from '../../errors/engine/asset/illegal_node_fetch';
 import { MissingAssetError } from '../../errors/engine/asset/missing_asset';
 import { BadGLTFFileError } from '../../errors/engine/gltf/bad_gltf_file';
 import { GLTFFile } from '../data/gltf/gltf_file';
@@ -21,8 +20,6 @@ type HDRAssetName = keyof AssetIndex['hdr'];
 type AddressableAsset = { url: string };
 
 export class AssetManager extends Manager<Asset> {
-    private readonly _isInsideElectron = !!window.electron_api;
-
     private readonly loaders = {
         gltf: new GLTFLoader(),
         hdr: new HDRLoader(),
@@ -74,32 +71,6 @@ export class AssetManager extends Manager<Asset> {
     }
 
     /**
-     * Uses "fs" through electron ipc to get an asset.
-     *
-     * To be used when running from electron, as fetch will not be able to get local files.
-     * @param name Asset name, used for errors.
-     * @param asset Asset object identifying the asset's uri.
-     * @param mode the type of response you want.
-     * @returns
-     */
-    private async nodeReadAssetFile(name: string, asset: AddressableAsset, mode: 'string' | 'buffer') {
-        if (!window.electron_api) throw new IllegalNodeFetchError('Trying to call an inexistent electron API');
-        const assetUrl = asset.url;
-
-        try {
-            switch (mode) {
-                case 'string':
-                    return await window.electron_api.nodeReadFileText('channel-fs', assetUrl);
-                case 'buffer':
-                    return await window.electron_api.nodeReadFileBuffer('channel-fs', assetUrl);
-            }
-        } catch (e) {
-            console.error(e);
-            throw new MissingAssetError(`Failed to load asset '${name}'`);
-        }
-    }
-
-    /**
      * Dispatch for loading JSON Assets.
      *
      * @param name Asset name, used for errors.
@@ -107,13 +78,8 @@ export class AssetManager extends Manager<Asset> {
      * @returns Required asset as a loaded object.
      */
     private async getAssetJson(name: string, asset: AddressableAsset) {
-        if (this._isInsideElectron) {
-            const assetText = (await this.nodeReadAssetFile(name, asset, 'string')) as string;
-            return JSON.parse(assetText);
-        } else {
-            const assetRequest = await this.fetchAssetFile(name, asset);
-            return await assetRequest.json();
-        }
+        const assetRequest = await this.fetchAssetFile(name, asset);
+        return await assetRequest.json();
     }
 
     /**
@@ -124,13 +90,8 @@ export class AssetManager extends Manager<Asset> {
      * @returns Required asset as an Array Buffer.
      */
     private async getAssetBuffer(name: string, asset: AddressableAsset) {
-        if (this._isInsideElectron) {
-            const buffer = (await this.nodeReadAssetFile(name, asset, 'buffer')) as Buffer;
-            return buffer.buffer;
-        } else {
-            const assetRequest = await this.fetchAssetFile(name, asset);
-            return await assetRequest.arrayBuffer();
-        }
+        const assetRequest = await this.fetchAssetFile(name, asset);
+        return await assetRequest.arrayBuffer();
     }
 
     /**
