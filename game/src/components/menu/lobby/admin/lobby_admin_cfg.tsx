@@ -20,7 +20,7 @@ import SocialismIcon from '../../../../images/icons/socialism/socialism_icon';
 
 const LobbyAdminConfigScreen = () => {
     const { currentLobbyState } = useGameSession();
-    const { t } = useTranslation(['lobby']);
+    const { t } = useTranslation(['lobby', 'parties']);
 
     const [cfgPage, setCfgPage] = useState('global');
     const isLobbyConfigReadonly = currentLobbyState?.game_config.is_immutable ?? false;

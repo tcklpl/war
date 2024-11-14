@@ -10,7 +10,7 @@ interface HUDCommonTopInfoProps {}
 
 const HUDCommonTopInfo: FunctionComponent<HUDCommonTopInfoProps> = () => {
     const { username, currentLobbyState, currentGameSession } = useGameSession();
-    const { t } = useTranslation(['common']);
+    const { t } = useTranslation(['common', 'ingame']);
     const isLobbyOwner =
         currentGameSession?.initialGameState.players.find(p => p.name === username)?.is_lobby_owner ?? false;
 
