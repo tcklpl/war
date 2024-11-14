@@ -1,21 +1,21 @@
 import { render } from '@testing-library/react';
+import { ConfigDisplay } from '../../../../engine/config/cfg_display';
+import { WarGameSession } from '../../../../game/lobby/war_game_session';
+import { WarGame } from '../../../../game/war_game';
 import { useConfig } from '../../../../hooks/use_config';
 import { useGame } from '../../../../hooks/use_game';
 import { useGameSession } from '../../../../hooks/use_game_session';
 import HUDPerformance from './hud_performance';
-import { ConfigDisplay } from '../../../../engine/config/cfg_display';
-import { WarGame } from '../../../../game/war_game';
-import { WarGameSession } from '../../../../game/lobby/war_game_session';
 
-jest.mock('../../../../hooks/use_game');
-jest.mock('../../../../hooks/use_game_session');
-jest.mock('../../../../hooks/use_config');
+vi.mock('../../../../hooks/use_game');
+vi.mock('../../../../hooks/use_game_session');
+vi.mock('../../../../hooks/use_config');
 
 describe('Performance HUD', () => {
-    it(`renders nothing if there's no game instance`, () => {
-        const mockUseGame = jest.mocked(useGame);
-        const mockUseGameSession = jest.mocked(useGameSession);
-        const mockUseConfig = jest.mocked(useConfig);
+    it(`renders nothing if there's no game instance`, async () => {
+        const mockUseGame = vi.mocked(useGame);
+        const mockUseGameSession = vi.mocked(useGameSession);
+        const mockUseConfig = vi.mocked(useConfig);
 
         mockUseGame.mockReturnValue({
             setGameInstance() {},
@@ -23,12 +23,12 @@ describe('Performance HUD', () => {
         });
 
         mockUseGameSession.mockReturnValue({
-            ...jest.requireActual('../../../../hooks/use_game_session'),
+            ...(await vi.importActual('../../../../hooks/use_game_session')),
             currentGameSession: undefined,
         });
 
         mockUseConfig.mockReturnValue({
-            ...jest.requireActual('../../../../hooks/use_config'),
+            ...(await vi.importActual('../../../../hooks/use_config')),
             displayConfig: new ConfigDisplay(),
         });
 
@@ -36,12 +36,12 @@ describe('Performance HUD', () => {
         expect(container).toBeEmptyDOMElement();
     });
 
-    it(`renders performance hud`, () => {
-        const mockUseGame = jest.mocked(useGame);
-        const mockUseGameSession = jest.mocked(useGameSession);
-        const mockUseConfig = jest.mocked(useConfig);
+    it(`renders performance hud`, async () => {
+        const mockUseGame = vi.mocked(useGame);
+        const mockUseGameSession = vi.mocked(useGameSession);
+        const mockUseConfig = vi.mocked(useConfig);
 
-        const mockRegisterFrameListener = jest.fn();
+        const mockRegisterFrameListener = vi.fn();
 
         const displayConfig = new ConfigDisplay();
         displayConfig.showPerformance = true;
@@ -56,12 +56,12 @@ describe('Performance HUD', () => {
         });
 
         mockUseGameSession.mockReturnValue({
-            ...jest.requireActual('../../../../hooks/use_game_session'),
+            ...(await vi.importActual('../../../../hooks/use_game_session')),
             currentGameSession: {} as WarGameSession,
         });
 
         mockUseConfig.mockReturnValue({
-            ...jest.requireActual('../../../../hooks/use_config'),
+            ...(await vi.importActual('../../../../hooks/use_config')),
             displayConfig,
         });
 
