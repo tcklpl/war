@@ -35,6 +35,7 @@ Icons:
 - 🎮🔩 Added dev dependency `vitest`.
 - 🎮🔩 Added dev dependency `happy-dom`.
 - 🎮🔩 Added dev dependency `@vitest/coverage-v8`.
+- 🎮🔩 Added dev dependency `@tauri-apps/cli`.
 
 ### 🔨 Fixed
 
