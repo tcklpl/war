@@ -36,6 +36,10 @@ Icons:
 - 🎮🔩 Added dev dependency `happy-dom`.
 - 🎮🔩 Added dev dependency `@vitest/coverage-v8`.
 
+### 🔨 Fixed
+
+- 🎮🔩 Fixed some components to properly import all `i18n` namespaces they're using.
+
 ### 🔧 Changed
 
 - 🖥🔩 Replaced `node` and `npm` with `bun`.
@@ -48,6 +52,20 @@ Icons:
 - 🎮🔩 Moved dependency `typescript` to dev dependencies.
 - 🎮🔩 Updated scripts to use `vitest`.
 - 🔩 Updated `README` to better reflect the state of the project.
+- 🎮🔩⬆️ Updated `@types/react` to `18.3.12`.
+- 🎮🔩⬆️ Updated `@types/react-dom` to `18.3.1`.
+- 🎮🔩⬆️ Updated `@webgpu/types` to `0.1.51`.
+- 🎮🔩⬆️ Updated `typescript` to `5.6.3`.
+- 🎮🔩⬆️ Updated `@mui/icons-material` to `5.16.7`.
+- 🎮🔩⬆️ Updated `@mui/lab` to `6.0.0-beta.15`.
+- 🎮🔩⬆️ Updated `@mui/material` to `6.1.7`.
+- 🎮🔩⬆️ Updated `react-router-dom` to `6.28.0`.
+- 🎮🔩⬆️ Updated `recharts` to `2.13.3`.
+- 🎮🔩⬆️ Updated `socket.io-client` to `4.8.1`.
+- 🎮🔩⬆️ Updated `@fontsource/roboto` to `5.1.0`.
+- 🎮🔩⬆️ Updated `@mui/icons-material` to `6.1.7`.
+- 🎮🔩⬆️ Updated `i18next` to `23.16.5`.
+- 🎮🔩⬆️ Updated `react-i18next` to `15.1.1`.
 
 ### ❌ Removed
 
@@ -108,8 +126,12 @@ Icons:
 - 🎮🔩 Removed dependency `@types/node`.
 - 🎮🔩 Removed dependency `i18next-resources-to-backend`.
 - 🎮🔩 Removed dependency `prompts`.
+- 🎮🔩 Removed dependency `react-refresh`.
 - 🎮🔩 Removed dev dependency `husky`.
 - 🎮🔩 Removed dev dependency `@types/jest`.
+- 🎮🔩 Removed dev dependency `electron`.
+- 🎮🔩 Removed dev dependency `electron-builder`.
+- 🎮🔩 Removed dev dependency `raw.macro`.
 
 ## [0.3.1] - 2024-11-10
 
