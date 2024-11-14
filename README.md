@@ -4,25 +4,40 @@
 [![Changelog Badge](https://img.shields.io/badge/Changelog-8A2BE2)](./CHANGELOG.md)
 [![GitHub Pages Deploy](https://img.shields.io/badge/Github%20Pages-Latest%20Dev%20Build-blue?logo=github)](https://tcklpl.github.io/war/)
 
-This is the browser version of a class-based war2-inspired game made using NodeJS, Typescript and WebGPU.
+This is the browser version of a class-based war2-inspired game made using Bun, Vite, Typescript and WebGPU.
 
-# Compiling
+The game was initially created with `crate-react-app`, and was later ejected so I could configure it to import shader
+files and run webpack with `tsc --build`. As of version `0.4.0`, all `cra`-related dependencies and configurations were
+removed and the project now runs on `bun` with `vite`.
 
-Make sure you have `node` and `npm` installed on your system. I'm currently using `node v20.12.2` and `npm 10.5.0`
+The server, as of version `0.4.0` also runs on `bun` and all server executables are compiled using `bun`.
 
-To start the game in development mode (hot reload) you can do the following:
+# Running
 
-```
+You can get the latest binaries on the releases page.
+
+> [!WARNING]
+> The game and server are still in **early** development and are probably broken and/or incomplete.
+>
+> The game will be playable when the major version gets bigger than `0` eg. `1.0.0`
+
+# Starting in Dev Mode
+
+> [!NOTE]  
+> You need to have the latest stable [Bun](https://bun.sh/) installed on your system.
+> (you can upgrade your install with `bun upgrade`)
+
+### Game
+
+```sh
 cd game
-npm install
-npm start
+bun install
+bun start
 ```
 
-This will open a browser and start the react-scripts server in hot-reload mode: your changes will be reflected on the page as you save the files.
+### Server
 
-To start the server in development mode:
-
-```
+```sh
 cd server
 bun install
 bun start
