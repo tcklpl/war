@@ -33,6 +33,8 @@ Icons:
 - 🎮🔩 Added dev dependency `vite-tsconfig-paths`.
 - 🎮🔩 Added dev dependency `vite-plugin-svgr`.
 - 🎮🔩 Added dev dependency `vitest`.
+- 🎮🔩 Added dev dependency `happy-dom`.
+- 🎮🔩 Added dev dependency `@vitest/coverage-v8`.
 
 ### 🔧 Changed
 
@@ -44,6 +46,8 @@ Icons:
 - 🎮🔩 Replaced `webpack` with `vite`.
 - 🎮🔩 Removed hack to get build version from env, as now we can use Vite to define variables.
 - 🎮🔩 Moved dependency `typescript` to dev dependencies.
+- 🎮🔩 Updated scripts to use `vitest`.
+- 🔩 Updated `README` to better reflect the state of the project.
 
 ### ❌ Removed
 
@@ -105,6 +109,7 @@ Icons:
 - 🎮🔩 Removed dependency `i18next-resources-to-backend`.
 - 🎮🔩 Removed dependency `prompts`.
 - 🎮🔩 Removed dev dependency `husky`.
+- 🎮🔩 Removed dev dependency `@types/jest`.
 
 ## [0.3.1] - 2024-11-10
 
