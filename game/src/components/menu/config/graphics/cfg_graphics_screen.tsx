@@ -1,3 +1,4 @@
+import { useConfig } from ':hooks/use_config';
 import {
     Box,
     Grid2,
@@ -14,7 +15,6 @@ import {
 } from '@mui/material';
 import React, { useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../../../hooks/use_config';
 import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgGraphicsScreen: React.FC = () => {

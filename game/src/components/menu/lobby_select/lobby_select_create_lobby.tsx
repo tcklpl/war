@@ -1,3 +1,5 @@
+import { useGame } from ':hooks/use_game';
+import { useGameSession } from ':hooks/use_game_session';
 import {
     Button,
     Dialog,
@@ -12,8 +14,6 @@ import {
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGame } from '../../../hooks/use_game';
-import { useGameSession } from '../../../hooks/use_game_session';
 
 const LobbySelectCreateLobby: React.FC<{
     open: boolean;

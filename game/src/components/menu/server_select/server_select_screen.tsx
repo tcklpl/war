@@ -1,4 +1,5 @@
 import { ServerConnectionCandidate } from ':game/server/connection/server_connection_candidate';
+import { useGame } from ':hooks/use_game';
 import {
     Button,
     CircularProgress,
@@ -18,12 +19,12 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { useGame } from '../../../hooks/use_game';
 import './server_select.scss';
 import ServerSelectAddServerScreen from './server_select_add_server';
 import ServerSelectConnectionInfo from './server_select_connection_info';
 import ServerSelectPasswordPrompt from './server_select_password_prompt';
 
+import { useGameSession } from ':hooks/use_game_session';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
@@ -37,7 +38,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import SendIcon from '@mui/icons-material/Send';
 import { UsernameNotAvailableError } from '../../../errors/game/connection/username_not_available';
 import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
-import { useGameSession } from '../../../hooks/use_game_session';
 import { ServerListEntry } from './server_list_entry';
 
 const ServerSelectScreen: React.FC = () => {

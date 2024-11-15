@@ -1,6 +1,6 @@
+import { useGameSession } from ':hooks/use_game_session';
 import { Box, Step, StepContent, StepLabel, Stepper, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useGameSession } from '../../../../../hooks/use_game_session';
 
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';

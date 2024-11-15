@@ -1,10 +1,10 @@
+import { useGameSession } from ':hooks/use_game_session';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Alert, Box, Tab } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGameSession } from '../../../../hooks/use_game_session';
 import '../lobby_screen.scss';
 import LobbyAdminConfigScreenAnarchism from './config_pages/lobby_admin_cfg_anarchism';
 import LobbyAdminConfigScreenCapitalism from './config_pages/lobby_admin_cfg_capitalism';
@@ -12,11 +12,11 @@ import LobbyAdminConfigScreenFeudalism from './config_pages/lobby_admin_cfg_feud
 import LobbyAdminConfigScreenGlobal from './config_pages/lobby_admin_cfg_global';
 import LobbyAdminConfigScreenSocialism from './config_pages/lobby_admin_cfg_socialism';
 
-import PublicIcon from '@mui/icons-material/Public';
 import AnarchismIcon from ':icons/anarchism/anarchism_icon';
 import CapitalismIcon from ':icons/capitalism/capitalism_icon';
 import FeudalismIcon from ':icons/feudalism/feudalism_icon';
 import SocialismIcon from ':icons/socialism/socialism_icon';
+import PublicIcon from '@mui/icons-material/Public';
 
 const LobbyAdminConfigScreen = () => {
     const { currentLobbyState } = useGameSession();

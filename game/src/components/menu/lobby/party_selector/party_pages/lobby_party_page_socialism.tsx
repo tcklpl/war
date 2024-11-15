@@ -1,3 +1,5 @@
+import { useGameSession } from ':hooks/use_game_session';
+import BlackBlockIcon from ':icons/anarchism/black_block_icon';
 import {
     Alert,
     AlertTitle,
@@ -11,10 +13,8 @@ import {
     Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useGameSession } from '../../../../../hooks/use_game_session';
 import { TSXUtils } from '../../../../../utils/tsx_utils';
 import LobbyAdminConfigTitle from '../../admin/config_pages/components/lobby_admin_cfg_title';
-import BlackBlockIcon from ':icons/anarchism/black_block_icon';
 
 const LobbyPartyPageSocialism = () => {
     const { t } = useTranslation(['lobby', 'parties', 'common', 'countries']);

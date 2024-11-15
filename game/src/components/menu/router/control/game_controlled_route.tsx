@@ -1,5 +1,5 @@
+import { useGameSession } from ':hooks/use_game_session';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useGameSession } from '../../../../hooks/use_game_session';
 
 interface GameControlledRouteParams {
     requiresActiveSession?: boolean;

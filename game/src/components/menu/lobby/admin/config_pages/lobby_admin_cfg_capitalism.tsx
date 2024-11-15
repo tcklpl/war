@@ -1,10 +1,10 @@
+import { useGameSession } from ':hooks/use_game_session';
 import { Box, Table, TableBody } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useGameSession } from '../../../../../hooks/use_game_session';
 import { useTranslation } from 'react-i18next';
-import LobbyAdminConfigTitle from './components/lobby_admin_cfg_title';
-import LobbyAdminConfigOption from './components/lobby_admin_cfg_option';
 import LobbyAdminConfigGroupHp from './components/lobby_admin_cfg_group_hp';
+import LobbyAdminConfigOption from './components/lobby_admin_cfg_option';
+import LobbyAdminConfigTitle from './components/lobby_admin_cfg_title';
 
 const LobbyAdminConfigScreenCapitalism = ({ disabled }: { disabled: boolean }) => {
     const { currentLobbyState, modifyLobbyState, cloneLobbyState } = useGameSession();

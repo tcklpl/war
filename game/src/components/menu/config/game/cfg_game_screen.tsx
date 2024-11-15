@@ -1,7 +1,7 @@
+import { useConfig } from ':hooks/use_config';
 import { Grid2, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../../../hooks/use_config';
 import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgGameScreen: React.FC = () => {

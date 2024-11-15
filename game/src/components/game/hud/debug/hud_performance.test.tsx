@@ -1,15 +1,15 @@
 import { ConfigDisplay } from ':engine/config/cfg_display';
 import { WarGameSession } from ':game/lobby/war_game_session';
 import { WarGame } from ':game/war_game';
+import { useConfig } from ':hooks/use_config';
+import { useGame } from ':hooks/use_game';
+import { useGameSession } from ':hooks/use_game_session';
 import { render } from '@testing-library/react';
-import { useConfig } from '../../../../hooks/use_config';
-import { useGame } from '../../../../hooks/use_game';
-import { useGameSession } from '../../../../hooks/use_game_session';
 import HUDPerformance from './hud_performance';
 
-vi.mock('../../../../hooks/use_game');
-vi.mock('../../../../hooks/use_game_session');
-vi.mock('../../../../hooks/use_config');
+vi.mock(':hooks/use_game');
+vi.mock(':hooks/use_game_session');
+vi.mock(':hooks/use_config');
 
 describe('Performance HUD', () => {
     it(`renders nothing if there's no game instance`, async () => {
@@ -23,12 +23,12 @@ describe('Performance HUD', () => {
         });
 
         mockUseGameSession.mockReturnValue({
-            ...(await vi.importActual('../../../../hooks/use_game_session')),
+            ...(await vi.importActual(':hooks/use_game_session')),
             currentGameSession: undefined,
         });
 
         mockUseConfig.mockReturnValue({
-            ...(await vi.importActual('../../../../hooks/use_config')),
+            ...(await vi.importActual(':hooks/use_config')),
             displayConfig: new ConfigDisplay(),
         });
 
@@ -56,12 +56,12 @@ describe('Performance HUD', () => {
         });
 
         mockUseGameSession.mockReturnValue({
-            ...(await vi.importActual('../../../../hooks/use_game_session')),
+            ...(await vi.importActual(':hooks/use_game_session')),
             currentGameSession: {} as WarGameSession,
         });
 
         mockUseConfig.mockReturnValue({
-            ...(await vi.importActual('../../../../hooks/use_config')),
+            ...(await vi.importActual(':hooks/use_config')),
             displayConfig,
         });
 
