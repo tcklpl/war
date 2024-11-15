@@ -26,6 +26,7 @@ Icons:
 ### ✨ New
 
 - 🖥🔩 Added dependency `drizzle-orm`.
+- 🖥🔩 Added dependency `tasai`.
 - 🖥🔩 Added dev dependency `drizzle-kit`.
 - 🖥🔩 Added dev dependency `@types/bun`.
 - 🎮🔩 Added dev dependency `vite`.
@@ -68,6 +69,7 @@ Icons:
 - 🎮🔩⬆️ Updated `@mui/icons-material` to `6.1.7`.
 - 🎮🔩⬆️ Updated `i18next` to `23.16.5`.
 - 🎮🔩⬆️ Updated `react-i18next` to `15.1.1`.
+- 🎮🖥⬆️ Updated `typescript-eslint` to `8.14.0`.
 
 ### ❌ Removed
 
@@ -81,6 +83,8 @@ Icons:
 - 🖥🔩 Removed dev dependency `husky`.
 - 🖥🔩 Removed dev dependency `fs-jetpack`.
 - 🖥🔩 Removed dev dependency `copyfiles`.
+- 🖥🔩 Removed dev dependency `@swc/core`.
+- 🖥🔩 Removed dev dependency `@swc/helpers`.
 - 🎮🔩 Removed dependency `@babel/core`.
 - 🎮🔩 Removed dependency `babel-jest`.
 - 🎮🔩 Removed dependency `babel-loader`.
