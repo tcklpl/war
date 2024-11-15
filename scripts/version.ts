@@ -50,4 +50,9 @@ for (const pkg of packages) {
   await $`git add ${pkg}`;
 }
 
+await $`git commit -m v${finalVersion}`;
+await $`git tag v${finalVersion}`;
+await $`git push`;
+await $`git push origin tag v${finalVersion}`;
+
 export {};
