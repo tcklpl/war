@@ -1,4 +1,4 @@
-import { blue, gray, red, yellow } from '../utils/color_utils';
+import { c } from 'tasai';
 
 export enum LogLevel {
     FATAL = 0,
@@ -47,11 +47,11 @@ export class Logger {
 
     private getCurrentTimeString() {
         const time = new Date();
-        return gray(time.toTimeString().split(' ')[0]);
+        return c.dim(time.toTimeString().split(' ')[0]);
     }
 
     private getContextString() {
-        return `${this._contextStack.map(c => yellow(c)).join(gray(' > '))} ${gray('>>>')}`;
+        return `${this._contextStack.map(ctx => c.yellow(ctx)).join(c.dim(' > '))} ${c.dim('>>>')}`;
     }
 
     private printLogLine(severity: string, str: string) {
@@ -60,31 +60,31 @@ export class Logger {
 
     trace(str: string) {
         if (Logger._logLevel < LogLevel.TRACE) return;
-        this.printLogLine(gray('TRACE'), str);
+        this.printLogLine(c.dim('TRACE'), str);
     }
 
     debug(str: string) {
         if (Logger._logLevel < LogLevel.DEBUG) return;
-        this.printLogLine(gray('DEBUG'), str);
+        this.printLogLine(c.dim('DEBUG'), str);
     }
 
     info(str: string) {
         if (Logger._logLevel < LogLevel.INFO) return;
-        this.printLogLine(blue('INFO '), str);
+        this.printLogLine(c.brightBlue('INFO '), str);
     }
 
     warn(str: string) {
         if (Logger._logLevel < LogLevel.WARN) return;
-        this.printLogLine(yellow('WARN '), str);
+        this.printLogLine(c.yellow('WARN '), str);
     }
 
     error(str: string) {
         if (Logger._logLevel < LogLevel.ERROR) return;
-        this.printLogLine(red('ERROR'), str);
+        this.printLogLine(c.brightRed('ERROR'), str);
     }
 
     fatal(str: string) {
         if (Logger._logLevel < LogLevel.FATAL) return;
-        this.printLogLine(red('FATAL'), str);
+        this.printLogLine(c.red('FATAL'), str);
     }
 }

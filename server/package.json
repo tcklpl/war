@@ -13,31 +13,29 @@
     "author": "tcklpl",
     "license": "ISC",
     "devDependencies": {
-        "@eslint/js": "^9.12.0",
-        "@swc/core": "^1.7.26",
-        "@swc/helpers": "^0.5.13",
+        "@eslint/js": "^9.14.0",
         "@types/bun": "^1.1.13",
         "@types/jsonwebtoken": "^9.0.7",
-        "@types/node": "^20.8.7",
-        "drizzle-kit": "^0.28.0",
-        "eslint": "^9.12.0",
+        "drizzle-kit": "^0.28.1",
+        "eslint": "^9.14.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-prettier": "^5.2.1",
-        "globals": "^15.10.0",
+        "globals": "^15.12.0",
         "prettier": "^3.3.3",
         "regenerator-runtime": "^0.14.1",
         "replace-in-file": "^8.2.0",
-        "typescript-eslint": "^8.8.1"
+        "typescript-eslint": "^8.14.0"
     },
     "dependencies": {
         "@types/express": "^4.17.21",
         "celebrate": "^15.0.3",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
-        "drizzle-orm": "^0.36.1",
-        "express": "^4.21.0",
+        "drizzle-orm": "^0.36.3",
+        "express": "^4.21.1",
         "json5": "^2.2.3",
         "jsonwebtoken": "^9.0.2",
-        "socket.io": "^4.8.0"
+        "socket.io": "^4.8.1",
+        "tasai": "^1.0.0"
     }
 }

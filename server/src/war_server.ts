@@ -1,3 +1,4 @@
+import { c } from 'tasai';
 import { WarServerBanner } from './banner';
 import { CommandProcessor } from './commands/command_processor';
 import { ConfigManager } from './config/config_manager';
@@ -8,7 +9,6 @@ import { GameServer } from './game/game_server';
 import { Logger } from './log/logger';
 import { PersistenceManager } from './persistence/persistence_manager';
 import { SocketServer } from './socket/socket_server';
-import { green } from './utils/color_utils';
 
 export class WarServer {
     private readonly _log = new Logger('War Server');
@@ -60,7 +60,7 @@ export class WarServer {
         await this._socketServer.initialize();
 
         const loadTime = Date.now() - startTime;
-        this._log.info(`Server started ${green('successfully')} in ${loadTime}ms`);
+        this._log.info(`Server started ${c.brightGreen('successfully')} in ${loadTime}ms`);
 
         this._commandProcessor.parseCommands();
     }
