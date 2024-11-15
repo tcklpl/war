@@ -53,6 +53,7 @@ Icons:
 - 🎮🔩 Moved dependency `typescript` to dev dependencies.
 - 🎮🔩 Updated scripts to use `vitest`.
 - 🔩 Updated `README` to better reflect the state of the project.
+- 🎮🖥🔩 Started using ts path remapping, for now implemented `:protocol`, `:engine`, `:components` and `:icons`.
 - 🎮🔩⬆️ Updated `@types/react` to `18.3.12`.
 - 🎮🔩⬆️ Updated `@types/react-dom` to `18.3.1`.
 - 🎮🔩⬆️ Updated `@webgpu/types` to `0.1.51`.
