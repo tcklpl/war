@@ -1,11 +1,19 @@
 {
-    "semi": true,
-    "endOfLine": "auto",
-    "trailingComma": "all",
-    "singleQuote": true,
-    "printWidth": 120,
-    "tabWidth": 4,
-    "bracketSpacing": true,
-    "bracketSameLine": false,
-    "arrowParens": "avoid"
+  "semi": true,
+  "endOfLine": "auto",
+  "trailingComma": "all",
+  "singleQuote": true,
+  "printWidth": 120,
+  "tabWidth": 4,
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "avoid",
+  "overrides": [
+    {
+      "files": ["*.json", "*.json5"],
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
 }
