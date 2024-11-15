@@ -25,8 +25,8 @@ You can get the latest binaries on the releases page.
 ### Game
 
 You can either install and run the game locally or access it through the GitHub Pages link on
-the top of this file. All game configuration can be done while running the game through the
-config menu.
+the top of this file. All game configuration can be done through the config menu while
+running the game.
 
 ### Server
 

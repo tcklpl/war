@@ -21,7 +21,7 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
-## [Unreleased]
+## [0.4.0] - 2024-11-15
 
 ### ✨ New
 
@@ -37,6 +37,7 @@ Icons:
 - 🎮🔩 Added dev dependency `happy-dom`.
 - 🎮🔩 Added dev dependency `@vitest/coverage-v8`.
 - 🎮🔩 Added dev dependency `@tauri-apps/cli`.
+- 🔩 Created a `version` script to change the project version across all packages.
 
 ### 🔨 Fixed
 
@@ -54,7 +55,7 @@ Icons:
 - 🎮🔩 Moved dependency `typescript` to dev dependencies.
 - 🎮🔩 Updated scripts to use `vitest`.
 - 🔩 Updated `README` to better reflect the state of the project.
-- 🎮🖥🔩 Started using ts path remapping, for now implemented `:protocol`, `:engine`, `:components` and `:icons`.
+- 🎮🖥🔩 Started using ts path remapping, for now implemented `:protocol`, `:engine`, `:hooks` and `:icons`.
 - 🎮🔩⬆️ Updated `@types/react` to `18.3.12`.
 - 🎮🔩⬆️ Updated `@types/react-dom` to `18.3.1`.
 - 🎮🔩⬆️ Updated `@webgpu/types` to `0.1.51`.
@@ -70,6 +71,7 @@ Icons:
 - 🎮🔩⬆️ Updated `i18next` to `23.16.5`.
 - 🎮🔩⬆️ Updated `react-i18next` to `15.1.1`.
 - 🎮🖥⬆️ Updated `typescript-eslint` to `8.14.0`.
+- 🔩 `pettier` now formats `json` and `json5` files with 2-space tabs. The rest of the files are 4-space tabs.
 
 ### ❌ Removed
 
@@ -85,6 +87,7 @@ Icons:
 - 🖥🔩 Removed dev dependency `copyfiles`.
 - 🖥🔩 Removed dev dependency `@swc/core`.
 - 🖥🔩 Removed dev dependency `@swc/helpers`.
+- 🖥🔩 Removed dev dependency `replace-in-file`.
 - 🎮🔩 Removed dependency `@babel/core`.
 - 🎮🔩 Removed dependency `babel-jest`.
 - 🎮🔩 Removed dependency `babel-loader`.
