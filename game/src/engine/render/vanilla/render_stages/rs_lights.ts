@@ -28,7 +28,7 @@ export class RenderStageLights implements RenderStage {
         'shadow map common buffer',
     );
 
-    async initialize(resources: RenderInitializationResources) {
+    async initialize(_resources: RenderInitializationResources) {
         await new Promise<void>(r => {
             this._depthShader = new DepthShader('depth shader', () => r());
         });

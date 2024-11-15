@@ -10,3 +10,6 @@ dist/
 public.key
 private.key
 gamedata.db
+
+# Incremental builds
+*.tsbuildinfo

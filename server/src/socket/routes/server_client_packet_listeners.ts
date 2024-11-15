@@ -1,4 +1,4 @@
-import { Constructor } from '../../@types/utils';
+import { type Constructor } from '../../@types/utils';
 import { ConfigManager } from '../../config/config_manager';
 import { CryptManager } from '../../crypt/crypt_manager';
 import { GameServer } from '../../game/game_server';
@@ -26,7 +26,7 @@ import { PLCreateLobby } from './lobby_list/pl_create_lobby';
 import { PLJoinLobby } from './lobby_list/pl_join_lobby';
 import { PLRequestLobbies } from './lobby_list/pl_req_lobbies';
 import { PacketListener } from './packet_listener';
-import { SocketRouteData } from './socket_route_data';
+import { type SocketRouteData } from './socket_route_data';
 
 export class ServerClientPacketListeners {
     private readonly _routeData: SocketRouteData;

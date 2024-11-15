@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './skybox.wgsl';
+import shaderSource from './skybox.wgsl?raw';
 
 export class SkyboxShader extends Shader {
     static readonly BINDING_GROUPS = {

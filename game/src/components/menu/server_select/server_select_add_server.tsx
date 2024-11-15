@@ -1,3 +1,5 @@
+import { ServerConnectionCandidate } from ':game/server/connection/server_connection_candidate';
+import { useGame } from ':hooks/use_game';
 import {
     Button,
     Dialog,
@@ -9,12 +11,10 @@ import {
     TextField,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import './server_select.scss';
-import { useGame } from '../../../hooks/use_game';
-import { URLUtils } from '../../../utils/url_utils';
 import { useTranslation } from 'react-i18next';
+import { URLUtils } from '../../../utils/url_utils';
 import { ServerListEntry } from './server_list_entry';
-import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
+import './server_select.scss';
 
 const ServerSelectAddServerScreen: React.FC<{
     open: boolean;

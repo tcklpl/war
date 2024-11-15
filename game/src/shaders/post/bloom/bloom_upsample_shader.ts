@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './bloom_upsample.wgsl';
+import shaderSource from './bloom_upsample.wgsl?raw';
 
 export class BloomUpsampleShader extends Shader {
     static readonly BINDING_GROUPS = {

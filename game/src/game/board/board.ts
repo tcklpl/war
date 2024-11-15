@@ -1,4 +1,4 @@
-import { Scene } from '../../engine/data/scene/scene';
+import { Scene } from ':engine/data/scene/scene';
 import { BoardCamera } from './board_camera';
 import { BoardCountriesIndex } from './board_countries_index';
 import { BoardLights } from './board_lights';

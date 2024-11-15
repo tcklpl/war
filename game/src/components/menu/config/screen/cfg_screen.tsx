@@ -1,3 +1,5 @@
+import { useConfig } from ':hooks/use_config';
+import { useGame } from ':hooks/use_game';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MonitorIcon from '@mui/icons-material/Monitor';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
@@ -6,8 +8,6 @@ import { Alert, Box, Stack, ToggleButton, ToggleButtonGroup, useTheme } from '@m
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useConfig } from '../../../../hooks/use_config';
-import { useGame } from '../../../../hooks/use_game';
 import CfgScreenDefaultBackground from '../default_background/cfg_default_background';
 import CfgDisplayScreen from '../display/cfg_display_screen';
 import CfgGameScreen from '../game/cfg_game_screen';

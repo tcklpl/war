@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './depth_and_velocity.wgsl';
+import shaderSource from './depth_and_velocity.wgsl?raw';
 
 export class DepthAndVelocityShader extends Shader {
     static readonly BINDING_GROUPS = {

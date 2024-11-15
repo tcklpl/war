@@ -1,8 +1,8 @@
 import { SvgIconProps } from '@mui/material';
 import { FunctionComponent } from 'react';
 
-import { ReactComponent as IconSrc } from './dragon.svg';
 import CustomIcon from '../custom_icon';
+import IconSrc from './dragon.svg?react';
 
 const DragonIcon: FunctionComponent<SvgIconProps> = ({ ...props }) => {
     return <CustomIcon svg={IconSrc} {...props} />;

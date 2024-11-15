@@ -1,18 +1,18 @@
+import { useAlert } from ':hooks/use_alert';
+import { useGame } from ':hooks/use_game';
+import { useGameSession } from ':hooks/use_game_session';
 import { Box, Button, ButtonGroup, CircularProgress, Grid2, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAlert } from '../../../hooks/use_alert';
-import { useGame } from '../../../hooks/use_game';
-import { useGameSession } from '../../../hooks/use_game_session';
 import PlayerNameBox from '../config/player_name_box/player_name_box';
 
+import { useConfirmation } from ':hooks/use_confirmation';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PublicIcon from '@mui/icons-material/Public';
 import RestoreIcon from '@mui/icons-material/Restore';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useConfirmation } from '../../../hooks/use_confirmation';
 
 const MainMenu: React.FC = () => {
     const { username, reconnectionInfo, setReconnectionInfo } = useGameSession();
@@ -127,7 +127,7 @@ const MainMenu: React.FC = () => {
                 sx={{ pointerEvents: 'none' }}
             >
                 <Typography variant='body2' color={'gray'}>
-                    {process.env.REACT_APP_VERSION}
+                    {__APP_VERSION__}
                 </Typography>
             </Box>
         </Grid2>

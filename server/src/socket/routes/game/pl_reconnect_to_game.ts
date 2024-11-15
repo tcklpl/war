@@ -1,4 +1,4 @@
-import { GameSessionConnectionInfo } from '../../../../../protocol';
+import { type GameSessionConnectionInfo } from ':protocol';
 import { LobbyMovedOnError } from '../../../exceptions/reconnection/lobby_moved_on_error';
 import { PlayerAlreadyInLobbyError } from '../../../exceptions/reconnection/player_already_in_lobby_error';
 import { PlayerDoesntBelongOnLobbyError } from '../../../exceptions/reconnection/player_doesnt_belong_on_lobby_error';

@@ -10,7 +10,6 @@ jobs:
     uses: ./.github/workflows/dispatch-build.yaml
     with:
       branch: master
-      node-version: 22.x
 
   create-release:
     uses: ./.github/workflows/create-release.yaml

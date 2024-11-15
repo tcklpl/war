@@ -1,4 +1,4 @@
-import { Engine } from '../engine/engine';
+import { Engine } from ':engine/engine';
 import { GameBoard } from './board/board';
 import { GameStateManager } from './game_state_manager';
 import { GameLoader } from './loader/game_loader';

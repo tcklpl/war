@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './luminance_reducer.wgsl';
+import shaderSource from './luminance_reducer.wgsl?raw';
 
 export class LuminanceReducerShader extends Shader {
     static readonly BINDING_GROUPS = {

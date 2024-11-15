@@ -33,14 +33,14 @@ export class Mouse {
         });
 
         // Left click
-        gameCanvas.addEventListener('click', e => {
+        gameCanvas.addEventListener('click', () => {
             this._listeners.forEach(l => {
                 if (l.onMouseLeftClick) l.onMouseLeftClick();
             });
         });
 
         // Right click
-        gameCanvas.addEventListener('contextmenu', e => {
+        gameCanvas.addEventListener('contextmenu', () => {
             this._listeners.forEach(l => {
                 if (l.onMouseRightClick) l.onMouseRightClick();
             });

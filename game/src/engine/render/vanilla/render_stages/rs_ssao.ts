@@ -50,7 +50,7 @@ export class RenderStageSSAO implements RenderStage {
     private _ssaoRenderPassDescriptor!: GPURenderPassDescriptor;
     private _ssaoBlurRenderPassDescriptor!: GPURenderPassDescriptor;
 
-    async initialize(resources: RenderInitializationResources) {
+    async initialize(_resources: RenderInitializationResources) {
         this.buildKernel();
         this.writeKernelBuffer();
         await this.buildNoiseMap();

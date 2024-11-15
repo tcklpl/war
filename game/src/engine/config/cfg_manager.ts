@@ -54,7 +54,7 @@ export class ConfigManager extends IDBController<ConfigPage> {
         if (!loadedConfig) return reference;
 
         // Check if the loaded config has any missing keys
-        for (let refKey of Object.keys(reference)) {
+        for (const refKey of Object.keys(reference)) {
             if (!Object.keys(loadedConfig).find(x => x === refKey)) {
                 (loadedConfig as any)[refKey] = reference[refKey as keyof typeof reference];
             }

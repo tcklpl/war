@@ -1,7 +1,7 @@
+import { useGameSession } from ':hooks/use_game_session';
 import { Box, Button, Typography } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGameSession } from '../../../../../hooks/use_game_session';
 
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import SaveIcon from '@mui/icons-material/Save';
@@ -10,7 +10,7 @@ interface HUDCommonTopInfoProps {}
 
 const HUDCommonTopInfo: FunctionComponent<HUDCommonTopInfoProps> = () => {
     const { username, currentLobbyState, currentGameSession } = useGameSession();
-    const { t } = useTranslation(['common']);
+    const { t } = useTranslation(['common', 'ingame']);
     const isLobbyOwner =
         currentGameSession?.initialGameState.players.find(p => p.name === username)?.is_lobby_owner ?? false;
 

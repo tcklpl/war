@@ -1,3 +1,18 @@
+import { useConfirmation } from ':hooks/use_confirmation';
+import { useGameSession } from ':hooks/use_game_session';
+import AnarchismIcon from ':icons/anarchism/anarchism_icon';
+import CapitalismIcon from ':icons/capitalism/capitalism_icon';
+import CrownIcon from ':icons/crown_icon';
+import FeudalismIcon from ':icons/feudalism/feudalism_icon';
+import SocialismIcon from ':icons/socialism/socialism_icon';
+import { GameParty } from ':protocol';
+import FlagIcon from '@mui/icons-material/Flag';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ShieldIcon from '@mui/icons-material/Shield';
+import StopIcon from '@mui/icons-material/Stop';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -20,26 +35,10 @@ import Tab from '@mui/material/Tab';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { GameParty } from '../../../../../protocol';
-import { useConfirmation } from '../../../hooks/use_confirmation';
-import { useGameSession } from '../../../hooks/use_game_session';
 import LobbyAdminConfigScreen from './admin/lobby_admin_cfg';
 import LobbyChatBox from './lobby_chat_box';
 import './lobby_screen.scss';
 import LobbyPartySelectorScreen from './party_selector/lobby_party_selector';
-
-import FlagIcon from '@mui/icons-material/Flag';
-import LogoutIcon from '@mui/icons-material/Logout';
-import PersonIcon from '@mui/icons-material/Person';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ShieldIcon from '@mui/icons-material/Shield';
-import StopIcon from '@mui/icons-material/Stop';
-import AnarchismIcon from '../../../images/icons/anarchism/anarchism_icon';
-import CapitalismIcon from '../../../images/icons/capitalism/capitalism_ison';
-import CrownIcon from '../../../images/icons/crown_icon';
-import FeudalismIcon from '../../../images/icons/feudalism/feudalism_ison';
-import SocialismIcon from '../../../images/icons/socialism/socialism_ison';
 
 const LobbyScreen: React.FC = () => {
     const { palette } = useTheme();

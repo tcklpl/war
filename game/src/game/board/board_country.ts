@@ -1,8 +1,8 @@
-import { MappedRegionSize } from '../../engine/data/atlas/mapped_region_size';
-import { Entity } from '../../engine/data/entity/entity';
-import { PointLight } from '../../engine/data/lights/point_light';
-import { interactable } from '../../engine/data/traits/interactable';
-import { Vec3 } from '../../engine/data/vec/vec3';
+import { MappedRegionSize } from ':engine/data/atlas/mapped_region_size';
+import { Entity } from ':engine/data/entity/entity';
+import { PointLight } from ':engine/data/lights/point_light';
+import { interactable } from ':engine/data/traits/interactable';
+import { Vec3 } from ':engine/data/vec/vec3';
 import { MissingAssetError } from '../../errors/engine/asset/missing_asset';
 import {
     BoardCountryAnimationHoverOn,

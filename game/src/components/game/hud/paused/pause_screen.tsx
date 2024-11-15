@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { useConfirmation } from ':hooks/use_confirmation';
 import {
     Box,
     Button,
@@ -11,13 +10,14 @@ import {
     alpha,
     useTheme,
 } from '@mui/material';
-import { useConfirmation } from '../../../../hooks/use_confirmation';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './pause_screen.scss';
 
+import { useGameSession } from ':hooks/use_game_session';
+import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import SaveIcon from '@mui/icons-material/Save';
-import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
-import { useGameSession } from '../../../../hooks/use_game_session';
 
 interface PauseScreenProps {}
 type PauseScreenText = { reason: string; descOwner: string; descOthers: string };

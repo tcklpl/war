@@ -1,19 +1,19 @@
+import { useGameSession } from ':hooks/use_game_session';
+import { GameParty } from ':protocol';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box, Button, Switch, Tab, Typography } from '@mui/material';
 import { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GameParty } from '../../../../../../protocol';
-import { useGameSession } from '../../../../hooks/use_game_session';
 import '../lobby_screen.scss';
 import LobbyPartyPageAnarchism from './party_pages/lobby_party_page_anarchism';
 
+import AnarchismIcon from ':icons/anarchism/anarchism_icon';
+import CapitalismIcon from ':icons/capitalism/capitalism_icon';
+import FeudalismIcon from ':icons/feudalism/feudalism_icon';
+import SocialismIcon from ':icons/socialism/socialism_icon';
 import InfoIcon from '@mui/icons-material/Info';
-import AnarchismIcon from '../../../../images/icons/anarchism/anarchism_icon';
-import CapitalismIcon from '../../../../images/icons/capitalism/capitalism_ison';
-import FeudalismIcon from '../../../../images/icons/feudalism/feudalism_ison';
-import SocialismIcon from '../../../../images/icons/socialism/socialism_ison';
 import { TSXUtils } from '../../../../utils/tsx_utils';
 import LobbyPageInfo from './party_pages/lobby_page_info';
 import LobbyPartyPageCapitalism from './party_pages/lobby_party_page_capitalism';

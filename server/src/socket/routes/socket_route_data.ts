@@ -1,4 +1,4 @@
-import { GameSocket } from '../../@types/server_socket';
+import { type GameSocket } from '../../@types/server_socket';
 import { ConfigManager } from '../../config/config_manager';
 import { CryptManager } from '../../crypt/crypt_manager';
 import { GameServer } from '../../game/game_server';

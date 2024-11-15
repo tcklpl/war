@@ -1,60 +1,61 @@
 {
-    /*
-        GLOBAL SERVER CONFIG
+  /*
+    GLOBAL SERVER CONFIG
 
-        Configure this file to setup your server.
-        Each config group is labeled as either IMPORTANT or SECONDARY:
-        [ IMPORTANT ]   You probably want to take a look at this lines as you'll likely change them.
-        [ SECONDARY ]   These are configs that you'll probably not need to change, as they are auto-generated or already sane ones.
-    */
+    Configure this file to setup your server.
+    Each config group is labeled as either IMPORTANT or SECONDARY:
+    [ IMPORTANT ]   You probably want to take a look at this lines as you'll likely change them.
+    [ SECONDARY ]   These are configs that you'll probably not need to change, as they are auto-generated or already sane ones.
+  */
 
-    /*
-        [ IMPORTANT ]
-        Server connection info, how your server will listen to incoming requests.
-        You may want to change the default port if it's already in use in your machine.
+  /*
+    [ IMPORTANT ]
+    Server connection info, how your server will listen to incoming requests.
+    You may want to change the default port if it's already in use in your machine.
 
-        Log Level can be either: debug, info, warn or error.
-            Debug:  All sorts of information will be logged, for example: players selection parties,
-                    players selection territories, each game action etc. This mode is only meant to be used
-                    while developing the server, most information logged here would be useless when in production.
-            
-            Info:   ( RECOMMENDED ) This mode will print only stuff like rooms being created, players joining and leaving the server,
-                    games starting etc. This mode is the recommended one when actually running the server.
+    Log Level can be either: trace, debug, info, warn or error.
+        Trace:  In addition to eveything in Debug, Trace will also print interal logs of the server components.
 
-            Warn:   Will only print warnings and errors, stuff like players doing things that they don't have permission to.
-
-            Error:  Will print only errors, these are server-side errors, stuff like corrupted configuration and/or databases.
+        Debug:  All sorts of information will be logged, for example: players selection parties,
+                players selection territories, each game action etc. This mode is only meant to be used
+                while developing the server, most information logged here would be useless when in production.
         
-        ALL LOG LEVELS WILL PRINT STUFF FROM HIGHER LEVELS. For example: Info will print stuff from Info, Warm and Error; Error will only print
-        errors and Debug will print everything.
-            
-    */
-    host: "localhost",
-    rest_port: 36875,
-    socket_port: 36876,
-    log_level: "info",
+        Info:   ( RECOMMENDED ) This mode will print only stuff like rooms being created, players joining and leaving the server,
+                games starting etc. This mode is the recommended one when actually running the server.
+
+        Warn:   Will only print warnings and errors, stuff like players doing things that they don't have permission to.
+
+        Error:  Will print only errors, these are server-side errors, stuff like corrupted configuration and/or databases.
     
-    /*
-        [ IMPORTANT ]
-        Server Name and Password that will be required when connecting to the server.
-        Leaving password as an empty string will make the server not require any password.
-    */
-    name: "My Server",
-    password: "",
-    description: "My Server Description",
+    ALL LOG LEVELS WILL PRINT STUFF FROM HIGHER LEVELS. For example: Info will print stuff from Info, Warm and Error; Error will only print
+    errors and Trace will print everything.
+  */
+  host: 'localhost',
+  rest_port: 36875,
+  socket_port: 36876,
+  log_level: 'info',
 
-    /*
-        [ SECONDARY ]
-        Server limits
-    */
-    max_players: 32,
-    max_lobbies: 8,
+  /*
+    [ IMPORTANT ]
+    Server Name and Password that will be required when connecting to the server.
+    Leaving password as an empty string will make the server not require any password.
+  */
+  name: 'My Server',
+  password: '',
+  description: 'My Server Description',
 
-    /*
-        [ SECONDARY ]
-        How long the token generated on login will be valid. This is important in case a player disconnects for some reason
-        and tries to rejoin shortly after. They'll be able to go straight back to the game without trigerring a re-authentication
-        as long as their token is still valid.
-    */
-    client_auth_token_expiration: "12h"
+  /*
+    [ SECONDARY ]
+    Server limits
+  */
+  max_players: 32,
+  max_lobbies: 8,
+
+  /*
+    [ SECONDARY ]
+    How long the token generated on login will be valid. This is important in case a player disconnects for some reason
+    and tries to rejoin shortly after. They'll be able to go straight back to the game without trigerring a re-authentication
+    as long as their token is still valid.
+  */
+  client_auth_token_expiration: '12h',
 }

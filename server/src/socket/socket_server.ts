@@ -1,6 +1,6 @@
+import { type AuthTokenBody } from ':protocol';
 import { Server } from 'socket.io';
-import { AuthTokenBody } from '../../../protocol';
-import { GameSocketServer } from '../@types/server_socket';
+import { type GameSocketServer } from '../@types/server_socket';
 import { ConfigManager } from '../config/config_manager';
 import { CfgServer } from '../config/default/cfg_server';
 import { CryptManager } from '../crypt/crypt_manager';

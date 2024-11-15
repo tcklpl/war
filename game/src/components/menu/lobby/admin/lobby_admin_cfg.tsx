@@ -1,26 +1,26 @@
+import { useGameSession } from ':hooks/use_game_session';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Alert, Box, Tab } from '@mui/material';
 import { useState } from 'react';
-import LobbyAdminConfigScreenGlobal from './config_pages/lobby_admin_cfg_global';
-import LobbyAdminConfigScreenAnarchism from './config_pages/lobby_admin_cfg_anarchism';
-import LobbyAdminConfigScreenFeudalism from './config_pages/lobby_admin_cfg_feudalism';
-import LobbyAdminConfigScreenSocialism from './config_pages/lobby_admin_cfg_socialism';
-import LobbyAdminConfigScreenCapitalism from './config_pages/lobby_admin_cfg_capitalism';
-import { useGameSession } from '../../../../hooks/use_game_session';
 import { useTranslation } from 'react-i18next';
 import '../lobby_screen.scss';
+import LobbyAdminConfigScreenAnarchism from './config_pages/lobby_admin_cfg_anarchism';
+import LobbyAdminConfigScreenCapitalism from './config_pages/lobby_admin_cfg_capitalism';
+import LobbyAdminConfigScreenFeudalism from './config_pages/lobby_admin_cfg_feudalism';
+import LobbyAdminConfigScreenGlobal from './config_pages/lobby_admin_cfg_global';
+import LobbyAdminConfigScreenSocialism from './config_pages/lobby_admin_cfg_socialism';
 
+import AnarchismIcon from ':icons/anarchism/anarchism_icon';
+import CapitalismIcon from ':icons/capitalism/capitalism_icon';
+import FeudalismIcon from ':icons/feudalism/feudalism_icon';
+import SocialismIcon from ':icons/socialism/socialism_icon';
 import PublicIcon from '@mui/icons-material/Public';
-import AnarchismIcon from '../../../../images/icons/anarchism/anarchism_icon';
-import FeudalismIcon from '../../../../images/icons/feudalism/feudalism_ison';
-import SocialismIcon from '../../../../images/icons/socialism/socialism_ison';
-import CapitalismIcon from '../../../../images/icons/capitalism/capitalism_ison';
 
 const LobbyAdminConfigScreen = () => {
     const { currentLobbyState } = useGameSession();
-    const { t } = useTranslation(['lobby']);
+    const { t } = useTranslation(['lobby', 'parties']);
 
     const [cfgPage, setCfgPage] = useState('global');
     const isLobbyConfigReadonly = currentLobbyState?.game_config.is_immutable ?? false;

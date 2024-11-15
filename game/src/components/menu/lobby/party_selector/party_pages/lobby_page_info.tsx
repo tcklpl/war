@@ -1,5 +1,5 @@
+import { useGameSession } from ':hooks/use_game_session';
 import { Box, Step, StepContent, StepLabel, Stepper, Typography } from '@mui/material';
-import { useGameSession } from '../../../../../hooks/use_game_session';
 import { useTranslation } from 'react-i18next';
 
 import CheckIcon from '@mui/icons-material/Check';
@@ -9,7 +9,7 @@ import { TSXUtils } from '../../../../../utils/tsx_utils';
 
 const LobbyPageInfo = () => {
     const { currentLobbyState, username, gameStartingIn } = useGameSession();
-    const { t } = useTranslation(['lobby']);
+    const { t } = useTranslation(['lobby', 'common']);
 
     const stepperSteps = [
         {

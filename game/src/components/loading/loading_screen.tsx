@@ -1,8 +1,8 @@
+import { LoadStage } from ':game/loader/load_stage';
+import { useGame } from ':hooks/use_game';
 import { Box, CircularProgress, Container, Grid2, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LoadStage } from '../../game/loader/load_stage';
-import { useGame } from '../../hooks/use_game';
 import style from './loading_screen.module.scss';
 
 const LoadingScreen: React.FC = () => {

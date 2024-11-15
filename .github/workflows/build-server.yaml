@@ -5,9 +5,6 @@ on:
       branch:
         required: true
         type: string
-      node-version:
-        required: true
-        type: string
 
 jobs:
   build-server:
@@ -18,32 +15,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
-      - name: Use Node.js ${{ inputs.node-version }}
-        uses: actions/setup-node@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ inputs.node-version }}
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-      - name: Get Version
-        id: version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-        with:
-          path: server
+          bun-version: latest
       - name: Installing Dependencies
         working-directory: server
-        run: npm ci
+        run: bun install
       - name: Verify Lint
         working-directory: server
-        run: npm run lint
+        run: bun lint
       - name: Build Server
         working-directory: server
-        run: npm run build
-      - name: Pack Server Executables
-        working-directory: server
-        run: npm run pack
-      - name: Rename Executables
-        working-directory: server/dist
-        run: for file in *; do mv "$file" $(echo "$file" | sed -E "s/war2-server-(.+)/War2-Server-${{ steps.version.outputs.current-version }}-\1/"); done
+        run: bun run build
       - name: Sharing Executables
         uses: actions/upload-artifact@v4
         with:

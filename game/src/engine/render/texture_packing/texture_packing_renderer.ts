@@ -84,7 +84,7 @@ export class TexturePackingRenderer {
         const resolution = this.getMaximumTextureDimensions(sources);
         const targetGPUTex = device.createTexture({
             size: [resolution.x, resolution.y],
-            format: 'rgba8unorm',
+            format,
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
         return new Texture(targetGPUTex);

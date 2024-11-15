@@ -1,17 +1,10 @@
-import { Logger } from "../../log/logger";
-import { Command } from "../command";
-import { CommandExecutionData } from "../command_execution_data";
+import { Logger } from '../../log/logger';
+import { Command } from '../command';
+import { type CommandExecutionData } from '../command_execution_data';
 
 export class CommandHelp extends Command {
-
     constructor(logger: Logger) {
-        super(
-            "help",
-            "Help",
-            ["h"],
-            "Shows help screen",
-            logger
-        );
+        super('help', 'Help', ['h'], 'Shows help screen', logger);
     }
 
     execute(data: CommandExecutionData): boolean {
@@ -29,22 +22,21 @@ export class CommandHelp extends Command {
             console.table({
                 name: finalExecutor.name,
                 command: finalExecutor.command,
-                aliases: finalExecutor.aliases.join(","),
+                aliases: finalExecutor.aliases.join(','),
                 description: finalExecutor.description,
-                subroutes: finalExecutor.subroutes.map(s => s.command).join(",")
+                subroutes: finalExecutor.subroutes.map(s => s.command).join(','),
             });
         } else {
             this._log.info(`Help Screen. To get info on a specific command, use "help <command name or alias>"`);
             const table = data.server.commandProcessor.commands.map(c => {
                 return {
                     command: c.command,
-                    aliases: c.aliases.join(",") ?? "--",
-                    description: c.description
-                }
+                    aliases: c.aliases.join(',') ?? '--',
+                    description: c.description,
+                };
             });
             console.table(table);
         }
         return true;
     }
-    
 }

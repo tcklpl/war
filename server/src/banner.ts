@@ -1,12 +1,11 @@
-import chalk from 'chalk';
+import { c } from 'tasai';
 
 export class WarServerBanner {
     readonly version = process.env.SERVER_VERSION;
-    readonly version_type: 'Development' | 'Release' = 'Development';
-    readonly source_url = 'https://github.com/tcklpl/war';
+    readonly sourceUrl = 'https://github.com/tcklpl/war';
     readonly greetings = `
-        War Server ${chalk.gray(this.version)} (${chalk.gray(this.version_type)})
-        ${chalk.dim('Source available at ' + chalk.underline(this.source_url))}
-        ${chalk.dim('Enter help to see the command list.')}
+        War2 Server ${c.dim(this.version ?? 'In-Development')} ${c.dim('@ Bun')} ${c.dim(Bun.version)}
+        ${c.dim('Source available at ' + c.underline(this.sourceUrl))}
+        Enter help to see the command list.
     `;
 }

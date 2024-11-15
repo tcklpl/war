@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './bloom_downsample.wgsl';
+import shaderSource from './bloom_downsample.wgsl?raw';
 
 export class BloomDownsampleShader extends Shader {
     static readonly BINDING_GROUPS = {

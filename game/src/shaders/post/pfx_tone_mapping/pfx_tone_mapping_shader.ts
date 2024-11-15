@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './pfx_tone_mapping.wgsl';
+import shaderSource from './pfx_tone_mapping.wgsl?raw';
 
 export class PFXTonemapShader extends Shader {
     static readonly BINDING_GROUPS = {

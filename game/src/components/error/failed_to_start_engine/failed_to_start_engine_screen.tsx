@@ -1,7 +1,7 @@
+import { useCrash } from ':hooks/use_crash';
 import { Box, Container, Grid2, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCrash } from '../../../hooks/use_crash';
 import './failed_to_start_engine_screen.scss';
 import logo from './no_webgpu_icon.png';
 

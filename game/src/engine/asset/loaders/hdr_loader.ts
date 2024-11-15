@@ -146,7 +146,7 @@ export class HDRLoader {
     }
 
     private parseData(stream: DataStream, header: Header): Float32Array {
-        let hash = stream.data.getUint16(stream.offset);
+        const hash = stream.data.getUint16(stream.offset);
         let data;
 
         if (hash === 0x0202) {
@@ -164,11 +164,11 @@ export class HDRLoader {
         const { width, height, colorCorr } = header;
         const tgt = new Float32Array(width * height * 4);
         let i = 0;
-        let { offset, data } = stream;
+        let { offset } = stream;
+        const { data } = stream;
 
         for (let y = 0; y < height; ++y) {
             if (data.getUint16(offset) !== 0x0202) throw new Error('Incorrect scanline start hash');
-
             if (data.getUint16(offset + 2) !== width) throw new Error("Scanline doesn't match picture dimension!");
 
             offset += 4;

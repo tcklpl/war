@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useGame } from '../../../../hooks/use_game';
-import { Time } from '../../../../engine/time';
-import { Card, CardContent, CardHeader, Typography, useTheme } from '@mui/material';
-import SixtyFpsSelectIcon from '@mui/icons-material/SixtyFpsSelect';
-import NetworkPingIcon from '@mui/icons-material/NetworkPing';
+import { Time } from ':engine/time';
+import { useConfig } from ':hooks/use_config';
+import { useGame } from ':hooks/use_game';
+import { useGameSession } from ':hooks/use_game_session';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import NetworkPingIcon from '@mui/icons-material/NetworkPing';
+import SixtyFpsSelectIcon from '@mui/icons-material/SixtyFpsSelect';
+import { Card, CardContent, CardHeader, Typography, useTheme } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Line, LineChart, ReferenceLine, YAxis } from 'recharts';
 import style from './debug_huds.module.scss';
 import { HUDPerformanceColor } from './hud_performance_colors';
-import { LineChart, Line, YAxis, ReferenceLine } from 'recharts';
-import { useConfig } from '../../../../hooks/use_config';
-import { useGameSession } from '../../../../hooks/use_game_session';
 
 const HUDPerformance: React.FC = () => {
     const { gameInstance } = useGame();

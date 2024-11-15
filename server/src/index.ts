@@ -1,5 +1,4 @@
 import { WarServer } from './war_server';
-import 'reflect-metadata';
 
 const server = new WarServer();
 server.initialize();

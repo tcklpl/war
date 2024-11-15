@@ -1,5 +1,5 @@
-import { Mat4 } from '../engine/data/mat/mat4';
-import { Vec4 } from '../engine/data/vec/vec4';
+import { Mat4 } from ':engine/data/mat/mat4';
+import { Vec4 } from ':engine/data/vec/vec4';
 
 export class MatrixUtils {
     static getFrustumCornersWorldSpace(projection: Mat4, view: Mat4) {

@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './mipmap.wgsl';
+import shaderSource from './mipmap.wgsl?raw';
 
 export class Mipmap2DShader extends Shader {
     static readonly BINDING_GROUPS = {

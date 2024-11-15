@@ -1,15 +1,15 @@
+import { useGameSession } from ':hooks/use_game_session';
+import BlackBlockIcon from ':icons/anarchism/black_block_icon';
+import FearsomeEnemyIcon from ':icons/anarchism/fearsome_enemy_icon';
+import FrenzyIcon from ':icons/anarchism/frenzy_icon';
+import OffensiveManiacIcon from ':icons/anarchism/offensive_maniac_icon';
+import PowerVoidIcon from ':icons/anarchism/power_void_icon';
+import SpontaneousSpawnIcon from ':icons/anarchism/spontaneous_spawn_icon';
 import { Box, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGameSession } from '../../../../../hooks/use_game_session';
 import { TSXUtils } from '../../../../../utils/tsx_utils';
 import LobbyAdminConfigTitle from '../../admin/config_pages/components/lobby_admin_cfg_title';
-import { Fragment } from 'react';
-import PowerVoidIcon from '../../../../../images/icons/anarchism/power_void_icon';
-import OffensiveManiacIcon from '../../../../../images/icons/anarchism/offensive_maniac_icon';
-import SpontaneousSpawnIcon from '../../../../../images/icons/anarchism/spontaneous_spawn_ison';
-import FrenzyIcon from '../../../../../images/icons/anarchism/frenzy_icon';
-import FearsomeEnemyIcon from '../../../../../images/icons/anarchism/fearsome_enemy_icon';
-import BlackBlockIcon from '../../../../../images/icons/anarchism/black_block_icon';
 
 const LobbyPartyPageAnarchism = () => {
     const { t } = useTranslation(['lobby', 'parties', 'common']);

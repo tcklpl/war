@@ -1,11 +1,11 @@
-import { Socket, io } from 'socket.io-client';
 import {
     ClientToServerPackets,
     ResponseServerInfoBody,
     ServerToClientPackets,
     cl_LoginRequest,
     sv_LoginResponseOK,
-} from '../../../../../protocol';
+} from ':protocol';
+import { Socket, io } from 'socket.io-client';
 import { UnknownConnectionError } from '../../../errors/game/connection/unknown_connection_error';
 import { UsernameNotAvailableError } from '../../../errors/game/connection/username_not_available';
 import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
@@ -47,7 +47,7 @@ export class ServerConnectionCandidate {
             const responseBody = (await result.json()) as ResponseServerInfoBody;
             this._serverInfo = responseBody;
             this.status = 'ready';
-        } catch (e) {
+        } catch {
             this.status = 'error';
         }
     }
@@ -99,7 +99,7 @@ export class ServerConnectionCandidate {
         });
         try {
             await this.waitForServerConnection(socket);
-        } catch (_) {
+        } catch {
             return;
         }
 

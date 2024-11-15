@@ -1,15 +1,20 @@
+import { useConfig } from ':hooks/use_config';
 import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import CfgScreen from './cfg_screen';
-import { useConfig } from '../../../../hooks/use_config';
 
-jest.mock('../../../../hooks/use_config');
-const mockUseConfig = jest.mocked(useConfig);
+vi.mock(':hooks/use_config');
+const mockUseConfig = vi.mocked(useConfig);
 
-it('renders', () => {
+it('renders', async () => {
     mockUseConfig.mockReturnValue({
-        ...jest.requireActual('../../../../hooks/use_config'),
+        ...(await vi.importActual(':hooks/use_config')),
         async saveConfig() {},
     });
 
-    render(<CfgScreen />);
+    render(
+        <MemoryRouter>
+            <CfgScreen />
+        </MemoryRouter>,
+    );
 });

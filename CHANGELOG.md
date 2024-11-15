@@ -21,6 +21,127 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
+## [0.4.0] - 2024-11-15
+
+### ✨ New
+
+- 🖥🔩 Added dependency `drizzle-orm`.
+- 🖥🔩 Added dependency `tasai`.
+- 🖥🔩 Added dev dependency `drizzle-kit`.
+- 🖥🔩 Added dev dependency `@types/bun`.
+- 🎮🔩 Added dev dependency `vite`.
+- 🎮🔩 Added dev dependency `@vitejs/plugin-react-swc`.
+- 🎮🔩 Added dev dependency `vite-tsconfig-paths`.
+- 🎮🔩 Added dev dependency `vite-plugin-svgr`.
+- 🎮🔩 Added dev dependency `vitest`.
+- 🎮🔩 Added dev dependency `happy-dom`.
+- 🎮🔩 Added dev dependency `@vitest/coverage-v8`.
+- 🎮🔩 Added dev dependency `@tauri-apps/cli`.
+- 🔩 Created a `version` script to change the project version across all packages.
+
+### 🔨 Fixed
+
+- 🎮🔩 Fixed some components to properly import all `i18n` namespaces they're using.
+
+### 🔧 Changed
+
+- 🖥🔩 Replaced `node` and `npm` with `bun`.
+- 🖥🔩 `json5` import changed from esm to cjs.
+- 🖥🔩 Replaced `sql.js + typeorm` with bun's own `sqlite3` and `drizzle-orm`.
+- 🖥🔩 Updated all server code to comply with `verbatimModuleSyntax`.
+- 🖥🔩 Updated all server scripts to use bun.
+- 🎮🔩 Replaced `webpack` with `vite`.
+- 🎮🔩 Removed hack to get build version from env, as now we can use Vite to define variables.
+- 🎮🔩 Moved dependency `typescript` to dev dependencies.
+- 🎮🔩 Updated scripts to use `vitest`.
+- 🔩 Updated `README` to better reflect the state of the project.
+- 🎮🖥🔩 Started using ts path remapping, for now implemented `:protocol`, `:engine`, `:hooks` and `:icons`.
+- 🎮🔩⬆️ Updated `@types/react` to `18.3.12`.
+- 🎮🔩⬆️ Updated `@types/react-dom` to `18.3.1`.
+- 🎮🔩⬆️ Updated `@webgpu/types` to `0.1.51`.
+- 🎮🔩⬆️ Updated `typescript` to `5.6.3`.
+- 🎮🔩⬆️ Updated `@mui/icons-material` to `5.16.7`.
+- 🎮🔩⬆️ Updated `@mui/lab` to `6.0.0-beta.15`.
+- 🎮🔩⬆️ Updated `@mui/material` to `6.1.7`.
+- 🎮🔩⬆️ Updated `react-router-dom` to `6.28.0`.
+- 🎮🔩⬆️ Updated `recharts` to `2.13.3`.
+- 🎮🔩⬆️ Updated `socket.io-client` to `4.8.1`.
+- 🎮🔩⬆️ Updated `@fontsource/roboto` to `5.1.0`.
+- 🎮🔩⬆️ Updated `@mui/icons-material` to `6.1.7`.
+- 🎮🔩⬆️ Updated `i18next` to `23.16.5`.
+- 🎮🔩⬆️ Updated `react-i18next` to `15.1.1`.
+- 🎮🖥⬆️ Updated `typescript-eslint` to `8.14.0`.
+- 🔩 `pettier` now formats `json` and `json5` files with 2-space tabs. The rest of the files are 4-space tabs.
+
+### ❌ Removed
+
+- 🖥🔩 Removed dependency `typeorm`.
+- 🖥🔩 Removed dependency `reflect-metadata`.
+- 🖥🔩 Removed dependency `sql.js`.
+- 🖥🔩 Removed dependency `chalk`.
+- 🖥🔩 Removed dev dependency `nodemon`.
+- 🖥🔩 Removed dev dependency `ts-node`.
+- 🖥🔩 Removed dev dependency `pkg`.
+- 🖥🔩 Removed dev dependency `husky`.
+- 🖥🔩 Removed dev dependency `fs-jetpack`.
+- 🖥🔩 Removed dev dependency `copyfiles`.
+- 🖥🔩 Removed dev dependency `@swc/core`.
+- 🖥🔩 Removed dev dependency `@swc/helpers`.
+- 🖥🔩 Removed dev dependency `replace-in-file`.
+- 🎮🔩 Removed dependency `@babel/core`.
+- 🎮🔩 Removed dependency `babel-jest`.
+- 🎮🔩 Removed dependency `babel-loader`.
+- 🎮🔩 Removed dependency `babel-plugin-named-asset-import`.
+- 🎮🔩 Removed dependency `babel-preset-react-app`.
+- 🎮🔩 Removed dependency `@pmmmwh/react-refresh-webpack-plugin`.
+- 🎮🔩 Removed dependency `@svgr/webpack`.
+- 🎮🔩 Removed dependency `case-sensitive-paths-webpack-plugin`.
+- 🎮🔩 Removed dependency `css-minimizer-webpack-plugin`.
+- 🎮🔩 Removed dependency `eslint-webpack-plugin`.
+- 🎮🔩 Removed dependency `html-webpack-plugin`.
+- 🎮🔩 Removed dependency `terser-webpack-plugin`.
+- 🎮🔩 Removed dependency `webpack`.
+- 🎮🔩 Removed dependency `webpack-dev-server`.
+- 🎮🔩 Removed dependency `webpack-manifest-plugin`.
+- 🎮🔩 Removed dependency `workbox-webpack-plugin`.
+- 🎮🔩 Removed dependency `postcss`.
+- 🎮🔩 Removed dependency `postcss-flexbugs-fixes`.
+- 🎮🔩 Removed dependency `postcss-loader`.
+- 🎮🔩 Removed dependency `postcss-normalize`.
+- 🎮🔩 Removed dependency `postcss-preset-env`.
+- 🎮🔩 Removed dependency `resolve`.
+- 🎮🔩 Removed dependency `resolve-url-loader`.
+- 🎮🔩 Removed dependency `camelcase`.
+- 🎮🔩 Removed dependency `css-loader`.
+- 🎮🔩 Removed dependency `dotenv`.
+- 🎮🔩 Removed dependency `dotenv-expand`.
+- 🎮🔩 Removed dependency `mini-css-extract-plugin`.
+- 🎮🔩 Removed dependency `sass`.
+- 🎮🔩 Removed dependency `sass-loader`.
+- 🎮🔩 Removed dependency `style-loader`.
+- 🎮🔩 Removed dependency `source-map-loader`.
+- 🎮🔩 Removed dependency `tailwindcss`.
+- 🎮🔩 Removed dependency `fs-extra`.
+- 🎮🔩 Removed dependency `bfj`.
+- 🎮🔩 Removed dependency `browserslist`.
+- 🎮🔩 Removed dependency `eslint-config-react-app`.
+- 🎮🔩 Removed dependency `file-loader`.
+- 🎮🔩 Removed dependency `identity-obj-proxy`.
+- 🎮🔩 Removed dependency `jest`.
+- 🎮🔩 Removed dependency `jest-environment-jsdom`.
+- 🎮🔩 Removed dependency `jest-resolve`.
+- 🎮🔩 Removed dependency `jest-watch-typeahead`.
+- 🎮🔩 Removed dependency `semver`.
+- 🎮🔩 Removed dependency `@types/node`.
+- 🎮🔩 Removed dependency `i18next-resources-to-backend`.
+- 🎮🔩 Removed dependency `prompts`.
+- 🎮🔩 Removed dependency `react-refresh`.
+- 🎮🔩 Removed dev dependency `husky`.
+- 🎮🔩 Removed dev dependency `@types/jest`.
+- 🎮🔩 Removed dev dependency `electron`.
+- 🎮🔩 Removed dev dependency `electron-builder`.
+- 🎮🔩 Removed dev dependency `raw.macro`.
+
 ## [0.3.1] - 2024-11-10
 
 ### 🔨 Fixed

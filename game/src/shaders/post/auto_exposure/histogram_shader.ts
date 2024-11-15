@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './histogram.wgsl';
+import shaderSource from './histogram.wgsl?raw';
 
 export class HistogramShader extends Shader {
     static readonly BINDING_GROUPS = {

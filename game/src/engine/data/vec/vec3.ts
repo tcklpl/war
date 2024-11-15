@@ -68,7 +68,7 @@ export class Vec3 extends Vec2 {
     }
 
     normalize() {
-        let length = Math.sqrt(this.squaredNorm());
+        const length = Math.sqrt(this.squaredNorm());
         return length > 0.00001 ? new Vec3(this.x / length, this.y / length, this.z / length) : Vec3.fromValue(0);
     }
 
@@ -119,7 +119,7 @@ export class Vec3 extends Vec2 {
     }
 
     static centroid(v: Vec3[]): Vec3 {
-        let accumulated = v.reduce((accumulated, current) => accumulated.add(current), Vec3.zero);
+        const accumulated = v.reduce((accumulated, current) => accumulated.add(current), Vec3.zero);
         return accumulated.divideFactor(v.length);
     }
 

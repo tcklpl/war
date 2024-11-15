@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './environment.wgsl';
+import shaderSource from './environment.wgsl?raw';
 
 export class EnvironmentShader extends Shader {
     static readonly BINDING_GROUPS = {

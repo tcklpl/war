@@ -15,7 +15,7 @@ export abstract class Camera {
         this._pos = pos;
         this._up = up;
         game.engine.registerFrameListener({
-            onEachFrame: delta => this.updatePreviousFrameMatrices(),
+            onEachFrame: () => this.updatePreviousFrameMatrices(),
         });
     }
 

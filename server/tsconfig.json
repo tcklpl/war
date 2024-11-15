@@ -1,19 +1,33 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "outDir": "build"
-  },
-  "ts-node": {
-    "swc": true
-  },
-  "references": [
-    { "path": "../protocol" }
-  ],
-  "include": [
-    "src"
-  ]
+    "compilerOptions": {
+        // Enable latest features
+        "lib": ["ESNext"],
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleDetection": "force",
+
+        // Bundler
+        "moduleResolution": "Bundler",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+
+        // Best Practices
+        "skipLibCheck": true,
+
+        "esModuleInterop": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+
+        "paths": {
+            ":protocol": ["./../protocol/index.ts"]
+        }
+    },
+    "ts-node": {
+        "swc": true
+    },
+    "references": [{ "path": "../protocol" }],
+    "include": ["src"]
 }

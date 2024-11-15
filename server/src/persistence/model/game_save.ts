@@ -1,13 +1,8 @@
-import { Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { GamePlayerSave } from './game_player_save';
 import { Game } from '../../game/ingame/game';
+import { GamePlayerSave } from './game_player_save';
 
-@Entity()
 export class GameSave {
-    @PrimaryColumn()
     id!: string;
-
-    @OneToMany(() => GamePlayerSave, player => player.game, { cascade: true })
     players!: GamePlayerSave[];
 
     fromGame(game: Game) {

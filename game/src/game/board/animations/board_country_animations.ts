@@ -1,5 +1,5 @@
-import { AnimationBuilder } from '../../../engine/data/animation/animation_builder';
-import { Vec3 } from '../../../engine/data/vec/vec3';
+import { AnimationBuilder } from ':engine/data/animation/animation_builder';
+import { Vec3 } from ':engine/data/vec/vec3';
 import { BoardCountry } from '../board_country';
 
 export const BoardCountryAnimationHoverOn = (country: BoardCountry) =>

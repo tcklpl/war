@@ -1,6 +1,6 @@
 import { DuplicatedCommandError } from '../exceptions/duplicated_command_error';
 import { Logger } from '../log/logger';
-import { CommandExecutionData } from './command_execution_data';
+import { type CommandExecutionData } from './command_execution_data';
 
 export abstract class Command {
     private readonly _subroutes: Command[] = [];

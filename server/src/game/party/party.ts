@@ -1,21 +1,24 @@
-import { GameParty, TerritoryCode, TurnAllowedActionMoveTroops, TurnAllowedActions, TurnPhase } from "../../../../protocol";
-import { LobbyPlayer } from "../player/lobby_player";
-import { Territory } from "../territory/territory";
+import {
+    type GameParty,
+    type TerritoryCode,
+    type TurnAllowedActionMoveTroops,
+    type TurnAllowedActions,
+    type TurnPhase,
+} from ':protocol';
 import * as crypto from 'crypto';
+import { LobbyPlayer } from '../player/lobby_player';
+import { Territory } from '../territory/territory';
 
 export abstract class Party {
-
     player?: LobbyPlayer;
     private _territories: Territory[] = [];
     availableTroops = 0;
-    readonly turnPhaseSequence: TurnPhase[] = [ "troop positioning", "attack", "over" ]
+    readonly turnPhaseSequence: TurnPhase[] = ['troop positioning', 'attack', 'over'];
 
-    constructor(
-        readonly protocolValue: GameParty
-    ) {}
+    constructor(readonly protocolValue: GameParty) {}
 
     abstract get startingTerritories(): 'any' | TerritoryCode[];
-    
+
     addTerritory(t: Territory) {
         if (!this._territories.some(x => x === t)) {
             this._territories.push(t);
@@ -44,14 +47,16 @@ export abstract class Party {
         return {
             id: this.generateActionID(),
             action_forces_phase_change: false,
-            movement: this._territories.flatMap(t => t.node.adjacentNodes.map(a => {
-                return {
-                    from: t.code,
-                    to: a.data.code,
-                    count: t.troops.length
-                }
-            }))
-        }
+            movement: this._territories.flatMap(t =>
+                t.node.adjacentNodes.map(a => {
+                    return {
+                        from: t.code,
+                        to: a.data.code,
+                        count: t.troops.length,
+                    };
+                }),
+            ),
+        };
     }
 
     abstract checkWinCondition(): boolean;
@@ -65,7 +70,9 @@ export abstract class Party {
     }
 
     get targetableTerritories() {
-        return this._territories.flatMap(t => t.node.adjacentNodes).filter(t => t.data.party !== this).map(t => t.data);
+        return this._territories
+            .flatMap(t => t.node.adjacentNodes)
+            .filter(t => t.data.party !== this)
+            .map(t => t.data);
     }
-
 }

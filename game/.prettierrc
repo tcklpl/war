@@ -8,5 +8,13 @@
     "tabWidth": 4,
     "bracketSpacing": true,
     "bracketSameLine": false,
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "overrides": [
+        {
+            "files": ["*.json"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
 }

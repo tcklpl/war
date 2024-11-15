@@ -1,3 +1,4 @@
+import { useConfig } from ':hooks/use_config';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import {
@@ -15,7 +16,6 @@ import {
 } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useConfig } from '../../../../hooks/use_config';
 import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgDisplayScreen: React.FC = () => {

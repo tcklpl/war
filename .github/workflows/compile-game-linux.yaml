@@ -5,40 +5,53 @@ on:
       branch:
         required: true
         type: string
-      node-version:
-        required: true
-        type: string
 
 jobs:
   game-compile-linux:
     name: Compile Linux Binaries
     runs-on: ubuntu-latest
     steps:
+      # Prepare the environment
+      - name: Install Linux-spceficic dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./game/src-tauri -> target"
+
+      # Checkout and build the project
       - name: Code Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
-      - name: Use Node.js ${{ inputs.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ inputs.node-version }}
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-      - name: Installing Dependencies
+      - name: Install Tauri CLI
         working-directory: game
-        run: npm ci
+        run: bun i -g @tauri-apps/cli
       - name: Download Game Pre-Compiled Bundle
         uses: actions/download-artifact@v4
         with:
           name: game-bundle
           path: "./game/build/"
-      - name: Install Snapcraft
-        uses: samuelmeuli/action-snapcraft@v2
       - name: Build Linux Binaries
         working-directory: game
-        run: npm run electron-build-linux
+        run: bun compile
+      - name: Move Targets
+        working-directory: game
+        run: |
+          mkdir target
+          mv ./src-tauri/target/release/bundle/appimage/*.AppImage target
+          mv ./src-tauri/target/release/bundle/deb/*.deb target
+          mv ./src-tauri/target/release/bundle/rpm/*.rpm target
       - name: Sharing Executables
         uses: actions/upload-artifact@v4
         with:
           name: game-dist-linux
-          path: game/dist/War2*
+          path: "game/target"

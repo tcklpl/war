@@ -1,4 +1,4 @@
-import { EmptyEntity } from '../../engine/data/entity/empty_entity';
+import { EmptyEntity } from ':engine/data/entity/empty_entity';
 import { BCAlaska } from './board_countries/bc_alaska';
 import { BCAlgeria } from './board_countries/bc_algeria';
 import { BCAral } from './board_countries/bc_aral';

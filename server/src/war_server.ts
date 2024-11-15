@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { c } from 'tasai';
 import { WarServerBanner } from './banner';
 import { CommandProcessor } from './commands/command_processor';
 import { ConfigManager } from './config/config_manager';
@@ -60,7 +60,7 @@ export class WarServer {
         await this._socketServer.initialize();
 
         const loadTime = Date.now() - startTime;
-        this._log.info(`Server started ${chalk.green('successfully')} in ${loadTime}ms`);
+        this._log.info(`Server started ${c.brightGreen('successfully')} in ${loadTime}ms`);
 
         this._commandProcessor.parseCommands();
     }

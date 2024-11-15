@@ -1,4 +1,4 @@
-import { ServerToClientPackets } from '../../../../protocol';
+import { type ServerToClientPackets } from ':protocol';
 import { Player } from '../../game/player/player';
 
 export type ServerPacketEventNames = keyof ServerToClientPackets;

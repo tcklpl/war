@@ -1,5 +1,5 @@
+import { ClientToServerPackets, ServerToClientPackets } from ':protocol';
 import { Socket } from 'socket.io-client';
-import { ClientToServerPackets, ServerToClientPackets } from '../../../../../protocol';
 import { ClientPacket } from './packet/client_packet';
 
 type ClientPacketEventNames = keyof ClientToServerPackets;

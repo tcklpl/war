@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './brdf_convolution_integral.wgsl';
+import shaderSource from './brdf_convolution_integral.wgsl?raw';
 
 export class BRDFConvolutionIntegralShader extends Shader {
     static readonly BINDING_GROUPS = {};

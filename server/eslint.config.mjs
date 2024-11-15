@@ -1,7 +1,7 @@
-import globals from 'globals';
 import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
     { languageOptions: { globals: globals.browser } },
@@ -11,6 +11,7 @@ export default [
     {
         rules: {
             '@typescript-eslint/no-explicit-any': ['off'],
+            '@typescript-eslint/no-require-imports': ['off'],
         },
     },
 ];

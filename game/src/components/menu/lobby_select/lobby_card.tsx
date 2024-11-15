@@ -1,6 +1,6 @@
+import { LobbyListStateLobby } from ':protocol';
 import { Card, CardContent, Typography } from '@mui/material';
 import React, { useCallback } from 'react';
-import { LobbyListStateLobby } from '../../../../../protocol';
 import { useTranslation } from 'react-i18next';
 import style from './lobby_select.module.scss';
 

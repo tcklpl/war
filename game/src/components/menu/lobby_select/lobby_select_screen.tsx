@@ -1,14 +1,14 @@
+import { useGameSession } from ':hooks/use_game_session';
 import { Box, Button, Container, Grid2, Stack, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGameSession } from '../../../hooks/use_game_session';
 import style from './lobby_select.module.scss';
 
+import { useConfirmation } from ':hooks/use_confirmation';
+import { useGame } from ':hooks/use_game';
 import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
 import PublicIcon from '@mui/icons-material/Public';
 import { useNavigate } from 'react-router-dom';
-import { useConfirmation } from '../../../hooks/use_confirmation';
-import { useGame } from '../../../hooks/use_game';
 import LobbyCard from './lobby_card';
 import LobbySelectCreateLobby from './lobby_select_create_lobby';
 

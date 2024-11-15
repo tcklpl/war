@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './texture_packer_vec3_f32.wgsl';
+import shaderSource from './texture_packer_vec3_f32.wgsl?raw';
 
 export class TexturePackerVec3f32Shader extends Shader {
     static readonly BINDING_GROUPS = {

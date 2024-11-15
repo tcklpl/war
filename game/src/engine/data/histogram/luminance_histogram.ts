@@ -20,7 +20,7 @@ export class LuminanceHistogram {
             this.updateRawData(newData);
             this._buffer.unmap();
             this.calculateAverage();
-        } catch (e) {
+        } catch {
             console.warn('Failed to map luminance histogram buffer, probably because the histogram is being deleted');
         }
     }

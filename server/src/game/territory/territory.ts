@@ -1,17 +1,16 @@
-import { ContinentCode, TerritoryCode } from "../../../../protocol";
-import { Node } from "../../graph/node";
-import { Party } from "../party/party";
-import { Troop } from "../troop/troop";
+import { type ContinentCode, type TerritoryCode } from ':protocol';
+import { Node } from '../../graph/node';
+import { Party } from '../party/party';
+import { Troop } from '../troop/troop';
 
 export class Territory {
-
     private _party?: Party;
     node!: Node<Territory>;
     troops: Troop[] = [];
 
     constructor(
         public readonly code: TerritoryCode,
-        public readonly continentCode: ContinentCode
+        public readonly continentCode: ContinentCode,
     ) {}
 
     setParty(p: Party | undefined) {
@@ -27,5 +26,4 @@ export class Territory {
     get party() {
         return this._party;
     }
-
 }

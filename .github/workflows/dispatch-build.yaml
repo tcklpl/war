@@ -5,40 +5,32 @@ on:
       branch:
         required: true
         type: string
-      node-version:
-        required: true
-        type: string
 
 jobs:
   build-server:
     uses: ./.github/workflows/build-server.yaml
     with:
       branch: ${{ inputs.branch }}
-      node-version: ${{ inputs.node-version }}
 
   build-game:
     uses: ./.github/workflows/build-game.yaml
     with:
       branch: ${{ inputs.branch }}
-      node-version: ${{ inputs.node-version }}
 
   compile-game-windows:
     uses: ./.github/workflows/compile-game-windows.yaml
     needs: [build-game]
     with:
       branch: ${{ inputs.branch }}
-      node-version: ${{ inputs.node-version }}
 
   compile-game-linux:
     uses: ./.github/workflows/compile-game-linux.yaml
     needs: [build-game]
     with:
       branch: ${{ inputs.branch }}
-      node-version: ${{ inputs.node-version }}
 
   compile-game-macos:
     uses: ./.github/workflows/compile-game-macos.yaml
     needs: [build-game]
     with:
       branch: ${{ inputs.branch }}
-      node-version: ${{ inputs.node-version }}

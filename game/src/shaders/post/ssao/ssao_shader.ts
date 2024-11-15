@@ -1,5 +1,5 @@
 import { Shader } from '../../shader';
-import shaderSource from './ssao.wgsl';
+import shaderSource from './ssao.wgsl?raw';
 
 export class SSAOShader extends Shader {
     static readonly BINDING_GROUPS = {
