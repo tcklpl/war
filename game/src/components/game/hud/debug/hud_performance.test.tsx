@@ -1,5 +1,5 @@
+import { ConfigDisplay } from ':engine/config/cfg_display';
 import { render } from '@testing-library/react';
-import { ConfigDisplay } from '../../../../engine/config/cfg_display';
 import { WarGameSession } from '../../../../game/lobby/war_game_session';
 import { WarGame } from '../../../../game/war_game';
 import { useConfig } from '../../../../hooks/use_config';

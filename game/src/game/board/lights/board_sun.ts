@@ -1,6 +1,6 @@
-import { MappedRegionSize } from '../../../engine/data/atlas/mapped_region_size';
-import { DirectionalLight } from '../../../engine/data/lights/directional_light';
-import { Vec3 } from '../../../engine/data/vec/vec3';
+import { MappedRegionSize } from ':engine/data/atlas/mapped_region_size';
+import { DirectionalLight } from ':engine/data/lights/directional_light';
+import { Vec3 } from ':engine/data/vec/vec3';
 
 export class BoardSun extends DirectionalLight {
     constructor() {

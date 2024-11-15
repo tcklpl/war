@@ -1,4 +1,4 @@
-import { IDBConnector } from '../../engine/idb/idb_connector';
+import { IDBConnector } from ':engine/idb/idb_connector';
 import { ServerListSelectInfo } from './server_list_select_info';
 import { ServerListStorage } from './server_list_storage';
 

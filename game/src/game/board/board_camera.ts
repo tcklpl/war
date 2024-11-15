@@ -1,9 +1,9 @@
-import { LookAtCamera } from '../../engine/data/camera/lookat_camera';
-import { frameListener } from '../../engine/data/traits/frame_listener';
-import { Vec2 } from '../../engine/data/vec/vec2';
-import { Vec3 } from '../../engine/data/vec/vec3';
-import { keyboardListener } from '../../engine/io/keyboard_listener';
-import { mouseListener } from '../../engine/io/mouse_listener';
+import { LookAtCamera } from ':engine/data/camera/lookat_camera';
+import { frameListener } from ':engine/data/traits/frame_listener';
+import { Vec2 } from ':engine/data/vec/vec2';
+import { Vec3 } from ':engine/data/vec/vec3';
+import { keyboardListener } from ':engine/io/keyboard_listener';
+import { mouseListener } from ':engine/io/mouse_listener';
 import { MathUtils } from '../../utils/math_utils';
 
 const BoardCameraBase = keyboardListener(mouseListener(frameListener(LookAtCamera)));

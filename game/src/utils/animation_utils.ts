@@ -1,6 +1,6 @@
-import { Animatable, AnimationValue, EncodedAnimationTarget } from '../engine/data/animation/animatable';
-import { Quaternion } from '../engine/data/quaternion/quaternion';
-import { Vec3 } from '../engine/data/vec/vec3';
+import { Animatable, AnimationValue, EncodedAnimationTarget } from ':engine/data/animation/animatable';
+import { Quaternion } from ':engine/data/quaternion/quaternion';
+import { Vec3 } from ':engine/data/vec/vec3';
 import { DifferentAnimationStepValueTypesError } from '../errors/engine/data/animation/different_animation_step_value_types';
 import { UnsupportedAnimationStepValueError } from '../errors/engine/data/animation/unsupported_animation_step_value';
 import { MathUtils } from './math_utils';
