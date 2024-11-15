@@ -5,28 +5,34 @@ on:
       branch:
         required: true
         type: string
-      node-version:
-        required: true
-        type: string
 
 jobs:
   game-compile-mac:
     name: Compile Mac Binaries
     runs-on: macos-latest
     steps:
+      # Prepare the environment
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: "aarch64-apple-darwin,x86_64-apple-darwin"
+      - name: Setup Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./game/src-tauri -> target"
+
+      # Checkout and build the project
       - name: Code Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch }}
-      - name: Use Node.js ${{ inputs.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ inputs.node-version }}
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-      - name: Installing Dependencies
+      - name: Install Tauri CLI
         working-directory: game
-        run: npm ci
+        run: bun i -g @tauri-apps/cli
       - name: Download Game Pre-Compiled Bundle
         uses: actions/download-artifact@v4
         with:
@@ -34,9 +40,10 @@ jobs:
           path: "./game/build/"
       - name: Build Mac Binaries
         working-directory: game
-        run: npm run electron-build-mac
+        run: bun compile
       - name: Sharing Executables
         uses: actions/upload-artifact@v4
         with:
           name: game-dist-mac
-          path: game/dist/War2*
+          path: |
+            game/src-tauri/target/release/bundle/dmg/*.dmg
