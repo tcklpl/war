@@ -1,11 +1,11 @@
-import * as crypto from 'crypto';
 import {
     type GameParty,
     type TerritoryCode,
     type TurnAllowedActionMoveTroops,
     type TurnAllowedActions,
     type TurnPhase,
-} from '../../../../protocol';
+} from ':protocol';
+import * as crypto from 'crypto';
 import { LobbyPlayer } from '../player/lobby_player';
 import { Territory } from '../territory/territory';
 

@@ -7,7 +7,7 @@ import {
     type PrematureGameEndReason,
     type TerritoryCode,
     type TurnAction,
-} from '../../../../protocol';
+} from ':protocol';
 import { CryptManager } from '../../crypt/crypt_manager';
 import { LobbyNotReadyError } from '../../exceptions/lobby_not_ready_error';
 import { LobbyMovedOnError } from '../../exceptions/reconnection/lobby_moved_on_error';

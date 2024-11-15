@@ -5,7 +5,7 @@ import {
     type TurnAllowedActionPlaceTroops,
     type TurnAllowedActions,
     type TurnPhase,
-} from '../../../../protocol';
+} from ':protocol';
 import { Party } from './party';
 
 export class PartyAnarchism extends Party {

@@ -1,4 +1,4 @@
-import { type GameParty } from '../../../../protocol';
+import { type GameParty } from ':protocol';
 import { GamePlayer } from '../../game/player/game_player';
 import { GameSave } from './game_save';
 

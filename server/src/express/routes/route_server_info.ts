@@ -1,4 +1,4 @@
-import { type ResponseServerInfoBody } from '../../../../protocol';
+import { type ResponseServerInfoBody } from ':protocol';
 import { CfgServer } from '../../config/default/cfg_server';
 import { ExpressRoute } from './route';
 

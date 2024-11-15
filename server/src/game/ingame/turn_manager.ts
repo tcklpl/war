@@ -1,10 +1,4 @@
-import {
-    type GameConfig,
-    type RoundState,
-    type TurnAction,
-    type TurnAllowedAction,
-    type TurnPhase,
-} from '../../../../protocol';
+import { type GameConfig, type RoundState, type TurnAction, type TurnAllowedAction, type TurnPhase } from ':protocol';
 import { Logger } from '../../log/logger';
 import { ServerPacketGameError } from '../../socket/packet/game/game_error';
 import { ServerPacketTurnAllowedActions } from '../../socket/packet/game/turn_allowed_actions';

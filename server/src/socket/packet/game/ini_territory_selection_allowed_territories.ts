@@ -1,4 +1,4 @@
-import { type TerritoryCode } from '../../../../../protocol';
+import { type TerritoryCode } from ':protocol';
 import { ServerPacket } from '../server_packet';
 
 export class ServerPacketInitialTerritorySelectionAllowedTerritories extends ServerPacket<'gInitialTerritorySelectionAllowedTerritories'> {

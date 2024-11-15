@@ -1,4 +1,4 @@
-import { type ContinentCode, type TerritoryCode } from '../../../../protocol';
+import { type ContinentCode, type TerritoryCode } from ':protocol';
 import { Node } from '../../graph/node';
 import { Party } from '../party/party';
 import { Troop } from '../troop/troop';

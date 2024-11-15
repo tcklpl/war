@@ -1,5 +1,4 @@
-import { LobbyListState } from '../../../../protocol';
-import { ReconnectionStatus } from '../../../../protocol/src/protocol/data/ingame/reconnection_status';
+import { LobbyListState, ReconnectionStatus } from ':protocol';
 import { WarGameLobby } from '../lobby/war_game_lobby';
 import { WarGameSession } from '../lobby/war_game_session';
 import { registerPacketListeners } from './connection/packet/listeners/packet_listeners';

@@ -1,4 +1,4 @@
-import { type GameConfig } from '../../../../protocol';
+import { type GameConfig } from ':protocol';
 import { Config } from '../config';
 import assetPath from './game.json5' with { type: 'file' };
 

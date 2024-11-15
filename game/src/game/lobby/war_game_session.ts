@@ -1,4 +1,4 @@
-import { GamePauseReason, InitialGameStatePacket } from '../../../../protocol';
+import { GamePauseReason, InitialGameStatePacket } from ':protocol';
 import { ClientPacketGMoveOn } from '../server/connection/packet/to_send/ingame/move_on';
 import { ClientPacketGPause } from '../server/connection/packet/to_send/ingame/pause';
 import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';

@@ -1,4 +1,4 @@
-import { type TurnAllowedActions } from '../../../../../protocol';
+import { type TurnAllowedActions } from ':protocol';
 import { ServerPacket } from '../server_packet';
 
 export class ServerPacketTurnAllowedActions extends ServerPacket<'gTurnAllowedActions'> {

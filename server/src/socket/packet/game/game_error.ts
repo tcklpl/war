@@ -1,4 +1,4 @@
-import { type GameError } from '../../../../../protocol/src/protocol/data/ingame/game_error';
+import { type GameError } from ':protocol';
 import { ServerPacket } from '../server_packet';
 
 export class ServerPacketGameError extends ServerPacket<'gGameError'> {

@@ -1,10 +1,10 @@
+import { GameParty } from ':protocol';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box, Button, Switch, Tab, Typography } from '@mui/material';
 import { ReactElement, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GameParty } from '../../../../../../protocol';
 import { useGameSession } from '../../../../hooks/use_game_session';
 import '../lobby_screen.scss';
 import LobbyPartyPageAnarchism from './party_pages/lobby_party_page_anarchism';

@@ -1,4 +1,4 @@
-import { type LobbyListState, type LobbyListStateLobby } from '../../../../../protocol';
+import { type LobbyListState, type LobbyListStateLobby } from ':protocol';
 import { CfgServer } from '../../../config/default/cfg_server';
 import { LobbyManager } from '../../../game/lobby/lobby_manager';
 import { ServerPacket } from '../server_packet';

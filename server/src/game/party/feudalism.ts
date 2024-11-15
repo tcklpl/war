@@ -1,4 +1,4 @@
-import { type TerritoryCode, type TurnAllowedActions, type TurnPhase } from '../../../../protocol';
+import { type TerritoryCode, type TurnAllowedActions, type TurnPhase } from ':protocol';
 import { Party } from './party';
 
 export class PartyFeudalism extends Party {

@@ -1,9 +1,8 @@
+import { GameParty } from ':protocol';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { FunctionComponent, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GameParty } from '../../../../../../../protocol';
 import { useGameSession } from '../../../../../hooks/use_game_session';
-
 import AnarchismIcon from '../../../../../images/icons/anarchism/anarchism_icon';
 import CapitalismIcon from '../../../../../images/icons/capitalism/capitalism_icon';
 import FeudalismIcon from '../../../../../images/icons/feudalism/feudalism_icon';

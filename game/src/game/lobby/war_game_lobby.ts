@@ -1,4 +1,4 @@
-import { GameParty, LobbyState } from '../../../../protocol';
+import { GameParty, LobbyState } from ':protocol';
 import { ClientPacketCancelGameStart } from '../server/connection/packet/to_send/lobby/admin/cancel_game_start';
 import { ClientPacketKickPlayer } from '../server/connection/packet/to_send/lobby/admin/kick_player';
 import { ClientPacketModifyLobbyState } from '../server/connection/packet/to_send/lobby/admin/modify_lobby_state';

@@ -1,4 +1,4 @@
-import { type TerritoryCode } from '../../../../protocol';
+import { type TerritoryCode } from ':protocol';
 import { Logger } from '../../log/logger';
 import { ServerPacketInitialTerritorySelectionAllowedTerritories } from '../../socket/packet/game/ini_territory_selection_allowed_territories';
 import { ServerPacketInitialTerritoryAssignment } from '../../socket/packet/game/ini_territory_selection_assignment';
