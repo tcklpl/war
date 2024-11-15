@@ -1,5 +1,5 @@
 [package]
-name = "app"
+name = "War2_Game_Client"
 version = "0.1.0"
 description = "War2 Game Client"
 authors = ["rcklpl"]
