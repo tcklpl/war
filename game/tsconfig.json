@@ -22,7 +22,8 @@
             ":protocol": ["./../protocol/index.ts"],
             ":engine/*": ["./src/engine/*"],
             ":game/*": ["./src/game/*"],
-            ":icons/*": ["./src/images/icons/*"]
+            ":icons/*": ["./src/images/icons/*"],
+            ":hooks/*": ["./src/hooks/*"]
         }
     },
     "include": ["src"],
