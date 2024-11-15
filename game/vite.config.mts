@@ -6,7 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { version } from './package.json';
 
 export default defineConfig({
-    base: '/',
+    base: './',
     plugins: [react(), svgr(), tsconfigPaths()],
     cacheDir: '../node_modules/.vite',
     envPrefix: 'WAR2_',
