@@ -24,7 +24,7 @@ if (patchParts.length !== 2) exitInvalidVersion();
 let [patch, extra]: string[] | number[] = patchParts;
 try {
   [major, minor, patch] = [major, minor, patch].map((v) => parseInt(v));
-  if (!major || !minor || !patch) throw Error();
+  if (isNaN(major) || isNaN(minor) || isNaN(patch)) throw Error();
 } catch {
   exitInvalidVersion();
 }
