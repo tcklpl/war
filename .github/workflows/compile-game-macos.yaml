@@ -41,9 +41,13 @@ jobs:
       - name: Build Mac Binaries
         working-directory: game
         run: bun compile
+      - name: Move Targets
+        working-directory: game
+        run: |
+          mkdir target
+          mv ./src-tauri/target/release/bundle/dmg/*.dmg target
       - name: Sharing Executables
         uses: actions/upload-artifact@v4
         with:
           name: game-dist-mac
-          path: |
-            game/src-tauri/target/release/bundle/dmg/*.dmg
+          path: "game/target"
