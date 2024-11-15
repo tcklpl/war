@@ -44,5 +44,4 @@ jobs:
         with:
           name: game-dist-win
           path: |
-            game/src-tauri/target/release/bundle/msi/*.msi
             game/src-tauri/target/release/bundle/nsis/*.exe
