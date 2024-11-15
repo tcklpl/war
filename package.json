@@ -3,6 +3,9 @@
   "description": "War",
   "author": "tcklpl",
   "license": "GPL-3.0-or-later",
+  "scripts": {
+    "version": "bun scripts/version.ts"
+  },
   "workspaces": [
     "./game",
     "./protocol",
