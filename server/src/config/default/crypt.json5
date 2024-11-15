@@ -1,28 +1,27 @@
 {
-    /*
-        CRYPTOGRAPHY AND HASHING CONFIG
+  /*
+    CRYPTOGRAPHY AND HASHING CONFIG
 
-        Configure this file to setup your server.
-        Each config group is labeled as either IMPORTANT or SECONDARY:
-        [ IMPORTANT ]   You probably want to take a look at this lines as you'll likely change them.
-        [ SECONDARY ]   These are configs that you'll probably not need to change, as they are auto-generated or already sane ones.
-    */
+    Configure this file to setup your server.
+    Each config group is labeled as either IMPORTANT or SECONDARY:
+    [ IMPORTANT ]   You probably want to take a look at this lines as you'll likely change them.
+    [ SECONDARY ]   These are configs that you'll probably not need to change, as they are auto-generated or already sane ones.
+  */
 
-    /*
-        [ SECONDARY ]
-        RSA key and hashing configuration.
-        If you change any of these values, you'll also need to delete the 'public.key' and 'private.key' files.
-        The next time the server starts without those files, new ones will be generated based on this config.
+  /*
+    [ SECONDARY ]
+    RSA key and hashing configuration.
+    If you change any of these values, you'll also need to delete the 'public.key' and 'private.key' files.
+    The next time the server starts without those files, new ones will be generated based on this config.
 
-        - "rsa_key_length" should be an exponent of 2 and not lower than 2048. For example: 2048, 4096, 8192 etc.
-          Notice that bigger key lengths will take more time and processing power to generate and sign stuff, 2048 is good enough;
+    - "rsa_key_length" should be an exponent of 2 and not lower than 2048. For example: 2048, 4096, 8192 etc.
+      Notice that bigger key lengths will take more time and processing power to generate and sign stuff, 2048 is good enough;
 
-        - "rsa_algorithm" NEEDS TO BE one of the following:
-            - RS256
-            - RS384
-            - RS512
-    */
-    rsa_key_length: 2048,
-    rsa_algorithm: "RS256"
-    
+    - "rsa_algorithm" NEEDS TO BE one of the following:
+      - RS256
+      - RS384
+      - RS512
+  */
+  rsa_key_length: 2048,
+  rsa_algorithm: 'RS256',
 }

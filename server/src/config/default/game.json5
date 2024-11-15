@@ -1,441 +1,435 @@
 {
+  /*
+    DEFAULT GAME CONFIG
+
+    This file contains game balance configuration.
+    Each configuration in this file is technically [ SECONDARY ], as the defaults are meant to be (at least a little bit) sane.
+    This file will only impact the server dafaults, each game lobby owner is free to change their game rules, UNLESS you configure
+    the property "is_immutable" as true, in that case the rules in this file will be forced on every game.
+  */
+  game_start_countdown_seconds: 10,
+
+  default_game_config: {
     /*
-        DEFAULT GAME CONFIG
-
-        This file contains game balance configuration.
-        Each configuration in this file is technically [ SECONDARY ], as the defaults are meant to be (at least a little bit) sane.
-        This file will only impact the server dafaults, each game lobby owner is free to change their game rules, UNLESS you configure
-        the property "is_immutable" as true, in that case the rules in this file will be forced on every game.
+      Defines this config as immutable and forces every game to abide to the rules in this file.
     */
-    game_start_countdown_seconds: 10,
-
-    default_game_config: {
-        /*
-            Defines this config as immutable and forces every game to abide to the rules in this file.
-        */
-        is_immutable: false,
-
-        /*
-            Max time allowed per turn per player.
-        */
-        turn_timeout_seconds: 60,
-
-        /*
-            Config for each playable party in the game.
-        */
-        party_config: {
-
-            anarchism: {
-                passive: {
-                    /*
-                        Number of unoccupied countries that will fall into anarchism per round. 
-                    */
-                    unoccupied_country_conversion_base: 1
-                },
-
-                bonus: {
-                    /*
-                        Number of troops that anarchism will gain after ending its turn. (Will be assigned at random)
-                    */
-                    troops_each_turns_end: 1,
-
-                    /*
-                        Dice bonus after successful attack.
-                    */
-                    attack_success_bonus: 1,
-
-                    /*
-                        Maximum number of times the attack success bonus can be stacked.
-                    */
-                    attack_success_bonus_max_stack: 3,
-
-                    /*
-                        Number of required successful sequential attacks to put victims into pressure,
-                    */
-                    number_of_successful_attacks_to_pressure: 4,
-                },
-
-                debuffs: {},
-
-                special_units: {
-                    black_block: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            The Black Block will be spawned after Anarchism loses this amount of territories.
-                        */
-                        number_of_lost_territories_required_to_spawn: 3,
-
-                        /*
-                            The amount of HP the Black Block will regenerate after having success in an attack. 
-                        */
-                        hp_recovery_on_successful_attack: 1,
-                    }
-                },
-
-                special_abilities: {}
-            },
-
-            feudalism: {
-                passive: {},
-
-                bonus: {
-                    /*
-                        Number of troops that Feudalism will gain after conquering a territory.
-                    */
-                    troop_bonus_on_conquering: 1,
-                },
-
-                debuffs: {},
-
-                special_units: {
-                    dragon: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 1,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 10,
-
-                        /*
-                            Number of turns before the dragon spawns again.
-                        */
-                        cooldown_after_dying: 3,
-
-                        /*
-                            Amount of max HP increase per turn until the Dragon's Max HP is what is configured.
-                        */
-                        hp_increase_rate_until_max_hp: 1,
-
-                        /*
-                            The amount of HP the Dragon will regenerate per turn when on a walled territory.
-                        */
-                        hp_recovery_on_walled_territory: 1,
-                    }
-                },
-
-                special_abilities: {
-                    wall: {
-                        /*
-                            Max number of walled countries that the Feudalism can have.
-                        */
-                        max_walled_countries: 1,
-
-                        /*
-                            Required number of sequential max-number attacking rolls to break the wall.
-                        */
-                        number_of_max_rolls_to_break: 3,
-                    }
-                }
-            },
-
-            socialism: {
-                passive: {
-                    /*
-                        Minimum number of troops moving at once to allow for unlimited movement through allied territory.
-                    */
-                    min_troop_movement_size_to_allow_unlimited_movement: 2,
-                },
-
-                bonus: {
-                    /*
-                        Dice modifier when attacking or defending with numerical disadvantage.
-                    */
-                    dice_modifier_on_numerical_disadvantage: 1,
-                },
-
-                debuffs: {
-
-                    /*
-                        Number of troops required for "Famine" to start killing troops.
-                    */
-                    famine_starting_point: 10,
-
-                    /*
-                        Units that'll die per turn if the number of troops exceeds the starting point.
-                    */
-                    famine_units_to_die_per_turn: 1,
-                },
-
-                special_units: {
-
-                    lula: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-                    },
-
-                    vladimir_lenin: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-                    },
-
-                    joseph_stalin: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            Troops that can be converted to the red army per turn
-                        */
-                        gulag_troop_conversion_rate: 1,
-                    },
-
-                    thomas_morus: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            Required number of turns in Cuba to spawn the Utopia Island.
-                        */
-                        turns_in_cuba_to_spawn_utopia_island: 2,
-                    },
-
-                    wilson: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            Required number of sequential numerical rolls to evolve into "Red God"
-                        */
-                        required_numerical_roll_sequence_length: 3,
-                    },
-
-                    red_god: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 99,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 99,
-
-                        /*
-                            Dice roll bonus
-                        */
-                        dice_bonus: 3,
-                    }
-                },
-
-                special_abilities: {
-                    tsar_bomb: {
-                        /*
-                            Turns to cast the Tsar Bomb.
-                        */
-                        turns_to_cast: 2,
-
-                        /*
-                            Famine penalty multiplier while casting the Tsar Bomb.
-                        */
-                        famine_multiplier_while_casting: 2,
-
-                        /*
-                            Number of turns for the Tsar Bomb radiation to completely decay.
-                        */
-                        radiation_falloff_turns: 3,
-                    },
-
-                    utopia_island: {
-
-                        /*
-                            Number of new troops that will be granted per turn while the Utopia Island is active.
-                        */
-                        troops_per_turn: 2,
-                    }
-                }
-            },
-
-            capitalism: {
-                passive: {
-                    /*
-                        Number of troops gained with each territory trade.
-                    */
-                    troop_gain_per_territory_trade: 1,
-                },
-
-                bonus: {
-                    /*
-                        Multiplier to the continental bonus.
-                    */
-                    continental_bonus_multiplier: 2,
-                },
-
-                debuffs: {
-
-                    /*
-                        Number of sequential loses to initiate a crisis.
-                    */
-                    crisis_sequential_loses: 3,
-
-                    /*
-                        Turns that the capitalist territories will be in crisis.
-                    */
-                    crisis_duration: 1,
-                },
-
-                special_units: {
-
-                    john_keynes: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            John Keynes territory troop multiplication factor.
-                        */
-                        troop_multiplier: 2,
-
-                        /*
-                            Troop multiplication turn cooldown.
-                        */
-                        troop_multiplication_cooldown: 2,
-                    },
-
-                    ray_croc: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            Cooldown to force some party to sell a country for 1 troop.
-                        */
-                        force_country_buy_cooldown: 3,
-                    },
-
-                    mark_zuckerberg: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            Number of troops that will be converted per turn.
-                        */
-                        social_network_troop_conversion_rate: 1,
-
-                        /*
-                            Cooldown to create a social network in another country.
-                        */
-                        create_social_network_cooldown: 5,
-                    },
-
-                    steve_jobs: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            Number of troops that will be invalidated per turn.
-                        */
-                        troop_invalidation_rate: 1,
-
-                        /*
-                            Cooldown to create another Store.
-                        */
-                        create_store_cooldown: 5,
-                    },
-
-                    donald_trump: {
-                        /*
-                            Unit hit points.
-                        */
-                        hp: 5,
-
-                        /*
-                            Unit max HP
-                        */
-                        max_hp: 5,
-
-                        /*
-                            Territory defense modifier when Trump is in the territory.
-                        */
-                        territory_defense_modifier: 1,
-                    }
-                },
-
-                special_abilities: {
-                    privatization: {
-                        /*
-                            Cooldown to try another privatization
-                        */
-                        cooldown: 3,
-
-                        /*
-                            Allow control of special units.
-                        */
-                        allow_using_specials: true,
-                    }
-                }
-            }
-        }
-    }
+    is_immutable: false,
+
+    /*
+      Max time allowed per turn per player.
+    */
+    turn_timeout_seconds: 60,
+
+    /*
+      Config for each playable party in the game.
+    */
+    party_config: {
+      anarchism: {
+        passive: {
+          /*
+            Number of unoccupied countries that will fall into anarchism per round. 
+          */
+          unoccupied_country_conversion_base: 1,
+        },
+
+        bonus: {
+          /*
+            Number of troops that anarchism will gain after ending its turn. (Will be assigned at random)
+          */
+          troops_each_turns_end: 1,
+
+          /*
+            Dice bonus after successful attack.
+          */
+          attack_success_bonus: 1,
+
+          /*
+            Maximum number of times the attack success bonus can be stacked.
+          */
+          attack_success_bonus_max_stack: 3,
+
+          /*
+            Number of required successful sequential attacks to put victims into pressure,
+          */
+          number_of_successful_attacks_to_pressure: 4,
+        },
+
+        debuffs: {},
+
+        special_units: {
+          black_block: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              The Black Block will be spawned after Anarchism loses this amount of territories.
+            */
+            number_of_lost_territories_required_to_spawn: 3,
+
+            /*
+              The amount of HP the Black Block will regenerate after having success in an attack. 
+            */
+            hp_recovery_on_successful_attack: 1,
+          },
+        },
+
+        special_abilities: {},
+      },
+
+      feudalism: {
+        passive: {},
+
+        bonus: {
+          /*
+            Number of troops that Feudalism will gain after conquering a territory.
+          */
+          troop_bonus_on_conquering: 1,
+        },
+
+        debuffs: {},
+
+        special_units: {
+          dragon: {
+            /*
+              Unit hit points.
+            */
+            hp: 1,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 10,
+
+            /*
+              Number of turns before the dragon spawns again.
+            */
+            cooldown_after_dying: 3,
+
+            /*
+              Amount of max HP increase per turn until the Dragon's Max HP is what is configured.
+            */
+            hp_increase_rate_until_max_hp: 1,
+
+            /*
+              The amount of HP the Dragon will regenerate per turn when on a walled territory.
+            */
+            hp_recovery_on_walled_territory: 1,
+          },
+        },
+
+        special_abilities: {
+          wall: {
+            /*
+              Max number of walled countries that the Feudalism can have.
+            */
+            max_walled_countries: 1,
+
+            /*
+              Required number of sequential max-number attacking rolls to break the wall.
+            */
+            number_of_max_rolls_to_break: 3,
+          },
+        },
+      },
+
+      socialism: {
+        passive: {
+          /*
+            Minimum number of troops moving at once to allow for unlimited movement through allied territory.
+          */
+          min_troop_movement_size_to_allow_unlimited_movement: 2,
+        },
+
+        bonus: {
+          /*
+            Dice modifier when attacking or defending with numerical disadvantage.
+          */
+          dice_modifier_on_numerical_disadvantage: 1,
+        },
+
+        debuffs: {
+          /*
+            Number of troops required for "Famine" to start killing troops.
+          */
+          famine_starting_point: 10,
+
+          /*
+            Units that'll die per turn if the number of troops exceeds the starting point.
+          */
+          famine_units_to_die_per_turn: 1,
+        },
+
+        special_units: {
+          lula: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+          },
+
+          vladimir_lenin: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+          },
+
+          joseph_stalin: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              Troops that can be converted to the red army per turn
+            */
+            gulag_troop_conversion_rate: 1,
+          },
+
+          thomas_morus: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              Required number of turns in Cuba to spawn the Utopia Island.
+            */
+            turns_in_cuba_to_spawn_utopia_island: 2,
+          },
+
+          wilson: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              Required number of sequential numerical rolls to evolve into "Red God"
+            */
+            required_numerical_roll_sequence_length: 3,
+          },
+
+          red_god: {
+            /*
+              Unit hit points.
+            */
+            hp: 99,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 99,
+
+            /*
+              Dice roll bonus
+            */
+            dice_bonus: 3,
+          },
+        },
+
+        special_abilities: {
+          tsar_bomb: {
+            /*
+              Turns to cast the Tsar Bomb.
+            */
+            turns_to_cast: 2,
+
+            /*
+              Famine penalty multiplier while casting the Tsar Bomb.
+            */
+            famine_multiplier_while_casting: 2,
+
+            /*
+              Number of turns for the Tsar Bomb radiation to completely decay.
+            */
+            radiation_falloff_turns: 3,
+          },
+
+          utopia_island: {
+            /*
+              Number of new troops that will be granted per turn while the Utopia Island is active.
+            */
+            troops_per_turn: 2,
+          },
+        },
+      },
+
+      capitalism: {
+        passive: {
+          /*
+            Number of troops gained with each territory trade.
+          */
+          troop_gain_per_territory_trade: 1,
+        },
+
+        bonus: {
+          /*
+            Multiplier to the continental bonus.
+          */
+          continental_bonus_multiplier: 2,
+        },
+
+        debuffs: {
+          /*
+            Number of sequential loses to initiate a crisis.
+          */
+          crisis_sequential_loses: 3,
+
+          /*
+            Turns that the capitalist territories will be in crisis.
+          */
+          crisis_duration: 1,
+        },
+
+        special_units: {
+          john_keynes: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              John Keynes territory troop multiplication factor.
+            */
+            troop_multiplier: 2,
+
+            /*
+              Troop multiplication turn cooldown.
+            */
+            troop_multiplication_cooldown: 2,
+          },
+
+          ray_croc: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              Cooldown to force some party to sell a country for 1 troop.
+            */
+            force_country_buy_cooldown: 3,
+          },
+
+          mark_zuckerberg: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              Number of troops that will be converted per turn.
+            */
+            social_network_troop_conversion_rate: 1,
+
+            /*
+              Cooldown to create a social network in another country.
+            */
+            create_social_network_cooldown: 5,
+          },
+
+          steve_jobs: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              Number of troops that will be invalidated per turn.
+            */
+            troop_invalidation_rate: 1,
+
+            /*
+              Cooldown to create another Store.
+            */
+            create_store_cooldown: 5,
+          },
+
+          donald_trump: {
+            /*
+              Unit hit points.
+            */
+            hp: 5,
+
+            /*
+              Unit max HP
+            */
+            max_hp: 5,
+
+            /*
+              Territory defense modifier when Trump is in the territory.
+            */
+            territory_defense_modifier: 1,
+          },
+        },
+
+        special_abilities: {
+          privatization: {
+            /*
+              Cooldown to try another privatization
+            */
+            cooldown: 3,
+
+            /*
+              Allow control of special units.
+            */
+            allow_using_specials: true,
+          },
+        },
+      },
+    },
+  },
 }
