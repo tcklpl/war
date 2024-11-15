@@ -1,4 +1,4 @@
-name: Dev Build for Open Versions
+name: Build for Open Versions
 on:
   push:
     tags:

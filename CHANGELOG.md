@@ -21,6 +21,12 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
+## [Unreleased]
+
+### 🔧 Changed
+
+- 🔩 GitHub Actions will now mark all closed versions as normal releases.
+
 ## [0.4.0] - 2024-11-15
 
 ### ✨ New
