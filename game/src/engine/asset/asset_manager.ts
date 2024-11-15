@@ -102,7 +102,7 @@ export class AssetManager extends Manager<Asset> {
     private async loadGLTFAssets(onAssetLoadCallback?: () => void) {
         const gltfAssets = Object.keys(assetIndex.gltf);
 
-        for (let k of gltfAssets) {
+        for (const k of gltfAssets) {
             const assetInfo = assetIndex.gltf[k as GLTFAssetName];
 
             let asset: GLTFFile;
@@ -127,7 +127,7 @@ export class AssetManager extends Manager<Asset> {
     private async loadHDRAssets(onAssetLoadCallback?: () => void) {
         const hdrAssets = Object.keys(assetIndex.hdr);
 
-        for (let k of hdrAssets) {
+        for (const k of hdrAssets) {
             const assetInfo = assetIndex.hdr[k as HDRAssetName];
 
             // try to get asset from the cache

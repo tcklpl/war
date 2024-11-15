@@ -5,7 +5,7 @@ import { MatrixTransformative } from './matrix_transformative';
 export class FrameListenerMatrixTransformative extends frameListener(MatrixTransformative) {
     private _previousFrameModelMatrix = Mat4.identity();
 
-    onEachFrame(deltaTime: number): void {
+    onEachFrame(_deltaTime: number): void {
         this._previousFrameModelMatrix = this.modelMatrix;
         device.queue.writeBuffer(
             this.modelMatrixUniformBuffer,

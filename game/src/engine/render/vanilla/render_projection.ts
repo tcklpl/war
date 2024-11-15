@@ -21,7 +21,7 @@ export class RenderProjection {
 
     initialize() {
         game.engine.registerFrameListener({
-            onEachFrame: delta => this.updatePreviousFrameMatrices(),
+            onEachFrame: () => this.updatePreviousFrameMatrices(),
         });
     }
 

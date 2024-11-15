@@ -1,10 +1,10 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ConfigDisplay } from '../engine/config/cfg_display';
-import { ConfigGraphics } from '../engine/config/cfg_graphics';
-import { useGame } from './use_game';
-import { LoadStage } from '../game/loader/load_stage';
 import { ConfigGame } from '../engine/config/cfg_game';
+import { ConfigGraphics } from '../engine/config/cfg_graphics';
 import { ConfigSession } from '../engine/config/cfg_session';
+import { LoadStage } from '../game/loader/load_stage';
+import { useGame } from './use_game';
 
 interface IConfigContext {
     displayConfig: ConfigDisplay;
@@ -51,7 +51,7 @@ const ConfigProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) 
         const keysB = Object.keys(a);
         if (keysA.length !== keysB.length) return false;
 
-        for (let k of keysA) {
+        for (const k of keysA) {
             if (a[k] !== b[k]) return false;
         }
 

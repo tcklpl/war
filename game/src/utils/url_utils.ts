@@ -8,7 +8,7 @@ export class URLUtils {
             if (!url.hostname) {
                 url = new URL('http://' + address);
             }
-        } catch (e) {
+        } catch {
             url = new URL('http://' + address);
         }
 

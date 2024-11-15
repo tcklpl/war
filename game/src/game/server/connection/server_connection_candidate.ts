@@ -47,7 +47,7 @@ export class ServerConnectionCandidate {
             const responseBody = (await result.json()) as ResponseServerInfoBody;
             this._serverInfo = responseBody;
             this.status = 'ready';
-        } catch (e) {
+        } catch {
             this.status = 'error';
         }
     }
@@ -99,7 +99,7 @@ export class ServerConnectionCandidate {
         });
         try {
             await this.waitForServerConnection(socket);
-        } catch (_) {
+        } catch {
             return;
         }
 

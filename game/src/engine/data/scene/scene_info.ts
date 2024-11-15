@@ -43,7 +43,7 @@ export class SceneInfo {
         this.updateLightBuffer(pointLights, this._pointLightBuffer);
     }
 
-    private updateLightBuffer(lights: Light[], buffer: GPUBuffer, starPadding = 16) {
+    private updateLightBuffer(lights: Light[], buffer: GPUBuffer) {
         device.queue.writeBuffer(buffer, 0, new Uint32Array([lights.length]));
         lights.forEach((l, i) => l.writeToBuffer(buffer, i, 16));
     }
