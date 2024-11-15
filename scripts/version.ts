@@ -19,7 +19,7 @@ if (versionParts.length !== 3) exitInvalidVersion();
 let [major, minor, patchAndMore]: string[] | number[] = versionParts;
 
 const patchParts = patchAndMore.split("-").filter((p) => !!p);
-if (patchParts.length !== 2) exitInvalidVersion();
+if (patchParts.length > 2) exitInvalidVersion();
 
 let [patch, extra]: string[] | number[] = patchParts;
 try {
