@@ -1,3 +1,4 @@
+import { ServerConnectionCandidate } from ':game/server/connection/server_connection_candidate';
 import {
     Button,
     CircularProgress,
@@ -17,7 +18,6 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { ServerConnectionCandidate } from '../../../game/server/connection/server_connection_candidate';
 import { useGame } from '../../../hooks/use_game';
 import './server_select.scss';
 import ServerSelectAddServerScreen from './server_select_add_server';

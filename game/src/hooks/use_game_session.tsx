@@ -1,12 +1,12 @@
+import { LobbyChatMessage } from ':game/lobby/lobby_chat';
+import { WarGameLobby } from ':game/lobby/war_game_lobby';
+import { WarGameSession } from ':game/lobby/war_game_session';
+import { ReconnectionInfo } from ':game/server/connection/reconnection_info';
+import { ServerConnection } from ':game/server/connection/server_connection';
+import { LobbyExitReason } from ':game/server/war_server';
 import { GamePauseReason, LobbyListState, LobbyState } from ':protocol';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LobbyChatMessage } from '../game/lobby/lobby_chat';
-import { WarGameLobby } from '../game/lobby/war_game_lobby';
-import { WarGameSession } from '../game/lobby/war_game_session';
-import { ReconnectionInfo } from '../game/server/connection/reconnection_info';
-import { ServerConnection } from '../game/server/connection/server_connection';
-import { LobbyExitReason } from '../game/server/war_server';
 import { useAlert } from './use_alert';
 import { useConfig } from './use_config';
 import { useGame } from './use_game';

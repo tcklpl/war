@@ -1,4 +1,4 @@
-import { WarGame } from '../game/war_game';
+import { WarGame } from ':game/war_game';
 
 declare global {
     var gl: WebGL2RenderingContext;

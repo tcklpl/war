@@ -2,8 +2,8 @@ import { ConfigDisplay } from ':engine/config/cfg_display';
 import { ConfigGame } from ':engine/config/cfg_game';
 import { ConfigGraphics } from ':engine/config/cfg_graphics';
 import { ConfigSession } from ':engine/config/cfg_session';
+import { LoadStage } from ':game/loader/load_stage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { LoadStage } from '../game/loader/load_stage';
 import { useGame } from './use_game';
 
 interface IConfigContext {

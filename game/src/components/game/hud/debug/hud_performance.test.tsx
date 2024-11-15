@@ -1,7 +1,7 @@
 import { ConfigDisplay } from ':engine/config/cfg_display';
+import { WarGameSession } from ':game/lobby/war_game_session';
+import { WarGame } from ':game/war_game';
 import { render } from '@testing-library/react';
-import { WarGameSession } from '../../../../game/lobby/war_game_session';
-import { WarGame } from '../../../../game/war_game';
 import { useConfig } from '../../../../hooks/use_config';
 import { useGame } from '../../../../hooks/use_game';
 import { useGameSession } from '../../../../hooks/use_game_session';
