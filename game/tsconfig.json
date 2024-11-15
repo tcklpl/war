@@ -21,7 +21,8 @@
         "paths": {
             ":protocol": ["./../protocol/index.ts"],
             ":engine/*": ["./src/engine/*"],
-            ":game/*": ["./src/game/*"]
+            ":game/*": ["./src/game/*"],
+            ":icons/*": ["./src/images/icons/*"]
         }
     },
     "include": ["src"],

@@ -13,10 +13,10 @@ import LobbyAdminConfigScreenGlobal from './config_pages/lobby_admin_cfg_global'
 import LobbyAdminConfigScreenSocialism from './config_pages/lobby_admin_cfg_socialism';
 
 import PublicIcon from '@mui/icons-material/Public';
-import AnarchismIcon from '../../../../images/icons/anarchism/anarchism_icon';
-import CapitalismIcon from '../../../../images/icons/capitalism/capitalism_icon';
-import FeudalismIcon from '../../../../images/icons/feudalism/feudalism_icon';
-import SocialismIcon from '../../../../images/icons/socialism/socialism_icon';
+import AnarchismIcon from ':icons/anarchism/anarchism_icon';
+import CapitalismIcon from ':icons/capitalism/capitalism_icon';
+import FeudalismIcon from ':icons/feudalism/feudalism_icon';
+import SocialismIcon from ':icons/socialism/socialism_icon';
 
 const LobbyAdminConfigScreen = () => {
     const { currentLobbyState } = useGameSession();

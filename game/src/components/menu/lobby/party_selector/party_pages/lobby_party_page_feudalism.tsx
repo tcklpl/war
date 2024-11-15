@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useGameSession } from '../../../../../hooks/use_game_session';
 import { TSXUtils } from '../../../../../utils/tsx_utils';
 import LobbyAdminConfigTitle from '../../admin/config_pages/components/lobby_admin_cfg_title';
-import DragonIcon from '../../../../../images/icons/feudalism/dragon_icon';
+import DragonIcon from ':icons/feudalism/dragon_icon';
 
 const LobbyPartyPageFeudalism = () => {
     const { t } = useTranslation(['lobby', 'parties', 'common', 'countries']);
