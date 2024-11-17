@@ -1,7 +1,20 @@
+import { Logger } from './log/logger';
 import { WarServer } from './war_server';
 
+const log = new Logger('Boot');
+
+process.on('uncaughtExceptionMonitor', e => {
+    Logger.saveCrashLog(e);
+    process.exit(1);
+});
+
 const server = new WarServer();
-server.initialize();
+try {
+    await server.initialize();
+} catch (e) {
+    log.fatal('Failed to initialize server');
+    throw e;
+}
 
 // When the process is killed
 process.on('SIGTERM', async () => {
