@@ -1,3 +1,4 @@
+import type { LoggerConfig } from '../../log/logger_config';
 import { Config } from '../config';
 import assetPath from './server.json5' with { type: 'file' };
 
@@ -9,7 +10,6 @@ export class CfgServer extends Config {
     host!: string;
     rest_port!: number;
     socket_port!: number;
-    log_level!: 'debug' | 'info' | 'warn' | 'error';
 
     name!: string;
     password!: string;
@@ -17,6 +17,8 @@ export class CfgServer extends Config {
 
     max_players!: number;
     max_lobbies!: number;
+
+    logger!: LoggerConfig;
 
     client_auth_token_expiration!: string;
 }

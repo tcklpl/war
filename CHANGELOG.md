@@ -23,6 +23,11 @@ Icons:
 
 ## [Unreleased]
 
+### ✨ New
+
+- 🖥 Server now saves a crashlog if it crashes by an unhandled exception.
+- 🖥 Server logger is now fully customizable through the config file `server.json5`.
+
 ### 🔧 Changed
 
 - 🔩 GitHub Actions will now mark all closed versions as normal releases.

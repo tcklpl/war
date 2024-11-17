@@ -49,8 +49,8 @@ export class WarServer {
         this._log.info(`Initializing server`);
 
         await this._configManager.loadConfig();
-        const logLvl = Logger.parseLogLevelFromString(this._configManager.getConfig(CfgServer).log_level);
-        Logger.setLogLevel(logLvl);
+        const logCfg = this._configManager.getConfig(CfgServer).logger;
+        Logger.configureLogger(logCfg);
 
         await this._cryptManager.initialize();
         await this._persistenceManager.initialize();

@@ -12,28 +12,10 @@
     [ IMPORTANT ]
     Server connection info, how your server will listen to incoming requests.
     You may want to change the default port if it's already in use in your machine.
-
-    Log Level can be either: trace, debug, info, warn or error.
-        Trace:  In addition to eveything in Debug, Trace will also print interal logs of the server components.
-
-        Debug:  All sorts of information will be logged, for example: players selection parties,
-                players selection territories, each game action etc. This mode is only meant to be used
-                while developing the server, most information logged here would be useless when in production.
-        
-        Info:   ( RECOMMENDED ) This mode will print only stuff like rooms being created, players joining and leaving the server,
-                games starting etc. This mode is the recommended one when actually running the server.
-
-        Warn:   Will only print warnings and errors, stuff like players doing things that they don't have permission to.
-
-        Error:  Will print only errors, these are server-side errors, stuff like corrupted configuration and/or databases.
-    
-    ALL LOG LEVELS WILL PRINT STUFF FROM HIGHER LEVELS. For example: Info will print stuff from Info, Warm and Error; Error will only print
-    errors and Trace will print everything.
   */
   host: 'localhost',
   rest_port: 36875,
   socket_port: 36876,
-  log_level: 'info',
 
   /*
     [ IMPORTANT ]
@@ -50,6 +32,56 @@
   */
   max_players: 32,
   max_lobbies: 8,
+
+  /*
+    [ SECONDARY ]
+
+    Log Level can be either: trace, debug, info, warn or error.
+      Trace:  In addition to eveything in Debug, Trace will also print interal logs of the server components.
+
+      Debug:  All sorts of information will be logged, for example: players selection parties,
+              players selection territories, each game action etc. This mode is only meant to be used
+              while developing the server, most information logged here would be useless when in production.
+      
+      Info:   ( RECOMMENDED ) This mode will print only stuff like rooms being created, players joining and leaving the server,
+              games starting etc. This mode is the recommended one when actually running the server.
+
+      Warn:   Will only print warnings and errors, stuff like players doing things that they don't have permission to.
+
+      Error:  Will print only errors, these are server-side errors, stuff like corrupted configuration and/or databases.
+    
+    ALL LOG LEVELS WILL PRINT STUFF FROM HIGHER LEVELS. For example: Info will print stuff from Info, Warm and Error; Error will only print
+    errors and Trace will print everything.
+
+    Valid time keys:
+      Formatter   Description             Example
+      %yyyy       Year                    2024
+      %MM         Month                   11
+      %dd         Day                     30
+      %HH         Hour (24 hour format)   20
+      %hh         Hour (12 hour format)   08
+      %mm         Minutes                 59
+      %ss         Seconds                 59
+      %tt         AM or PM                AM
+  */
+  logger: {
+    log_level: 'info',
+
+    // How the time will be printed when logging.
+    log_time_format: '%HH:%mm:%ss',
+
+    // How many lines the logger will record before erasing the old ones.
+    log_max_buffer_lines: 2000,
+
+    // Folder where the crashlogs will be created.
+    log_crashlog_folder: 'crashlog',
+
+    // Always buffer all log levels, regardless of what'll be printed to the screen.
+    log_crashlog_ignore_log_level: true,
+
+    // Crashlog file name.
+    log_crashlog_file_name: '%yyyy-%MM-%dd--%HH-%mm-%ss.crashlog.txt',
+  },
 
   /*
     [ SECONDARY ]
