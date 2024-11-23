@@ -286,7 +286,7 @@ export class GLTFLoader {
             }
 
             // unknown node
-            throw new BadGLTFFileError(`Unrecognized node:\n\n${node}`);
+            throw new BadGLTFFileError(`Unrecognized node:\n\n${node.name}`);
         }
         return nodes;
     }
