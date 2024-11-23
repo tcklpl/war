@@ -31,7 +31,6 @@ const EscMenu: React.FC = () => {
                 size={{ xs: 4, md: 2 }}
                 className={style.categories}
                 style={{ backgroundColor: palette.background.default }}
-                direction='column'
                 justifyContent='center'
             >
                 <Stack spacing={1} paddingX={'1em'}>
