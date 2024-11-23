@@ -41,17 +41,17 @@ struct VSUniqueUniforms {
 
 
 // Scene Info - Shadow map atlas
-@group(3) @binding(0) var sceneSampler: sampler;
-@group(3) @binding(1) var sceneShadowAtlas: texture_depth_2d;
-
 struct DirectionalLights {
     count: u32,
     lights: array<DirectionalLightInfo, MAX_DIRECTIONAL_LIGHTS>
 };
-@group(3) @binding(2) var<uniform> directionalLights: DirectionalLights;
+@group(3) @binding(0) var<uniform> directionalLights: DirectionalLights;
 
 struct PointLights {
     count: u32,
     lights: array<PointLightInfo, MAX_POINT_LIGHTS>
 };
-@group(3) @binding(3) var<uniform> pointLights: PointLights;
+@group(3) @binding(1) var<uniform> pointLights: PointLights;
+@group(3) @binding(2) var sceneSampler: sampler;
+@group(3) @binding(3) var sceneShadowAtlas: texture_depth_2d;
+

@@ -8,10 +8,12 @@ import fragmentShader from './fragment.wgsl?raw';
 import lightDirectional from './light/directional.wgsl?raw';
 import lightEval from './light/light_eval.wgsl?raw';
 import lightPunctual from './light/punctual.wgsl?raw';
+import lightShadowFiltering from './light/shadow_filtering.wgsl?raw';
 import lightShadows from './light/shadows.wgsl?raw';
 import material from './material.wgsl?raw';
 import overrides from './overrides.wgsl?raw';
 import pixel from './pixel.wgsl?raw';
+import precomputedKernels from './precomputed_kernels.wgsl?raw';
 import surface from './surface.wgsl?raw';
 import uniforms from './uniforms.wgsl?raw';
 import utils from './utils.wgsl?raw';
@@ -30,6 +32,7 @@ export class PrincipledBSDFShader extends Shader {
 
         const shaderSource = ''.concat(
             constants,
+            precomputedKernels,
             overrides,
             uniforms,
             utils,
@@ -42,6 +45,7 @@ export class PrincipledBSDFShader extends Shader {
             brdfLobes,
             surface,
 
+            lightShadowFiltering,
             lightShadows,
             lightDirectional,
             lightPunctual,

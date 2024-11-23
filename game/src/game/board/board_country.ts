@@ -19,6 +19,7 @@ export class BoardCountry extends BoardCountryBase {
             position: this.translation,
             castsShadows: false,
             range: 1000,
+            radius: 10,
             shadowMapSize: MappedRegionSize.SMALL,
             shadowMapCanShrink: true,
         },
@@ -56,9 +57,9 @@ export class BoardCountry extends BoardCountryBase {
     }
 
     onMouseHover(): void {
-        this.overlayIntensity = 1;
+        this.overlayIntensity = 0;
         this.overlayColor = new Vec3(5, 0, 0);
-        this._hoverLight.enabled = true;
+        this._hoverLight.enabled = false;
         this.puppeteer.cancelAllAnimations();
         this.puppeteer.playAnimation(this.animationTable.hoverOn);
     }

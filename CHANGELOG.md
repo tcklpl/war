@@ -27,10 +27,19 @@ Icons:
 
 - 🖥 Server now saves a crashlog if it crashes by an unhandled exception.
 - 🖥 Server logger is now fully customizable through the config file `server.json5`.
+- 🎮 Game now has the `Shadow Filtering` config, between Off (None), Low (PCF) and Medium (PCSS + PCF).
+
+### 🔨 Fixed
+
+- 🎮 Fixed game ESC menu `Grid2` error.
+- 🎮🔩 Shadow map size is now clamped to (try to) prevent the user from fucking shit up.
+- 🎮🔩 Implemented `ReactRouter`'s future stuff.
+- 🎮 Optimized directional lights to only do 1 `writeBuffer` call.
 
 ### 🔧 Changed
 
 - 🔩 GitHub Actions will now mark all closed versions as normal releases.
+- 🎮 Game shadow atlas resolution increased from 0.5k-4k to 1k-8k.
 
 ## [0.4.0] - 2024-11-15
 

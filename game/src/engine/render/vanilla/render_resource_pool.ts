@@ -1,4 +1,5 @@
 import { BufferUtils } from '../../../utils/buffer_utils';
+import { MathUtils } from '../../../utils/math_utils';
 import { ShadowMapAtlas } from '../../data/atlas/shadow_map_atlas';
 import { LuminanceHistogram } from '../../data/histogram/luminance_histogram';
 import { Mat4 } from '../../data/mat/mat4';
@@ -60,13 +61,14 @@ export class RenderResourcePool {
         /*
             Shadow map resolution will be 1x1 if shadows are off, otherwise:
 
-            Very Low (1)     512 x  512 (2^ 9)
-            Low (2)         1024 x 1024 (2^10)
-            Medium (3)      2048 x 2048 (2^11)
-            High (4)        4096 x 4096 (2^12)
+            Very Low (1)    1024 x 1024 (2^10)
+            Low (2)         2048 x 2048 (2^11)
+            Medium (3)      4096 x 4096 (2^12)
+            High (4)        8192 x 8192 (2^13)
         */
         const cfgShadowMapQuality = game.engine.config.graphics.shadowMapQuality;
-        const shadowMapResolution = cfgShadowMapQuality === 0 ? 1 : 2 ** (8 + cfgShadowMapQuality);
+        const clampedShadowMapQuality = MathUtils.clamp(1, 4, cfgShadowMapQuality);
+        const shadowMapResolution = cfgShadowMapQuality === 0 ? 1 : 2 ** (9 + clampedShadowMapQuality);
         this._shadowMapAtlas = new ShadowMapAtlas(shadowMapResolution);
     }
 

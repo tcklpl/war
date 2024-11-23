@@ -9,6 +9,7 @@ export interface LightProperties {
     color: Vec3;
     intensity: number;
     range: number;
+    radius: number;
 
     /**
      * If the light can cast shadows.
@@ -26,7 +27,6 @@ export interface LightProperties {
 }
 
 export abstract class Light {
-    private readonly _properties: LightProperties;
     /**
      * Shadow map atlas region if shadow mapping is enabled.
      *
@@ -38,24 +38,15 @@ export abstract class Light {
     shadowMappingViewProj?: Mat4;
 
     constructor(
-        properties: LightProperties,
-        private _enabled = true,
+        private readonly _properties: LightProperties,
+        public enabled = true,
     ) {
-        this._properties = properties;
         game.engine.managers.light.register(this);
     }
+
+    abstract writeToBuffer(buf: GPUBuffer, index: number, generalBufferOffset: number): void;
 
     get properties() {
         return this._properties;
     }
-
-    get enabled() {
-        return this._enabled;
-    }
-
-    set enabled(e: boolean) {
-        this._enabled = e;
-    }
-
-    abstract writeToBuffer(buf: GPUBuffer, index: number, generalBufferOffset: number): void;
 }
