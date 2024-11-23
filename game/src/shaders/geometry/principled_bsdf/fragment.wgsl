@@ -92,6 +92,7 @@ fn fragment(v: VSOutput) -> FSOutput {
     );
 
     var pixel = getPixelParams(mat);
+    pixel.uv = v.uv;
 
     var color = evaluateMaterial(mat, pixel, cv, cp);
 
