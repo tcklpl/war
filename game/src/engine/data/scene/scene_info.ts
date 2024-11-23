@@ -12,10 +12,12 @@ export class SceneInfo {
     private readonly _directionalLightBuffer = BufferUtils.createEmptyBuffer(
         DirectionalLight.byteSize * 2 + 16,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        'directional light buffer',
     );
     private readonly _pointLightBuffer = BufferUtils.createEmptyBuffer(
         PointLight.byteSize * 64 + 16,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        'point light buffer',
     );
     private readonly _pipelineBindGroups = new Map<
         GPURenderPipeline,
