@@ -5,11 +5,9 @@
 */
 
 fn getMaterialParams(mat: MaterialInputs, pixel: ptr<function, PixelInfo>) {
-
     (*pixel).diffuse = (1.0 - mat.metallic) * mat.albedo.rgb;
     (*pixel).f0 = vec3f(IORtoF0(mat.ior));
     (*pixel).roughness = mat.roughness * mat.roughness;
-
 }
 
 fn getClearCoatParams(mat: MaterialInputs, pixel: ptr<function, PixelInfo>) {
