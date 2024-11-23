@@ -12,6 +12,7 @@ export class BoardSun extends DirectionalLight {
                 intensity: light.light.intensity,
                 position: light.translation,
                 range: -1,
+                radius: 100,
 
                 castsShadows: true,
                 shadowMapSize: MappedRegionSize.BIG,
