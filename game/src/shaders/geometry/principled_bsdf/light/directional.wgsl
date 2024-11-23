@@ -31,8 +31,10 @@ fn evaluateDirectionalLights(pixel: PixelInfo, cv: CommonVectors, cp: CommonPosi
         // I'll only check the first one because no valid UV would be < 0
         if (directionalLights.lights[i].uv.x != -1.0) {
             var shadow = evaluateShadowMappingFromAtlas(
+                pixel,
                 cv,
                 L,
+                directionalLights.lights[i].radius,
                 cp.model_pos,
                 directionalLights.lights[i].uv.xy,
                 directionalLights.lights[i].uv.zw,
