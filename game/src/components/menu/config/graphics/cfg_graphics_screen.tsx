@@ -13,7 +13,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CfgTooltip from '../tooltip/cfg_tooltip';
 
@@ -24,6 +24,7 @@ const CfgGraphicsScreen: React.FC = () => {
     const { graphicsConfig } = useConfig();
 
     const [shadowQuality, setShadowQuality] = useState(graphicsConfig.shadowMapQuality);
+    const [shadowFilteringQuality, setShadowFilteringQuality] = useState(graphicsConfig.shadowFiltering);
     const [shaderQuality, setShaderQuality] = useState(graphicsConfig.shaderQuality);
 
     const [useSSAO, setUseSSAO] = useState(graphicsConfig.useSSAO);
@@ -37,6 +38,7 @@ const CfgGraphicsScreen: React.FC = () => {
         // save the config when this screen is closed
         return () => {
             graphicsConfig.shadowMapQuality = shadowQuality;
+            graphicsConfig.shadowFiltering = shadowFilteringQuality;
             graphicsConfig.shaderQuality = shaderQuality;
 
             graphicsConfig.useSSAO = useSSAO;
@@ -45,7 +47,22 @@ const CfgGraphicsScreen: React.FC = () => {
             graphicsConfig.motionBlurAmount = motionBlurAmount;
             graphicsConfig.useFilmGrain = useFilmGrain;
         };
-    }, [shadowQuality, shaderQuality, useSSAO, useBloom, useTAA, motionBlurAmount, useFilmGrain, graphicsConfig]);
+    }, [
+        shadowQuality,
+        shadowFilteringQuality,
+        shaderQuality,
+        useSSAO,
+        useBloom,
+        useTAA,
+        motionBlurAmount,
+        useFilmGrain,
+        graphicsConfig,
+    ]);
+
+    useEffect(() => {
+        if (shadowQuality > 0) return;
+        setShadowFilteringQuality(0);
+    }, [shadowQuality]);
 
     return (
         <Grid2 container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
@@ -77,6 +94,39 @@ const CfgGraphicsScreen: React.FC = () => {
                                     <MenuItem value={2}>{t('config:generic_low')}</MenuItem>
                                     <MenuItem value={3}>{t('config:generic_medium')}</MenuItem>
                                     <MenuItem value={4}>{t('config:generic_high')}</MenuItem>
+                                </Select>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+
+                <Table>
+                    <TableBody>
+                        <TableRow
+                            onMouseEnter={() =>
+                                setCurrentTooltip({
+                                    title: t('config:graphics_rendering_shadow_filtering'),
+                                    content: t('config:graphics_rendering_shadow_filtering_desc'),
+                                })
+                            }
+                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        >
+                            <TableCell>
+                                <Typography variant='body1'>
+                                    {t('config:graphics_rendering_shadow_filtering')}
+                                </Typography>
+                            </TableCell>
+                            <TableCell align='right'>
+                                <Select
+                                    value={shadowFilteringQuality}
+                                    disabled={!shadowQuality}
+                                    onChange={e => {
+                                        setShadowFilteringQuality(e.target.value as number);
+                                    }}
+                                >
+                                    <MenuItem value={0}>{t('config:generic_off')}</MenuItem>
+                                    <MenuItem value={1}>{t('config:generic_low')}</MenuItem>
+                                    <MenuItem value={2}>{t('config:generic_medium')}</MenuItem>
                                 </Select>
                             </TableCell>
                         </TableRow>
