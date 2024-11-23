@@ -15,9 +15,11 @@ export class RenderStageSolidGeometry implements RenderStage {
     private readonly _meshDrawOptions = new PrimitiveDrawOptions().includeAll();
     private _sceneBindGroupOptions!: SceneInfoBindGroupOptions;
 
-    private readonly _shadowMapSampler = device.createSampler({
+    private readonly _repeatSampler = device.createSampler({
         addressModeU: 'repeat',
         addressModeV: 'repeat',
+        minFilter: 'linear',
+        magFilter: 'linear',
     });
 
     async initialize(resources: RenderInitializationResources) {
@@ -26,11 +28,11 @@ export class RenderStageSolidGeometry implements RenderStage {
         });
 
         this._sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO)
-            .includeDirectionalLights(2)
-            .includePointLights(3)
+            .includeDirectionalLights(0)
+            .includePointLights(1)
             .includeExtras([
-                { binding: 0, resource: this._shadowMapSampler },
-                { binding: 1, resource: resources.shadowMapAtlas.texture.view },
+                { binding: 2, resource: this._repeatSampler },
+                { binding: 3, resource: resources.shadowMapAtlas.texture.view },
             ]);
 
         this._pipelineCW = await this.createPipeline('cw', resources.hdrTextureFormat);
@@ -80,6 +82,7 @@ export class RenderStageSolidGeometry implements RenderStage {
                 ],
                 constants: {
                     shader_quality: game.engine.config.graphics.shaderQuality,
+                    shadow_filtering: game.engine.config.graphics.shadowFiltering,
                 },
             },
             primitive: {
