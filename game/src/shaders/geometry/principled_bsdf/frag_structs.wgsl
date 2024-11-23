@@ -36,7 +36,9 @@ struct PixelInfo {
     clearCoatRoughness: f32,
 
     dfg: vec3f, // IBL
-    energyCompensation: vec3f
+    energyCompensation: vec3f,
+
+    uv: vec2f
 }
 
 struct Light {
@@ -49,6 +51,7 @@ struct Light {
 // Scene Info - Directional lights (like the sun)
 struct DirectionalLightInfo {
     color: vec3f,
+    radius: f32,
     direction: vec3f,
     intensity: f32,
     uv: vec4f,
@@ -61,3 +64,14 @@ struct PointLightInfo {
     intensity: f32,
     position: vec3f
 };
+
+struct ShadowCalcParams {
+    light_projected_depth: f32,
+    light_radius: f32,
+    bias: f32,
+    atlas_uv: vec2f,
+    atlas_uv_region_min: vec2f,
+    atlas_uv_region_max: vec2f,
+    texel_size: vec2f,
+    global_uv: vec2f,
+}
