@@ -27,7 +27,9 @@ Icons:
 
 - 🖥 Server now saves a crashlog if it crashes by an unhandled exception.
 - 🖥 Server logger is now fully customizable through the config file `server.json5`.
-- 🎮 Game now has the `Shadow Filtering` config, between Off (None), Low (PCF) and Medium (PCSS + PCF).
+- 🎮 **Shadow Filtering**: Configurable between Off (None), Low (PCF) and Medium (PCSS + PCF).
+- 🎮🔩 Entity Flag System, for 32 possible boolean flags.
+- 🎮 **Outlines**: Accessible via the new Entity Flag system.
 
 ### 🔨 Fixed
 
@@ -35,6 +37,7 @@ Icons:
 - 🎮🔩 Shadow map size is now clamped to (try to) prevent the user from fucking shit up.
 - 🎮🔩 Implemented `ReactRouter`'s future stuff.
 - 🎮 Optimized directional lights to only do 1 `writeBuffer` call.
+- 🎮 Fixed "Failed to get config" error when first loading the page.
 
 ### 🔧 Changed
 
