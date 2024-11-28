@@ -1,3 +1,4 @@
+import vsCommonUniforms from '../../common/vs_common_uniforms.wgsl?raw';
 import { Shader } from '../../shader';
 import brdfDiffuse from './brdf/diffuse.wgsl?raw';
 import brdfLobes from './brdf/lobes.wgsl?raw';
@@ -31,6 +32,8 @@ export class PrincipledBSDFShader extends Shader {
         super(name);
 
         const shaderSource = ''.concat(
+            vsCommonUniforms,
+
             constants,
             precomputedKernels,
             overrides,
