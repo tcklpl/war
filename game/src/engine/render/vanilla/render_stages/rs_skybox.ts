@@ -14,9 +14,9 @@ export class RenderStageSkybox implements RenderStage {
             this._shader = new SkyboxShader('rs skybox shader', () => r());
         });
 
-        this._pipeline = await this.createPipeline(resources.hdrTextureFormat);
+        this._pipeline = await this.createPipeline(resources.renderResourcePool.hdrTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
-        this._viewProjBindGroup = this.createViewProjBindGroup(resources.viewProjBuffer);
+        this._viewProjBindGroup = this.createViewProjBindGroup(resources.renderResourcePool.viewProjBuffer);
     }
 
     private createPipeline(hdrTextureFormat: GPUTextureFormat) {

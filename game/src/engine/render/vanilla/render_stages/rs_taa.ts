@@ -21,7 +21,7 @@ export class RenderStageTAA implements RenderStage {
             this._taaShader = new TAAShader('taa shader', () => r());
         });
 
-        this._taaPipeline = await this.createTAAPipeline(resources.hdrTextureFormat);
+        this._taaPipeline = await this.createTAAPipeline(resources.renderResourcePool.hdrTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 

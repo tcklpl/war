@@ -38,13 +38,12 @@ export class VanillaRenderer extends Renderer {
         this._renderPipeline.buildPipeline(game.engine.config.graphics);
         await this._renderPipeline.initialize({
             canvasPreferredTextureFormat: this._presentationFormat,
-            viewProjBuffer: this._renderResourcePool.viewProjBuffer,
             pickingBuffer: this._pickingBuffer,
-            hdrTextureFormat: this._renderResourcePool.hdrTextureFormat,
-            shadowMapAtlas: this._renderResourcePool.shadowMapAtlas,
 
             luminanceHistogramBins: this._luminanceHistogram.bins,
             luminanceHistogramBuffer: this._luminanceHistogram.buffer,
+
+            renderResourcePool: this._renderResourcePool,
         });
         this.buildJitterOffsets(this._renderProjection.resolution.full);
     }
@@ -84,6 +83,7 @@ export class VanillaRenderer extends Renderer {
         gameCanvas.height = height;
         this._renderProjection.updateResolution(new Vec2(width, height));
         this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
+        this._renderPipeline.dispatchResolutionUpdate(this._renderResourcePool);
         this.buildJitterOffsets(this._renderProjection.resolution.full);
     }
 

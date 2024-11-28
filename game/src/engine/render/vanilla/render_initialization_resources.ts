@@ -1,12 +1,11 @@
-import { ShadowMapAtlas } from '../../data/atlas/shadow_map_atlas';
+import { RenderResourcePool } from './render_resource_pool';
 
 export interface RenderInitializationResources {
-    viewProjBuffer: GPUBuffer;
     canvasPreferredTextureFormat: GPUTextureFormat;
     pickingBuffer: GPUBuffer;
-    hdrTextureFormat: GPUTextureFormat;
-    shadowMapAtlas: ShadowMapAtlas;
 
     luminanceHistogramBins: number;
     luminanceHistogramBuffer: GPUBuffer;
+
+    renderResourcePool: RenderResourcePool;
 }
