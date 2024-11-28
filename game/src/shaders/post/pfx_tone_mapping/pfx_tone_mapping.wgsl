@@ -50,6 +50,7 @@ fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
 @group(0) @binding(1) var pfx_hdr: texture_2d<f32>;
 @group(0) @binding(2) var pfx_bloom: texture_2d<f32>;
 @group(0) @binding(3) var pfx_velocity: texture_2d<f32>;
+@group(0) @binding(4) var pfx_outline: texture_2d<f32>;
 
 struct PFXOptions {
     // Selectors
@@ -81,6 +82,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var hdrColor = textureSample(pfx_hdr, pfx_sampler, v.uv).rgb;
     var bloomColor = textureSample(pfx_bloom, pfx_sampler, v.uv).rgb;
     var velocityTexel = textureSample(pfx_velocity, pfx_sampler, v.uv).rg;
+    var outlineTexel = textureSample(pfx_outline, pfx_sampler, v.uv).rgb;
 
     var texelSize = 1.0 / vec2f(textureDimensions(pfx_hdr));
 
@@ -130,6 +132,11 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
         var vignette = vignetteUV.x * vignetteUV.y * opt.vignette_size;
         vignette = saturate(pow(vignette, opt.vignette_strength));
         mapped *= vignette;
+    }
+
+    // Outline
+    if (all(outlineTexel != vec3f(0.0, 0.0, 0.0))) {
+        mapped = outlineTexel;
     }
 
     return vec4f(mapped, 1.0);
