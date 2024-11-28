@@ -25,6 +25,8 @@ export class RenderResourcePool {
 
     private readonly _depthTexture = new Texture();
     private readonly _velocityTexture = new Texture();
+    private readonly _outlineMask = new Texture();
+    private readonly _outlineTexture = new Texture();
 
     private readonly _hdrBufferChain!: RenderHDRBufferChain;
 
@@ -93,6 +95,20 @@ export class RenderResourcePool {
             size: [resolution.full.x, resolution.full.y],
             format: 'rg16float',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+        });
+
+        this._outlineMask.texture = device.createTexture({
+            label: 'render pool: outline mask',
+            size: [resolution.full.x, resolution.full.y],
+            format: 'r32uint',
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+        });
+
+        this._outlineTexture.texture = device.createTexture({
+            label: 'render pool: outline texture',
+            size: [resolution.full.x, resolution.full.y],
+            format: 'rgba8unorm',
+            usage: GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.TEXTURE_BINDING,
         });
 
         this._normalTexture.texture = device.createTexture({
@@ -206,6 +222,9 @@ export class RenderResourcePool {
     private freeTextures() {
         this._depthTexture.free();
         this._velocityTexture.free();
+        this._outlineMask.free();
+        this._outlineTexture.free();
+
         this._hdrBufferChain.free();
         this._bloomMips.free();
         this._normalTexture.free();
@@ -234,6 +253,14 @@ export class RenderResourcePool {
 
     get velocityTextureView() {
         return this._velocityTexture.view;
+    }
+
+    get outlineMaskView() {
+        return this._outlineMask.view;
+    }
+
+    get outlineTextureView() {
+        return this._outlineTexture.view;
     }
 
     get hdrBufferChain() {
