@@ -59,7 +59,7 @@ const ConfigProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) 
     };
 
     const shouldRenitializeRenderer = useCallback(() => {
-        if (!gameInstance) return false;
+        if (!gameInstance?.engine.config) return false;
 
         let hasChanged = false;
         // display config changes should not reinitialize the whole game, only graphical or game
@@ -70,7 +70,7 @@ const ConfigProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) 
     }, [graphicsConfig, gameConfig, gameInstance]);
 
     const saveConfig = useCallback(async () => {
-        if (!gameInstance) return;
+        if (!gameInstance?.engine.config) return;
 
         // see if the user has actually changed anything
         const shouldReinitializeRenderer = shouldRenitializeRenderer();
