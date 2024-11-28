@@ -10,7 +10,7 @@
     "url": "https://github.com/tcklpl"
   },
   "scripts": {
-    "start": "bunx --bun vite",
+    "start": "vite",
     "build": "tsc --build && vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
