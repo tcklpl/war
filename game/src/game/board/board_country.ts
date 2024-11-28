@@ -1,5 +1,6 @@
 import { MappedRegionSize } from ':engine/data/atlas/mapped_region_size';
 import { Entity } from ':engine/data/entity/entity';
+import { EntityFlag } from ':engine/data/entity/entity_flag';
 import { PointLight } from ':engine/data/lights/point_light';
 import { interactable } from ':engine/data/traits/interactable';
 import { Vec3 } from ':engine/data/vec/vec3';
@@ -62,6 +63,7 @@ export class BoardCountry extends BoardCountryBase {
         this._hoverLight.enabled = false;
         this.puppeteer.cancelAllAnimations();
         this.puppeteer.playAnimation(this.animationTable.hoverOn);
+        this.addFlag(EntityFlag.OUTLINE);
     }
 
     onMouseLeave(): void {
@@ -69,6 +71,7 @@ export class BoardCountry extends BoardCountryBase {
         this._hoverLight.enabled = false;
         this.puppeteer.cancelAllAnimations();
         this.puppeteer.playAnimation(this.animationTable.resetPosition);
+        this.removeFlag(EntityFlag.OUTLINE);
     }
 
     private updateAnimationTable() {
