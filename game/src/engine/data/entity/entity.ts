@@ -6,7 +6,7 @@ import { PrimitiveDrawOptions } from '../meshes/primitive_draw_options';
 import { identifiable } from '../traits/identifiable';
 import { puppet } from '../traits/puppet';
 import { Vec3 } from '../vec/vec3';
-import { Vec4 } from '../vec/vec4';
+import { EntityFlag } from './entity_flag';
 import { FrameListenerMatrixTransformative } from './frame_listener_matrix_transformative';
 import { MatrixTransformative } from './matrix_transformative';
 
@@ -21,6 +21,8 @@ export class Entity extends EntityBase {
     private _overlayColor = Vec3.fromValue(0);
     private _overlayIntensity = 0;
 
+    private readonly _flags = new Set<EntityFlag>();
+
     private readonly _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
 
     constructor(data: { name: string; mesh: Mesh }) {
@@ -28,7 +30,8 @@ export class Entity extends EntityBase {
         this._name = data.name;
         this._mesh = data.mesh;
         // write id to buffer
-        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize + Vec4.byteSize, this.idUint32);
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xd0, this.idUint32);
+        this.updateFlagsOnBuffer();
     }
 
     getBindGroup(pipeline: GPURenderPipeline) {
@@ -47,6 +50,35 @@ export class Entity extends EntityBase {
     draw(passEncoder: GPURenderPassEncoder, pipeline: GPURenderPipeline, options: PrimitiveDrawOptions) {
         passEncoder.setBindGroup(PrincipledBSDFShader.BINDING_GROUPS.MODEL, this.getBindGroup(pipeline));
         this._mesh.draw(passEncoder, pipeline, options);
+    }
+
+    private updateFlagsOnBuffer() {
+        const u32Flags = [...this._flags].reduce((prev, cur) => prev | cur, 0);
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xd4, new Uint32Array([u32Flags]));
+    }
+
+    addFlag(flag: EntityFlag) {
+        this._flags.add(flag);
+        this.updateFlagsOnBuffer();
+    }
+
+    toggleFlag(flag: EntityFlag) {
+        if (this._flags.has(flag)) {
+            this._flags.delete(flag);
+        } else {
+            this._flags.add(flag);
+        }
+        this.updateFlagsOnBuffer();
+    }
+
+    removeFlag(flag: EntityFlag) {
+        this._flags.delete(flag);
+        this.updateFlagsOnBuffer();
+    }
+
+    clearFlags() {
+        this._flags.clear();
+        this.updateFlagsOnBuffer();
     }
 
     registerChildren(...children: MatrixTransformative[]) {
@@ -81,7 +113,7 @@ export class Entity extends EntityBase {
 
     set overlayColor(color: Vec3) {
         this._overlayColor = color;
-        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 3 * Mat4.byteSize, this._overlayColor.asF32Array);
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xc0, this._overlayColor.asF32Array);
     }
 
     set overlayIntensity(intensity: number) {
