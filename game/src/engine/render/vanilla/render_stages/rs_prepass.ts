@@ -1,11 +1,11 @@
-import { DepthAndVelocityShader } from '../../../../shaders/geometry/depth/depth_and_velocity_shader';
+import { PrepassShader } from '../../../../shaders/geometry/prepass/prepass_shader';
 import { PrimitiveDrawOptions } from '../../../data/meshes/primitive_draw_options';
 import { RenderInitializationResources } from '../render_initialization_resources';
 import { RenderResourcePool } from '../render_resource_pool';
 import { RenderStage } from './render_stage';
 
-export class RenderStageDepthMap implements RenderStage {
-    private _depthShader!: DepthAndVelocityShader;
+export class RenderStagePrePass implements RenderStage {
+    private _prepassShader!: PrepassShader;
     private _depthPipelineCW!: GPURenderPipeline;
     private _depthPipelineCCW!: GPURenderPipeline;
     private _renderPassDescriptor!: GPURenderPassDescriptor;
@@ -15,22 +15,22 @@ export class RenderStageDepthMap implements RenderStage {
 
     async initialize(resources: RenderInitializationResources) {
         await new Promise<void>(r => {
-            this._depthShader = new DepthAndVelocityShader('rs depth and velocity shader', () => r());
+            this._prepassShader = new PrepassShader('rs pre pass shader', () => r());
         });
 
-        this._depthPipelineCW = await this.createDepthPipeline('cw');
-        this._depthPipelineCCW = await this.createDepthPipeline('ccw');
-        this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.viewProjBuffer);
-        this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.viewProjBuffer);
+        this._depthPipelineCW = await this.createPrepassPipeline('cw');
+        this._depthPipelineCCW = await this.createPrepassPipeline('ccw');
+        this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.renderResourcePool.viewProjBuffer);
+        this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.renderResourcePool.viewProjBuffer);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }
 
-    private createDepthPipeline(windingOrder: 'cw' | 'ccw') {
+    private createPrepassPipeline(windingOrder: 'cw' | 'ccw') {
         return device.createRenderPipelineAsync({
-            label: `rs depth pass ${windingOrder} pipeline`,
+            label: `rs pre pass ${windingOrder} pipeline`,
             layout: 'auto',
             vertex: {
-                module: this._depthShader.module,
+                module: this._prepassShader.module,
                 entryPoint: 'vertex',
                 buffers: [
                     // position
@@ -41,9 +41,9 @@ export class RenderStageDepthMap implements RenderStage {
                 ] as GPUVertexBufferLayout[],
             },
             fragment: {
-                module: this._depthShader.module,
+                module: this._prepassShader.module,
                 entryPoint: 'fragment',
-                targets: [{ format: 'rg16float' as GPUTextureFormat }],
+                targets: [{ format: 'rg16float' as GPUTextureFormat }, { format: 'r32uint' as GPUTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
@@ -67,6 +67,12 @@ export class RenderStageDepthMap implements RenderStage {
                     loadOp: 'clear',
                     storeOp: 'store',
                 },
+                // Outline mask
+                {
+                    // view will be assigned later
+                    loadOp: 'clear',
+                    storeOp: 'store',
+                },
             ] as GPURenderPassColorAttachment[],
             depthStencilAttachment: {
                 // view will be assigned later
@@ -81,13 +87,17 @@ export class RenderStageDepthMap implements RenderStage {
         const pipeline = windingOrder === 'ccw' ? this._depthPipelineCCW : this._depthPipelineCW;
         return device.createBindGroup({
             label: 'PBR ViewProj',
-            layout: pipeline.getBindGroupLayout(DepthAndVelocityShader.BINDING_GROUPS.VIEWPROJ),
+            layout: pipeline.getBindGroupLayout(PrepassShader.BINDING_GROUPS.VIEWPROJ),
             entries: [{ binding: 0, resource: { buffer: buffer } }],
         });
     }
 
     private setVelocityTexture(velocityTex: GPUTextureView) {
         (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = velocityTex;
+    }
+
+    private setOutlineMaskTexture(outlineMaskTexture: GPUTextureView) {
+        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[1].view = outlineMaskTexture;
     }
 
     private setDepthTexture(depthTex: GPUTextureView) {
@@ -98,11 +108,12 @@ export class RenderStageDepthMap implements RenderStage {
         pool.commandEncoder.pushDebugGroup('Depth Map Renderer');
         this.setDepthTexture(pool.depthTextureView);
         this.setVelocityTexture(pool.velocityTextureView);
+        this.setOutlineMaskTexture(pool.outlineMaskView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
             rpe.setPipeline(this._depthPipelineCCW);
-            rpe.setBindGroup(DepthAndVelocityShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCCW);
+            rpe.setBindGroup(PrepassShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCCW);
             pool.scene.entitiesPerWindingOrder.ccw.forEach(e =>
                 e.draw(rpe, this._depthPipelineCCW, this._meshDrawOptions),
             );
@@ -110,7 +121,7 @@ export class RenderStageDepthMap implements RenderStage {
 
         if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
             rpe.setPipeline(this._depthPipelineCW);
-            rpe.setBindGroup(DepthAndVelocityShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCW);
+            rpe.setBindGroup(PrepassShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroupCW);
             pool.scene.entitiesPerWindingOrder.cw.forEach(e =>
                 e.draw(rpe, this._depthPipelineCW, this._meshDrawOptions),
             );
