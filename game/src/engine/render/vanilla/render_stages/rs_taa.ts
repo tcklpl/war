@@ -61,7 +61,7 @@ export class RenderStageTAA implements RenderStage {
 
     private createBindGroup(pool: RenderResourcePool) {
         return device.createBindGroup({
-            label: 'ssao opt and kernel bind group',
+            label: 'taa bind group',
             layout: this._taaPipeline.getBindGroupLayout(TAAShader.BINDING_GROUPS.TEXTURES),
             entries: [
                 { binding: 0, resource: this._samplerNearest },
