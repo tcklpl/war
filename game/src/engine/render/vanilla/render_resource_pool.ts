@@ -4,8 +4,8 @@ import { ShadowMapAtlas } from '../../data/atlas/shadow_map_atlas';
 import { LuminanceHistogram } from '../../data/histogram/luminance_histogram';
 import { Mat4 } from '../../data/mat/mat4';
 import { Scene } from '../../data/scene/scene';
-import { RenderHDRBufferChain } from '../../data/texture/render_hdr_buffer_chain';
 import { Texture } from '../../data/texture/texture';
+import { TextureBufferChain } from '../../data/texture/texture_buffer_chain';
 import { Vec2 } from '../../data/vec/vec2';
 import { Vec3 } from '../../data/vec/vec3';
 import { Resolution } from '../../resolution';
@@ -28,7 +28,7 @@ export class RenderResourcePool {
     private readonly _outlineMask = new Texture();
     private readonly _outlineTexture = new Texture();
 
-    private readonly _hdrBufferChain!: RenderHDRBufferChain;
+    private readonly _hdrBufferChain!: TextureBufferChain;
 
     private readonly _bloomMips = new Texture();
     private readonly _bloomMipsLength = 7;
@@ -56,7 +56,7 @@ export class RenderResourcePool {
         const canRenderToRG11B10 = device.features.has('rg11b10ufloat-renderable');
         if (canRenderToRG11B10) this._hdrTextureFormat = 'rg11b10ufloat';
 
-        this._hdrBufferChain = new RenderHDRBufferChain(this._hdrTextureFormat);
+        this._hdrBufferChain = new TextureBufferChain(this._hdrTextureFormat, 'HDR');
     }
 
     async initialize() {
