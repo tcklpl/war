@@ -9,12 +9,7 @@ function App() {
     return (
         <div className='App'>
             <Hooks>
-                <HashRouter
-                    future={{
-                        v7_startTransition: true,
-                        v7_relativeSplatPath: true,
-                    }}
-                >
+                <HashRouter>
                     <WarGameComponent />
                 </HashRouter>
             </Hooks>

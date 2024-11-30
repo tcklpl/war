@@ -21,7 +21,7 @@ export class MatrixTransformative implements Animatable {
     private _modelMatrix = Mat4.identity();
     private _modelMatrixInverse = Mat4.identity();
     private readonly _modelMatrixUniformBuffer = BufferUtils.createEmptyBuffer(
-        3 * Mat4.byteSize + Vec4.byteSize + 4,
+        3 * Mat4.byteSize + 2 * Vec4.byteSize + 4,
         GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     );
 

@@ -30,8 +30,14 @@ export class RenderStageBloom implements RenderStage {
             this._upsampleShader = new BloomUpsampleShader('bloom upsample shader', () => r());
         });
 
-        this._downsamplePipeline = await this.createBloomPipeline(this._downsampleShader, resources.hdrTextureFormat);
-        this._upsamplePipeline = await this.createBloomPipeline(this._upsampleShader, resources.hdrTextureFormat);
+        this._downsamplePipeline = await this.createBloomPipeline(
+            this._downsampleShader,
+            resources.renderResourcePool.hdrTextureFormat,
+        );
+        this._upsamplePipeline = await this.createBloomPipeline(
+            this._upsampleShader,
+            resources.renderResourcePool.hdrTextureFormat,
+        );
 
         this._renderPassDescriptor = this.createRenderPassDescriptor();
     }

@@ -27,19 +27,41 @@ Icons:
 
 - 🖥 Server now saves a crashlog if it crashes by an unhandled exception.
 - 🖥 Server logger is now fully customizable through the config file `server.json5`.
-- 🎮 Game now has the `Shadow Filtering` config, between Off (None), Low (PCF) and Medium (PCSS + PCF).
+- 🎮 **Shadow Filtering**: Configurable between Off (None), Low (PCF) and Medium (PCSS + PCF).
+- 🎮🔩 Entity Flag System, for 32 possible boolean flags.
+- 🎮 **Outlines**: Accessible via the new Entity Flag system and Entity `outlineColor` property.
 
 ### 🔨 Fixed
 
 - 🎮 Fixed game ESC menu `Grid2` error.
 - 🎮🔩 Shadow map size is now clamped to (try to) prevent the user from fucking shit up.
-- 🎮🔩 Implemented `ReactRouter`'s future stuff.
 - 🎮 Optimized directional lights to only do 1 `writeBuffer` call.
+- 🎮 Fixed "Failed to get config" error when first loading the page.
+- 🎮🔩 Fixed some naming inconsistencies.
 
 ### 🔧 Changed
 
 - 🔩 GitHub Actions will now mark all closed versions as normal releases.
 - 🎮 Game shadow atlas resolution increased from 0.5k-4k to 1k-8k.
+- 🎮🔩 Renamed `RenderHDRBufferChain` to `TextureBufferChain` and made it more generic.
+- 🎮🔩⬆️ Updated `@vitejs/plugin-react-swc` to `3.7.2`.
+- 🎮🔩⬆️ Updated `@vitest/coverage-v8` to `2.1.6`.
+- 🎮🔩⬆️ Updated `eslint` to `9.15.0`.
+- 🎮🔩⬆️ Updated `happy-dom` to `15.11.7`.
+- 🎮🔩⬆️ Updated `prettier` to `3.4.1`.
+- 🎮🔩⬆️ Updated `typescript` to `5.7.2`.
+- 🎮🔩⬆️ Updated `vite` to `6.0.1`.
+- 🎮🔩⬆️ Updated `vite-tsconfig-paths` to `5.1.3`.
+- 🎮🔩⬆️ Updated `vitest` to `2.1.6`.
+- 🎮🔩⬆️ Updated `@emotion/react` to `11.13.5`.
+- 🎮🔩⬆️ Updated `@emotion/styled` to `11.13.5`.
+- 🎮🔩⬆️ Updated `@mui/icons-material` to `6.1.9`.
+- 🎮🔩⬆️ Updated `@mui/lab` to `6.0.0-beta.17`.
+- 🎮🔩⬆️ Updated `@mui/material` to `6.1.9`.
+- 🎮🔩⬆️ Updated `@petamoriken/float16` to `3.9.0`.
+- 🎮🔩⬆️ Updated `i18next` to `24.0.2`.
+- 🎮🔩⬆️ Updated `react-i18next` to `15.1.2`.
+- 🎮🔩⬆️ Updated `react-router-dom` to `7.0.1`.
 
 ## [0.4.0] - 2024-11-15
 

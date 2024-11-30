@@ -1,10 +1,9 @@
 import { Shader } from '../../shader';
-import shaderSource from './depth_and_velocity.wgsl?raw';
+import shaderSource from './outline.wgsl?raw';
 
-export class DepthAndVelocityShader extends Shader {
+export class OutlineShader extends Shader {
     static readonly BINDING_GROUPS = {
-        VIEWPROJ: 0,
-        MODEL: 1,
+        TEXTURES: 0,
     };
 
     constructor(name: string, cb: () => void) {

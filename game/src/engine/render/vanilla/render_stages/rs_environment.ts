@@ -31,7 +31,7 @@ export class RenderStageEnvironment implements RenderStage {
             this._shader = new EnvironmentShader('environment shader', () => r());
         });
 
-        this._pipeline = await this.createPipeline(resources.hdrTextureFormat);
+        this._pipeline = await this.createPipeline(resources.renderResourcePool.hdrTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
         this._variablesBindGroup = this.createVariablesBindGroup();
     }

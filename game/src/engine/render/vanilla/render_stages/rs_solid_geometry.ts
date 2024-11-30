@@ -32,14 +32,14 @@ export class RenderStageSolidGeometry implements RenderStage {
             .includePointLights(1)
             .includeExtras([
                 { binding: 2, resource: this._repeatSampler },
-                { binding: 3, resource: resources.shadowMapAtlas.texture.view },
+                { binding: 3, resource: resources.renderResourcePool.shadowMapAtlas.texture.view },
             ]);
 
-        this._pipelineCW = await this.createPipeline('cw', resources.hdrTextureFormat);
-        this._pipelineCCW = await this.createPipeline('ccw', resources.hdrTextureFormat);
+        this._pipelineCW = await this.createPipeline('cw', resources.renderResourcePool.hdrTextureFormat);
+        this._pipelineCCW = await this.createPipeline('ccw', resources.renderResourcePool.hdrTextureFormat);
         this._renderPassDescriptor = this.createRenderPassDescriptor();
-        this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.viewProjBuffer);
-        this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.viewProjBuffer);
+        this._viewProjBindGroupCW = this.createViewProjBindGroup('cw', resources.renderResourcePool.viewProjBuffer);
+        this._viewProjBindGroupCCW = this.createViewProjBindGroup('ccw', resources.renderResourcePool.viewProjBuffer);
     }
 
     private createPipeline(windingOrder: 'cw' | 'ccw', hdrTextureFormat: GPUTextureFormat) {
