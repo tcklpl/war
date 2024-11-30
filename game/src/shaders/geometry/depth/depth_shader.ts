@@ -1,3 +1,4 @@
+import vsUniqueUniforms from '../../common/vs_unique_uniforms.wgsl?raw';
 import { Shader } from '../../shader';
 import shaderSource from './depth.wgsl?raw';
 
@@ -9,6 +10,7 @@ export class DepthShader extends Shader {
 
     constructor(name: string, cb: () => void) {
         super(name);
-        this.compileShader(shaderSource).then(() => cb());
+        const source = ''.concat(vsUniqueUniforms, shaderSource);
+        this.compileShader(source).then(() => cb());
     }
 }

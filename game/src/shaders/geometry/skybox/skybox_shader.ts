@@ -1,3 +1,4 @@
+import vsCommonUniforms from '../../common/vs_common_uniforms.wgsl?raw';
 import { Shader } from '../../shader';
 import shaderSource from './skybox.wgsl?raw';
 
@@ -9,6 +10,7 @@ export class SkyboxShader extends Shader {
 
     constructor(name: string, cb: () => void) {
         super(name);
-        this.compileShader(shaderSource).then(() => cb());
+        const source = ''.concat(vsCommonUniforms, shaderSource);
+        this.compileShader(source).then(() => cb());
     }
 }
