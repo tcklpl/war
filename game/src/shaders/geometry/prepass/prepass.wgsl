@@ -4,8 +4,7 @@
 
     This shader outputs:
         - Depth map for early z testing;
-        - Velocity map for motion blur; and
-        - Outline mask texture;
+        - Velocity map for motion blur;
     --------------------------------------------------------------------------------------------------
 */
 
@@ -55,22 +54,15 @@ fn calculate_velocity(newPos: vec4f, oldPos: vec4f) -> vec2f {
     return (newP - oldP).xy;
 }
 
-fn get_outline_mask() -> u32 {
-    return select(0u, unique_uniforms.id, (unique_uniforms.flags & FLAG_OUTLINE) != 0);
-}
-
 struct FSOutput {
     @location(0) velocity_texture: vec2f,
-    @location(1) outline_mask: u32,
 }
 
 @fragment
 fn fragment(v: VSOutput) -> FSOutput {
     let velocity = calculate_velocity(v.cur_position, v.prev_position);
-    let outline_mask = get_outline_mask();
 
     var output: FSOutput;
     output.velocity_texture = velocity;
-    output.outline_mask = outline_mask;
     return output;
 }

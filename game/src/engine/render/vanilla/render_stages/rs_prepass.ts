@@ -43,7 +43,7 @@ export class RenderStagePrePass implements RenderStage {
             fragment: {
                 module: this._prepassShader.module,
                 entryPoint: 'fragment',
-                targets: [{ format: 'rg16float' as GPUTextureFormat }, { format: 'r32uint' as GPUTextureFormat }],
+                targets: [{ format: 'rg16float' as GPUTextureFormat }],
             },
             primitive: {
                 topology: 'triangle-list',
@@ -62,12 +62,6 @@ export class RenderStagePrePass implements RenderStage {
         return {
             colorAttachments: [
                 // Velocity
-                {
-                    // view will be assigned later
-                    loadOp: 'clear',
-                    storeOp: 'store',
-                },
-                // Outline mask
                 {
                     // view will be assigned later
                     loadOp: 'clear',
@@ -96,10 +90,6 @@ export class RenderStagePrePass implements RenderStage {
         (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = velocityTex;
     }
 
-    private setOutlineMaskTexture(outlineMaskTexture: GPUTextureView) {
-        (this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[1].view = outlineMaskTexture;
-    }
-
     private setDepthTexture(depthTex: GPUTextureView) {
         (this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthTex;
     }
@@ -108,7 +98,6 @@ export class RenderStagePrePass implements RenderStage {
         pool.commandEncoder.pushDebugGroup('Depth Map Renderer');
         this.setDepthTexture(pool.depthTextureView);
         this.setVelocityTexture(pool.velocityTextureView);
-        this.setOutlineMaskTexture(pool.outlineMaskView);
         const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
 
         if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
