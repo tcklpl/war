@@ -6,6 +6,7 @@ import { PrimitiveDrawOptions } from '../meshes/primitive_draw_options';
 import { identifiable } from '../traits/identifiable';
 import { puppet } from '../traits/puppet';
 import { Vec3 } from '../vec/vec3';
+import { Vec4 } from '../vec/vec4';
 import { EntityFlag } from './entity_flag';
 import { FrameListenerMatrixTransformative } from './frame_listener_matrix_transformative';
 import { MatrixTransformative } from './matrix_transformative';
@@ -21,6 +22,8 @@ export class Entity extends EntityBase {
     private _overlayColor = Vec3.fromValue(0);
     private _overlayIntensity = 0;
 
+    private _outlineColor = Vec4.fromValue(1);
+
     private readonly _flags = new Set<EntityFlag>();
 
     private readonly _pipelineBindGroups = new Map<GPURenderPipeline, GPUBindGroup>();
@@ -30,7 +33,8 @@ export class Entity extends EntityBase {
         this._name = data.name;
         this._mesh = data.mesh;
         // write id to buffer
-        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xd0, this.idUint32);
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xe0, this.idUint32);
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xd0, this._outlineColor.asF32Array);
         this.updateFlagsOnBuffer();
     }
 
@@ -54,7 +58,7 @@ export class Entity extends EntityBase {
 
     private updateFlagsOnBuffer() {
         const u32Flags = [...this._flags].reduce((prev, cur) => prev | cur, 0);
-        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xd4, new Uint32Array([u32Flags]));
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xe4, new Uint32Array([u32Flags]));
     }
 
     addFlag(flag: EntityFlag) {
@@ -79,6 +83,10 @@ export class Entity extends EntityBase {
     clearFlags() {
         this._flags.clear();
         this.updateFlagsOnBuffer();
+    }
+
+    hasFlag(flag: EntityFlag) {
+        return this._flags.has(flag);
     }
 
     registerChildren(...children: MatrixTransformative[]) {
@@ -114,6 +122,15 @@ export class Entity extends EntityBase {
     set overlayColor(color: Vec3) {
         this._overlayColor = color;
         device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xc0, this._overlayColor.asF32Array);
+    }
+
+    get outlineColor() {
+        return this._outlineColor;
+    }
+
+    set outlineColor(color: Vec4) {
+        this._outlineColor = color;
+        device.queue.writeBuffer(this.modelMatrixUniformBuffer, 0xd0, this._outlineColor.asF32Array);
     }
 
     set overlayIntensity(intensity: number) {
