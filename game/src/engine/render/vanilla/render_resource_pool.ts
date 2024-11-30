@@ -100,7 +100,7 @@ export class RenderResourcePool {
         this._outlineMask.texture = device.createTexture({
             label: 'render pool: outline mask',
             size: [resolution.full.x, resolution.full.y],
-            format: 'r32uint',
+            format: 'rgba8unorm',
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
 
