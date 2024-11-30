@@ -1,14 +1,42 @@
 @group(0) @binding(0) var outline_mask: texture_2d<f32>;
-@group(0) @binding(1) var outline_texture: texture_storage_2d<rgba8unorm, write>;
 
-@compute @workgroup_size(8, 8)
-fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
+struct VSOutput {
+    @builtin(position) position: vec4f,
+    @location(0) uv: vec2f
+};
+
+@vertex
+fn vertex(@builtin(vertex_index) vertexIndex : u32) -> VSOutput {
+    var output: VSOutput;
+
+    var pos = array(
+        vec2( 1.0,  1.0),
+        vec2( 1.0, -1.0),
+        vec2(-1.0, -1.0),
+        vec2( 1.0,  1.0),
+        vec2(-1.0, -1.0),
+        vec2(-1.0,  1.0)
+    );
+
+    var uv = array(
+        vec2(1.0, 0.0),
+        vec2(1.0, 1.0),
+        vec2(0.0, 1.0),
+        vec2(1.0, 0.0),
+        vec2(0.0, 1.0),
+        vec2(0.0, 0.0)
+    );
+
+    output.position = vec4f(pos[vertexIndex], 0.0, 1.0);
+    output.uv = uv[vertexIndex];
+
+    return output;
+}
+
+@fragment
+fn fragment(v: VSOutput) -> @location(0) vec4f {
     let tex_size = vec2<i32>(textureDimensions(outline_mask).xy);
-    let uv = vec2<i32>(global_id.xy);
-
-    if (uv.x >= tex_size.x || uv.y >= tex_size.y) {
-        return; // Ignore out-of-bounds threads
-    }
+    let uv = vec2<i32>(v.uv * vec2f(tex_size));
 
     let outline_color = textureLoad(outline_mask, uv, 0);
 
@@ -37,23 +65,21 @@ fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
         }
     }
 
-    // Write to the outline texture
-    if (number_neighbor_colors > 0u) {
-        // Also add the current color
-        if (outline_color.a != 0.0) {
-            neighbor_colors[number_neighbor_colors] = outline_color;
-            number_neighbor_colors++;
-        }
-
-        // Accumulate outline colors
-        let weight = 1.0 / f32(number_neighbor_colors);
-        var sum = vec4f(0.0);
-        for (var i = 0u; i < number_neighbor_colors; i++) {
-            sum += neighbor_colors[i] * weight;
-        }
-
-        textureStore(outline_texture, uv, sum);
-    } else {
-        textureStore(outline_texture, uv, vec4<f32>(0.0, 0.0, 0.0, 0.0));
+    if (number_neighbor_colors == 0u) {
+        discard;
     }
+
+    // Also add the current color
+    if (outline_color.a != 0.0) {
+        neighbor_colors[number_neighbor_colors] = outline_color;
+        number_neighbor_colors++;
+    }
+
+    // Get most predominant outline
+    var max_color = outline_color;
+    for (var i = 0u; i < number_neighbor_colors; i++) {
+        max_color = max(max_color, neighbor_colors[i]);
+    }
+
+    return max_color;
 }
