@@ -1,3 +1,4 @@
+import GavelIcon from '@mui/icons-material/Gavel';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,8 +34,11 @@ const LegalDisclaimerScreen: FunctionComponent<LegalDisclaimerScreenProps> = () 
             <Container maxWidth='md' className={style['disclaimer-screen']}>
                 <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100vh'}>
                     <Stack spacing={5}>
-                        <Box display={'flex'} justifyContent={'start'} alignItems={'end'} gap={2}>
-                            <Typography variant='h2'>{t('disclaimer:legal_title')}</Typography>
+                        <Box>
+                            <Typography variant='h2'>
+                                <GavelIcon fontSize='inherit' sx={{ verticalAlign: 'middle', marginRight: '0.5em' }} />
+                                {t('disclaimer:legal_title')}
+                            </Typography>
                             <Typography variant='caption'>
                                 {t('version')} {disclaimerVersion}
                             </Typography>
