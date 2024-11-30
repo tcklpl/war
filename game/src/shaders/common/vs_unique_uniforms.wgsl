@@ -3,6 +3,7 @@ struct VSUniqueUniforms {
     model_inverse: mat4x4f,
     previous_model: mat4x4f,
     overlay: vec4f,
+    outline_color: vec4f,
     id: u32,
     flags: u32,
 };
