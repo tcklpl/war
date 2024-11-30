@@ -108,7 +108,7 @@ export class RenderResourcePool {
             label: 'render pool: outline texture',
             size: [resolution.full.x, resolution.full.y],
             format: 'rgba8unorm',
-            usage: GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.TEXTURE_BINDING,
+            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
         });
 
         this._normalTexture.texture = device.createTexture({
