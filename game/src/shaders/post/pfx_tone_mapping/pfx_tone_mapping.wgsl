@@ -82,7 +82,7 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     var hdrColor = textureSample(pfx_hdr, pfx_sampler, v.uv).rgb;
     var bloomColor = textureSample(pfx_bloom, pfx_sampler, v.uv).rgb;
     var velocityTexel = textureSample(pfx_velocity, pfx_sampler, v.uv).rg;
-    var outlineTexel = textureSample(pfx_outline, pfx_sampler, v.uv).rgb;
+    var outlineTexel = textureSample(pfx_outline, pfx_sampler, v.uv);
 
     var texelSize = 1.0 / vec2f(textureDimensions(pfx_hdr));
 
@@ -135,8 +135,8 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
     }
 
     // Outline
-    if (all(outlineTexel != vec3f(0.0, 0.0, 0.0))) {
-        mapped = outlineTexel;
+    if (outlineTexel.a != 0.0) {
+        mapped = mix(mapped, outlineTexel.rgb, outlineTexel.a);
     }
 
     return vec4f(mapped, 1.0);
