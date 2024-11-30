@@ -8,6 +8,7 @@ import { RenderStageEnvironment } from './render_stages/rs_environment';
 import { RenderStageExposureCalculation } from './render_stages/rs_exposure_calculation';
 import { RenderStageLights } from './render_stages/rs_lights';
 import { RenderStageOutline } from './render_stages/rs_outline';
+import { RenderStageOutlineMask } from './render_stages/rs_outline_mask';
 import { RenderStagePFXToneMapping } from './render_stages/rs_pfx_tone_mapping';
 import { RenderStagePicking } from './render_stages/rs_picking';
 import { RenderStagePrePass } from './render_stages/rs_prepass';
@@ -17,35 +18,37 @@ import { RenderStageSSAO } from './render_stages/rs_ssao';
 import { RenderStageTAA } from './render_stages/rs_taa';
 
 export class VanillaRenderPipeline {
-    private readonly _rsPrepass = new RenderStagePrePass();
-    private readonly _rsLights = new RenderStageLights();
-    private readonly _rsSolidGeometry = new RenderStageSolidGeometry();
-    private readonly _rsSkybox = new RenderStageSkybox();
-    private readonly _rsExposureCalculation = new RenderStageExposureCalculation();
-    private readonly _rsSSAO = new RenderStageSSAO();
-    private readonly _rsEnvironment = new RenderStageEnvironment();
-    private readonly _rsTAA = new RenderStageTAA();
-    private readonly _rsBloom = new RenderStageBloom();
-    private readonly _rsOutline = new RenderStageOutline();
-    private readonly _rs_pfx_tonemap = new RenderStagePFXToneMapping();
-    private readonly _rsPicking = new RenderStagePicking();
-
     private _currentPipeline: RenderStage[] = [];
 
     buildPipeline(graphicsConfig: ConfigGraphics) {
+        const rsPrepass = new RenderStagePrePass();
+        const rsLights = new RenderStageLights();
+        const rsSolidGeometry = new RenderStageSolidGeometry();
+        const rsSkybox = new RenderStageSkybox();
+        const rsExposureCalculation = new RenderStageExposureCalculation();
+        const rsSSAO = new RenderStageSSAO();
+        const rsEnvironment = new RenderStageEnvironment();
+        const rsTAA = new RenderStageTAA();
+        const rsBloom = new RenderStageBloom();
+        const rsOutlineMask = new RenderStageOutlineMask();
+        const rsOutline = new RenderStageOutline();
+        const rs_pfx_tonemap = new RenderStagePFXToneMapping();
+        const rsPicking = new RenderStagePicking();
+
         this._currentPipeline = [
-            this._rsPrepass,
-            this._rsLights,
-            this._rsSolidGeometry,
-            this._rsSkybox,
-            ...(graphicsConfig.useSSAO ? [this._rsSSAO] : []),
-            this._rsEnvironment,
-            ...(graphicsConfig.useTAA ? [this._rsTAA] : []),
-            ...(graphicsConfig.useBloom ? [this._rsBloom] : []),
-            this._rsExposureCalculation,
-            this._rsOutline,
-            this._rs_pfx_tonemap,
-            this._rsPicking,
+            rsPrepass,
+            rsLights,
+            rsSolidGeometry,
+            rsSkybox,
+            ...(graphicsConfig.useSSAO ? [rsSSAO] : []),
+            rsEnvironment,
+            ...(graphicsConfig.useTAA ? [rsTAA] : []),
+            ...(graphicsConfig.useBloom ? [rsBloom] : []),
+            rsExposureCalculation,
+            rsOutlineMask,
+            rsOutline,
+            rs_pfx_tonemap,
+            rsPicking,
         ];
     }
 
