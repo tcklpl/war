@@ -29,7 +29,7 @@ Icons:
 - 🖥 Server logger is now fully customizable through the config file `server.json5`.
 - 🎮 **Shadow Filtering**: Configurable between Off (None), Low (PCF) and Medium (PCSS + PCF).
 - 🎮🔩 Entity Flag System, for 32 possible boolean flags.
-- 🎮 **Outlines**: Accessible via the new Entity Flag system.
+- 🎮 **Outlines**: Accessible via the new Entity Flag system and Entity `outlineColor` property.
 
 ### 🔨 Fixed
 
