@@ -21,7 +21,7 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
-## [Unreleased]
+## [0.5.0] - 2024-12-01
 
 ### ✨ New
 
@@ -45,6 +45,7 @@ Icons:
 - 🔩 GitHub Actions will now mark all closed versions as normal releases.
 - 🎮 Game shadow atlas resolution increased from 0.5k-4k to 1k-8k.
 - 🎮🔩 Renamed `RenderHDRBufferChain` to `TextureBufferChain` and made it more generic.
+- 🎮🔩 Wrote some more component smoke screen tests.
 - 🎮🔩⬆️ Updated `@vitejs/plugin-react-swc` to `3.7.2`.
 - 🎮🔩⬆️ Updated `@vitest/coverage-v8` to `2.1.6`.
 - 🎮🔩⬆️ Updated `eslint` to `9.16.0`.
