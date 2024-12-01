@@ -8,7 +8,7 @@ export class CommandConfig extends Command {
         this.registerSubroute(new CommandConfigReload(logger.createChildContext('Reload')));
     }
 
-    execute(data: CommandExecutionData): boolean {
+    execute(_data: CommandExecutionData): boolean {
         return false;
     }
 }

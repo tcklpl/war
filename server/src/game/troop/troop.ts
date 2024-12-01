@@ -1,4 +1,1 @@
-
-export class Troop {
-
-}
+export class Troop {}

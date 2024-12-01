@@ -1,8 +1,7 @@
-import { ServerPacket } from "../server_packet";
+import { ServerPacket } from '../server_packet';
 
-export class ServerPacketInitialTerritorySelectionTurn extends ServerPacket<"gInitialTerritorySelectionTurn"> {
-
+export class ServerPacketInitialTerritorySelectionTurn extends ServerPacket<'gInitialTerritorySelectionTurn'> {
     constructor(currentPlayer: string, timeout: number) {
-        super("gInitialTerritorySelectionTurn", currentPlayer, timeout);
+        super('gInitialTerritorySelectionTurn', currentPlayer, timeout);
     }
 }
