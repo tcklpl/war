@@ -9,7 +9,7 @@ export class GameSaveService {
         this._gsDao = pm.dao.gameSave;
     }
 
-    async save(game: Game) {
+    async save(_game: Game) {
         // TODO: save
     }
 }

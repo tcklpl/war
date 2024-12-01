@@ -10,7 +10,7 @@ export class PartySocialism extends Party {
         return ['moscow'];
     }
 
-    calculateAllowedTurnActionsForPhase(phase: TurnPhase): TurnAllowedActions {
+    calculateAllowedTurnActionsForPhase(_phase: TurnPhase): TurnAllowedActions {
         throw new Error('Method not implemented.');
     }
 

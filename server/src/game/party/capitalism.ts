@@ -10,7 +10,7 @@ export class PartyCapitalism extends Party {
         return ['california'];
     }
 
-    calculateAllowedTurnActionsForPhase(phase: TurnPhase): TurnAllowedActions {
+    calculateAllowedTurnActionsForPhase(_phase: TurnPhase): TurnAllowedActions {
         throw new Error('Method not implemented.');
     }
 

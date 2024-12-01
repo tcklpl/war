@@ -1,8 +1,7 @@
-import { ServerPacket } from "../server_packet";
+import { ServerPacket } from '../server_packet';
 
-export class ServerPacketStartingGame extends ServerPacket<"lStartingGame"> {
-
+export class ServerPacketStartingGame extends ServerPacket<'lStartingGame'> {
     constructor(seconds: number) {
-        super("lStartingGame", seconds);
+        super('lStartingGame', seconds);
     }
 }

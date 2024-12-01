@@ -21,7 +21,7 @@ Icons:
 - 🔩 Dev-related.
 - ⬆️ Package or dependency update.
 
-## [Unreleased]
+## [0.5.0] - 2024-12-01
 
 ### ✨ New
 
@@ -30,6 +30,7 @@ Icons:
 - 🎮 **Shadow Filtering**: Configurable between Off (None), Low (PCF) and Medium (PCSS + PCF).
 - 🎮🔩 Entity Flag System, for 32 possible boolean flags.
 - 🎮 **Outlines**: Accessible via the new Entity Flag system and Entity `outlineColor` property.
+- 🎮 Legal disclaimer screen.
 
 ### 🔨 Fixed
 
@@ -44,9 +45,10 @@ Icons:
 - 🔩 GitHub Actions will now mark all closed versions as normal releases.
 - 🎮 Game shadow atlas resolution increased from 0.5k-4k to 1k-8k.
 - 🎮🔩 Renamed `RenderHDRBufferChain` to `TextureBufferChain` and made it more generic.
+- 🎮🔩 Wrote some more component smoke screen tests.
 - 🎮🔩⬆️ Updated `@vitejs/plugin-react-swc` to `3.7.2`.
 - 🎮🔩⬆️ Updated `@vitest/coverage-v8` to `2.1.6`.
-- 🎮🔩⬆️ Updated `eslint` to `9.15.0`.
+- 🎮🔩⬆️ Updated `eslint` to `9.16.0`.
 - 🎮🔩⬆️ Updated `happy-dom` to `15.11.7`.
 - 🎮🔩⬆️ Updated `prettier` to `3.4.1`.
 - 🎮🔩⬆️ Updated `typescript` to `5.7.2`.
@@ -60,8 +62,11 @@ Icons:
 - 🎮🔩⬆️ Updated `@mui/material` to `6.1.9`.
 - 🎮🔩⬆️ Updated `@petamoriken/float16` to `3.9.0`.
 - 🎮🔩⬆️ Updated `i18next` to `24.0.2`.
-- 🎮🔩⬆️ Updated `react-i18next` to `15.1.2`.
+- 🎮🔩⬆️ Updated `react-i18next` to `15.1.3`.
 - 🎮🔩⬆️ Updated `react-router-dom` to `7.0.1`.
+- 🖥🔩⬆️ Updated `@types/bun` to `1.1.14`.
+- 🖥🔩⬆️ Updated `typescript-eslint` to `8.16.0`.
+- 🖥🔩⬆️ Updated `drizzle-orm` to `0.36.4`.
 
 ## [0.4.0] - 2024-11-15
 

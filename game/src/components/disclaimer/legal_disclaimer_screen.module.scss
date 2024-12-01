@@ -1,0 +1,6 @@
+@import '../../style/constants.scss';
+
+.disclaimer-screen {
+    height: 100vh;
+    z-index: $z-index-disclaimers;
+}
