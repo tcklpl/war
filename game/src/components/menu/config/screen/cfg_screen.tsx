@@ -4,7 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MonitorIcon from '@mui/icons-material/Monitor';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
-import { Alert, Box, Stack, ToggleButton, ToggleButtonGroup, useTheme } from '@mui/material';
+import { Alert, Box, Fade, Slide, Stack, ToggleButton, ToggleButtonGroup, useTheme } from '@mui/material';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -41,36 +41,46 @@ const CfgScreen: React.FC<IPropsCfgScreen> = ({ showReturnToMenu }) => {
             sx={{ flexDirection: 'column', display: 'flex' }}
         >
             <Box className={style.header}>
-                <Stack spacing={2} alignItems={'center'}>
-                    <ToggleButtonGroup
-                        color='primary'
-                        exclusive
-                        onChange={(e, alignment) => setAlignment(alignment)}
-                        value={alignment}
-                    >
-                        {showReturnToMenu && (
-                            <ToggleButton value={'menu'} onClick={() => navigate('/')}>
-                                <ArrowBackIcon style={{ marginRight: '0.5em' }} /> {t('common:back_to_menu')}
-                            </ToggleButton>
-                        )}
+                <Fade in timeout={100}>
+                    <Stack spacing={2} alignItems={'center'}>
+                        <Slide in direction='down' timeout={200}>
+                            <ToggleButtonGroup
+                                color='primary'
+                                exclusive
+                                onChange={(e, alignment) => setAlignment(alignment)}
+                                value={alignment}
+                            >
+                                {showReturnToMenu && (
+                                    <ToggleButton value={'menu'} onClick={() => navigate('/')}>
+                                        <ArrowBackIcon style={{ marginRight: '0.5em' }} /> {t('common:back_to_menu')}
+                                    </ToggleButton>
+                                )}
 
-                        <ToggleButton value={'display'} onClick={() => setCurrentConfigScreen(<CfgDisplayScreen />)}>
-                            <MonitorIcon style={{ marginRight: '0.5em' }} /> {t('config:display')}
-                        </ToggleButton>
+                                <ToggleButton
+                                    value={'display'}
+                                    onClick={() => setCurrentConfigScreen(<CfgDisplayScreen />)}
+                                >
+                                    <MonitorIcon style={{ marginRight: '0.5em' }} /> {t('config:display')}
+                                </ToggleButton>
 
-                        <ToggleButton value={'graphics'} onClick={() => setCurrentConfigScreen(<CfgGraphicsScreen />)}>
-                            <ViewInArIcon style={{ marginRight: '0.5em' }} /> {t('config:graphics')}
-                        </ToggleButton>
+                                <ToggleButton
+                                    value={'graphics'}
+                                    onClick={() => setCurrentConfigScreen(<CfgGraphicsScreen />)}
+                                >
+                                    <ViewInArIcon style={{ marginRight: '0.5em' }} /> {t('config:graphics')}
+                                </ToggleButton>
 
-                        <ToggleButton value={'game'} onClick={() => setCurrentConfigScreen(<CfgGameScreen />)}>
-                            <SportsEsportsIcon style={{ marginRight: '0.5em' }} /> {t('config:game')}
-                        </ToggleButton>
-                    </ToggleButtonGroup>
+                                <ToggleButton value={'game'} onClick={() => setCurrentConfigScreen(<CfgGameScreen />)}>
+                                    <SportsEsportsIcon style={{ marginRight: '0.5em' }} /> {t('config:game')}
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </Slide>
 
-                    {!gameInstance?.engine.db.isAvailable ? (
-                        <Alert severity='warning'>{t('config:no_idb')}</Alert>
-                    ) : undefined}
-                </Stack>
+                        {!gameInstance?.engine.db.isAvailable ? (
+                            <Alert severity='warning'>{t('config:no_idb')}</Alert>
+                        ) : undefined}
+                    </Stack>
+                </Fade>
             </Box>
 
             <Box flexGrow={1}>{currentConfigScreen}</Box>

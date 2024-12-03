@@ -1,7 +1,8 @@
 import { useConfig } from ':hooks/use_config';
-import { Grid2, Switch, Table, TableBody, TableCell, TableRow, Typography, useTheme } from '@mui/material';
+import { Grid2, Grow, Switch, Table, TableBody, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ConfigLabel from '../config_label/config_label';
 import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgGameScreen: React.FC = () => {
@@ -45,51 +46,47 @@ const CfgGameScreen: React.FC = () => {
         return `${b.toFixed(b < 10 && unitIndex > 0 ? 1 : 0)} ${units[unitIndex]}`;
     };
 
+    const cacheAssetsDescription = t('config:game_loading_cache_assets_desc')
+        .replace(
+            '<USAGE>',
+            usedStorage !== -1
+                ? `${convertBytesToName(usedStorage)}`
+                : t('config:game_loading_cache_assets_desc_failed_to_calculate_usage'),
+        )
+        .replace(
+            '<ASSET_NO>',
+            usedStorageAssetCount !== -1
+                ? `${usedStorageAssetCount}`
+                : t('config:game_loading_cache_assets_desc_failed_to_calculate_usage'),
+        )
+        .replace(
+            '<ASSET_PLURAL>',
+            usedStorageAssetCount > 1
+                ? t('config:game_loading_cache_assets_desc_asset_plural')
+                : t('config:game_loading_cache_assets_desc_asset_singular'),
+        );
+
     return (
         <Grid2 container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
             <Grid2 size={{ xs: 8 }}>
-                <Typography variant='h5'>{t('config:game_loading')}</Typography>
+                <Grow in timeout={100}>
+                    <Typography variant='h5'>{t('config:game_loading')}</Typography>
+                </Grow>
                 <Table>
                     <TableBody>
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:game_loading_cache_assets'),
-                                    content: t('config:game_loading_cache_assets_desc')
-                                        .replace(
-                                            '<USAGE>',
-                                            usedStorage !== -1
-                                                ? `${convertBytesToName(usedStorage)}`
-                                                : t('config:game_loading_cache_assets_desc_failed_to_calculate_usage'),
-                                        )
-                                        .replace(
-                                            '<ASSET_NO>',
-                                            usedStorageAssetCount !== -1
-                                                ? `${usedStorageAssetCount}`
-                                                : t('config:game_loading_cache_assets_desc_failed_to_calculate_usage'),
-                                        )
-                                        .replace(
-                                            '<ASSET_PLURAL>',
-                                            usedStorageAssetCount > 1
-                                                ? t('config:game_loading_cache_assets_desc_asset_plural')
-                                                : t('config:game_loading_cache_assets_desc_asset_singular'),
-                                        ),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        <ConfigLabel
+                            title={t('config:game_loading_cache_assets')}
+                            description={cacheAssetsDescription}
+                            animationDelay={200}
+                            setTooltip={setCurrentTooltip}
                         >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:game_loading_cache_assets')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Switch
-                                    checked={cacheAssets}
-                                    onChange={e => {
-                                        setCacheAssets(e.target.checked);
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
+                            <Switch
+                                checked={cacheAssets}
+                                onChange={e => {
+                                    setCacheAssets(e.target.checked);
+                                }}
+                            />
+                        </ConfigLabel>
                     </TableBody>
                 </Table>
             </Grid2>

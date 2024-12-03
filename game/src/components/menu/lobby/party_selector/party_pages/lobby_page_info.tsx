@@ -80,8 +80,8 @@ const LobbyPageInfo = () => {
             </Typography>
 
             <Stepper activeStep={currentStep} orientation='vertical' sx={{ width: '100%' }}>
-                {stepperSteps.map((step, index) => (
-                    <Step key={index}>
+                {stepperSteps.map(step => (
+                    <Step key={step.label}>
                         <StepLabel>{step.label}</StepLabel>
                         <StepContent>
                             <Typography>{step.description}</Typography>

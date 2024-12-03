@@ -2,19 +2,19 @@ import { useConfig } from ':hooks/use_config';
 import {
     Box,
     Grid2,
+    Grow,
     MenuItem,
     Select,
     Slider,
     Switch,
     Table,
     TableBody,
-    TableCell,
-    TableRow,
     Typography,
     useTheme,
 } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ConfigLabel from '../config_label/config_label';
 import CfgTooltip from '../tooltip/cfg_tooltip';
 
 const CfgGraphicsScreen: React.FC = () => {
@@ -67,228 +67,166 @@ const CfgGraphicsScreen: React.FC = () => {
     return (
         <Grid2 container style={{ backgroundColor: palette.background.default }} className='cfg-display-screen'>
             <Grid2 size={{ xs: 8 }}>
-                <Typography variant='h5'>{t('config:graphics_rendering')}</Typography>
+                <Grow in timeout={100}>
+                    <Typography variant='h5'>{t('config:graphics_rendering')}</Typography>
+                </Grow>
                 <Table>
                     <TableBody>
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_rendering_shadows'),
-                                    content: t('config:graphics_rendering_shadows_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        {/* Shadows */}
+                        <ConfigLabel
+                            title={t('config:graphics_rendering_shadows')}
+                            description={t('config:graphics_rendering_shadows_desc')}
+                            animationDelay={200}
+                            setTooltip={setCurrentTooltip}
                         >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:graphics_rendering_shadows')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Select
-                                    value={shadowQuality}
-                                    onChange={e => {
-                                        setShadowQuality(e.target.value as number);
-                                    }}
-                                >
-                                    <MenuItem value={0}>{t('config:generic_off')}</MenuItem>
-                                    <MenuItem value={1}>{t('config:generic_very_low')}</MenuItem>
-                                    <MenuItem value={2}>{t('config:generic_low')}</MenuItem>
-                                    <MenuItem value={3}>{t('config:generic_medium')}</MenuItem>
-                                    <MenuItem value={4}>{t('config:generic_high')}</MenuItem>
-                                </Select>
-                            </TableCell>
-                        </TableRow>
+                            <Select
+                                value={shadowQuality}
+                                onChange={e => {
+                                    setShadowQuality(e.target.value as number);
+                                }}
+                            >
+                                <MenuItem value={0}>{t('config:generic_off')}</MenuItem>
+                                <MenuItem value={1}>{t('config:generic_very_low')}</MenuItem>
+                                <MenuItem value={2}>{t('config:generic_low')}</MenuItem>
+                                <MenuItem value={3}>{t('config:generic_medium')}</MenuItem>
+                                <MenuItem value={4}>{t('config:generic_high')}</MenuItem>
+                            </Select>
+                        </ConfigLabel>
+
+                        {/* Shadow filtering */}
+                        <ConfigLabel
+                            title={t('config:graphics_rendering_shadow_filtering')}
+                            description={t('config:graphics_rendering_shadow_filtering_desc')}
+                            animationDelay={300}
+                            setTooltip={setCurrentTooltip}
+                        >
+                            <Select
+                                value={shadowFilteringQuality}
+                                disabled={!shadowQuality}
+                                onChange={e => {
+                                    setShadowFilteringQuality(e.target.value as number);
+                                }}
+                            >
+                                <MenuItem value={0}>{t('config:generic_off')}</MenuItem>
+                                <MenuItem value={1}>{t('config:generic_low')}</MenuItem>
+                                <MenuItem value={2}>{t('config:generic_medium')}</MenuItem>
+                            </Select>
+                        </ConfigLabel>
+
+                        {/* Shader quality */}
+                        <ConfigLabel
+                            title={t('config:graphics_rendering_shaders')}
+                            description={t('config:graphics_rendering_shaders_desc')}
+                            animationDelay={400}
+                            setTooltip={setCurrentTooltip}
+                        >
+                            <Select
+                                value={shaderQuality}
+                                onChange={e => {
+                                    setShaderQuality(e.target.value as number);
+                                }}
+                            >
+                                <MenuItem value={1}>{t('config:generic_low')}</MenuItem>
+                                <MenuItem value={2}>{t('config:generic_medium')}</MenuItem>
+                            </Select>
+                        </ConfigLabel>
                     </TableBody>
                 </Table>
 
+                <Grow in timeout={500}>
+                    <Typography variant='h5' style={{ marginTop: '1em' }}>
+                        {t('config:graphics_post_effects')}
+                    </Typography>
+                </Grow>
                 <Table>
                     <TableBody>
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_rendering_shadow_filtering'),
-                                    content: t('config:graphics_rendering_shadow_filtering_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        {/* SSAO */}
+                        <ConfigLabel
+                            title={t('config:graphics_post_effects_ssao')}
+                            description={t('config:graphics_post_effects_ssao_desc')}
+                            animationDelay={600}
+                            setTooltip={setCurrentTooltip}
                         >
-                            <TableCell>
-                                <Typography variant='body1'>
-                                    {t('config:graphics_rendering_shadow_filtering')}
-                                </Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Select
-                                    value={shadowFilteringQuality}
-                                    disabled={!shadowQuality}
-                                    onChange={e => {
-                                        setShadowFilteringQuality(e.target.value as number);
-                                    }}
-                                >
-                                    <MenuItem value={0}>{t('config:generic_off')}</MenuItem>
-                                    <MenuItem value={1}>{t('config:generic_low')}</MenuItem>
-                                    <MenuItem value={2}>{t('config:generic_medium')}</MenuItem>
-                                </Select>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
+                            <Switch
+                                checked={useSSAO}
+                                onChange={e => {
+                                    setUseSSAO(e.target.checked);
+                                }}
+                            />
+                        </ConfigLabel>
 
-                <Table>
-                    <TableBody>
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_rendering_shaders'),
-                                    content: t('config:graphics_rendering_shaders_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        {/* Bloom */}
+                        <ConfigLabel
+                            title={t('config:graphics_post_effects_bloom')}
+                            description={t('config:graphics_post_effects_bloom_desc')}
+                            animationDelay={700}
+                            setTooltip={setCurrentTooltip}
                         >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:graphics_rendering_shaders')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Select
-                                    value={shaderQuality}
-                                    onChange={e => {
-                                        setShaderQuality(e.target.value as number);
-                                    }}
-                                >
-                                    <MenuItem value={1}>{t('config:generic_low')}</MenuItem>
-                                    <MenuItem value={2}>{t('config:generic_medium')}</MenuItem>
-                                </Select>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
+                            <Switch
+                                checked={useBloom}
+                                onChange={e => {
+                                    setUseBloom(e.target.checked);
+                                }}
+                            />
+                        </ConfigLabel>
 
-                <Typography variant='h5' style={{ marginTop: '1em' }}>
-                    {t('config:graphics_post_effects')}
-                </Typography>
-                <Table>
-                    <TableBody>
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_post_effects_ssao'),
-                                    content: t('config:graphics_post_effects_ssao_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        {/* TAA */}
+                        <ConfigLabel
+                            title={t('config:graphics_post_effects_taa')}
+                            description={t('config:graphics_post_effects_taa_desc')}
+                            animationDelay={800}
+                            setTooltip={setCurrentTooltip}
                         >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:graphics_post_effects_ssao')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Switch
-                                    checked={useSSAO}
-                                    onChange={e => {
-                                        setUseSSAO(e.target.checked);
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
+                            <Switch
+                                checked={useTAA}
+                                onChange={e => {
+                                    setUseTAA(e.target.checked);
+                                }}
+                            />
+                        </ConfigLabel>
 
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_post_effects_bloom'),
-                                    content: t('config:graphics_post_effects_bloom_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        {/* Motion blur */}
+                        <ConfigLabel
+                            title={t('config:graphics_post_effects_motion_blur')}
+                            description={t('config:graphics_post_effects_motion_blur_desc')}
+                            animationDelay={900}
+                            setTooltip={setCurrentTooltip}
                         >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:graphics_post_effects_bloom')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Switch
-                                    checked={useBloom}
-                                    onChange={e => {
-                                        setUseBloom(e.target.checked);
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
-
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_post_effects_taa'),
-                                    content: t('config:graphics_post_effects_taa_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
-                        >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:graphics_post_effects_taa')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Switch
-                                    checked={useTAA}
-                                    onChange={e => {
-                                        setUseTAA(e.target.checked);
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
-
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_post_effects_motion_blur'),
-                                    content: t('config:graphics_post_effects_motion_blur_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
-                        >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:graphics_post_effects_motion_blur')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Box display={'flex'}>
-                                    <Box flexGrow={1}>
-                                        <Slider
-                                            size='small'
-                                            min={0}
-                                            max={1}
-                                            step={0.01}
-                                            value={motionBlurAmount}
-                                            onChange={(e, val) => {
-                                                setMotionBlurAmount(val as number);
-                                            }}
-                                        />
-                                    </Box>
-                                    <Box paddingLeft={1}>
-                                        <Typography variant='body1' width='4em'>
-                                            {(motionBlurAmount * 100).toFixed(0)}%
-                                        </Typography>
-                                    </Box>
+                            <Box display={'flex'}>
+                                <Box flexGrow={1}>
+                                    <Slider
+                                        size='small'
+                                        min={0}
+                                        max={1}
+                                        step={0.01}
+                                        value={motionBlurAmount}
+                                        onChange={(e, val) => {
+                                            setMotionBlurAmount(val as number);
+                                        }}
+                                    />
                                 </Box>
-                            </TableCell>
-                        </TableRow>
+                                <Box paddingLeft={1}>
+                                    <Typography variant='body1' width='4em'>
+                                        {(motionBlurAmount * 100).toFixed(0)}%
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </ConfigLabel>
 
-                        <TableRow
-                            onMouseEnter={() =>
-                                setCurrentTooltip({
-                                    title: t('config:graphics_post_effects_film_grain'),
-                                    content: t('config:graphics_post_effects_film_grain_desc'),
-                                })
-                            }
-                            onMouseLeave={() => setCurrentTooltip(undefined)}
+                        {/* Film grain */}
+                        <ConfigLabel
+                            title={t('config:graphics_post_effects_film_grain')}
+                            description={t('config:graphics_post_effects_film_grain_desc')}
+                            animationDelay={1000}
+                            setTooltip={setCurrentTooltip}
                         >
-                            <TableCell>
-                                <Typography variant='body1'>{t('config:graphics_post_effects_film_grain')}</Typography>
-                            </TableCell>
-                            <TableCell align='right'>
-                                <Switch
-                                    checked={useFilmGrain}
-                                    onChange={e => {
-                                        setUseFilmGrain(e.target.checked);
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
+                            <Switch
+                                checked={useFilmGrain}
+                                onChange={e => {
+                                    setUseFilmGrain(e.target.checked);
+                                }}
+                            />
+                        </ConfigLabel>
                     </TableBody>
                 </Table>
             </Grid2>
