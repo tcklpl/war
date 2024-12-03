@@ -69,6 +69,7 @@ jobs:
           body: ${{ steps.extract-release-notes.outputs.release_notes }}
           prerelease: ${{ inputs.prerelease }}
           tag_name: ${{ github.ref_name }}
+          make_latest: ${{ !inputs.prerelease }}
           files: ./binaries/*
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
