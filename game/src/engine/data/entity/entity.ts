@@ -142,4 +142,15 @@ export class Entity extends EntityBase {
             new Float32Array([this._overlayIntensity]),
         );
     }
+
+    private readonly entityAnimations = {
+        ...super.animationStrings,
+        encoders: {
+            ...super.animationStrings.encoders,
+        },
+    };
+
+    get animationStrings() {
+        return this.entityAnimations;
+    }
 }

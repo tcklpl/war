@@ -88,7 +88,7 @@ export class AnimationPlayback<T extends Animatable> {
             const getter = this._animation.getGetterByTransformationTarget(target);
             const setter = this._animation.getSetterByTransformationTarget(target);
 
-            let value = this._target.animation.getters[getter]();
+            let value = this._target.animationStrings.getters[getter]();
             if (this._animation.startsAt === 'absolute') {
                 const firstValue = this._animation.assertGetKeyframesFor(target)[0];
                 value = firstValue.target.value;

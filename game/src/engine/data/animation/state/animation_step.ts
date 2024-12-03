@@ -22,13 +22,16 @@ export class AnimationStep<T extends Animatable> {
         return this._deltas;
     }
 
-    do(deltaDefinition: (encoders: T['animation']['encoders']) => EncodedAnimationTarget[]) {
-        const newDeltas = deltaDefinition(this._parentAnimationBuilder.target.animation.encoders);
+    do(deltaDefinition: (encoders: T['animationStrings']['encoders']) => EncodedAnimationTarget[]) {
+        const newDeltas = deltaDefinition(this._parentAnimationBuilder.target.animationStrings.encoders);
         if (!this.validateDeltas(newDeltas))
             throw new DuplicateAnimationDeltasError(
                 `Trying to define duplicate deltas on animation ${this._parentAnimationBuilder.name}`,
             );
-        this._deltas = [...this._deltas, ...deltaDefinition(this._parentAnimationBuilder.target.animation.encoders)];
+        this._deltas = [
+            ...this._deltas,
+            ...deltaDefinition(this._parentAnimationBuilder.target.animationStrings.encoders),
+        ];
         return this;
     }
 

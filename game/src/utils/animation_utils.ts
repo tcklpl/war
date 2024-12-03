@@ -104,10 +104,10 @@ export class AnimationUtils {
         let apply: (value: any) => void;
         switch (value.type) {
             case 'setter':
-                apply = object.animation.setters[value.setter];
+                apply = object.animationStrings.setters[value.setter];
                 break;
             case 'incrementor':
-                apply = object.animation.accumulators[value.setter];
+                apply = object.animationStrings.accumulators[value.setter];
                 break;
         }
         apply(value.value);

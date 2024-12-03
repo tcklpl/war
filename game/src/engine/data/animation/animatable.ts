@@ -12,7 +12,7 @@ export type AnimationInterpolation = 'step' | 'linear';
  * already implemented by base classes such as MatrixTransformative.
  */
 export interface Animatable {
-    animation: {
+    get animationStrings(): {
         encoders: {
             [key: string]: (value: any, interpolation?: AnimationInterpolation) => EncodedAnimationTarget;
         };

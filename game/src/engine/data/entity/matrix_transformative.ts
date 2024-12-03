@@ -153,7 +153,7 @@ export class MatrixTransformative implements Animatable {
         return this._windingOrder;
     }
 
-    readonly animation = {
+    private readonly animation = {
         encoders: {
             translate(by: Vec3, interpolation: AnimationInterpolation = 'linear') {
                 return {
@@ -250,4 +250,8 @@ export class MatrixTransformative implements Animatable {
             },
         },
     };
+
+    get animationStrings() {
+        return this.animation;
+    }
 }
