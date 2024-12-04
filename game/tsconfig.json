@@ -1,31 +1,33 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "lib": ["dom", "dom.iterable", "esnext"],
-        "allowJs": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "allowImportingTsExtensions": true,
-        "jsx": "react-jsx",
-        "types": ["@webgpu/types", "@testing-library/jest-dom", "vite-plugin-svgr/client", "vitest/globals"],
-        "plugins": [{ "name": "typescript-plugin-css-modules" }],
-        "paths": {
-            ":protocol": ["./../protocol/index.ts"],
-            ":engine/*": ["./src/engine/*"],
-            ":game/*": ["./src/game/*"],
-            ":icons/*": ["./src/images/icons/*"],
-            ":hooks/*": ["./src/hooks/*"]
-        }
-    },
-    "include": ["src"],
-    "references": [{ "path": "../protocol" }]
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react-jsx",
+    "types": ["@webgpu/types", "@testing-library/jest-dom", "vite-plugin-svgr/client", "vitest/globals"],
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "paths": {
+      ":protocol": ["./../protocol/index.ts"],
+      ":engine/*": ["./src/engine/*"],
+      ":game/*": ["./src/game/*"],
+      ":icons/*": ["./src/images/icons/*"],
+      ":hooks/*": ["./src/hooks/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "../protocol" }]
 }

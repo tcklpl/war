@@ -7,7 +7,7 @@ import { version } from './package.json';
 
 export default defineConfig({
     base: './',
-    plugins: [react(), svgr(), tsconfigPaths()],
+    plugins: [react({ tsDecorators: true, devTarget: 'esnext' }), svgr(), tsconfigPaths()],
     cacheDir: '../node_modules/.vite',
     envPrefix: 'WAR2_',
     build: {
