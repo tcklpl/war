@@ -5,6 +5,7 @@ export class PLGameConnectionToken extends PacketListener {
         this.socket.on('gGameSessionConnectionToken', token => {
             if (!this.server.currentLobby) return;
             if (game.state.server?.currentGameSession) game.state.server.currentGameSession.token = token;
+            game.events.dispatchEvent('onTest', 'teste 1');
         });
     }
 }

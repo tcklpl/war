@@ -1,4 +1,5 @@
-import { GamePauseReason, InitialGameStatePacket } from ':protocol';
+import { EventListener } from ':game/event/decorator/event_listener';
+import { type GamePauseReason, InitialGameStatePacket } from ':protocol';
 import { ClientPacketGMoveOn } from '../server/connection/packet/to_send/ingame/move_on';
 import { ClientPacketGPause } from '../server/connection/packet/to_send/ingame/pause';
 import { ClientPacketPing } from '../server/connection/packet/to_send/ingame/ping';
@@ -54,13 +55,16 @@ export class WarGameSession {
         new ClientPacketGMoveOn().dispatch();
     }
 
-    notifyGamePaused(reason: GamePauseReason) {
+    @EventListener('onGamePause')
+    onGamePause(reason: GamePauseReason) {
+        console.log(reason);
         this._pauseReason = reason;
         game.state.reactState.useGameSession.setGPauseReason(reason);
         game.engine.pauseRender();
     }
 
-    notifyGameResumed() {
+    @EventListener('onGameResume')
+    onGameResume() {
         this._pauseReason = undefined;
         game.state.reactState.useGameSession.setGPauseReason(undefined);
         game.engine.resumeRender();
