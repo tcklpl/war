@@ -19,7 +19,7 @@ import LobbyAdminConfigTitle from '../../admin/config_pages/components/lobby_adm
 const LobbyPartyPageSocialism = () => {
 	const { t } = useTranslation(['lobby', 'parties', 'common', 'countries']);
 	const { currentLobbyState } = useGameSession();
-	if (!currentLobbyState) return <></>;
+	if (!currentLobbyState) return;
 	const cfg = currentLobbyState.game_config.party_config.socialism;
 
 	return (

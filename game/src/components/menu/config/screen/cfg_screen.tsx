@@ -48,7 +48,7 @@ const CfgScreen: React.FC<IPropsCfgScreen> = ({ showReturnToMenu }) => {
 							<ToggleButtonGroup
 								color='primary'
 								exclusive
-								onChange={(e, alignment) => setAlignment(alignment)}
+								onChange={(_, alignment) => setAlignment(alignment)}
 								value={alignment}
 							>
 								{showReturnToMenu && (

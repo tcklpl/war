@@ -8,7 +8,7 @@ import LobbyAdminConfigTitle from '../../admin/config_pages/components/lobby_adm
 const LobbyPartyPageFeudalism = () => {
 	const { t } = useTranslation(['lobby', 'parties', 'common', 'countries']);
 	const { currentLobbyState } = useGameSession();
-	if (!currentLobbyState) return <></>;
+	if (!currentLobbyState) return;
 	const cfg = currentLobbyState.game_config.party_config.feudalism;
 
 	return (

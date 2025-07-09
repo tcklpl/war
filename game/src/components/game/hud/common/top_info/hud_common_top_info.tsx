@@ -1,10 +1,9 @@
 import { useGameSession } from ':hooks/use_game_session';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import SaveIcon from '@mui/icons-material/Save';
 import { Box, Button, Typography } from '@mui/material';
 import type { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
-import SaveIcon from '@mui/icons-material/Save';
 
 const HUDCommonTopInfo: FunctionComponent = () => {
 	const { username, currentLobbyState, currentGameSession } = useGameSession();
@@ -20,7 +19,7 @@ const HUDCommonTopInfo: FunctionComponent = () => {
 		currentGameSession?.saveGame();
 	};
 
-	if (!currentLobbyState) return <></>;
+	if (!currentLobbyState) return;
 	return (
 		<Box width='100%' height='100%' display='flex' flexDirection='column' bgcolor='background.paper'>
 			<Box display='flex' width='100%' height='100%' justifyContent='space-between'>

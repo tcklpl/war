@@ -1,16 +1,15 @@
+import { useConfirmation } from ':hooks/use_confirmation';
+import { useGame } from ':hooks/use_game';
 import { useGameSession } from ':hooks/use_game_session';
+import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
+import PublicIcon from '@mui/icons-material/Public';
 import { Box, Button, Container, Grid, Stack, Typography, useTheme } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import style from './lobby_select.module.scss';
-
-import { useConfirmation } from ':hooks/use_confirmation';
-import { useGame } from ':hooks/use_game';
-import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
-import PublicIcon from '@mui/icons-material/Public';
 import { useNavigate } from 'react-router-dom';
 import LobbyCard from './lobby_card';
+import style from './lobby_select.module.scss';
 import LobbySelectCreateLobby from './lobby_select_create_lobby';
 
 const LobbySelectScreen: React.FC = () => {
@@ -58,7 +57,11 @@ const LobbySelectScreen: React.FC = () => {
 						<Box display='flex' flexDirection='column'>
 							<Typography variant='h4'>
 								<PublicIcon
-									style={{ marginRight: '0.5em', fontSize: '1em', verticalAlign: 'middle' }}
+									style={{
+										marginRight: '0.5em',
+										fontSize: '1em',
+										verticalAlign: 'middle',
+									}}
 								/>
 								{t('lobby:lobbies')}
 							</Typography>

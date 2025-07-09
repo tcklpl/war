@@ -103,7 +103,10 @@ export class RenderStageExposureCalculation implements RenderStage {
 						{ binding: 1, resource: { buffer: uniformBuffer } },
 					],
 				});
-				this._reduceBindGroups.push({ buffer: uniformBuffer, bindGroup: chunkSumBindGroup });
+				this._reduceBindGroups.push({
+					buffer: uniformBuffer,
+					bindGroup: chunkSumBindGroup,
+				});
 			}
 		}
 

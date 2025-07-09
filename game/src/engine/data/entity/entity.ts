@@ -1,5 +1,6 @@
 import { PrincipledBSDFShader } from '../../../shaders/geometry/principled_bsdf/principled_bsdf_shader';
 import { MathUtils } from '../../../utils/math_utils';
+import type { AnimationInterpolation, EncodedAnimationTarget } from '../animation/animatable';
 import { Mat4 } from '../mat/mat4';
 import type { Mesh } from '../meshes/mesh';
 import type { PrimitiveDrawOptions } from '../meshes/primitive_draw_options';
@@ -7,7 +8,7 @@ import { identifiable } from '../traits/identifiable';
 import { puppet } from '../traits/puppet';
 import { Vec3 } from '../vec/vec3';
 import { Vec4 } from '../vec/vec4';
-import type { EntityFlag } from './entity_flag';
+import { EntityFlag } from './entity_flag';
 import { FrameListenerMatrixTransformative } from './frame_listener_matrix_transformative';
 import type { MatrixTransformative } from './matrix_transformative';
 
@@ -147,6 +148,72 @@ export class Entity extends EntityBase {
 		...super.animationStrings,
 		encoders: {
 			...super.animationStrings.encoders,
+			overlayColor(target: Vec3, interpolation: AnimationInterpolation = 'step') {
+				return {
+					target: 'overlayColor',
+					value: target,
+					type: 'setter',
+					getter: 'overlayColor',
+					setter: 'overlayColor',
+					interpolation,
+				} as EncodedAnimationTarget;
+			},
+			overlayIntensity(intensity: number, interpolation: AnimationInterpolation = 'step') {
+				return {
+					target: 'overlayIntensity',
+					value: intensity,
+					type: 'setter',
+					getter: 'overlayIntensity',
+					setter: 'overlayIntensity',
+					interpolation,
+				} as EncodedAnimationTarget;
+			},
+			outlineEnabled(enabled: boolean) {
+				return {
+					target: 'outlineEnabled',
+					value: enabled,
+					type: 'setter',
+					getter: 'outlineEnabled',
+					setter: 'outlineEnabled',
+					interpolation: 'step',
+				} as EncodedAnimationTarget;
+			},
+		},
+		getters: {
+			...super.animationStrings.getters,
+			overlayColor: () => {
+				return this._overlayColor;
+			},
+			overlayIntensity: () => {
+				return this._overlayIntensity;
+			},
+			outlineEnabled: () => {
+				return this.hasFlag(EntityFlag.OUTLINE);
+			},
+		},
+		setters: {
+			...super.animationStrings.setters,
+			overlayColor: (color: Vec3) => {
+				this.overlayColor = color;
+			},
+			overlayIntensity: (intensity: number) => {
+				this.overlayIntensity = intensity;
+			},
+			outlineEnabled: (enabled: boolean) => {
+				enabled ? this.addFlag(EntityFlag.OUTLINE) : this.removeFlag(EntityFlag.OUTLINE);
+			},
+		},
+		accumulators: {
+			...super.animationStrings.accumulators,
+			overlayColor: (color: Vec3) => {
+				this.overlayColor = this.overlayColor.add(color);
+			},
+			overlayIntensity: (intensity: number) => {
+				this.overlayIntensity += intensity;
+			},
+			outlineEnabled: (enabled: boolean) => {
+				enabled ? this.addFlag(EntityFlag.OUTLINE) : this.removeFlag(EntityFlag.OUTLINE);
+			},
 		},
 	};
 

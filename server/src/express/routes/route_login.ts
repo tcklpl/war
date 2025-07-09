@@ -1,5 +1,5 @@
 import type { cl_LoginRequest, sv_LoginResponseOK } from ':protocol';
-import { Joi, celebrate } from 'celebrate';
+import { celebrate, Joi } from 'celebrate';
 import { CfgServer } from '../../config/default/cfg_server';
 import { ExpressRoute } from './route';
 

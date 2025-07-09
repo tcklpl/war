@@ -19,7 +19,7 @@ const LobbyAdminConfigScreenSocialism = ({ disabled }: { disabled: boolean }) =>
 		});
 	}, [cfg, modifyLobbyState]);
 
-	if (!cfg) return <></>;
+	if (!cfg) return;
 
 	return currentLobbyState ? (
 		<Box width='100%' height='100%'>
@@ -323,9 +323,7 @@ const LobbyAdminConfigScreenSocialism = ({ disabled }: { disabled: boolean }) =>
 				</TableBody>
 			</Table>
 		</Box>
-	) : (
-		<></>
-	);
+	) : undefined;
 };
 
 export default LobbyAdminConfigScreenSocialism;

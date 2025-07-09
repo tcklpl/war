@@ -12,7 +12,12 @@ export class Atlas {
 	private _mappedRegions: MappedAtlasRegion[] = [];
 	private readonly _tree = new AtlasTree();
 
-	constructor(props: { resolution: number; format: GPUTextureFormat; usage: number; label?: string }) {
+	constructor(props: {
+		resolution: number;
+		format: GPUTextureFormat;
+		usage: number;
+		label?: string;
+	}) {
 		const resolution = MathUtils.clamp(1, device.limits.maxTextureDimension2D, props.resolution);
 		this._resolution = resolution;
 

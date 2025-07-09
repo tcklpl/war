@@ -1,9 +1,8 @@
+import { useGameSession } from ':hooks/use_game_session';
+import EditIcon from '@mui/icons-material/Edit';
 import { Divider, IconButton, InputBase, Paper } from '@mui/material';
 import type React from 'react';
 import { useCallback, useRef, useState } from 'react';
-
-import { useGameSession } from ':hooks/use_game_session';
-import EditIcon from '@mui/icons-material/Edit';
 
 const PlayerNameBox: React.FC = () => {
 	const { username, setUsername, saveGameSession } = useGameSession();

@@ -19,7 +19,7 @@ const HUDCommonPlayOrder: FunctionComponent = () => {
 		['capitalism', { name: t('parties:capitalism'), icon: <CapitalismIcon /> }],
 	]);
 
-	if (!currentGameSession) return <></>;
+	if (!currentGameSession) return;
 	return (
 		<Box width='100%' height='100%' display='flex' flexDirection='column' bgcolor='background.paper'>
 			<Typography color='primary' textAlign='center'>

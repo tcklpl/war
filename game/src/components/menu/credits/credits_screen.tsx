@@ -1,10 +1,9 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import { Box, Container, Grid, IconButton, Link, Stack, Typography, useTheme } from '@mui/material';
 import type { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import type { CreditScreenEntry } from './credit_screen_entry';
 
 const CreditsScreen: FunctionComponent = () => {
@@ -12,32 +11,69 @@ const CreditsScreen: FunctionComponent = () => {
 	const { palette } = useTheme();
 
 	const people = new Map<string, CreditScreenEntry>([
-		['tcklpl', { name: 'Luan Negroni Sibinel', alias: 'tcklpl', github: 'https://github.com/tcklpl' }],
+		[
+			'tcklpl',
+			{
+				name: 'Luan Negroni Sibinel',
+				alias: 'tcklpl',
+				github: 'https://github.com/tcklpl',
+			},
+		],
 		['Jão', { name: 'João Victor Martiniano', alias: 'Jão', github: '' }],
-		['Anakin86708', { name: 'Ariel Tadeu da Silva', alias: 'Getúlio', github: 'https://github.com/Anakin86708' }],
+		[
+			'Anakin86708',
+			{
+				name: 'Ariel Tadeu da Silva',
+				alias: 'Getúlio',
+				github: 'https://github.com/Anakin86708',
+			},
+		],
 		[
 			'Kesley',
-			{ name: 'Kesley Henrique Pereira Amorim', alias: 'Kesley', github: 'https://github.com/Kesley-Amorim' },
+			{
+				name: 'Kesley Henrique Pereira Amorim',
+				alias: 'Kesley',
+				github: 'https://github.com/Kesley-Amorim',
+			},
 		],
 		[
 			'renatojuniorrs',
-			{ name: 'Renato Donizeti Junior', alias: 'Renatinho', github: 'https://github.com/renatojuniorrs' },
+			{
+				name: 'Renato Donizeti Junior',
+				alias: 'Renatinho',
+				github: 'https://github.com/renatojuniorrs',
+			},
 		],
 		['Victor', { name: 'Victor Matheus Monteiro', alias: 'Victor 2', github: '' }],
 		[
 			'ElectroKhan',
-			{ name: 'Marcelo Davi Ferreira Pereira', alias: 'ElectroKhan', github: 'https://github.com/electrokhan' },
+			{
+				name: 'Marcelo Davi Ferreira Pereira',
+				alias: 'ElectroKhan',
+				github: 'https://github.com/electrokhan',
+			},
 		],
 		[
 			'Jader',
-			{ name: 'Jader Gedeon de Oliveira Rocha', alias: 'Redaji', github: 'https://github.com/JaderGedeon' },
+			{
+				name: 'Jader Gedeon de Oliveira Rocha',
+				alias: 'Redaji',
+				github: 'https://github.com/JaderGedeon',
+			},
 		],
-		['Greggman', { name: 'Greggman', alias: 'Greggman', github: 'https://github.com/greggman' }],
+		[
+			'Greggman',
+			{
+				name: 'Greggman',
+				alias: 'Greggman',
+				github: 'https://github.com/greggman',
+			},
+		],
 	]);
 
 	const nameToElement = (name: string) => {
 		const entry = people.get(name);
-		if (!entry) return <></>;
+		if (!entry) return;
 
 		const splitName = entry.name.split(' ');
 		const firstName = splitName[0];
@@ -54,7 +90,11 @@ const CreditsScreen: FunctionComponent = () => {
 					<Link href={entry.github} target='_blank' rel='noopener noreferrer'>
 						<GitHubIcon
 							color='secondary'
-							sx={{ verticalAlign: 'middle', marginLeft: '0.3em', marginRight: '0.3em' }}
+							sx={{
+								verticalAlign: 'middle',
+								marginLeft: '0.3em',
+								marginRight: '0.3em',
+							}}
 						/>
 					</Link>
 				)}

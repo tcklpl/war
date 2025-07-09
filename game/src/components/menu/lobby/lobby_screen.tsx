@@ -32,8 +32,8 @@ import {
 	useTheme,
 } from '@mui/material';
 import Tab from '@mui/material/Tab';
-import type { ReactElement } from 'react';
 import type React from 'react';
+import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -260,7 +260,7 @@ const LobbyScreen: React.FC = () => {
 					</Box>
 				</Box>
 			) : (
-				<>{t('lobby:loading_lobby_data')}</>
+				t('lobby:loading_lobby_data')
 			)}
 		</Grid>
 	);

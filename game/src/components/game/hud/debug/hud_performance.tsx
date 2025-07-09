@@ -109,9 +109,7 @@ const HUDPerformance: React.FC = () => {
 				)}
 			</CardContent>
 		</Card>
-	) : (
-		<></>
-	);
+	) : undefined;
 };
 
 export default HUDPerformance;

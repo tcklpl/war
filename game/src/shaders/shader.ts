@@ -9,7 +9,10 @@ export abstract class Shader {
 	}
 
 	protected async compileShader(source: string) {
-		const module = device.createShaderModule({ code: source, label: this._name });
+		const module = device.createShaderModule({
+			code: source,
+			label: this._name,
+		});
 		const info = await module.getCompilationInfo();
 
 		// if there's any compilation error

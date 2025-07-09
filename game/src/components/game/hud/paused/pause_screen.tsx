@@ -1,5 +1,6 @@
 import { useConfirmation } from ':hooks/use_confirmation';
 import {
+	alpha,
 	Box,
 	Button,
 	Container,
@@ -7,7 +8,6 @@ import {
 	ToggleButton,
 	ToggleButtonGroup,
 	Typography,
-	alpha,
 	useTheme,
 } from '@mui/material';
 import type { FunctionComponent } from 'react';
@@ -20,7 +20,11 @@ import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import SaveIcon from '@mui/icons-material/Save';
 
-type PauseScreenText = { reason: string; descOwner: string; descOthers: string };
+type PauseScreenText = {
+	reason: string;
+	descOwner: string;
+	descOthers: string;
+};
 type LobbyOwnerActions = 'keep paused' | 'save and exit' | 'move on';
 
 const PauseScreen: FunctionComponent = () => {
@@ -31,11 +35,15 @@ const PauseScreen: FunctionComponent = () => {
 	const isLobbyOwner =
 		currentGameSession?.initialGameState.players.find(p => p.name === username)?.is_lobby_owner ?? false;
 
-	const [text, setText] = useState<PauseScreenText>({ reason: '', descOwner: '', descOthers: '' });
+	const [text, setText] = useState<PauseScreenText>({
+		reason: '',
+		descOwner: '',
+		descOthers: '',
+	});
 	const [action, setAction] = useState<LobbyOwnerActions>('keep paused');
 	const [description, setDescription] = useState(t('ingame:pause_action_keep_paused_desc'));
 
-	const handleActionChange = (event: React.MouseEvent<HTMLElement>, newAction: LobbyOwnerActions) => {
+	const handleActionChange = (_: React.MouseEvent<HTMLElement>, newAction: LobbyOwnerActions) => {
 		setAction(newAction);
 		switch (newAction) {
 			case 'keep paused':
@@ -80,7 +88,11 @@ const PauseScreen: FunctionComponent = () => {
 	};
 
 	useEffect(() => {
-		const newText: PauseScreenText = { reason: '', descOwner: '', descOthers: '' };
+		const newText: PauseScreenText = {
+			reason: '',
+			descOwner: '',
+			descOthers: '',
+		};
 
 		if (gPauseReason === 'player disconnected') {
 			newText.reason = t('ingame:pause_reason_disconnect');
@@ -95,11 +107,14 @@ const PauseScreen: FunctionComponent = () => {
 		setText(newText);
 	}, [gPauseReason, t]);
 
-	if (!gIsPaused) return <></>;
+	if (!gIsPaused) return;
 	return (
 		<Box
 			className='pause-screen-outer'
-			sx={{ background: alpha(palette.background.default, 0.8), pointerEvents: 'all' }}
+			sx={{
+				background: alpha(palette.background.default, 0.8),
+				pointerEvents: 'all',
+			}}
 		>
 			<Container className='pause-screen-container'>
 				<Box className='pause-screen-inner'>

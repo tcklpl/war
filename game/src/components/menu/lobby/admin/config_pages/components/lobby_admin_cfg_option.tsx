@@ -22,9 +22,9 @@ type LobbyAdminConfigOptions =
 			setter: (value: boolean) => void;
 	  };
 
-const LobbyAdminConfigOption: React.FC<{ options: LobbyAdminConfigOptions & LobbyAdminConfigCommonOptions }> = ({
-	options,
-}) => {
+const LobbyAdminConfigOption: React.FC<{
+	options: LobbyAdminConfigOptions & LobbyAdminConfigCommonOptions;
+}> = ({ options }) => {
 	const handleNumber = (val: string) => {
 		if (!val) return;
 		if (options.type === 'number') {

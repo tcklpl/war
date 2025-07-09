@@ -23,7 +23,12 @@ export class RenderStageSolidGeometry implements RenderStage {
 		this._sceneBindGroupOptions = new SceneInfoBindGroupOptions(PrincipledBSDFShader.BINDING_GROUPS.SCENE_INFO)
 			.includeDirectionalLights(0)
 			.includePointLights(1)
-			.includeExtras([{ binding: 2, resource: resources.renderResourcePool.shadowMapAtlas.texture.view }]);
+			.includeExtras([
+				{
+					binding: 2,
+					resource: resources.renderResourcePool.shadowMapAtlas.texture.view,
+				},
+			]);
 
 		this._pipelineCW = await this.createPipeline('cw', resources.renderResourcePool.hdrTextureFormat);
 		this._pipelineCCW = await this.createPipeline('ccw', resources.renderResourcePool.hdrTextureFormat);

@@ -201,8 +201,8 @@ const CfgGraphicsScreen: React.FC = () => {
 										max={1}
 										step={0.01}
 										value={motionBlurAmount}
-										onChange={(e, val) => {
-											setMotionBlurAmount(val as number);
+										onChange={(_, val) => {
+											setMotionBlurAmount(val);
 										}}
 									/>
 								</Box>

@@ -1,19 +1,18 @@
 import { useAlert } from ':hooks/use_alert';
+import { useConfirmation } from ':hooks/use_confirmation';
 import { useGame } from ':hooks/use_game';
 import { useGameSession } from ':hooks/use_game_session';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import PublicIcon from '@mui/icons-material/Public';
+import RestoreIcon from '@mui/icons-material/Restore';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Button, ButtonGroup, CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import type React from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import PlayerNameBox from '../config/player_name_box/player_name_box';
-
-import { useConfirmation } from ':hooks/use_confirmation';
-import DeleteIcon from '@mui/icons-material/Delete';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import PublicIcon from '@mui/icons-material/Public';
-import RestoreIcon from '@mui/icons-material/Restore';
-import SettingsIcon from '@mui/icons-material/Settings';
 
 const MainMenu: React.FC = () => {
 	const { username, reconnectionInfo, setReconnectionInfo } = useGameSession();

@@ -1,8 +1,8 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Button, Grid, Stack, useTheme } from '@mui/material';
-import type { ReactNode } from 'react';
 import type React from 'react';
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import CfgScreen from '../../../menu/config/screen/cfg_screen';
 import style from './esc_menu.module.scss';
@@ -63,9 +63,7 @@ const EscMenu: React.FC = () => {
 
 			<Grid size={{ xs: 8, md: 10 }}>{currentRightScreen}</Grid>
 		</Grid>
-	) : (
-		<></>
-	);
+	) : undefined;
 };
 
 export default EscMenu;

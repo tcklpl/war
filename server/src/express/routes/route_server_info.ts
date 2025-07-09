@@ -5,7 +5,7 @@ import { ExpressRoute } from './route';
 export class RouteServerInfo extends ExpressRoute {
 	register() {
 		const serverConfig = this._configManager.getConfig(CfgServer);
-		this.router.get('/', (req, res) => {
+		this.router.get('/', (_, res) => {
 			res.status(200).json(<ResponseServerInfoBody>{
 				name: serverConfig.name,
 				hasPassword: serverConfig.password !== '',

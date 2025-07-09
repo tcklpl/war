@@ -21,9 +21,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import './server_select.scss';
-import ServerSelectAddServerScreen from './server_select_add_server';
-import ServerSelectConnectionInfo from './server_select_connection_info';
-import ServerSelectPasswordPrompt from './server_select_password_prompt';
 
 import { useGameSession } from ':hooks/use_game_session';
 import AddIcon from '@mui/icons-material/Add';
@@ -40,6 +37,9 @@ import SendIcon from '@mui/icons-material/Send';
 import { UsernameNotAvailableError } from '../../../errors/game/connection/username_not_available';
 import { WrongPasswordError } from '../../../errors/game/connection/wrong_password';
 import type { ServerListEntry } from './server_list_entry';
+import ServerSelectAddServerScreen from './server_select_add_server';
+import ServerSelectConnectionInfo from './server_select_connection_info';
+import ServerSelectPasswordPrompt from './server_select_password_prompt';
 
 const ServerSelectScreen: React.FC = () => {
 	const { palette } = useTheme();
@@ -199,7 +199,13 @@ const ServerSelectScreen: React.FC = () => {
 				<Stack spacing={5} width='100%'>
 					<Grid>
 						<Typography variant='h4'>
-							<PublicIcon style={{ marginRight: '0.5em', fontSize: '1em', verticalAlign: 'middle' }} />
+							<PublicIcon
+								style={{
+									marginRight: '0.5em',
+									fontSize: '1em',
+									verticalAlign: 'middle',
+								}}
+							/>
 							{t('server_list:server_list')}
 						</Typography>
 						<Typography variant='caption'>{`${t('common:playing_as')} ${username}`}</Typography>
@@ -303,7 +309,10 @@ const ServerSelectScreen: React.FC = () => {
 												{sv.connectionCandidate.status === 'ready' && (
 													<>
 														<PeopleIcon
-															style={{ verticalAlign: 'middle', marginRight: '0.5em' }}
+															style={{
+																verticalAlign: 'middle',
+																marginRight: '0.5em',
+															}}
 														/>
 														{sv.connectionCandidate.serverInfo?.playerCount} /{' '}
 														{sv.connectionCandidate.serverInfo?.playerLimit}

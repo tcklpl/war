@@ -6,17 +6,17 @@ import { Alert, Box, Tab } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../lobby_screen.scss';
-import LobbyAdminConfigScreenAnarchism from './config_pages/lobby_admin_cfg_anarchism';
-import LobbyAdminConfigScreenCapitalism from './config_pages/lobby_admin_cfg_capitalism';
-import LobbyAdminConfigScreenFeudalism from './config_pages/lobby_admin_cfg_feudalism';
-import LobbyAdminConfigScreenGlobal from './config_pages/lobby_admin_cfg_global';
-import LobbyAdminConfigScreenSocialism from './config_pages/lobby_admin_cfg_socialism';
 
 import AnarchismIcon from ':icons/anarchism/anarchism_icon';
 import CapitalismIcon from ':icons/capitalism/capitalism_icon';
 import FeudalismIcon from ':icons/feudalism/feudalism_icon';
 import SocialismIcon from ':icons/socialism/socialism_icon';
 import PublicIcon from '@mui/icons-material/Public';
+import LobbyAdminConfigScreenAnarchism from './config_pages/lobby_admin_cfg_anarchism';
+import LobbyAdminConfigScreenCapitalism from './config_pages/lobby_admin_cfg_capitalism';
+import LobbyAdminConfigScreenFeudalism from './config_pages/lobby_admin_cfg_feudalism';
+import LobbyAdminConfigScreenGlobal from './config_pages/lobby_admin_cfg_global';
+import LobbyAdminConfigScreenSocialism from './config_pages/lobby_admin_cfg_socialism';
 
 const LobbyAdminConfigScreen = () => {
 	const { currentLobbyState } = useGameSession();
@@ -33,7 +33,13 @@ const LobbyAdminConfigScreen = () => {
 						{t('lobby:cfg_immutable')}
 					</Alert>
 				)}
-				<Box sx={{ bgcolor: 'background.paper', display: 'flex', flex: '1 1 auto' }}>
+				<Box
+					sx={{
+						bgcolor: 'background.paper',
+						display: 'flex',
+						flex: '1 1 auto',
+					}}
+				>
 					<Box sx={{ borderRight: 1, borderColor: 'divider' }}>
 						<TabList onChange={(_, val) => setCfgPage(val)} orientation='vertical'>
 							<Tab icon={<PublicIcon />} label='Global' value='global' />

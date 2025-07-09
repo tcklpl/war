@@ -1,8 +1,8 @@
 import type {
 	ClientToServerPackets,
+	cl_LoginRequest,
 	ResponseServerInfoBody,
 	ServerToClientPackets,
-	cl_LoginRequest,
 	sv_LoginResponseOK,
 } from ':protocol';
 import type { Socket } from 'socket.io-client';
@@ -36,7 +36,9 @@ export class ServerConnectionCandidate {
 		window.setTimeout(() => this._pingAbortController?.abort(), this.TIMEOUT * 1000); // 20 sec timeout
 
 		try {
-			const result = await fetch(this._address, { signal: this._pingAbortController.signal });
+			const result = await fetch(this._address, {
+				signal: this._pingAbortController.signal,
+			});
 
 			// fetch doesn't throw an error for any valid response code, so we need to check if the response is ok
 			if (!result.ok) {

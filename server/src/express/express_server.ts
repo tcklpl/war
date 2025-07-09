@@ -1,6 +1,6 @@
-import type { Server } from 'http';
 import cors from 'cors';
 import express from 'express';
+import type { Server } from 'http';
 import type { ConfigManager } from '../config/config_manager';
 import { CfgServer } from '../config/default/cfg_server';
 import type { CryptManager } from '../crypt/crypt_manager';

@@ -1,12 +1,13 @@
+import { file } from 'bun';
 import * as fs from 'fs';
 import * as path from 'path';
-import { file } from 'bun';
 import { exit } from 'process';
 import type { Logger } from '../log/logger';
 import type { Config } from './config';
 import { CfgCrypt } from './default/cfg_crypt';
 import { CfgGame } from './default/cfg_game';
 import { CfgServer } from './default/cfg_server';
+
 const JSON5 = require('json5');
 
 export class ConfigManager {

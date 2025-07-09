@@ -61,9 +61,7 @@ const LoadingScreen: React.FC = () => {
 				</Grid>
 			</Box>
 		</Container>
-	) : (
-		<></>
-	);
+	) : undefined;
 };
 
 export default LoadingScreen;

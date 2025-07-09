@@ -49,9 +49,7 @@ const LobbyAdminConfigScreenGlobal = ({ disabled }: { disabled: boolean }) => {
 				</TableBody>
 			</Table>
 		</Box>
-	) : (
-		<></>
-	);
+	) : undefined;
 };
 
 export default LobbyAdminConfigScreenGlobal;

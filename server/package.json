@@ -12,24 +12,24 @@
 	},
 	"author": "tcklpl",
 	"license": "ISC",
-	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"@types/bun": "^1.2.12",
-		"@types/jsonwebtoken": "^9.0.9",
-		"drizzle-kit": "^0.31.1",
-		"globals": "^16.1.0",
-		"regenerator-runtime": "^0.14.1"
-	},
 	"dependencies": {
-		"@types/express": "^5.0.1",
+		"@types/express": "^5.0.3",
 		"celebrate": "^15.0.3",
 		"cors": "^2.8.5",
-		"dotenv": "^16.5.0",
+		"dotenv": "^16.6.1",
 		"drizzle-orm": "^0.43.1",
 		"express": "^5.1.0",
 		"json5": "^2.2.3",
 		"jsonwebtoken": "^9.0.2",
 		"socket.io": "^4.8.1",
 		"tasai": "^1.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.0.6",
+		"@types/bun": "^1.2.18",
+		"@types/jsonwebtoken": "^9.0.10",
+		"drizzle-kit": "^0.31.4",
+		"globals": "^16.3.0",
+		"regenerator-runtime": "^0.14.1"
 	}
 }

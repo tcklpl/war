@@ -4,11 +4,17 @@ interface SceneInfoBindGroupOption {
 }
 
 export class SceneInfoBindGroupOptions {
-	private _directionalLights: SceneInfoBindGroupOption = { use: false, index: -1 };
+	private _directionalLights: SceneInfoBindGroupOption = {
+		use: false,
+		index: -1,
+	};
 	private _pointLights: SceneInfoBindGroupOption = { use: false, index: -1 };
 
 	private _skybox: SceneInfoBindGroupOption = { use: false, index: -1 };
-	private _prefilteredSkybox: SceneInfoBindGroupOption = { use: false, index: -1 };
+	private _prefilteredSkybox: SceneInfoBindGroupOption = {
+		use: false,
+		index: -1,
+	};
 
 	private _brdfLUT: SceneInfoBindGroupOption = { use: false, index: -1 };
 

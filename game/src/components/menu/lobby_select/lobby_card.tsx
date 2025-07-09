@@ -1,12 +1,11 @@
 import type { LobbyListStateLobby } from ':protocol';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import { Card, CardContent, Typography } from '@mui/material';
 import type React from 'react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import style from './lobby_select.module.scss';
-
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 
 const LobbyCard: React.FC<{
 	lobby: LobbyListStateLobby;

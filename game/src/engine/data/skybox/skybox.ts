@@ -27,7 +27,12 @@ export abstract class Skybox {
 			layout: pipeline.getBindGroupLayout(SkyboxShader.BINDING_GROUPS.TEXTURE),
 			entries: [
 				{ binding: 0, resource: this._sampler },
-				{ binding: 1, resource: this._prefilteredSkybox.texture.createView({ dimension: 'cube' }) },
+				{
+					binding: 1,
+					resource: this._prefilteredSkybox.texture.createView({
+						dimension: 'cube',
+					}),
+				},
 			],
 		});
 

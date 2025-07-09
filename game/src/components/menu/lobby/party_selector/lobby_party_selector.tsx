@@ -8,7 +8,6 @@ import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../lobby_screen.scss';
-import LobbyPartyPageAnarchism from './party_pages/lobby_party_page_anarchism';
 
 import AnarchismIcon from ':icons/anarchism/anarchism_icon';
 import CapitalismIcon from ':icons/capitalism/capitalism_icon';
@@ -17,6 +16,7 @@ import SocialismIcon from ':icons/socialism/socialism_icon';
 import InfoIcon from '@mui/icons-material/Info';
 import { TSXUtils } from '../../../../utils/tsx_utils';
 import LobbyPageInfo from './party_pages/lobby_page_info';
+import LobbyPartyPageAnarchism from './party_pages/lobby_party_page_anarchism';
 import LobbyPartyPageCapitalism from './party_pages/lobby_party_page_capitalism';
 import LobbyPartyPageFeudalism from './party_pages/lobby_party_page_feudalism';
 import LobbyPartyPageSocialism from './party_pages/lobby_party_page_socialism';
