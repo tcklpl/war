@@ -1,7 +1,7 @@
 import type { Quaternion } from '../quaternion/quaternion';
 import type { Vec3 } from '../vec/vec3';
 
-export type AnimationValue = number | Vec3 | Quaternion;
+export type AnimationValue = number | Vec3 | Quaternion | boolean;
 export type AnimationInterpolation = 'step' | 'linear';
 
 /**
@@ -12,19 +12,21 @@ export type AnimationInterpolation = 'step' | 'linear';
  * already implemented by base classes such as MatrixTransformative.
  */
 export interface Animatable {
-	get animationStrings(): {
-		encoders: {
-			[key: string]: (value: any, interpolation?: AnimationInterpolation) => EncodedAnimationTarget;
-		};
-		getters: {
-			[key: string]: () => any;
-		};
-		setters: {
-			[key: string]: (value: any) => void;
-		};
-		accumulators: {
-			[key: string]: (value: any) => void;
-		};
+	get animationStrings(): AnimationStrings;
+}
+
+export interface AnimationStrings {
+	encoders: {
+		[key: string]: (value: any, interpolation?: AnimationInterpolation) => EncodedAnimationTarget;
+	};
+	getters: {
+		[key: string]: () => any;
+	};
+	setters: {
+		[key: string]: (value: any) => void;
+	};
+	accumulators: {
+		[key: string]: (value: any) => void;
 	};
 }
 

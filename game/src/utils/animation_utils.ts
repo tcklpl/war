@@ -64,6 +64,9 @@ export class AnimationUtils {
 		if (typeof source === 'number' && typeof increment === 'number') {
 			return source + increment;
 		}
+		if (typeof source === 'boolean' && typeof increment === 'boolean') {
+			return source || increment;
+		}
 		if (source instanceof Vec3 && increment instanceof Vec3) {
 			return source.add(increment);
 		}
@@ -84,6 +87,9 @@ export class AnimationUtils {
 		AnimationUtils.assertSameTypes(a, b);
 		if (typeof a === 'number' && typeof b === 'number') {
 			return b - a;
+		}
+		if (typeof a === 'boolean' && typeof b === 'boolean') {
+			return b > a;
 		}
 		if (a instanceof Vec3 && b instanceof Vec3) {
 			return b.subtract(a);
@@ -120,7 +126,7 @@ export class AnimationUtils {
 	 * @returns Cloned value
 	 */
 	static cloneAnimationValue(val: AnimationValue) {
-		if (typeof val === 'number') {
+		if (typeof val === 'number' || typeof val === 'boolean') {
 			return val;
 		}
 		return val.clone();
