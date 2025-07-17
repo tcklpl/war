@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
@@ -20,7 +20,7 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'happy-dom',
-		setupFiles: './src/setup_tests.ts',
+		setupFiles: './src/setup-tests.ts',
 		coverage: {
 			provider: 'v8',
 			reporter: ['json', 'html'],

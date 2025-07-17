@@ -8,7 +8,7 @@ const mockUseConfig = vi.mocked(useConfig);
 
 it('renders', async () => {
 	mockUseConfig.mockReturnValue({
-		...(await vi.importActual(':hooks/use_config')),
+		...(await vi.importActual(':hooks/use-config')),
 		async saveConfig() {},
 	});
 
