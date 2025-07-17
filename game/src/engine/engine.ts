@@ -1,6 +1,5 @@
 import { AssetManager } from './asset/asset_manager';
 import { ConfigManager } from './config/cfg_manager';
-import { Orchestrator } from './data/animation/orchestrator';
 import { CameraManager } from './data/camera/camera_manager';
 import { LightManager } from './data/lights/light_manager';
 import { MaterialManager } from './data/material/material_manager';
@@ -25,7 +24,6 @@ export class Engine {
 
 	readonly idPool = new IdentifierPool();
 	readonly db = new IDBWarConnection();
-	readonly orchestrator = new Orchestrator();
 	private _config!: ConfigManager;
 
 	readonly managers = {
@@ -74,9 +72,6 @@ export class Engine {
 		}
 
 		if (this._shouldRender) {
-			// Update all animations
-			this.orchestrator.purgeFinishedAnimations();
-			this.orchestrator.update(deltaTime);
 			// Update all frame listeners before rendering
 			this._frameListeners.forEach(fl => {
 				if (fl.onEachFrame) fl.onEachFrame(deltaTime);
