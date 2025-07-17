@@ -16,7 +16,7 @@ export class WarGameSession {
 	private _token = '';
 
 	private _pauseReason?: GamePauseReason;
-	private _initialTerritorySelectionManager = new InitialTerritorySelectionManager();
+	private _initialTerritorySelectionManager = new InitialTerritorySelectionManager(this);
 	private _currentTurnPlayerIndex = 0;
 
 	constructor(public readonly initialGameState: InitialGameStatePacket) {
