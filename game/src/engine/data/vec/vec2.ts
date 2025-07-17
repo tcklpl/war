@@ -1,10 +1,15 @@
 import { MathUtils } from '../../../utils/math_utils';
+import { Vector } from './vector';
 
-export class Vec2 {
+export class Vec2 extends Vector {
+	readonly identifier: string = 'Vec2';
+
 	constructor(
 		public x: number,
 		public y: number,
-	) {}
+	) {
+		super();
+	}
 
 	static get byteSize() {
 		return 4 * 2;

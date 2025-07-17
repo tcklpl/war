@@ -3,6 +3,8 @@ import { MathUtils } from '../../../utils/math_utils';
 import { Vec2 } from './vec2';
 
 export class Vec3 extends Vec2 {
+	readonly identifier: string = 'Vec3';
+
 	constructor(
 		x: number,
 		y: number,
