@@ -1,5 +1,5 @@
 import { Vec2 } from '../data/vec/vec2';
-import type { IMouseListener } from './mouse_listener';
+import type { IMouseListener } from './mouse-listener';
 
 export class Mouse {
 	private readonly _listeners: IMouseListener[] = [];

@@ -1,3 +1,3 @@
-export * from './auth_token_body';
-export * from './game_session_connection_info';
-export * from './token_body';
+export * from './auth-token-body';
+export * from './game-session-connection-info';
+export * from './token-body';

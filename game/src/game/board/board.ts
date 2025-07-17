@@ -1,8 +1,8 @@
 import { Scene } from ':engine/data/scene/scene';
-import { BoardCamera } from './board_camera';
-import { BoardCountriesIndex } from './board_countries_index';
-import { BoardLights } from './board_lights';
-import { BoardSkybox } from './board_skybox';
+import { BoardCamera } from './board-camera';
+import { BoardCountriesIndex } from './board-countries-index';
+import { BoardLights } from './board-lights';
+import { BoardSkybox } from './board-skybox';
 
 export class GameBoard extends Scene {
 	private readonly _mainCamera: BoardCamera;

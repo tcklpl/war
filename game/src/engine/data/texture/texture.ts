@@ -1,4 +1,4 @@
-import { MissingTextureError } from '../../../errors/engine/data/missing_texture';
+import { MissingTextureError } from '../../../errors/engine/data/missing-texture';
 
 export class Texture {
 	private _view?: GPUTextureView;

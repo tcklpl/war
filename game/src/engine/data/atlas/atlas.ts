@@ -1,10 +1,10 @@
-import { MathUtils } from '../../../utils/math_utils';
+import { MathUtils } from '../../../utils/math-utils';
 import { Texture } from '../texture/texture';
 import { Vec2 } from '../vec/vec2';
-import { AtlasTree, type AtlasTreeNode } from './atlas_tree';
-import { MappedAtlasRegion } from './mapped_atlas_region';
-import type { MappedRegionRequest } from './mapped_region_request';
-import { MappedRegionSize } from './mapped_region_size';
+import { AtlasTree, type AtlasTreeNode } from './atlas-tree';
+import { MappedAtlasRegion } from './mapped-atlas-region';
+import type { MappedRegionRequest } from './mapped-region-request';
+import { MappedRegionSize } from './mapped-region-size';
 
 export class Atlas {
 	private readonly _atlasTexture = new Texture();

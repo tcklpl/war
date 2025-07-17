@@ -1,5 +1,5 @@
 import { Logger } from './log/logger';
-import { WarServer } from './war_server';
+import { WarServer } from './war-server';
 
 const log = new Logger('Boot');
 

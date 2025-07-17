@@ -10,7 +10,7 @@ import ingame_enUS from './locales/en-US/ingame.json';
 import loading_enUS from './locales/en-US/loading.json';
 import lobby_enUS from './locales/en-US/lobby.json';
 import parties_enUS from './locales/en-US/parties.json';
-import server_list_enUS from './locales/en-US/server_list.json';
+import server_list_enUS from './locales/en-US/server-list.json';
 
 export const defaultNS = 'ns1';
 

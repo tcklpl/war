@@ -1,9 +1,9 @@
 import type { Camera } from '../camera/camera';
 import type { Entity } from '../entity/entity';
 import type { Light } from '../lights/light';
-import { BlackSkybox } from '../skybox/black_skybox';
+import { BlackSkybox } from '../skybox/black-skybox';
 import type { Skybox } from '../skybox/skybox';
-import { SceneInfo } from './scene_info';
+import { SceneInfo } from './scene-info';
 
 export class Scene {
 	private readonly _entities: Entity[];

@@ -1,6 +1,6 @@
-import { InvalidSecondAssignmentError } from '../../exceptions/generic/invalid_second_assignment_error';
-import type { ServerClientPacketListeners } from '../../socket/routes/server_client_packet_listeners';
-import type { PlayerConnection } from './player_connection';
+import { InvalidSecondAssignmentError } from '../../exceptions/generic/invalid-second-assignment-error';
+import type { ServerClientPacketListeners } from '../../socket/routes/server-client-packet-listeners';
+import type { PlayerConnection } from './player-connection';
 
 export abstract class Player {
 	private _packetListeners!: ServerClientPacketListeners;

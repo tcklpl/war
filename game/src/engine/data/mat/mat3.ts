@@ -1,4 +1,4 @@
-import { BadMatrixLengthError } from '../../../errors/engine/data/bad_matrix_length';
+import { BadMatrixLengthError } from '../../../errors/engine/data/bad-matrix-length';
 import { Mat4 } from './mat4';
 
 export class Mat3 {

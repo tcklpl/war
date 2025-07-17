@@ -1,5 +1,5 @@
 import type { Primitive } from './primitive';
-import type { PrimitiveDrawOptions } from './primitive_draw_options';
+import type { PrimitiveDrawOptions } from './primitive-draw-options';
 
 export class Mesh {
 	private readonly _name: string;

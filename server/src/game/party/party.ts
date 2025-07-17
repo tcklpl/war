@@ -1,6 +1,6 @@
 import type { GameParty, TerritoryCode, TurnAllowedActionMoveTroops, TurnAllowedActions, TurnPhase } from ':protocol';
 import * as crypto from 'node:crypto';
-import type { LobbyPlayer } from '../player/lobby_player';
+import type { LobbyPlayer } from '../player/lobby-player';
 import type { Territory } from '../territory/territory';
 
 export abstract class Party {

@@ -1,18 +1,18 @@
 import type { GameConfig, GameParty, LobbyPlayerState, LobbyStage, LobbyState } from ':protocol';
 import type { Logger } from '../../log/logger';
-import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
-import { ServerPacketChatMessage } from '../../socket/packet/lobby/chat_message';
-import { ServerPacketGameStartCancelled } from '../../socket/packet/lobby/game_start_cancelled';
-import { ServerPacketStartingGame } from '../../socket/packet/lobby/starting_game';
-import { ServerPacketUpdateLobbyState } from '../../socket/packet/lobby/update_lobby_state';
-import type { GameManager } from '../ingame/game_manager';
+import { ServerPacketInitialGameState } from '../../socket/packet/game/initial-game-state';
+import { ServerPacketChatMessage } from '../../socket/packet/lobby/chat-message';
+import { ServerPacketGameStartCancelled } from '../../socket/packet/lobby/game-start-cancelled';
+import { ServerPacketStartingGame } from '../../socket/packet/lobby/starting-game';
+import { ServerPacketUpdateLobbyState } from '../../socket/packet/lobby/update-lobby-state';
+import type { GameManager } from '../ingame/game-manager';
 import { PartyAnarchism } from '../party/anarchism';
 import { PartyCapitalism } from '../party/capitalism';
 import { PartyFeudalism } from '../party/feudalism';
-import { PartyNotSet } from '../party/not_set';
+import { PartyNotSet } from '../party/not-set';
 import type { Party } from '../party/party';
 import { PartySocialism } from '../party/socialism';
-import type { LobbyPlayer } from '../player/lobby_player';
+import type { LobbyPlayer } from '../player/lobby-player';
 
 export class Lobby {
 	private _stage: LobbyStage = 'in lobby';

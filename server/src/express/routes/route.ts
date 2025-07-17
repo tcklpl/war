@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import type { ConfigManager } from '../../config/config_manager';
-import type { CryptManager } from '../../crypt/crypt_manager';
-import type { GameServer } from '../../game/game_server';
+import type { ConfigManager } from '../../config/config-manager';
+import type { CryptManager } from '../../crypt/crypt-manager';
+import type { GameServer } from '../../game/game-server';
 
 export abstract class ExpressRoute {
 	readonly router = Router();

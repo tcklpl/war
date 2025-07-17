@@ -1,4 +1,4 @@
-import { PrincipledBSDFShader } from '../../../shaders/geometry/principled_bsdf/principled_bsdf_shader';
+import { PrincipledBSDFShader } from '../../../shaders/geometry/principled-bsdf/principled-bsdf-shader';
 
 export abstract class Material {
 	private readonly _id: number;

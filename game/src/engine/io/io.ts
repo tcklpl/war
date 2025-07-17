@@ -1,5 +1,5 @@
-import { InteractableManager } from './interaction/interactable_manager';
-import { MouseInteractionManager } from './interaction/mouse_interaction_manager';
+import { InteractableManager } from './interaction/interactable-manager';
+import { MouseInteractionManager } from './interaction/mouse-interaction-manager';
 import { Keyboard } from './keyboard';
 import { Mouse } from './mouse';
 

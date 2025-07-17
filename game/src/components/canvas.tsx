@@ -1,10 +1,10 @@
-import { WarGame } from ':game/war_game';
-import { useCrash } from ':hooks/use_crash';
-import { useGame } from ':hooks/use_game';
+import { WarGame } from ':game/war-game';
+import { useCrash } from ':hooks/use-crash';
+import { useGame } from ':hooks/use-game';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { InvalidCanvasError } from '../errors/engine/initialization/invalid_canvas';
-import { WebGPUUnsupportedError } from '../errors/engine/initialization/webgpu_unsupported';
+import { InvalidCanvasError } from '../errors/engine/initialization/invalid-canvas';
+import { WebGPUUnsupportedError } from '../errors/engine/initialization/webgpu-unsupported';
 
 const WarCanvas = memo(() => {
 	const ref = useRef<HTMLCanvasElement>(null);

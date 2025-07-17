@@ -1,21 +1,21 @@
-import { AssetManager } from './asset/asset_manager';
-import { ConfigManager } from './config/cfg_manager';
-import { CameraManager } from './data/camera/camera_manager';
-import { LightManager } from './data/lights/light_manager';
-import { MaterialManager } from './data/material/material_manager';
-import { MeshManager } from './data/meshes/mesh_manager';
-import { SceneManager } from './data/scene/scene_manager';
-import type { IFrameListener } from './data/traits/frame_listener';
-import { IDBWarConnection } from './idb_war_connection';
-import { IdentifierPool } from './identifier_pool';
+import { AssetManager } from './asset/asset-manager';
+import { ConfigManager } from './config/cfg-manager';
+import { CameraManager } from './data/camera/camera-manager';
+import { LightManager } from './data/lights/light-manager';
+import { MaterialManager } from './data/material/material-manager';
+import { MeshManager } from './data/meshes/mesh-manager';
+import { SceneManager } from './data/scene/scene-manager';
+import type { IFrameListener } from './data/traits/frame-listener';
+import { IDBWarConnection } from './idb-war-connection';
+import { IdentifierPool } from './identifier-pool';
 import { GameIO } from './io/io';
-import { BRDFLUTRenderer } from './render/brdf_lut/brdf_lut_renderer';
-import { CubemapPrefilterRenderer } from './render/cubemap_prefilter/cubemap_prefilter_renderer';
-import { EquirectangularToCubemapRenderer } from './render/equirec_to_cubemap/equirec_to_cubemap_renderer';
-import { MipmapRenderer } from './render/mipmap/mipmap_renderer';
+import { BRDFLUTRenderer } from './render/brdf-lut/brdf-lut-renderer';
+import { CubemapPrefilterRenderer } from './render/cubemap-prefilter/cubemap-prefilter-renderer';
+import { EquirectangularToCubemapRenderer } from './render/equirec-to-cubemap/equirec-to-cubemap-renderer';
+import { MipmapRenderer } from './render/mipmap/mipmap-renderer';
 import type { Renderer } from './render/renderer';
-import { TexturePackingRenderer } from './render/texture_packing/texture_packing_renderer';
-import { VanillaRenderer } from './render/vanilla/vanilla_renderer';
+import { TexturePackingRenderer } from './render/texture-packing/texture-packing-renderer';
+import { VanillaRenderer } from './render/vanilla/vanilla-renderer';
 import { Time } from './time';
 
 export class Engine {

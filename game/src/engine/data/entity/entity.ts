@@ -1,14 +1,14 @@
-import { PrincipledBSDFShader } from '../../../shaders/geometry/principled_bsdf/principled_bsdf_shader';
-import { MathUtils } from '../../../utils/math_utils';
+import { PrincipledBSDFShader } from '../../../shaders/geometry/principled-bsdf/principled-bsdf-shader';
+import { MathUtils } from '../../../utils/math-utils';
 import { Mat4 } from '../mat/mat4';
 import type { Mesh } from '../meshes/mesh';
-import type { PrimitiveDrawOptions } from '../meshes/primitive_draw_options';
+import type { PrimitiveDrawOptions } from '../meshes/primitive-draw-options';
 import { identifiable } from '../traits/identifiable';
 import { Vec3 } from '../vec/vec3';
 import { Vec4 } from '../vec/vec4';
-import type { EntityFlag } from './entity_flag';
-import { FrameListenerMatrixTransformative } from './frame_listener_matrix_transformative';
-import type { MatrixTransformative } from './matrix_transformative';
+import type { EntityFlag } from './entity-flag';
+import { FrameListenerMatrixTransformative } from './frame-listener-matrix-transformative';
+import type { MatrixTransformative } from './matrix-transformative';
 
 const EntityBase = identifiable(FrameListenerMatrixTransformative);
 

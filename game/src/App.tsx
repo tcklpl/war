@@ -1,6 +1,6 @@
 import '@fontsource/roboto/400.css';
 import { HashRouter } from 'react-router-dom';
-import WarGameComponent from './components/war_game_component';
+import WarGameComponent from './components/war-game-component';
 import Hooks from './hooks';
 import './i18next';
 import './style/globals.scss';

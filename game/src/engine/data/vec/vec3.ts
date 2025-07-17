@@ -1,5 +1,5 @@
-import { BadVectorLengthError } from '../../../errors/engine/data/bad_vector_length';
-import { MathUtils } from '../../../utils/math_utils';
+import { BadVectorLengthError } from '../../../errors/engine/data/bad-vector-length';
+import { MathUtils } from '../../../utils/math-utils';
 import { Vec2 } from './vec2';
 
 export class Vec3 extends Vec2 {

@@ -7,21 +7,21 @@ export class Board {
 	readonly graph = new Graph<Territory>();
 
 	readonly territories = {
-		alaska: this.graph.addNode(new Territory('alaska', 'n_america')),
-		california: this.graph.addNode(new Territory('california', 'n_america')),
-		cuba: this.graph.addNode(new Territory('cuba', 'n_america')),
-		greenland: this.graph.addNode(new Territory('greenland', 'n_america')),
-		labrador: this.graph.addNode(new Territory('labrador', 'n_america')),
-		mackenzie: this.graph.addNode(new Territory('mackenzie', 'n_america')),
-		mexico: this.graph.addNode(new Territory('mexico', 'n_america')),
-		new_york: this.graph.addNode(new Territory('new_york', 'n_america')),
-		ottawa: this.graph.addNode(new Territory('ottawa', 'n_america')),
-		vancouver: this.graph.addNode(new Territory('vancouver', 'n_america')),
+		alaska: this.graph.addNode(new Territory('alaska', 'north_america')),
+		california: this.graph.addNode(new Territory('california', 'north_america')),
+		cuba: this.graph.addNode(new Territory('cuba', 'north_america')),
+		greenland: this.graph.addNode(new Territory('greenland', 'north_america')),
+		labrador: this.graph.addNode(new Territory('labrador', 'north_america')),
+		mackenzie: this.graph.addNode(new Territory('mackenzie', 'north_america')),
+		mexico: this.graph.addNode(new Territory('mexico', 'north_america')),
+		new_york: this.graph.addNode(new Territory('new_york', 'north_america')),
+		ottawa: this.graph.addNode(new Territory('ottawa', 'north_america')),
+		vancouver: this.graph.addNode(new Territory('vancouver', 'north_america')),
 
-		argentina: this.graph.addNode(new Territory('argentina', 's_america')),
-		brazil: this.graph.addNode(new Territory('brazil', 's_america')),
-		chile: this.graph.addNode(new Territory('chile', 's_america')),
-		venezuela: this.graph.addNode(new Territory('venezuela', 's_america')),
+		argentina: this.graph.addNode(new Territory('argentina', 'south_america')),
+		brazil: this.graph.addNode(new Territory('brazil', 'south_america')),
+		chile: this.graph.addNode(new Territory('chile', 'south_america')),
+		venezuela: this.graph.addNode(new Territory('venezuela', 'south_america')),
 
 		germany: this.graph.addNode(new Territory('germany', 'europe')),
 		france: this.graph.addNode(new Territory('france', 'europe')),
@@ -33,13 +33,13 @@ export class Board {
 		australia: this.graph.addNode(new Territory('australia', 'oceania')),
 		sumatra: this.graph.addNode(new Territory('sumatra', 'oceania')),
 		borneo: this.graph.addNode(new Territory('borneo', 'oceania')),
-		new_guinea: this.graph.addNode(new Territory('n_guinea', 'oceania')),
+		new_guinea: this.graph.addNode(new Territory('new_guinea', 'oceania')),
 
 		egypt: this.graph.addNode(new Territory('egypt', 'africa')),
 		algeria: this.graph.addNode(new Territory('algeria', 'africa')),
 		sudan: this.graph.addNode(new Territory('sudan', 'africa')),
 		congo: this.graph.addNode(new Territory('congo', 'africa')),
-		s_africa: this.graph.addNode(new Territory('s_africa', 'africa')),
+		south_africa: this.graph.addNode(new Territory('south_africa', 'africa')),
 		madagascar: this.graph.addNode(new Territory('madagascar', 'africa')),
 
 		poland: this.graph.addNode(new Territory('poland', 'asia')),
@@ -220,26 +220,26 @@ export class Board {
 		);
 		this.territories.algeria.addAdjacentNode('sea', this.territories.brazil, this.territories.france);
 
-		this.territories.s_africa.addAdjacentNode('land', this.territories.congo, this.territories.sudan);
-		this.territories.s_africa.addAdjacentNode('sea', this.territories.madagascar);
+		this.territories.south_africa.addAdjacentNode('land', this.territories.congo, this.territories.sudan);
+		this.territories.south_africa.addAdjacentNode('sea', this.territories.madagascar);
 
 		this.territories.congo.addAdjacentNode(
 			'land',
 			this.territories.algeria,
 			this.territories.sudan,
-			this.territories.s_africa,
+			this.territories.south_africa,
 		);
 
 		this.territories.sudan.addAdjacentNode(
 			'land',
 			this.territories.egypt,
 			this.territories.algeria,
-			this.territories.s_africa,
+			this.territories.south_africa,
 			this.territories.congo,
 		);
 		this.territories.sudan.addAdjacentNode('sea', this.territories.madagascar);
 
-		this.territories.madagascar.addAdjacentNode('sea', this.territories.s_africa, this.territories.sudan);
+		this.territories.madagascar.addAdjacentNode('sea', this.territories.south_africa, this.territories.sudan);
 
 		this.territories.egypt.addAdjacentNode(
 			'land',

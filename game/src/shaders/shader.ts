@@ -1,4 +1,4 @@
-import { ShaderError } from '../errors/engine/shader/shader_error';
+import { ShaderError } from '../errors/engine/shader/shader-error';
 
 export abstract class Shader {
 	private readonly _name: string;

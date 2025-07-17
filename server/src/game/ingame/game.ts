@@ -8,30 +8,30 @@ import type {
 	TerritoryCode,
 	TurnAction,
 } from ':protocol';
-import type { CryptManager } from '../../crypt/crypt_manager';
-import { LobbyNotReadyError } from '../../exceptions/lobby_not_ready_error';
-import { LobbyMovedOnError } from '../../exceptions/reconnection/lobby_moved_on_error';
-import { PlayerAlreadyInLobbyError } from '../../exceptions/reconnection/player_already_in_lobby_error';
-import { PlayerDoesntBelongOnLobbyError } from '../../exceptions/reconnection/player_doesnt_belong_on_lobby_error';
+import type { CryptManager } from '../../crypt/crypt-manager';
+import { LobbyNotReadyError } from '../../exceptions/lobby-not-ready-error';
+import { LobbyMovedOnError } from '../../exceptions/reconnection/lobby-moved-on-error';
+import { PlayerAlreadyInLobbyError } from '../../exceptions/reconnection/player-already-in-lobby-error';
+import { PlayerDoesntBelongOnLobbyError } from '../../exceptions/reconnection/player-doesnt-belong-on-lobby-error';
 import type { Logger } from '../../log/logger';
-import type { GameSaveService } from '../../persistence/service/game_save_service';
-import { SvPktGGamePaused } from '../../socket/packet/game/game_paused';
-import { SvPktGGameResumed } from '../../socket/packet/game/game_resumed';
-import { SvPktGGameSaved } from '../../socket/packet/game/game_saved';
-import { ServerPacketGameSessionConnectionToken } from '../../socket/packet/game/game_session_connection_token';
-import { ServerPacketInitialGameState } from '../../socket/packet/game/initial_game_state';
-import { SvPktGPlayerDisconnected } from '../../socket/packet/game/player_disconnected';
-import { SvPktGPlayerReconnected } from '../../socket/packet/game/player_reconnected';
-import { SvPktGPrematureGameEnd } from '../../socket/packet/game/premature_game_end';
-import { ServerPacketUpdateGameStage } from '../../socket/packet/game/update_game_stage';
+import type { GameSaveService } from '../../persistence/service/game-save-service';
+import { SvPktGGamePaused } from '../../socket/packet/game/game-paused';
+import { SvPktGGameResumed } from '../../socket/packet/game/game-resumed';
+import { SvPktGGameSaved } from '../../socket/packet/game/game-saved';
+import { ServerPacketGameSessionConnectionToken } from '../../socket/packet/game/game-session-connection-token';
+import { ServerPacketInitialGameState } from '../../socket/packet/game/initial-game-state';
+import { SvPktGPlayerDisconnected } from '../../socket/packet/game/player-disconnected';
+import { SvPktGPlayerReconnected } from '../../socket/packet/game/player-reconnected';
+import { SvPktGPrematureGameEnd } from '../../socket/packet/game/premature-game-end';
+import { ServerPacketUpdateGameStage } from '../../socket/packet/game/update-game-stage';
 import { Board } from '../board/board';
 import type { Lobby } from '../lobby/lobby';
-import type { GamePlayer } from '../player/game_player';
+import type { GamePlayer } from '../player/game-player';
 import type { Player } from '../player/player';
-import type { PlayerManager } from '../player/player_manager';
-import type { GameManager } from './game_manager';
-import { InitialTerritorySelectionManager } from './initial_territory_selection_manager';
-import { TurnManager } from './turn_manager';
+import type { PlayerManager } from '../player/player-manager';
+import type { GameManager } from './game-manager';
+import { InitialTerritorySelectionManager } from './initial-territory-selection-manager';
+import { TurnManager } from './turn-manager';
 
 export class Game {
 	// basic state

@@ -1,5 +1,5 @@
-import { BadQuaternionLengthError } from '../../../errors/engine/data/bad_quaternion_length';
-import { MathUtils } from '../../../utils/math_utils';
+import { BadQuaternionLengthError } from '../../../errors/engine/data/bad-quaternion-length';
+import { MathUtils } from '../../../utils/math-utils';
 import { Mat4 } from '../mat/mat4';
 import { Vec3 } from '../vec/vec3';
 

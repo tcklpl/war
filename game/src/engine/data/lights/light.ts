@@ -1,5 +1,5 @@
-import type { MappedAtlasRegion } from '../atlas/mapped_atlas_region';
-import type { MappedRegionSize } from '../atlas/mapped_region_size';
+import type { MappedAtlasRegion } from '../atlas/mapped-atlas-region';
+import type { MappedRegionSize } from '../atlas/mapped-region-size';
 import type { Mat4 } from '../mat/mat4';
 import type { Vec3 } from '../vec/vec3';
 

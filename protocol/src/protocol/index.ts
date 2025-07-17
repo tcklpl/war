@@ -1,4 +1,4 @@
-export * from './client_to_server_packets';
+export * from './client-to-server-packets';
 export * from './data';
-export * from './server_to_client_packets';
-export * from './socket_data';
+export * from './server-to-client-packets';
+export * from './socket-data';

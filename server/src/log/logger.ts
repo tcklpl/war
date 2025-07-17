@@ -1,6 +1,6 @@
 import { c } from 'tasai';
-import { formatDate } from '../utils/date_utils';
-import type { LoggerConfig } from './logger_config';
+import { formatDate } from '../utils/date-utils';
+import type { LoggerConfig } from './logger-config';
 
 export enum LogLevel {
 	FATAL = 0,

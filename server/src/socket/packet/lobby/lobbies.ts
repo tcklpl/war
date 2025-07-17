@@ -1,7 +1,7 @@
 import type { LobbyListState, LobbyListStateLobby } from ':protocol';
-import type { CfgServer } from '../../../config/default/cfg_server';
-import type { LobbyManager } from '../../../game/lobby/lobby_manager';
-import { ServerPacket } from '../server_packet';
+import type { CfgServer } from '../../../config/default/cfg-server';
+import type { LobbyManager } from '../../../game/lobby/lobby-manager';
+import { ServerPacket } from '../server-packet';
 
 export class ServerPacketLobbies extends ServerPacket<'lobbies'> {
 	constructor(gameRoomManager: LobbyManager, serverCfg: CfgServer) {

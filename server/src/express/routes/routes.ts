@@ -1,9 +1,9 @@
-import type { ConfigManager } from '../../config/config_manager';
-import type { CryptManager } from '../../crypt/crypt_manager';
-import type { GameServer } from '../../game/game_server';
+import type { ConfigManager } from '../../config/config-manager';
+import type { CryptManager } from '../../crypt/crypt-manager';
+import type { GameServer } from '../../game/game-server';
 import type { ExpressRoute } from './route';
-import { RouteLogin } from './route_login';
-import { RouteServerInfo } from './route_server_info';
+import { RouteLogin } from './route-login';
+import { RouteServerInfo } from './route-server-info';
 
 export class ExpressRoutes {
 	private _routes!: ExpressRoute[];

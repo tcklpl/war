@@ -1,1 +1,1 @@
-export * from './lobby_stage';
+export * from './lobby-stage';

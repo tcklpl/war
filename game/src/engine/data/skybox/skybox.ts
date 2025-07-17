@@ -1,6 +1,6 @@
-import { SkyboxShader } from '../../../shaders/geometry/skybox/skybox_shader';
-import { TextureUtils } from '../../../utils/texture_utils';
-import type { HDRAsset } from '../../asset/hdr_asset';
+import { SkyboxShader } from '../../../shaders/geometry/skybox/skybox-shader';
+import { TextureUtils } from '../../../utils/texture-utils';
+import type { HDRAsset } from '../../asset/hdr-asset';
 import { Texture } from '../texture/texture';
 
 export abstract class Skybox {

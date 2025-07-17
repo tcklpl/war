@@ -1,4 +1,4 @@
-import { MathUtils } from '../../../utils/math_utils';
+import { MathUtils } from '../../../utils/math-utils';
 import { Vector } from './vector';
 
 export class Vec2 extends Vector {

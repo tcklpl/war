@@ -1,4 +1,4 @@
-import { BadMatrixLengthError } from '../../../errors/engine/data/bad_matrix_length';
+import { BadMatrixLengthError } from '../../../errors/engine/data/bad-matrix-length';
 import { Vec3 } from '../vec/vec3';
 import { Vec4 } from '../vec/vec4';
 
