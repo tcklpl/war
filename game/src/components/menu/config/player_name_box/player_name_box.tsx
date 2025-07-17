@@ -8,7 +8,7 @@ const PlayerNameBox: React.FC = () => {
 	const { username, setUsername, saveGameSession } = useGameSession();
 
 	const [editing, setEditing] = useState(false);
-	const inputRef = useRef<HTMLInputElement>();
+	const inputRef = useRef<HTMLInputElement>(undefined);
 
 	const edit = useCallback(() => {
 		setEditing(true);

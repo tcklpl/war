@@ -1,7 +1,6 @@
 import { useGameSession } from ':hooks/use_game_session';
 import { Box, Divider, List, ListItem, ListItemText, Paper, TextField, Typography } from '@mui/material';
-import type React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './lobby_screen.scss';
 
@@ -11,25 +10,12 @@ const LobbyChatBox = () => {
 	const { chat, currentLobby } = useGameSession();
 
 	const [msg, setMsg] = useState('');
-	const [isAtChatEnd, setIsAtChatEnd] = useState(true);
 	const { t } = useTranslation(['lobby']);
-	const chatboxRef = useRef<HTMLUListElement>() as React.MutableRefObject<HTMLUListElement>;
 
 	const sendMessage = useCallback(() => {
 		currentLobby?.chat.sendMessage(msg);
 		setMsg('');
 	}, [msg, currentLobby?.chat]);
-
-	const handleChatLogScroll = useCallback((e: React.UIEvent<HTMLUListElement, UIEvent>) => {
-		setIsAtChatEnd(e.currentTarget.scrollHeight - e.currentTarget.scrollTop === e.currentTarget.clientHeight);
-	}, []);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: chat is needed to trigger effect
-	useEffect(() => {
-		if (isAtChatEnd) {
-			chatboxRef.current.scrollTo({ top: chatboxRef.current.scrollHeight });
-		}
-	}, [chat, isAtChatEnd, chatboxRef]);
 
 	return (
 		<>
@@ -38,11 +24,7 @@ const LobbyChatBox = () => {
 				{t('lobby:chat')}
 			</Typography>
 			<Box display='flex' flexDirection='column' justifyContent='space-between' component={Paper}>
-				<List
-					sx={{ flexGrow: 1, overflowY: 'auto', height: '300px' }}
-					onScroll={e => handleChatLogScroll(e)}
-					ref={chatboxRef}
-				>
+				<List sx={{ flexGrow: 1, overflowY: 'auto', height: '300px' }}>
 					<ListItem key='info'>
 						<ListItemText secondary={t('lobby:chat_info_msg')} />
 					</ListItem>
