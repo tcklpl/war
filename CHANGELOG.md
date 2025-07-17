@@ -39,6 +39,7 @@ Icons:
 - 🎮🖥🔩 Replaced eslint + prettier with biome.
 - 🎮🔩 Updated game UI to use MUI `Grid`, as `Grid2` is now the default `Grid`.
 - 🎮 Changed the chromatic aberration post effect implementation.
+- 🔩 Changed file naming from snake_case to kebab-case.
 
 ## [0.5.0] - 2024-12-01
 
