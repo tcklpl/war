@@ -6,7 +6,7 @@ import { BoardSkybox } from './board_skybox';
 
 export class GameBoard extends Scene {
 	private readonly _mainCamera: BoardCamera;
-	private readonly _countries: BoardCountriesIndex;
+	readonly countries: BoardCountriesIndex;
 	private readonly _boardLights: BoardLights;
 	private readonly _skybox: BoardSkybox;
 
@@ -26,7 +26,7 @@ export class GameBoard extends Scene {
 			activeSkybox: skybox,
 		});
 		this._mainCamera = mainCamera;
-		this._countries = countries;
+		this.countries = countries;
 		this._boardLights = lights;
 		this._skybox = skybox;
 	}
