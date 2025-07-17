@@ -66,6 +66,10 @@ struct PFXOptions {
 };
 @group(1) @binding(0) var<uniform> opt: PFXOptions;
 
+const chromatic_aberration_r_offset =  0.009;
+const chromatic_aberration_g_offset =  0.006;
+const chromatic_aberration_b_offset = -0.006;
+
 const kSRGBLuminanceFactors = vec3f(0.2126, 0.7152, 0.0722);
 fn srgbLuminance(color: vec3f) -> f32 {
     return saturate(dot(color, kSRGBLuminanceFactors));
@@ -102,8 +106,9 @@ fn fragment(v: VSOutput) -> @location(0) vec4f {
 
     // Chromatic Aberration
     if (opt.use_chromatic_aberration == 1u) {
-        hdrColor.r = textureSample(pfx_hdr, pfx_sampler, vec2f(v.uv.x + opt.chromatic_aberration_amount * texelSize.x, v.uv.y)).r;
-        hdrColor.b = textureSample(pfx_hdr, pfx_sampler, vec2f(v.uv.x - opt.chromatic_aberration_amount * texelSize.x, v.uv.y)).b;
+        hdrColor.r = textureSample(pfx_hdr, pfx_sampler, vec2f(v.uv.x + opt.chromatic_aberration_amount * chromatic_aberration_r_offset * texelSize.x, v.uv.y)).r;
+        hdrColor.g = textureSample(pfx_hdr, pfx_sampler, vec2f(v.uv.x + opt.chromatic_aberration_amount * chromatic_aberration_g_offset * texelSize.x, v.uv.y)).g;
+        hdrColor.b = textureSample(pfx_hdr, pfx_sampler, vec2f(v.uv.x + opt.chromatic_aberration_amount * chromatic_aberration_b_offset * texelSize.x, v.uv.y)).b;
     }
 
     // Apply Bloom
