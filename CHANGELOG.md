@@ -27,6 +27,7 @@ Icons:
 
 - 🎮 Game now has animations in the UI.
 - 🎮🔩 Created a Game event system.
+- 🎮🔩 Each game geometry object can now have a separate shader (they were previously tied to the Principled BSDF Shader).
 
 ### 🔨 Fixed
 
@@ -40,6 +41,8 @@ Icons:
 - 🎮🔩 Updated game UI to use MUI `Grid`, as `Grid2` is now the default `Grid`.
 - 🎮 Changed the chromatic aberration post effect implementation.
 - 🔩 Changed file naming from snake_case to kebab-case.
+- 🎮🔩 Added `rxjs` to the project and started migrating listeners to use it.
+- 🎮🔩 Broke down `Entity` and `MatrixTransformative` giga-classes into traits (mixins).
 
 ## [0.5.0] - 2024-12-01
 
