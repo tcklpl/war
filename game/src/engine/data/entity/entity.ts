@@ -1,9 +1,9 @@
 import { PrincipledBSDFShader } from '../../../shaders/geometry/principled-bsdf/principled-bsdf-shader';
 import { MathUtils } from '../../../utils/math-utils';
+import { identifiable } from '../../traits/identifiable.trait';
 import { Mat4 } from '../mat/mat4';
 import type { Mesh } from '../meshes/mesh';
 import type { PrimitiveDrawOptions } from '../meshes/primitive-draw-options';
-import { identifiable } from '../traits/identifiable';
 import { Vec3 } from '../vec/vec3';
 import { Vec4 } from '../vec/vec4';
 import type { EntityFlag } from './entity-flag';

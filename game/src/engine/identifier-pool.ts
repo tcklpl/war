@@ -1,4 +1,4 @@
-import type { IIdentifiable } from './data/traits/identifiable';
+import type { IIdentifiable } from './traits/identifiable.trait';
 
 export class IdentifierPool {
 	private _currentID = 0;

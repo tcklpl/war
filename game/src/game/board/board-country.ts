@@ -1,8 +1,8 @@
 import { Entity } from ':engine/data/entity/entity';
 import { EntityFlag } from ':engine/data/entity/entity-flag';
 import { PointLight } from ':engine/data/lights/point-light';
-import { interactable } from ':engine/data/traits/interactable';
 import { Vec3 } from ':engine/data/vec/vec3';
+import { interactable } from ':engine/traits/interactable';
 import type { TerritoryCode } from ':protocol';
 import { MissingAssetError } from '../../errors/engine/asset/missing-asset';
 

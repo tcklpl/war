@@ -1,5 +1,5 @@
-import type { IIdentifiable } from '../../data/traits/identifiable';
-import type { IInteractable } from '../../data/traits/interactable';
+import type { IIdentifiable } from '../../traits/identifiable.trait';
+import type { IInteractable } from '../../traits/interactable';
 
 export class InteractableManager {
 	private readonly _interactables: Map<number, IInteractable> = new Map();

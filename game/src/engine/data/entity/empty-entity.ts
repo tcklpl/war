@@ -1,4 +1,4 @@
-import { identifiable } from '../traits/identifiable';
+import { identifiable } from '../../traits/identifiable.trait';
 import { FrameListenerMatrixTransformative } from './frame-listener-matrix-transformative';
 import type { MatrixTransformative } from './matrix-transformative';
 
