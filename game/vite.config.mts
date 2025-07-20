@@ -5,7 +5,7 @@ import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { version } from './package.json';
 
-export default defineConfig({
+export default defineConfig(() => ({
 	base: './',
 	plugins: [react({ tsDecorators: true, devTarget: 'esnext' }), svgr(), tsconfigPaths()],
 	cacheDir: '../node_modules/.vite',
@@ -26,4 +26,4 @@ export default defineConfig({
 			reporter: ['json', 'html'],
 		},
 	},
-});
+}));
