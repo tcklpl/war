@@ -15,7 +15,7 @@ export class Mat4 {
 		return 4 * 4 * 4;
 	}
 
-	get asF32Array() {
+	toF32Array() {
 		return new Float32Array(this.values);
 	}
 
@@ -192,7 +192,7 @@ export class Mat4 {
 		]);
 	}
 
-	get determinant() {
+	determinant() {
 		/*
             00 01 02 03
             10 11 12 13

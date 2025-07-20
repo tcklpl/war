@@ -41,10 +41,10 @@ export class MatrixTransformative {
 		this._modelMatrixInverse = this._modelMatrix.inverse();
 
 		// models that have a negative transformation matrix should be drawn in clockwise winding order, this allows mirrored geometry
-		this._windingOrder = this._modelMatrix.determinant >= 0 ? 'ccw' : 'cw';
+		this._windingOrder = this._modelMatrix.determinant() >= 0 ? 'ccw' : 'cw';
 
-		device.queue.writeBuffer(this._modelMatrixUniformBuffer, 0, this._modelMatrix.asF32Array);
-		device.queue.writeBuffer(this._modelMatrixUniformBuffer, Mat4.byteSize, this._modelMatrixInverse.asF32Array);
+		device.queue.writeBuffer(this._modelMatrixUniformBuffer, 0, this._modelMatrix.toF32Array());
+		device.queue.writeBuffer(this._modelMatrixUniformBuffer, Mat4.byteSize, this._modelMatrixInverse.toF32Array());
 
 		// update children
 		this._children.forEach(c => c.buildModelMatrix());
@@ -58,7 +58,7 @@ export class MatrixTransformative {
 	}
 
 	buildRotationMatrix() {
-		this._rotationMatrix = this._rotation.asMat4;
+		this._rotationMatrix = this._rotation.toMat4();
 	}
 
 	buildScaleMatrix() {

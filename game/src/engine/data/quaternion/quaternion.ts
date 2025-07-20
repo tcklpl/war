@@ -24,7 +24,7 @@ export class Quaternion {
 		return new Quaternion(this.w, -this.x, -this.y, -this.z);
 	}
 
-	get asMat4() {
+	toMat4() {
 		const x2 = this.x * this.x;
 		const y2 = this.y * this.y;
 		const z2 = this.z * this.z;
