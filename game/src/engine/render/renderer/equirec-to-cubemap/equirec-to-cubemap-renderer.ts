@@ -40,7 +40,7 @@ export class EquirectangularToCubemapRenderer {
 		this._renderPassDescriptor = this.createRenderPassDescriptor();
 
 		// write projection matrix to buffer as it won't change
-		device.queue.writeBuffer(this._uniformBuffer, Mat4.byteSize, this._projectionMat.asF32Array);
+		device.queue.writeBuffer(this._uniformBuffer, Mat4.byteSize, this._projectionMat.toF32Array());
 
 		this._matrixBindGroup16f = this.createMatrixBindGroup(this._pipeline16f);
 		this._matrixBindGroup32f = this.createMatrixBindGroup(this._pipeline32f);
@@ -171,7 +171,7 @@ export class EquirectangularToCubemapRenderer {
 			const cameraMatrix = this._cameraMatrices[i];
 
 			// write view matrix to buffer
-			device.queue.writeBuffer(this._uniformBuffer, 0, cameraMatrix.asF32Array);
+			device.queue.writeBuffer(this._uniformBuffer, 0, cameraMatrix.toF32Array());
 
 			const commandEncoder = device.createCommandEncoder();
 

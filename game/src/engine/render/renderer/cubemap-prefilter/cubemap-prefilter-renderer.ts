@@ -1,9 +1,9 @@
-import { BadResolutionError } from '../../../errors/engine/data/bad-resolution';
-import { PrefilterCubemapShader } from '../../../shaders/util/cubemap-prefiltering/prefilter-cubemap-shader';
-import { BufferUtils } from '../../../utils/buffer-utils';
-import { MathUtils } from '../../../utils/math-utils';
-import { Mat4 } from '../../data/mat/mat4';
-import { Vec3 } from '../../data/vec/vec3';
+import { BadResolutionError } from '../../../../errors/engine/data/bad-resolution';
+import { PrefilterCubemapShader } from '../../../../shaders/util/cubemap-prefiltering/prefilter-cubemap-shader';
+import { BufferUtils } from '../../../../utils/buffer-utils';
+import { MathUtils } from '../../../../utils/math-utils';
+import { Mat4 } from '../../../data/mat/mat4';
+import { Vec3 } from '../../../data/vec/vec3';
 
 export class CubemapPrefilterRenderer {
 	private _convolutionShader!: PrefilterCubemapShader;
@@ -41,7 +41,7 @@ export class CubemapPrefilterRenderer {
 		this._renderPassDescriptor = this.createRenderPassDescriptor();
 
 		// write projection matrix to buffer as it won't change
-		device.queue.writeBuffer(this._uniformBuffer, Mat4.byteSize, this._projectionMat.asF32Array);
+		device.queue.writeBuffer(this._uniformBuffer, Mat4.byteSize, this._projectionMat.toF32Array());
 
 		this._matrixBindGroup = this.createMatrixBindGroup();
 	}
@@ -132,7 +132,7 @@ export class CubemapPrefilterRenderer {
 			const cameraMatrix = this._cameraMatrices[i];
 
 			// write view matrix to buffer
-			device.queue.writeBuffer(this._uniformBuffer, 0, cameraMatrix.asF32Array);
+			device.queue.writeBuffer(this._uniformBuffer, 0, cameraMatrix.toF32Array());
 
 			// render all mip levels for each face
 			for (let mipLevel = 0; mipLevel < mipLevels; mipLevel++) {
