@@ -1,26 +1,16 @@
-import { BufferUtils } from '../../../utils/buffer-utils';
-import { MathUtils } from '../../../utils/math-utils';
-import { LuminanceHistogram } from '../../data/histogram/luminance-histogram';
-import { Vec2 } from '../../data/vec/vec2';
-import { Renderer } from '../renderer';
+import { MathUtils } from '../../../../utils/math-utils';
+import { Vec2 } from '../../../data/vec/vec2';
+import { Renderer } from '../../renderer/renderer';
 import { RenderPostEffects } from './render-post-effects';
 import { RenderProjection } from './render-projection';
 import { RenderResourcePool } from './render-resource-pool';
 import { VanillaRenderPipeline } from './vanilla-render-pipeline';
 
 export class VanillaRenderer extends Renderer {
-	private _presentationFormat!: GPUTextureFormat;
 	private readonly _renderProjection = new RenderProjection();
 	private _renderPostEffects!: RenderPostEffects;
 	private readonly _renderPipeline = new VanillaRenderPipeline();
 	private readonly _renderResourcePool = new RenderResourcePool();
-	private _luminanceHistogram!: LuminanceHistogram;
-
-	private readonly _pickingBuffer = BufferUtils.createEmptyBuffer(
-		4,
-		GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
-		'Picking',
-	);
 
 	// Jitter offsets - Needed for TAA, should be an array of zeroes if TAA is disabled
 	private readonly _jitterOffsetCount = 16;
@@ -28,13 +18,10 @@ export class VanillaRenderer extends Renderer {
 	private _currentJitter = 0;
 
 	async initialize() {
-		this._luminanceHistogram = new LuminanceHistogram();
 		this._renderProjection.initialize();
 		this._renderPostEffects = new RenderPostEffects();
-		this._presentationFormat = navigator.gpu.getPreferredCanvasFormat();
 		await this._renderResourcePool.initialize();
 		this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
-
 		this._renderPipeline.buildPipeline(game.engine.config.graphics);
 		await this._renderPipeline.initialize({
 			canvasPreferredTextureFormat: this._presentationFormat,
@@ -125,7 +112,6 @@ export class VanillaRenderer extends Renderer {
 			projection: this._renderProjection,
 			postEffets: this._renderPostEffects,
 			jitter: frameJitter,
-			luminanceHistogram: this._luminanceHistogram,
 		});
 		this._renderPipeline.render(this._renderResourcePool);
 		device.queue.submit([commandEncoder.finish()]);

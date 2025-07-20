@@ -129,8 +129,8 @@ export class RenderStagePicking implements RenderStage {
 	}
 
 	private updateViewProjBuffer(view: Mat4) {
-		device.queue.writeBuffer(this._viewProjBuffer, 0, view.asF32Array);
-		device.queue.writeBuffer(this._viewProjBuffer, Mat4.byteSize, this._pickingProjectionMatrix.asF32Array);
+		device.queue.writeBuffer(this._viewProjBuffer, 0, view.toF32Array());
+		device.queue.writeBuffer(this._viewProjBuffer, Mat4.byteSize, this._pickingProjectionMatrix.toF32Array());
 	}
 
 	private setColorAttachment(view: GPUTextureView) {

@@ -1,19 +1,20 @@
-import { BufferUtils } from '../../../utils/buffer-utils';
-import { MathUtils } from '../../../utils/math-utils';
-import { ShadowMapAtlas } from '../../data/atlas/shadow-map-atlas';
-import type { LuminanceHistogram } from '../../data/histogram/luminance-histogram';
-import { Mat4 } from '../../data/mat/mat4';
-import type { Scene } from '../../data/scene/scene';
-import { Texture } from '../../data/texture/texture';
-import { TextureBufferChain } from '../../data/texture/texture-buffer-chain';
-import { Vec2 } from '../../data/vec/vec2';
-import { Vec3 } from '../../data/vec/vec3';
-import type { Resolution } from '../../resolution';
+import { ShadowMapAtlas } from ':engine/data/atlas/shadow-map-atlas';
+import { LuminanceHistogram } from ':engine/data/histogram/luminance-histogram';
+import { Mat4 } from ':engine/data/mat/mat4';
+import type { Scene } from ':engine/data/scene/scene';
+import { Texture } from ':engine/data/texture/texture';
+import { TextureBufferChain } from ':engine/data/texture/texture-buffer-chain';
+import { Vec2 } from ':engine/data/vec/vec2';
+import { Vec3 } from ':engine/data/vec/vec3';
+import type { Resolution } from ':engine/resolution';
+import { BufferUtils } from '../../../../utils/buffer-utils';
+import { MathUtils } from '../../../../utils/math-utils';
 import type { RenderPostEffects } from './render-post-effects';
 import type { RenderProjection } from './render-projection';
 
 export class RenderResourcePool {
 	private readonly _hdrTextureFormat: GPUTextureFormat = 'rgba16float';
+	readonly preferredCanvasFormat = navigator.gpu.getPreferredCanvasFormat();
 
 	private _commandEncoder!: GPUCommandEncoder;
 	private _scene!: Scene;
@@ -42,6 +43,10 @@ export class RenderResourcePool {
 	private readonly _viewProjBuffer!: GPUBuffer;
 
 	private _shadowMapAtlas!: ShadowMapAtlas;
+
+	readonly pickingBuffer = BufferUtils.createEmptyBuffer(4, GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ, 'pck');
+
+	readonly luminanceHistogram = new LuminanceHistogram();
 
 	constructor() {
 		// buffer has 5 mat4s and 1 vec3 (camera position)
@@ -204,11 +209,11 @@ export class RenderResourcePool {
 
 		// write camera view matrix, only need to do this once per loop as all shaders share the uniform buffer
 		const frameSharedBuffer = Float32Array.of(
-			...camera.viewMatrix.asF32Array, // 0x000 - 0x040 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-			...camera.cameraMatrix.asF32Array, // 0x040 - 0x080 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-			...camera.previousFrameViewMatrix.asF32Array, // 0x080 - 0x0c0 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-			...this.projectionMatrix.asF32Array, // 0x0c0 - 0x100 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
-			...this._renderProjection.previousFrameProjectionMatrix.asF32Array, // 0x100 - 0x140 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+			...camera.viewMatrix.toF32Array(), // 0x000 - 0x040 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+			...camera.cameraMatrix.toF32Array(), // 0x040 - 0x080 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+			...camera.previousFrameViewMatrix.toF32Array(), // 0x080 - 0x0c0 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+			...this.projectionMatrix.toF32Array(), // 0x0c0 - 0x100 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
+			...this._renderProjection.previousFrameProjectionMatrix.toF32Array(), // 0x100 - 0x140 - 64B - (1) Mat4 [ 4 * 4 * 4B = 64B ]
 			...camera.position.asF32Array, // 0x140 - 0x14c - 12B - (1) Vec3 [ 3 * 4B = 12B ]
 			0, // 0x14c - 0x150 -  4B - Padding
 			...data.jitter.asF32Array, // 0x150 - 0x158 -  8B - (1) Vec2 [ 2 * 4B = 8B ]
@@ -237,6 +242,7 @@ export class RenderResourcePool {
 		this.freeTextures();
 		this._viewProjBuffer?.destroy();
 		this._shadowMapAtlas?.free();
+		this.pickingBuffer.destroy();
 	}
 
 	get hasTextures() {

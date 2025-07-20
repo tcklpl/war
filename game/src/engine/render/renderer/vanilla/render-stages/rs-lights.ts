@@ -201,7 +201,7 @@ export class RenderStageLights implements RenderStage {
 				if (light instanceof DirectionalLight) {
 					const lightViewProj = this.getDirectionalLightViewProjMatrix(light, camera, pool.renderProjection);
 					light.shadowMappingViewProj = lightViewProj;
-					device.queue.writeBuffer(this._shadowCommonBuffer, 0, lightViewProj.asF32Array);
+					device.queue.writeBuffer(this._shadowCommonBuffer, 0, lightViewProj.toF32Array());
 					pool.scene.entitiesToRender.forEach(e =>
 						e.draw(rpe, this._depthPipeline, this._primitiveDrawOptions),
 					);

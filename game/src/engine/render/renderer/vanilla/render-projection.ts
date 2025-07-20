@@ -1,7 +1,7 @@
-import { MathUtils } from '../../../utils/math-utils';
-import { Mat4 } from '../../data/mat/mat4';
-import { Vec2 } from '../../data/vec/vec2';
-import { Resolution } from '../../resolution';
+import { MathUtils } from '../../../../utils/math-utils';
+import { Mat4 } from '../../../data/mat/mat4';
+import { Vec2 } from '../../../data/vec/vec2';
+import { Resolution } from '../../../resolution';
 
 export class RenderProjection {
 	private _near = 0.9;
@@ -20,9 +20,7 @@ export class RenderProjection {
 	}
 
 	initialize() {
-		game.engine.registerFrameListener({
-			onEachFrame: () => this.updatePreviousFrameMatrices(),
-		});
+		game.engine.onFrame$.subscribe(() => this.updatePreviousFrameMatrices());
 	}
 
 	private buildProjectionMatrices() {

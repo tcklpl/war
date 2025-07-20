@@ -1,6 +1,4 @@
-import { frameListener } from '../../data/traits/frame-listener';
-
-export class RenderPostEffects extends frameListener(class {}) {
+export class RenderPostEffects {
 	private _avgLuminance = 1;
 	avg_luminance_target = 1;
 
@@ -29,7 +27,11 @@ export class RenderPostEffects extends frameListener(class {}) {
 		amount: 3,
 	};
 
-	onEachFrame(deltaTime: number): void {
+	constructor() {
+		game.engine.onFrame$.subscribe(deltaTime => this.updateAverageLuminance(deltaTime));
+	}
+
+	updateAverageLuminance(deltaTime: number): void {
 		if (this._avgLuminance !== this.avg_luminance_target) {
 			const diff = this.avg_luminance_target - this._avgLuminance;
 			let adjustmentFactor = Math.min(deltaTime, Math.abs(diff));

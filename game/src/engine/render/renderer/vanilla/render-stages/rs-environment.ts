@@ -116,12 +116,12 @@ export class RenderStageEnvironment implements RenderStage {
 	}
 
 	private updateVariablesBuffer(pool: RenderResourcePool) {
-		device.queue.writeBuffer(this._variablesBuffer, 0, pool.projectionMatrix.asF32Array);
-		device.queue.writeBuffer(this._variablesBuffer, Mat4.byteSize, pool.inverseProjectionMatrix.asF32Array);
+		device.queue.writeBuffer(this._variablesBuffer, 0, pool.projectionMatrix.toF32Array());
+		device.queue.writeBuffer(this._variablesBuffer, Mat4.byteSize, pool.inverseProjectionMatrix.toF32Array());
 		device.queue.writeBuffer(
 			this._variablesBuffer,
 			2 * Mat4.byteSize,
-			(pool.scene.activeCamera as Camera).cameraMatrix.asF32Array,
+			(pool.scene.activeCamera as Camera).cameraMatrix.toF32Array(),
 		);
 	}
 

@@ -125,8 +125,8 @@ export class RenderStageSSAO implements RenderStage {
             ░: f32
         */
 
-		device.queue.writeBuffer(this._ssaoOptionsBuffer, 0x00, pool.projectionMatrix.asF32Array);
-		device.queue.writeBuffer(this._ssaoOptionsBuffer, 1 * Mat4.byteSize, pool.inverseProjectionMatrix.asF32Array);
+		device.queue.writeBuffer(this._ssaoOptionsBuffer, 0x00, pool.projectionMatrix.toF32Array());
+		device.queue.writeBuffer(this._ssaoOptionsBuffer, 1 * Mat4.byteSize, pool.inverseProjectionMatrix.toF32Array());
 		device.queue.writeBuffer(this._ssaoOptionsBuffer, 2 * Mat4.byteSize, new Float32Array([this._bias]));
 	}
 

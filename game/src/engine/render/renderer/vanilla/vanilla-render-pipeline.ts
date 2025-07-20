@@ -1,6 +1,5 @@
-import { BadPipelineError } from '../../../errors/engine/render/bad-pipeline';
-import type { ConfigGraphics } from '../../config/cfg-graphics';
-import type { RenderInitializationResources } from './render-initialization-resources';
+import type { ConfigGraphics } from ':engine/config/cfg-graphics';
+import { BadPipelineError } from '../../../../errors/engine/render/bad-pipeline';
 import type { RenderResourcePool } from './render-resource-pool';
 import type { RenderStage } from './render-stages/render-stage';
 import { RenderStageBloom } from './render-stages/rs-bloom';
@@ -13,9 +12,9 @@ import { RenderStagePFXToneMapping } from './render-stages/rs-pfx-tone-mapping';
 import { RenderStagePicking } from './render-stages/rs-picking';
 import { RenderStagePrePass } from './render-stages/rs-prepass';
 import { RenderStageSkybox } from './render-stages/rs-skybox';
-import { RenderStageSolidGeometry } from './render-stages/rs-solid-geometry';
 import { RenderStageSSAO } from './render-stages/rs-ssao';
 import { RenderStageTAA } from './render-stages/rs-taa';
+import { RenderStageSolidGeometry } from './render-stages/solid-geometry.render-stage';
 
 export class VanillaRenderPipeline {
 	private _currentPipeline: RenderStage[] = [];
@@ -52,9 +51,9 @@ export class VanillaRenderPipeline {
 		];
 	}
 
-	async initialize(resources: RenderInitializationResources) {
+	async initialize(resources: RenderResourcePool) {
 		for (const stage of this._currentPipeline) {
-			await stage.initialize(resources);
+			await stage.initialize?.(resources);
 		}
 	}
 
