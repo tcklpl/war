@@ -22,45 +22,39 @@ import utils from './utils.wgsl?raw';
 import vertexShader from './vertex.wgsl?raw';
 
 export class PrincipledBSDFShader extends Shader {
+	protected _source = ''.concat(
+		vsCommonUniforms,
+		vsUniqueUniforms,
+
+		constants,
+		precomputedKernels,
+		overrides,
+		uniforms,
+		utils,
+
+		vertexShader,
+
+		fragStructs,
+		brdfSpecular,
+		brdfDiffuse,
+		brdfLobes,
+		surface,
+
+		lightShadowFiltering,
+		lightShadows,
+		lightDirectional,
+		lightPunctual,
+		lightEval,
+
+		material,
+		pixel,
+		fragmentShader,
+	);
+
 	static readonly BINDING_GROUPS = {
-		VIEWPROJ: 0,
+		VIEW_PROJ: 0,
 		MODEL: 1,
 		MATERIAL: 2,
 		SCENE_INFO: 3,
 	};
-
-	constructor(name: string, cb: () => void) {
-		super(name);
-
-		const shaderSource = ''.concat(
-			vsCommonUniforms,
-			vsUniqueUniforms,
-
-			constants,
-			precomputedKernels,
-			overrides,
-			uniforms,
-			utils,
-
-			vertexShader,
-
-			fragStructs,
-			brdfSpecular,
-			brdfDiffuse,
-			brdfLobes,
-			surface,
-
-			lightShadowFiltering,
-			lightShadows,
-			lightDirectional,
-			lightPunctual,
-			lightEval,
-
-			material,
-			pixel,
-			fragmentShader,
-		);
-
-		this.compileShader(shaderSource).then(() => cb());
-	}
 }
