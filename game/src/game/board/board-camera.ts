@@ -1,12 +1,11 @@
 import { LookAtCamera } from ':engine/data/camera/lookat-camera';
-import { frameListener } from ':engine/data/traits/frame-listener';
 import type { Vec2 } from ':engine/data/vec/vec2';
 import { Vec3 } from ':engine/data/vec/vec3';
 import { keyboardListener } from ':engine/io/keyboard-listener';
 import { mouseListener } from ':engine/io/mouse-listener';
 import { MathUtils } from '../../utils/math-utils';
 
-const BoardCameraBase = keyboardListener(mouseListener(frameListener(LookAtCamera)));
+const BoardCameraBase = keyboardListener(mouseListener(LookAtCamera));
 
 export class BoardCamera extends BoardCameraBase {
 	private _moveSpeed = 5;
@@ -34,6 +33,7 @@ export class BoardCamera extends BoardCameraBase {
 		super(p, t, u);
 		this._camTarget = t;
 		this.registerKeyEvents();
+		game.engine.onFrame$.subscribe(deltaTime => this.update(deltaTime));
 	}
 
 	private registerKeyEvents() {
@@ -53,7 +53,7 @@ export class BoardCamera extends BoardCameraBase {
 		this.onKeyUp('shift', () => (this._moveSpeed = this._moveSpeedSlow));
 	}
 
-	onEachFrame(deltaTime: number): void {
+	update(deltaTime: number): void {
 		if (this._deltaX === 0 && this._deltaY === 0 && this._deltaZ === 0) return;
 		this.position = this.position.add(
 			new Vec3(

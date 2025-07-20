@@ -14,9 +14,7 @@ export abstract class Camera {
 	constructor(pos: Vec3, up: Vec3) {
 		this._pos = pos;
 		this._up = up;
-		game.engine.registerFrameListener({
-			onEachFrame: () => this.updatePreviousFrameMatrices(),
-		});
+		game.engine.onFrame$.subscribe(() => this.updatePreviousFrameMatrices());
 	}
 
 	abstract generateCameraMatrix(): void;

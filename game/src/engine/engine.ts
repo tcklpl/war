@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { AssetManager } from './asset/asset-manager';
 import { ConfigManager } from './config/cfg-manager';
 import { CameraManager } from './data/camera/camera-manager';
@@ -5,15 +6,14 @@ import { LightManager } from './data/lights/light-manager';
 import { MaterialManager } from './data/material/material-manager';
 import { MeshManager } from './data/meshes/mesh-manager';
 import { SceneManager } from './data/scene/scene-manager';
-import type { IFrameListener } from './data/traits/frame-listener';
 import { IDBWarConnection } from './idb-war-connection';
 import { IdentifierPool } from './identifier-pool';
 import { GameIO } from './io/io';
 import { BRDFLUTRenderer } from './render/brdf-lut/brdf-lut-renderer';
-import { CubemapPrefilterRenderer } from './render/cubemap-prefilter/cubemap-prefilter-renderer';
 import { EquirectangularToCubemapRenderer } from './render/equirec-to-cubemap/equirec-to-cubemap-renderer';
 import { MipmapRenderer } from './render/mipmap/mipmap-renderer';
-import type { Renderer } from './render/renderer';
+import { CubemapPrefilterRenderer } from './render/renderer/cubemap-prefilter/cubemap-prefilter-renderer';
+import type { Renderer } from './render/renderer/renderer';
 import { TexturePackingRenderer } from './render/texture-packing/texture-packing-renderer';
 import { VanillaRenderer } from './render/vanilla/vanilla-renderer';
 import { Time } from './time';
@@ -44,7 +44,8 @@ export class Engine {
 		packing: new TexturePackingRenderer(),
 	};
 
-	private readonly _frameListeners: IFrameListener[] = [];
+	readonly onFrame$ = new Subject<number>();
+	readonly onSecond$ = new Subject<void>();
 
 	private _brdfLUT!: GPUTexture;
 
@@ -66,16 +67,12 @@ export class Engine {
 			this._lastFullSecondTime = time;
 			Time.updateFPS(this._framesRenderedSinceLastSecond);
 			this._framesRenderedSinceLastSecond = 0;
-			this._frameListeners.forEach(fl => {
-				if (fl.onEachSecond) fl.onEachSecond();
-			});
+			this.onSecond$.next();
 		}
 
 		if (this._shouldRender) {
 			// Update all frame listeners before rendering
-			this._frameListeners.forEach(fl => {
-				if (fl.onEachFrame) fl.onEachFrame(deltaTime);
-			});
+			this.onFrame$.next(deltaTime);
 			await this._renderer.render();
 		}
 
@@ -113,10 +110,6 @@ export class Engine {
 
 	resumeRender() {
 		this._shouldRender = true;
-	}
-
-	registerFrameListener(l: IFrameListener) {
-		this._frameListeners.push(l);
 	}
 
 	async free() {
