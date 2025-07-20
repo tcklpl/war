@@ -7,9 +7,9 @@ import { useGameSession } from ':hooks/use-game-session';
 import { render } from '@testing-library/react';
 import HUDPerformance from './hud-performance';
 
-vi.mock(':hooks/use_game');
-vi.mock(':hooks/use_game_session');
-vi.mock(':hooks/use_config');
+vi.mock(':hooks/use-game');
+vi.mock(':hooks/use-game_session');
+vi.mock(':hooks/use-config');
 
 describe('Performance HUD', () => {
 	it(`renders nothing if there's no game instance`, async () => {
@@ -23,12 +23,12 @@ describe('Performance HUD', () => {
 		});
 
 		mockUseGameSession.mockReturnValue({
-			...(await vi.importActual(':hooks/use_game_session')),
+			...(await vi.importActual(':hooks/use-game-session')),
 			currentGameSession: undefined,
 		});
 
 		mockUseConfig.mockReturnValue({
-			...(await vi.importActual(':hooks/use_config')),
+			...(await vi.importActual(':hooks/use-config')),
 			displayConfig: new ConfigDisplay(),
 		});
 
@@ -56,12 +56,12 @@ describe('Performance HUD', () => {
 		});
 
 		mockUseGameSession.mockReturnValue({
-			...(await vi.importActual(':hooks/use_game_session')),
+			...(await vi.importActual(':hooks/use-game-session')),
 			currentGameSession: {} as WarGameSession,
 		});
 
 		mockUseConfig.mockReturnValue({
-			...(await vi.importActual(':hooks/use_config')),
+			...(await vi.importActual(':hooks/use-config')),
 			displayConfig,
 		});
 

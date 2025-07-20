@@ -29,16 +29,14 @@ const HUDPerformance: React.FC = () => {
 	useEffect(() => {
 		if (!gameInstance) return;
 
-		gameInstance.engine.registerFrameListener({
-			onEachSecond() {
-				if (!currentGameSession) return;
+		gameInstance.engine.onSecond$.subscribe(() => {
+			if (!currentGameSession) return;
 
-				setFps(Time.FPS);
-				if (display.showPerformanceCharts) setFpsHistory([...fpsHistory, Time.FPS]);
+			setFps(Time.FPS);
+			if (display.showPerformanceCharts) setFpsHistory([...fpsHistory, Time.FPS]);
 
-				setPing(currentGameSession.ping ?? 0);
-				if (display.showPerformanceCharts) setPingHistory([...pingHistory, currentGameSession.ping ?? 0]);
-			},
+			setPing(currentGameSession.ping ?? 0);
+			if (display.showPerformanceCharts) setPingHistory([...pingHistory, currentGameSession.ping ?? 0]);
 		});
 	}, [gameInstance, fpsHistory, pingHistory, currentGameSession, display.showPerformanceCharts]);
 
