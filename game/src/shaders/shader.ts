@@ -1,25 +1,23 @@
 import { ShaderError } from '../errors/engine/shader/shader-error';
 
 export abstract class Shader {
-	private readonly _name: string;
-	private _module!: GPUShaderModule;
+	protected abstract _source: string;
+	private _module?: GPUShaderModule;
 
-	constructor(name: string) {
-		this._name = name;
-	}
+	constructor(public readonly name: string) {}
 
-	protected async compileShader(source: string) {
+	async compile() {
 		const module = device.createShaderModule({
-			code: source,
-			label: this._name,
+			code: this._source,
+			label: this.name,
 		});
 		const info = await module.getCompilationInfo();
 
 		// if there's any compilation error
 		if (info.messages.some(m => m.type === 'error')) {
 			console.log(info.messages);
-			console.log(source);
-			throw new ShaderError(`Error when compiling shader '${this._name}'`);
+			console.log(this._source);
+			throw new ShaderError(`Error when compiling shader '${this.name}'`);
 		}
 
 		if (info.messages.length > 0) {
@@ -30,6 +28,8 @@ export abstract class Shader {
 	}
 
 	get module() {
+		if (!this._module)
+			throw new ShaderError(`Trying to access shader module before it was compiled, on shader '${this.name}'`);
 		return this._module;
 	}
 }
