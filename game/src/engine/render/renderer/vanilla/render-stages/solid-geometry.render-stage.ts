@@ -53,7 +53,7 @@ export class RenderStageSolidGeometry implements RenderStage {
 	}
 
 	async render(pool: RenderResourcePool) {
-		pool.commandEncoder.pushDebugGroup('Solid Geometry Renderer');
+		pool.commandEncoder.pushDebugGroup('Solid Geometry Renderer Stage');
 
 		this._renderPassPipelines.clear();
 		pool.scene.entitiesToRender.forEach(e => this.putRenderableIntoMap(e));
