@@ -6,7 +6,7 @@ export class PickingShader extends Shader {
 	protected _source = ''.concat(vsUniqueUniforms, shaderSource);
 
 	static readonly BINDING_GROUPS = {
-		VIEWPROJ: 0,
+		VIEW_PROJ: 0,
 		ENTITY: 1,
 	};
 }
