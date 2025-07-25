@@ -32,6 +32,8 @@ abstract class RenderPipelineBase {
 		}
 		this.gpuRenderPassDescriptor.depthStencilAttachment.view = view;
 	}
+
+	free?(): void;
 }
 
 export abstract class RenderPipeline extends RenderPipelineBase {
@@ -43,12 +45,7 @@ export abstract class GeometryRenderPipeline extends RenderPipelineBase {
 	abstract sceneInfoBindGroupOptions: SceneInfoBindGroupOptions;
 	abstract initialize(pool: RenderResourcePool, windingOrder: WindingOrder): Promise<void>;
 
-	render(
-		rpe: GPURenderPassEncoder,
-		pipeline: GPURenderPipeline,
-		options: PrimitiveDrawOptions,
-		objects: Renderable[],
-	) {
-		objects.forEach(o => o.render(rpe, pipeline, options));
+	render(rpe: GPURenderPassEncoder, objects: Renderable[]) {
+		objects.forEach(o => o.render(rpe, this.gpuPipeline as GPURenderPipeline, this.primitiveDrawOptions));
 	}
 }

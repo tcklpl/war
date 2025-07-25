@@ -19,18 +19,14 @@ export class RenderStagePrePass implements RenderStage {
 			this._prepassPipelineCCW.defineRenderAttachments(pool);
 			rpe.setPipeline(this._prepassPipelineCCW.gpuPipeline);
 			this._prepassPipelineCCW.bindBindGroups(rpe);
-			pool.scene.entitiesPerWindingOrder.ccw.forEach(e =>
-				e.render(rpe, this._prepassPipelineCCW.gpuPipeline, this._prepassPipelineCCW.primitiveDrawOptions),
-			);
+			this._prepassPipelineCCW.render(rpe, pool.scene.entitiesPerWindingOrder.ccw);
 		}
 
 		if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
 			this._prepassPipelineCW.defineRenderAttachments(pool);
 			rpe.setPipeline(this._prepassPipelineCW.gpuPipeline);
 			this._prepassPipelineCW.bindBindGroups(rpe);
-			pool.scene.entitiesPerWindingOrder.cw.forEach(e =>
-				e.render(rpe, this._prepassPipelineCW.gpuPipeline, this._prepassPipelineCW.primitiveDrawOptions),
-			);
+			this._prepassPipelineCW.render(rpe, pool.scene.entitiesPerWindingOrder.cw);
 		}
 
 		rpe.end();
