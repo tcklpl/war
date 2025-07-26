@@ -1,97 +1,21 @@
-import { DepthShader } from '../../../../shaders/geometry/depth/depth-shader';
-import { BufferUtils } from '../../../../utils/buffer-utils';
-import { MathUtils } from '../../../../utils/math-utils';
-import { MatrixUtils } from '../../../../utils/matrix-utils';
-import type { Camera } from '../../../data/camera/camera';
-import { DirectionalLight } from '../../../data/lights/directional-light';
-import { Mat4 } from '../../../data/mat/mat4';
-import { PrimitiveDrawOptions } from '../../../data/meshes/primitive-draw-options';
-import { Vec3 } from '../../../data/vec/vec3';
-import { Vec4 } from '../../../data/vec/vec4';
-import type { RenderInitializationResources } from '../render-initialization-resources';
+import type { Camera } from ':engine/data/camera/camera';
+import { DirectionalLight } from ':engine/data/lights/directional-light';
+import { Mat4 } from ':engine/data/mat/mat4';
+import { Vec3 } from ':engine/data/vec/vec3';
+import { Vec4 } from ':engine/data/vec/vec4';
+import { DepthPipeline } from ':engine/render/pipeline/geometry/depth.pipeline';
+import { MathUtils } from '../../../../../utils/math-utils';
+import { MatrixUtils } from '../../../../../utils/matrix-utils';
 import type { RenderProjection } from '../render-projection';
 import type { RenderResourcePool } from '../render-resource-pool';
 import type { RenderStage } from './render-stage';
 
 export class RenderStageLights implements RenderStage {
 	private readonly _zMult = 1;
+	private readonly _depthPipeline = new DepthPipeline();
 
-	private _depthShader!: DepthShader;
-	private _depthPipeline!: GPURenderPipeline;
-	private _renderPassDescriptor!: GPURenderPassDescriptor;
-	private readonly _primitiveDrawOptions = new PrimitiveDrawOptions().includePosition(0);
-	private _viewProjBindGroup!: GPUBindGroup;
-
-	private readonly _shadowCommonBuffer = BufferUtils.createEmptyBuffer(
-		Mat4.byteSize,
-		GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-		'shadow map common buffer',
-	);
-
-	async initialize(_resources: RenderInitializationResources) {
-		await new Promise<void>(r => {
-			this._depthShader = new DepthShader('depth shader', () => r());
-		});
-
-		this._depthPipeline = await this.createPipeline();
-		this._renderPassDescriptor = this.createRenderPassDescriptor();
-		this._viewProjBindGroup = this.createViewProjBindGroup(this._shadowCommonBuffer);
-	}
-
-	private createPipeline() {
-		return device.createRenderPipelineAsync({
-			label: 'rs ssao pipeline',
-			layout: 'auto',
-			vertex: {
-				module: this._depthShader.module,
-				entryPoint: 'vertex',
-				buffers: [
-					// position
-					{
-						arrayStride: 3 * 4,
-						attributes: [{ shaderLocation: 0, offset: 0, format: 'float32x3' }],
-					},
-				] as GPUVertexBufferLayout[],
-			},
-			fragment: {
-				module: this._depthShader.module,
-				entryPoint: 'fragment',
-				targets: [],
-			},
-			primitive: {
-				topology: 'triangle-list',
-				cullMode: 'none',
-			},
-			depthStencil: {
-				depthWriteEnabled: true,
-				depthCompare: 'less',
-				format: 'depth24plus',
-			},
-		});
-	}
-
-	private createRenderPassDescriptor() {
-		return {
-			colorAttachments: [],
-			depthStencilAttachment: {
-				// view will be assigned later
-				depthClearValue: 1,
-				depthLoadOp: 'clear',
-				depthStoreOp: 'store',
-			} as GPURenderPassDepthStencilAttachment,
-		} as GPURenderPassDescriptor;
-	}
-
-	private createViewProjBindGroup(buffer: GPUBuffer) {
-		return device.createBindGroup({
-			label: 'PBR ViewProj',
-			layout: this._depthPipeline.getBindGroupLayout(DepthShader.BINDING_GROUPS.VIEWPROJ),
-			entries: [{ binding: 0, resource: { buffer: buffer } }],
-		});
-	}
-
-	private setDepthTexture(depthView: GPUTextureView) {
-		(this._renderPassDescriptor.depthStencilAttachment as GPURenderPassDepthStencilAttachment).view = depthView;
+	async initialize() {
+		await this._depthPipeline.initialize();
 	}
 
 	private getDirectionalLightViewProjMatrix(
@@ -152,18 +76,19 @@ export class RenderStageLights implements RenderStage {
 	}
 
 	render(pool: RenderResourcePool) {
+		// get corners and center of the view frustum
+		const camera = pool.scene.activeCamera;
+		if (!camera) return;
+
 		pool.commandEncoder.pushDebugGroup('Light Renderer');
 
 		// update light buffers
 		pool.scene.info.updateLightBuffers();
 
-		// get corners and center of the view frustum
-		const camera = pool.scene.activeCamera as Camera;
-
-		this.setDepthTexture(pool.shadowMapAtlas.texture.view);
-		const rpe = pool.commandEncoder.beginRenderPass(this._renderPassDescriptor);
-		rpe.setPipeline(this._depthPipeline);
-		rpe.setBindGroup(DepthShader.BINDING_GROUPS.VIEWPROJ, this._viewProjBindGroup);
+		const rpe = pool.commandEncoder.beginRenderPass(this._depthPipeline.gpuRenderPassDescriptor);
+		this._depthPipeline.defineRenderAttachments(pool);
+		rpe.setPipeline(this._depthPipeline.gpuPipeline);
+		this._depthPipeline.bindBindGroups(rpe, pool);
 
 		for (const light of pool.scene.lights) {
 			// if shadows are enabled
@@ -201,20 +126,17 @@ export class RenderStageLights implements RenderStage {
 				if (light instanceof DirectionalLight) {
 					const lightViewProj = this.getDirectionalLightViewProjMatrix(light, camera, pool.renderProjection);
 					light.shadowMappingViewProj = lightViewProj;
-					device.queue.writeBuffer(this._shadowCommonBuffer, 0, lightViewProj.toF32Array());
-					pool.scene.entitiesToRender.forEach(e =>
-						e.draw(rpe, this._depthPipeline, this._primitiveDrawOptions),
-					);
+					this._depthPipeline.writeToDepthCommonBuffer(lightViewProj);
+					this._depthPipeline.render(rpe, pool.scene.entitiesToRender);
 				}
 			}
 		}
 
 		rpe.end();
-
 		pool.commandEncoder.popDebugGroup();
 	}
 
 	free() {
-		this._shadowCommonBuffer.destroy();
+		this._depthPipeline.free();
 	}
 }

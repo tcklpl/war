@@ -7,7 +7,7 @@ import type { RenderResourcePool } from '../renderer/vanilla/render-resource-poo
 
 abstract class RenderPipelineBase {
 	abstract readonly gpuShader: Shader;
-	gpuPipeline?: GPURenderPipeline;
+	gpuPipeline!: GPURenderPipeline;
 	abstract readonly gpuRenderPassDescriptor: GPURenderPassDescriptor;
 	abstract defineRenderAttachments(pool: RenderResourcePool): void;
 	abstract bindBindGroups(rpe: GPURenderPassEncoder, pool: RenderResourcePool): void;
@@ -38,6 +38,8 @@ abstract class RenderPipelineBase {
 
 export abstract class RenderPipeline extends RenderPipelineBase {
 	abstract initialize(resources: RenderResourcePool): Promise<void>;
+
+	abstract render(rpe: GPURenderPassDescriptor): void;
 }
 
 export abstract class GeometryRenderPipeline extends RenderPipelineBase {
@@ -46,6 +48,6 @@ export abstract class GeometryRenderPipeline extends RenderPipelineBase {
 	abstract initialize(pool: RenderResourcePool, windingOrder: WindingOrder): Promise<void>;
 
 	render(rpe: GPURenderPassEncoder, objects: Renderable[]) {
-		objects.forEach(o => o.render(rpe, this.gpuPipeline as GPURenderPipeline, this.primitiveDrawOptions));
+		objects.forEach(o => o.render(rpe, this.gpuPipeline, this.primitiveDrawOptions));
 	}
 }
