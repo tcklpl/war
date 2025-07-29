@@ -39,7 +39,7 @@ abstract class RenderPipelineBase {
 export abstract class RenderPipeline extends RenderPipelineBase {
 	abstract initialize(resources: RenderResourcePool): Promise<void>;
 
-	abstract render(rpe: GPURenderPassDescriptor): void;
+	abstract render(pool: RenderResourcePool): void;
 }
 
 export abstract class GeometryRenderPipeline extends RenderPipelineBase {
