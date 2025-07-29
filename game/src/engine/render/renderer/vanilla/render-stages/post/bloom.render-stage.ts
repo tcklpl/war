@@ -1,7 +1,7 @@
 import { BloomDownsamplePipeline } from ':engine/render/pipeline/post/bloom-downsample.pipeline';
 import { BloomUpsamplePipeline } from ':engine/render/pipeline/post/bloom-upsample.pipeline';
-import type { RenderResourcePool } from '../render-resource-pool';
-import type { RenderStage } from './render-stage';
+import type { RenderResourcePool } from '../../render-resource-pool';
+import type { RenderStage } from '../render-stage';
 
 export class RenderStageBloom implements RenderStage {
 	private readonly _downsamplePipeline = new BloomDownsamplePipeline();

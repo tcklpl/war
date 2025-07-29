@@ -3,9 +3,9 @@ import { BadPipelineError } from '../../../../errors/engine/render/bad-pipeline'
 import type { RenderResourcePool } from './render-resource-pool';
 import { RenderStageLights } from './render-stages/lights.render-stage';
 import { RenderStagePicking } from './render-stages/picking.render-stage';
+import { RenderStageBloom } from './render-stages/post/bloom.render-stage';
 import { RenderStagePrePass } from './render-stages/prepass.render-stage';
 import type { RenderStage } from './render-stages/render-stage';
-import { RenderStageBloom } from './render-stages/rs-bloom';
 import { RenderStageEnvironment } from './render-stages/rs-environment';
 import { RenderStageExposureCalculation } from './render-stages/rs-exposure-calculation';
 import { RenderStageOutline } from './render-stages/rs-outline';
