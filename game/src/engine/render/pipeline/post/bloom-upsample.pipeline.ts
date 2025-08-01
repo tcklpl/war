@@ -52,7 +52,7 @@ export class BloomUpsamplePipeline extends RenderPipeline {
 		} as GPURenderPassDescriptor;
 	}
 
-	private createBindGroup(texView: GPUTextureView) {
+	private getBindGroup(texView: GPUTextureView) {
 		return device.createBindGroup({
 			label: 'bloom downsample bind group',
 			layout: this.gpuPipeline.getBindGroupLayout(BloomDownsampleShader.BINDING_GROUPS.TEXTURE),
@@ -63,33 +63,11 @@ export class BloomUpsamplePipeline extends RenderPipeline {
 		});
 	}
 
-	render(pool: RenderResourcePool) {
-		for (let i = pool.bloomMipsLength - 1; i > 0; i--) {
-			const sourceTexture = pool.bloomMips.texture.createView({
-				mipLevelCount: 1,
-				baseMipLevel: i,
-			});
-
-			const targetMip = pool.bloomMips.texture.createView({
-				mipLevelCount: 1,
-				baseMipLevel: i - 1,
-			});
-
-			this.defineColorRenderAttachment(0, targetMip);
-			const rpe = pool.commandEncoder.beginRenderPass(this.gpuRenderPassDescriptor);
-
-			rpe.setPipeline(this.gpuPipeline);
-			rpe.setBindGroup(BloomUpsampleShader.BINDING_GROUPS.TEXTURE, this.createBindGroup(sourceTexture));
-			rpe.draw(6);
-			rpe.end();
-		}
+	bindSourceTexture(textureView: GPUTextureView, rpe: GPURenderPassEncoder) {
+		rpe.setBindGroup(BloomUpsampleShader.BINDING_GROUPS.TEXTURE, this.getBindGroup(textureView));
 	}
 
-	defineRenderAttachments(_pool: RenderResourcePool): void {
-		throw new Error('Method not implemented.');
-	}
-
-	bindBindGroups(_rpe: GPURenderPassEncoder, _pool: RenderResourcePool): void {
-		throw new Error('Method not implemented.');
+	render(_pool: RenderResourcePool, rpe: GPURenderPassEncoder) {
+		rpe.draw(6);
 	}
 }
