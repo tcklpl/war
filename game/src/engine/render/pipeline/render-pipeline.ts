@@ -9,8 +9,6 @@ abstract class RenderPipelineBase {
 	abstract readonly gpuShader: Shader;
 	gpuPipeline!: GPURenderPipeline;
 	abstract readonly gpuRenderPassDescriptor: GPURenderPassDescriptor;
-	abstract defineRenderAttachments(pool: RenderResourcePool): void;
-	abstract bindBindGroups(rpe: GPURenderPassEncoder, pool: RenderResourcePool): void;
 
 	defineColorRenderAttachment(index: number, view: GPUTextureView) {
 		const colorAttachments = this.gpuRenderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[];
@@ -39,7 +37,7 @@ abstract class RenderPipelineBase {
 export abstract class RenderPipeline extends RenderPipelineBase {
 	abstract initialize(resources: RenderResourcePool): Promise<void>;
 
-	abstract render(pool: RenderResourcePool): void;
+	abstract render(pool: RenderResourcePool, rpe: GPURenderPassEncoder): void;
 }
 
 export abstract class GeometryRenderPipeline extends RenderPipelineBase {
@@ -50,4 +48,7 @@ export abstract class GeometryRenderPipeline extends RenderPipelineBase {
 	render(rpe: GPURenderPassEncoder, objects: Renderable[]) {
 		objects.forEach(o => o.render(rpe, this.gpuPipeline, this.primitiveDrawOptions));
 	}
+
+	abstract defineRenderAttachments(pool: RenderResourcePool): void;
+	abstract bindBindGroups(rpe: GPURenderPassEncoder, pool: RenderResourcePool): void;
 }
