@@ -6,7 +6,7 @@ export class SkyboxShader extends Shader {
 	protected _source = ''.concat(vsCommonUniforms, shaderSource);
 
 	static readonly BINDING_GROUPS = {
-		VIEWPROJ: 0,
+		VIEW_PROJ: 0,
 		TEXTURE: 1,
 	};
 }

@@ -4,6 +4,7 @@ import type { RenderResourcePool } from './render-resource-pool';
 import { RenderStageLights } from './render-stages/lights.render-stage';
 import { RenderStagePicking } from './render-stages/picking.render-stage';
 import { RenderStageBloom } from './render-stages/post/bloom.render-stage';
+import { RenderStageSkybox } from './render-stages/post/skybox.render-stage';
 import { RenderStagePrePass } from './render-stages/prepass.render-stage';
 import type { RenderStage } from './render-stages/render-stage';
 import { RenderStageEnvironment } from './render-stages/rs-environment';
@@ -11,7 +12,6 @@ import { RenderStageExposureCalculation } from './render-stages/rs-exposure-calc
 import { RenderStageOutline } from './render-stages/rs-outline';
 import { RenderStageOutlineMask } from './render-stages/rs-outline-mask';
 import { RenderStagePFXToneMapping } from './render-stages/rs-pfx-tone-mapping';
-import { RenderStageSkybox } from './render-stages/rs-skybox';
 import { RenderStageSSAO } from './render-stages/rs-ssao';
 import { RenderStageTAA } from './render-stages/rs-taa';
 import { RenderStageSolidGeometry } from './render-stages/solid-geometry.render-stage';

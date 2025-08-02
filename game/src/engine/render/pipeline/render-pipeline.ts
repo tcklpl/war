@@ -35,7 +35,7 @@ abstract class RenderPipelineBase {
 }
 
 export abstract class RenderPipeline extends RenderPipelineBase {
-	abstract initialize(resources: RenderResourcePool): Promise<void>;
+	abstract initialize(pool: RenderResourcePool): Promise<void>;
 
 	abstract render(pool: RenderResourcePool, rpe: GPURenderPassEncoder): void;
 }
