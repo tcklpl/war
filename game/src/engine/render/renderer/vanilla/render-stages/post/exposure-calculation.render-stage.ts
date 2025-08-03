@@ -1,11 +1,10 @@
-import { HistogramShader } from '../../../../shaders/post/auto-exposure/histogram-shader';
-import { LuminanceReducerShader } from '../../../../shaders/post/auto-exposure/luminance-reducer-shader';
-import type { Shader } from '../../../../shaders/shader';
-import { BufferUtils } from '../../../../utils/buffer-utils';
-import type { Texture } from '../../../data/texture/texture';
-import type { RenderInitializationResources } from '../render-initialization-resources';
-import type { RenderResourcePool } from '../render-resource-pool';
-import type { RenderStage } from './render-stage';
+import type { Texture } from ':engine/data/texture/texture';
+import { HistogramShader } from '../../../../../../shaders/post/auto-exposure/histogram-shader';
+import { LuminanceReducerShader } from '../../../../../../shaders/post/auto-exposure/luminance-reducer-shader';
+import type { Shader } from '../../../../../../shaders/shader';
+import { BufferUtils } from '../../../../../../utils/buffer-utils';
+import type { RenderResourcePool } from '../../render-resource-pool';
+import type { RenderStage } from '../render-stage';
 
 export class RenderStageExposureCalculation implements RenderStage {
 	private _chunkSize!: number;
@@ -16,10 +15,10 @@ export class RenderStageExposureCalculation implements RenderStage {
 	private _chunksBuffer!: GPUBuffer;
 	private _resultBuffer!: GPUBuffer;
 
-	private _histShader!: HistogramShader;
+	private readonly _histShader = new HistogramShader('Histogram shader');
 	private _histPipeline!: GPUComputePipeline;
 
-	private _reduceShader!: LuminanceReducerShader;
+	private readonly _reduceShader = new LuminanceReducerShader('Luminance reduce shader');
 	private _reducePipeline!: GPUComputePipeline;
 	private _histBindGroup!: GPUBindGroup;
 	private _reduceBindGroups: { buffer: GPUBuffer; bindGroup: GPUBindGroup }[] = [];
@@ -29,20 +28,15 @@ export class RenderStageExposureCalculation implements RenderStage {
 		GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
 	);
 
-	async initialize(resources: RenderInitializationResources) {
-		await new Promise<void>(r => {
-			this._histShader = new HistogramShader('histogram shader', () => r());
-		});
-
-		await new Promise<void>(r => {
-			this._reduceShader = new LuminanceReducerShader('luminance reducer shader', () => r());
-		});
+	async initialize(pool: RenderResourcePool) {
+		await this._histShader.compile();
+		await this._reduceShader.compile();
 
 		this._histPipeline = await this.createComputePipeline(this._histShader);
 		this._reducePipeline = await this.createComputePipeline(this._reduceShader);
 
-		this._chunkSize = resources.luminanceHistogramBins;
-		this._resultBuffer = resources.luminanceHistogramBuffer;
+		this._chunkSize = pool.luminanceHistogram.bins;
+		this._resultBuffer = pool.luminanceHistogram.buffer;
 	}
 
 	private createComputePipeline(shader: Shader) {
@@ -114,7 +108,7 @@ export class RenderStageExposureCalculation implements RenderStage {
 	}
 
 	render(pool: RenderResourcePool) {
-		pool.commandEncoder.pushDebugGroup('PFX and Tonemapper');
+		pool.commandEncoder.pushDebugGroup('Exposure calculation');
 		this.updateForCurrentRender(pool);
 		const pass = pool.commandEncoder.beginComputePass();
 
