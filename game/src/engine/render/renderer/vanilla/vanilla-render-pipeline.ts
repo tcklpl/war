@@ -7,10 +7,10 @@ import { RenderStagePrePass } from './render-stages/geometry/prepass.render-stag
 import { RenderStageSolidGeometry } from './render-stages/geometry/solid-geometry.render-stage';
 import { RenderStageBloom } from './render-stages/post/bloom.render-stage';
 import { RenderStageExposureCalculation } from './render-stages/post/exposure-calculation.render-stage';
+import { RenderStageOutline } from './render-stages/post/outline.render-stage';
 import { RenderStageSkybox } from './render-stages/post/skybox.render-stage';
 import type { RenderStage } from './render-stages/render-stage';
 import { RenderStageEnvironment } from './render-stages/rs-environment';
-import { RenderStageOutline } from './render-stages/rs-outline';
 import { RenderStageOutlineMask } from './render-stages/rs-outline-mask';
 import { RenderStagePFXToneMapping } from './render-stages/rs-pfx-tone-mapping';
 import { RenderStageSSAO } from './render-stages/rs-ssao';
