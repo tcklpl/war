@@ -1,3 +1,4 @@
+import type { Flaggable } from ':engine/traits/flaggable.trait';
 import type { Renderable } from ':engine/traits/renderable.trait';
 import type { Transformable } from ':engine/traits/transformable.trait';
 import type { Camera } from '../camera/camera';
@@ -6,8 +7,10 @@ import { BlackSkybox } from '../skybox/black-skybox';
 import type { Skybox } from '../skybox/skybox';
 import { SceneInfo } from './scene-info';
 
+type RenderableEntity = Renderable & Transformable & Flaggable;
+
 export class Scene {
-	private readonly _entities: (Renderable & Transformable)[];
+	private readonly _entities: RenderableEntity[];
 	private readonly _cameras: Camera[];
 	private readonly _lights: Light[];
 	private readonly _skyboxes: Skybox[];
@@ -18,14 +21,14 @@ export class Scene {
 	private _sceneInfo!: SceneInfo;
 
 	private readonly _entitiesPerWindingOrder = {
-		cw: [] as (Renderable & Transformable)[],
-		ccw: [] as (Renderable & Transformable)[],
+		cw: [] as RenderableEntity[],
+		ccw: [] as RenderableEntity[],
 	};
 
 	constructor(
 		private readonly _name: string,
 		props: {
-			entities: (Renderable & Transformable)[];
+			entities: RenderableEntity[];
 			cameras: Camera[];
 			lights: Light[];
 			skyboxes: Skybox[];

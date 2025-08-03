@@ -7,7 +7,7 @@ export class OutlineMaskShader extends Shader {
 	protected _source = ''.concat(vsCommonUniforms, vsUniqueUniforms, shaderSource);
 
 	static readonly BINDING_GROUPS = {
-		VIEWPROJ: 0,
+		VIEW_PROJ: 0,
 		MODEL: 1,
 	};
 }
