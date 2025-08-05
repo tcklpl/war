@@ -12,9 +12,9 @@ import { RenderStageExposureCalculation } from './render-stages/post/exposure-ca
 import { RenderStageOutline } from './render-stages/post/outline.render-stage';
 import { RenderStagePFXToneMapping } from './render-stages/post/pfx-tone-mapping.render-stage';
 import { RenderStageSkybox } from './render-stages/post/skybox.render-stage';
+import { RenderStageTAA } from './render-stages/post/taa.render-stage';
 import type { RenderStage } from './render-stages/render-stage';
 import { RenderStageSSAO } from './render-stages/rs-ssao';
-import { RenderStageTAA } from './render-stages/rs-taa';
 
 export class VanillaRenderPipeline {
 	private _currentPipeline: RenderStage[] = [];
