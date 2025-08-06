@@ -1,15 +1,16 @@
+import { Texture } from ':engine/data/texture/texture';
+import { SSAOPipeline } from ':engine/render/pipeline/post/ssao.pipeline';
+import { SSAOBlurPipeline } from ':engine/render/pipeline/post/ssao-blur.pipeline';
 import { Float16Array } from '@petamoriken/float16';
-import { SSAOBlurShader } from '../../../../shaders/post/ssao/ssao-blur-shader';
-import { SSAOShader } from '../../../../shaders/post/ssao/ssao-shader';
-import type { Shader } from '../../../../shaders/shader';
-import { BufferUtils } from '../../../../utils/buffer-utils';
-import { MathUtils } from '../../../../utils/math-utils';
-import { Mat4 } from '../../../data/mat/mat4';
-import { Vec2 } from '../../../data/vec/vec2';
-import { Vec3 } from '../../../data/vec/vec3';
-import type { RenderInitializationResources } from '../render-initialization-resources';
-import type { RenderResourcePool } from '../render-resource-pool';
-import type { RenderStage } from './render-stage';
+import { SSAOBlurShader } from '../../../../../../shaders/post/ssao/ssao-blur-shader';
+import { SSAOShader } from '../../../../../../shaders/post/ssao/ssao-shader';
+import { BufferUtils } from '../../../../../../utils/buffer-utils';
+import { MathUtils } from '../../../../../../utils/math-utils';
+import { Mat4 } from '../../../../../data/mat/mat4';
+import { Vec2 } from '../../../../../data/vec/vec2';
+import { Vec3 } from '../../../../../data/vec/vec3';
+import type { RenderResourcePool } from '../../render-resource-pool';
+import type { RenderStage } from '../render-stage';
 
 export class RenderStageSSAO implements RenderStage {
 	private readonly _bias = 0.0025;
@@ -22,7 +23,7 @@ export class RenderStageSSAO implements RenderStage {
 	);
 
 	private _noise: Vec2[] = [];
-	private _noiseTexture!: GPUTexture;
+	private readonly _noiseTexture = new Texture();
 	private readonly _samplerRepeat = device.createSampler({
 		addressModeU: 'repeat',
 		addressModeV: 'repeat',
@@ -36,39 +37,23 @@ export class RenderStageSSAO implements RenderStage {
 		magFilter: 'linear',
 	});
 
-	private _ssaoShader!: SSAOShader;
-	private _ssaoPipeline!: GPURenderPipeline;
+	private readonly _ssaoPipeline = new SSAOPipeline();
 	private readonly _ssaoOptionsBuffer = BufferUtils.createEmptyBuffer(
 		2 * Mat4.byteSize + 4,
 		GPUBufferUsage.COPY_DST | GPUBufferUsage.UNIFORM,
 	);
 	private _ssaoOptKernelBindGroup!: GPUBindGroup;
 
-	private _ssaoBlurShader!: SSAOBlurShader;
-	private _ssaoBlurPipeline!: GPURenderPipeline;
+	private readonly _ssaoBlurPipeline = new SSAOBlurPipeline();
 
-	private _ssaoRenderPassDescriptor!: GPURenderPassDescriptor;
-	private _ssaoBlurRenderPassDescriptor!: GPURenderPassDescriptor;
-
-	async initialize(_resources: RenderInitializationResources) {
+	async initialize(pool: RenderResourcePool) {
 		this.buildKernel();
 		this.writeKernelBuffer();
 		await this.buildNoiseMap();
 
-		await new Promise<void>(r => {
-			this._ssaoShader = new SSAOShader('ssao shader', () => r());
-		});
-
-		await new Promise<void>(r => {
-			this._ssaoBlurShader = new SSAOBlurShader('ssao blur shader', () => r());
-		});
-
-		this._ssaoPipeline = await this.createSSAOPipeline(this._ssaoShader);
-		this._ssaoBlurPipeline = await this.createSSAOPipeline(this._ssaoBlurShader);
+		await this._ssaoPipeline.initialize(pool);
+		await this._ssaoBlurPipeline.initialize(pool);
 		this._ssaoOptKernelBindGroup = this.createSSAOOptKernelBindGroup();
-
-		this._ssaoRenderPassDescriptor = this.createRenderPassDescriptor();
-		this._ssaoBlurRenderPassDescriptor = this.createRenderPassDescriptor();
 	}
 
 	private buildKernel() {
@@ -132,7 +117,7 @@ export class RenderStageSSAO implements RenderStage {
 
 	private async buildNoiseMap() {
 		this._noise = [];
-		this._noiseTexture?.destroy();
+		this._noiseTexture.free();
 
 		// 16 as the noise will be a 4x4 texture
 		for (let i = 0; i < 16; i++) {
@@ -141,7 +126,7 @@ export class RenderStageSSAO implements RenderStage {
 		}
 
 		// build noise texture
-		this._noiseTexture = device.createTexture({
+		this._noiseTexture.texture = device.createTexture({
 			size: [4, 4],
 			format: 'rg16float',
 			usage: GPUTextureUsage.COPY_DST | GPUTextureUsage.TEXTURE_BINDING,
@@ -150,7 +135,7 @@ export class RenderStageSSAO implements RenderStage {
 		const noiseF16 = new Float16Array(this._noise.flatMap(v => [v.x, v.y]));
 
 		device.queue.writeTexture(
-			{ texture: this._noiseTexture },
+			{ texture: this._noiseTexture.texture },
 			noiseF16.buffer,
 			{ bytesPerRow: 16, rowsPerImage: 4 },
 			{ width: 4, height: 4 },
@@ -159,31 +144,10 @@ export class RenderStageSSAO implements RenderStage {
 		await device.queue.onSubmittedWorkDone();
 	}
 
-	private createSSAOPipeline(shader: Shader) {
-		return device.createRenderPipelineAsync({
-			label: 'rs ssao pipeline',
-			layout: 'auto',
-			vertex: {
-				module: shader.module,
-				entryPoint: 'vertex',
-				buffers: [],
-			},
-			fragment: {
-				module: shader.module,
-				entryPoint: 'fragment',
-				targets: [{ format: 'r16float' as GPUTextureFormat }],
-			},
-			primitive: {
-				topology: 'triangle-list',
-				cullMode: 'none',
-			},
-		});
-	}
-
 	private createSSAOOptKernelBindGroup() {
 		return device.createBindGroup({
 			label: 'ssao opt and kernel bind group',
-			layout: this._ssaoPipeline.getBindGroupLayout(SSAOShader.BINDING_GROUPS.OPT_KERNEL),
+			layout: this._ssaoPipeline.gpuPipeline.getBindGroupLayout(SSAOShader.BINDING_GROUPS.OPT_KERNEL),
 			entries: [
 				{ binding: 0, resource: { buffer: this._ssaoOptionsBuffer } },
 				{ binding: 1, resource: { buffer: this._kernelBuffer } },
@@ -194,11 +158,11 @@ export class RenderStageSSAO implements RenderStage {
 	private createSSAOTexturesBindGroup(pool: RenderResourcePool) {
 		return device.createBindGroup({
 			label: 'ssao textures bind group',
-			layout: this._ssaoPipeline.getBindGroupLayout(SSAOShader.BINDING_GROUPS.TEXTURES),
+			layout: this._ssaoPipeline.gpuPipeline.getBindGroupLayout(SSAOShader.BINDING_GROUPS.TEXTURES),
 			entries: [
 				{ binding: 0, resource: this._samplerRepeat },
 				{ binding: 1, resource: this._samplerClamp },
-				{ binding: 2, resource: this._noiseTexture.createView() },
+				{ binding: 2, resource: this._noiseTexture.view },
 				{ binding: 3, resource: pool.depthTextureView },
 				{ binding: 4, resource: pool.normalTextureView },
 			],
@@ -208,34 +172,12 @@ export class RenderStageSSAO implements RenderStage {
 	private createSSAOBlurBindGroup(pool: RenderResourcePool) {
 		return device.createBindGroup({
 			label: 'ssao blur textures bind group',
-			layout: this._ssaoBlurPipeline.getBindGroupLayout(SSAOBlurShader.BINDING_GROUPS.TEXTURES),
+			layout: this._ssaoBlurPipeline.gpuPipeline.getBindGroupLayout(SSAOBlurShader.BINDING_GROUPS.TEXTURES),
 			entries: [
 				{ binding: 0, resource: this._samplerClamp },
-				{ binding: 1, resource: pool.ssaoTextureNoisy.texture.createView() },
+				{ binding: 1, resource: pool.ssaoTextureNoisy.view },
 			],
 		});
-	}
-
-	private createRenderPassDescriptor() {
-		return {
-			colorAttachments: [
-				{
-					// view: undefined, Assigned later
-					clearValue: { r: 0, g: 0, b: 0, a: 1 },
-					loadOp: 'load',
-					storeOp: 'store',
-				},
-			] as GPURenderPassColorAttachment[],
-		} as GPURenderPassDescriptor;
-	}
-
-	private setSSAORenderTexture(texView: GPUTextureView) {
-		(this._ssaoRenderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = texView;
-	}
-
-	private setSSAOBlurRenderTexture(tex: GPUTexture) {
-		(this._ssaoBlurRenderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view =
-			tex.createView();
 	}
 
 	private renderSSAO(pool: RenderResourcePool) {
@@ -244,10 +186,9 @@ export class RenderStageSSAO implements RenderStage {
 		this.writeOptionsBuffer(pool);
 		const texturesBindGroup = this.createSSAOTexturesBindGroup(pool);
 
-		this.setSSAORenderTexture(pool.ssaoTextureViewNoisy);
-		const rpe = pool.commandEncoder.beginRenderPass(this._ssaoRenderPassDescriptor);
+		this._ssaoPipeline.defineColorRenderAttachment(0, pool.ssaoTextureViewNoisy);
 
-		rpe.setPipeline(this._ssaoPipeline);
+		const rpe = this._ssaoPipeline.beginRenderPassAndSetPipeline(pool.commandEncoder);
 		rpe.setBindGroup(SSAOShader.BINDING_GROUPS.OPT_KERNEL, this._ssaoOptKernelBindGroup);
 		rpe.setBindGroup(SSAOShader.BINDING_GROUPS.TEXTURES, texturesBindGroup);
 		rpe.draw(6);
@@ -260,11 +201,9 @@ export class RenderStageSSAO implements RenderStage {
 		pool.commandEncoder.pushDebugGroup('SSAO Renderer - Blur');
 
 		const texturesBindGroup = this.createSSAOBlurBindGroup(pool);
+		this._ssaoBlurPipeline.defineColorRenderAttachment(0, pool.ssaoTextureBlurred.view);
 
-		this.setSSAOBlurRenderTexture(pool.ssaoTextureBlurred.texture);
-		const rpe = pool.commandEncoder.beginRenderPass(this._ssaoBlurRenderPassDescriptor);
-
-		rpe.setPipeline(this._ssaoBlurPipeline);
+		const rpe = this._ssaoBlurPipeline.beginRenderPassAndSetPipeline(pool.commandEncoder);
 		rpe.setBindGroup(SSAOBlurShader.BINDING_GROUPS.TEXTURES, texturesBindGroup);
 		rpe.draw(6);
 		rpe.end();
@@ -280,6 +219,6 @@ export class RenderStageSSAO implements RenderStage {
 	}
 
 	free() {
-		this._noiseTexture?.destroy();
+		this._noiseTexture.free();
 	}
 }

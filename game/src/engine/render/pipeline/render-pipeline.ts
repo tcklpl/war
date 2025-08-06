@@ -31,6 +31,12 @@ abstract class RenderPipelineBase {
 		this.gpuRenderPassDescriptor.depthStencilAttachment.view = view;
 	}
 
+	beginRenderPassAndSetPipeline(commandEncoder: GPUCommandEncoder) {
+		const rpe = commandEncoder.beginRenderPass(this.gpuRenderPassDescriptor);
+		rpe.setPipeline(this.gpuPipeline);
+		return rpe;
+	}
+
 	free?(): void;
 }
 
