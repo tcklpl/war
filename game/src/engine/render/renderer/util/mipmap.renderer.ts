@@ -1,9 +1,8 @@
-import { Mipmap2DShader } from '../../../shaders/util/mipmap/mipmap-shader';
+import { MipmapPipeline } from ':engine/render/pipeline/util/mipmap.pipeline';
+import { Mipmap2DShader } from '../../../../shaders/util/mipmap/mipmap-shader';
 
 export class MipmapRenderer {
-	private _mipShader!: Mipmap2DShader;
-	private _mipPipeline!: GPURenderPipeline;
-	private _renderPassDescriptor!: GPURenderPassDescriptor;
+	private readonly _pipeline = new MipmapPipeline();
 	private readonly _sampler = device.createSampler({
 		label: 'cubemap convolution sampler',
 		magFilter: 'linear',
@@ -12,48 +11,7 @@ export class MipmapRenderer {
 	});
 
 	async initialize() {
-		await new Promise<void>(r => {
-			this._mipShader = new Mipmap2DShader('mipmap shader', () => r());
-		});
-		this._mipPipeline = await this.createPipeline();
-		this._renderPassDescriptor = this.createRenderPassDescriptor();
-	}
-
-	private createPipeline() {
-		return device.createRenderPipelineAsync({
-			label: 'mipmap pipeline',
-			layout: 'auto',
-			vertex: {
-				module: this._mipShader.module,
-				entryPoint: 'vertex',
-			},
-			fragment: {
-				module: this._mipShader.module,
-				entryPoint: 'fragment',
-				targets: [{ format: 'rgba16float' as GPUTextureFormat }],
-			},
-			primitive: {
-				topology: 'triangle-list',
-				cullMode: 'none',
-			},
-		});
-	}
-
-	private createRenderPassDescriptor() {
-		return {
-			colorAttachments: [
-				{
-					// view: Assigned later
-					clearValue: { r: 0, g: 0, b: 0, a: 1 },
-					loadOp: 'clear',
-					storeOp: 'store',
-				} as GPURenderPassColorAttachment,
-			],
-		} as GPURenderPassDescriptor;
-	}
-
-	private setRenderTargetView(view: GPUTextureView) {
-		(this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view = view;
+		await this._pipeline.initialize();
 	}
 
 	/**
@@ -77,7 +35,7 @@ export class MipmapRenderer {
 				// create a bind group to hold the source of this pass
 				const texBindGroup = device.createBindGroup({
 					label: 'cube mipmap texture bind group',
-					layout: this._mipPipeline.getBindGroupLayout(Mipmap2DShader.BINDING_GROUPS.TEXTURE),
+					layout: this._pipeline.gpuPipeline.getBindGroupLayout(Mipmap2DShader.BINDING_GROUPS.TEXTURE),
 					entries: [
 						{ binding: 0, resource: this._sampler },
 						{ binding: 1, resource: passSource },
@@ -94,9 +52,8 @@ export class MipmapRenderer {
 
 				// encode the mip render and submit it to the GPU queue
 				const commandEncoder = device.createCommandEncoder();
-				this.setRenderTargetView(renderTarget);
-				const rpe = commandEncoder.beginRenderPass(this._renderPassDescriptor);
-				rpe.setPipeline(this._mipPipeline);
+				this._pipeline.defineColorRenderAttachment(0, renderTarget);
+				const rpe = this._pipeline.beginRenderPassAndSetPipeline(commandEncoder);
 				rpe.setBindGroup(Mipmap2DShader.BINDING_GROUPS.TEXTURE, texBindGroup);
 				rpe.draw(6);
 				rpe.end();
