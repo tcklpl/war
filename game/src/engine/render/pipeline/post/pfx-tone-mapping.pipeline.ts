@@ -19,13 +19,13 @@ export class PfxToneMappingPipeline extends RenderPipeline {
 
 	async initialize(pool: RenderResourcePool) {
 		await this.gpuShader.compile();
-		this.gpuPipeline = await this.buildPipeline(pool.hdrTextureFormat);
+		this.gpuPipeline = await this.buildPipeline(navigator.gpu.getPreferredCanvasFormat());
 		this._optionsBuffer = this.buildOptionsBuffer();
 		this._optionsBindGroup = this.buildOptionsBindGroup();
 		this.updateTextureBindGroup(pool);
 	}
 
-	private buildPipeline(hdrTextureFormat: GPUTextureFormat) {
+	private buildPipeline(textureFormat: GPUTextureFormat) {
 		return device.createRenderPipelineAsync({
 			label: 'rs pfx and tonemapping pipeline',
 			layout: 'auto',
@@ -37,7 +37,7 @@ export class PfxToneMappingPipeline extends RenderPipeline {
 			fragment: {
 				module: this.gpuShader.module,
 				entryPoint: 'fragment',
-				targets: [{ format: hdrTextureFormat }],
+				targets: [{ format: textureFormat }],
 				constants: {
 					bloom_strength: game.engine.config.graphics.useBloom ? 0.04 : 0,
 					motion_blur_amount: Math.max(0, game.engine.config.graphics.motionBlurAmount),
