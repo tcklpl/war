@@ -2,9 +2,9 @@ import { Mat4 } from ':engine/data/mat/mat4';
 import type { Vec2 } from ':engine/data/vec/vec2';
 import { PickingPipeline } from ':engine/render/pipeline/geometry/picking.pipeline';
 import type { Resolution } from ':engine/resolution';
-import { MathUtils } from '../../../../../utils/math-utils';
-import type { RenderResourcePool } from '../render-resource-pool';
-import type { RenderStage } from './render-stage';
+import { MathUtils } from '../../../../../../utils/math-utils';
+import type { RenderResourcePool } from '../../render-resource-pool';
+import type { RenderStage } from '../render-stage';
 
 export class RenderStagePicking implements RenderStage {
 	private readonly _pipeline = new PickingPipeline();
@@ -49,6 +49,7 @@ export class RenderStagePicking implements RenderStage {
 		);
 		this._pipeline.writeMatricesToBuffer(camera.viewMatrix, projectionMatrix);
 
+		this._pipeline.defineRenderAttachments();
 		const rpe = pool.commandEncoder.beginRenderPass(this._pipeline.gpuRenderPassDescriptor);
 
 		rpe.setPipeline(this._pipeline.gpuPipeline);
