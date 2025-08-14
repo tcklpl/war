@@ -4,11 +4,11 @@ import { Mat4 } from ':engine/data/mat/mat4';
 import { Vec3 } from ':engine/data/vec/vec3';
 import { Vec4 } from ':engine/data/vec/vec4';
 import { DepthPipeline } from ':engine/render/pipeline/geometry/depth.pipeline';
-import { MathUtils } from '../../../../../utils/math-utils';
-import { MatrixUtils } from '../../../../../utils/matrix-utils';
-import type { RenderProjection } from '../render-projection';
-import type { RenderResourcePool } from '../render-resource-pool';
-import type { RenderStage } from './render-stage';
+import { MathUtils } from '../../../../../../utils/math-utils';
+import { MatrixUtils } from '../../../../../../utils/matrix-utils';
+import type { RenderProjection } from '../../render-projection';
+import type { RenderResourcePool } from '../../render-resource-pool';
+import type { RenderStage } from '../render-stage';
 
 export class RenderStageLights implements RenderStage {
 	private readonly _zMult = 1;
@@ -85,8 +85,8 @@ export class RenderStageLights implements RenderStage {
 		// update light buffers
 		pool.scene.info.updateLightBuffers();
 
-		const rpe = pool.commandEncoder.beginRenderPass(this._depthPipeline.gpuRenderPassDescriptor);
 		this._depthPipeline.defineRenderAttachments(pool);
+		const rpe = pool.commandEncoder.beginRenderPass(this._depthPipeline.gpuRenderPassDescriptor);
 		rpe.setPipeline(this._depthPipeline.gpuPipeline);
 		this._depthPipeline.bindBindGroups(rpe, pool);
 

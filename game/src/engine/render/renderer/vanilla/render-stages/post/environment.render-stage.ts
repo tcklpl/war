@@ -13,6 +13,7 @@ export class RenderStageEnvironment implements RenderStage {
 		pool.commandEncoder.pushDebugGroup('Environment Renderer');
 
 		this._pipeline.updateEnvironmentVariablesBuffer(pool);
+		this._pipeline.updateEnvironmentTextureBindGroup(pool);
 		this._pipeline.defineRenderAttachments(pool);
 		const rpe = pool.commandEncoder.beginRenderPass(this._pipeline.gpuRenderPassDescriptor);
 

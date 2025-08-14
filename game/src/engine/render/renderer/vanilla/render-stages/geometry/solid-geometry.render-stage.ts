@@ -2,8 +2,8 @@ import type { GeometryRenderPipeline } from ':engine/render/pipeline/render-pipe
 import type { Renderable } from ':engine/traits/renderable.trait';
 import type { Transformable } from ':engine/traits/transformable.trait';
 import type { Constructor } from 'typeUtils';
-import type { RenderResourcePool } from '../render-resource-pool';
-import type { RenderStage } from './render-stage';
+import type { RenderResourcePool } from '../../render-resource-pool';
+import type { RenderStage } from '../render-stage';
 
 interface GeometryPipelineEntry {
 	ccw: GeometryRenderPipeline;

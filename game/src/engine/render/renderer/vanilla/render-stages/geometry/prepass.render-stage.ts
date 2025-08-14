@@ -1,6 +1,6 @@
 import { PrepassPipeline } from ':engine/render/pipeline/geometry/prepass.pipeline';
-import type { RenderResourcePool } from '../render-resource-pool';
-import type { RenderStage } from './render-stage';
+import type { RenderResourcePool } from '../../render-resource-pool';
+import type { RenderStage } from '../render-stage';
 
 export class RenderStagePrePass implements RenderStage {
 	private readonly _prepassPipelineCCW = new PrepassPipeline();
@@ -13,6 +13,7 @@ export class RenderStagePrePass implements RenderStage {
 
 	render(pool: RenderResourcePool) {
 		pool.commandEncoder.pushDebugGroup('Pre-pass Render Stage');
+		this._prepassPipelineCCW.defineRenderAttachments(pool);
 		const rpe = pool.commandEncoder.beginRenderPass(this._prepassPipelineCCW.gpuRenderPassDescriptor);
 
 		if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {

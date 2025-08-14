@@ -15,6 +15,7 @@ export class RenderStageOutlineMask implements RenderStage {
 	render(pool: RenderResourcePool) {
 		pool.commandEncoder.pushDebugGroup('Outline Masking');
 
+		this._pipelineCCW.defineRenderAttachments(pool);
 		const rpe = pool.commandEncoder.beginRenderPass(this._pipelineCCW.gpuRenderPassDescriptor);
 
 		if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
