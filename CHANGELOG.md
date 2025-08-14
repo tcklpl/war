@@ -43,6 +43,7 @@ Icons:
 - 🔩 Changed file naming from snake_case to kebab-case.
 - 🎮🔩 Added `rxjs` to the project and started migrating listeners to use it.
 - 🎮🔩 Broke down `Entity` and `MatrixTransformative` giga-classes into traits (mixins).
+- 🎮🔩 Refactored the entire rendering pipeline, breaking down into pipelines and renderers.
 
 ## [0.5.0] - 2024-12-01
 
