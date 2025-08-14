@@ -48,7 +48,7 @@ export class GLTFMesh {
 		this._engineMesh = new Mesh(this._name, constructedPrimitives);
 	}
 
-	get asEngineMesh() {
+	convertToEngineMesh() {
 		if (!this._engineMesh) this.constructEngineMesh();
 		return this._engineMesh as Mesh;
 	}
