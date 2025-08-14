@@ -1,15 +1,14 @@
-import { BadResolutionError } from '../../../errors/engine/data/bad-resolution';
-import { EquirectangularShader } from '../../../shaders/util/equirectangular/equirectangular-shader';
-import { BufferUtils } from '../../../utils/buffer-utils';
-import { MathUtils } from '../../../utils/math-utils';
-import { Mat4 } from '../../data/mat/mat4';
-import { Vec3 } from '../../data/vec/vec3';
+import { Mat4 } from ':engine/data/mat/mat4';
+import { Vec3 } from ':engine/data/vec/vec3';
+import { EquirecToCubemapPipeline } from ':engine/render/pipeline/util/equirec-to-cubemap.pipeline';
+import { BadResolutionError } from '../../../../errors/engine/data/bad-resolution';
+import { EquirectangularShader } from '../../../../shaders/util/equirectangular/equirectangular-shader';
+import { BufferUtils } from '../../../../utils/buffer-utils';
+import { MathUtils } from '../../../../utils/math-utils';
 
 export class EquirectangularToCubemapRenderer {
-	private _equirecShader!: EquirectangularShader;
-	private _pipeline16f!: GPURenderPipeline;
-	private _pipeline32f!: GPURenderPipeline;
-	private _renderPassDescriptor!: GPURenderPassDescriptor;
+	private readonly _pipeline16f = new EquirecToCubemapPipeline('rgba16float');
+	private readonly _pipeline32f = new EquirecToCubemapPipeline('rgba32float');
 
 	private readonly _projectionMat = Mat4.perspective(MathUtils.degToRad(90), 1, 0.1, 10);
 	private readonly _cameraMatrices = [
@@ -27,93 +26,20 @@ export class EquirectangularToCubemapRenderer {
 
 	private _matrixBindGroup16f!: GPUBindGroup;
 	private _matrixBindGroup32f!: GPUBindGroup;
-	private _sampler!: GPUSampler;
+
+	private readonly _sampler = device.createSampler({
+		label: 'equirec to cubemap sampler',
+	});
 
 	async initialize() {
-		await new Promise<void>(r => {
-			this._equirecShader = new EquirectangularShader('equirec to cubemap shader', () => r());
-		});
-
-		this._pipeline16f = await this.createPipeline('rgba16float');
-		this._pipeline32f = await this.createPipeline('rgba32float');
-		this._sampler = this.createSampler();
-		this._renderPassDescriptor = this.createRenderPassDescriptor();
+		await this._pipeline16f.initialize();
+		await this._pipeline32f.initialize();
 
 		// write projection matrix to buffer as it won't change
 		device.queue.writeBuffer(this._uniformBuffer, Mat4.byteSize, this._projectionMat.toF32Array());
 
-		this._matrixBindGroup16f = this.createMatrixBindGroup(this._pipeline16f);
-		this._matrixBindGroup32f = this.createMatrixBindGroup(this._pipeline32f);
-	}
-
-	private createPipeline(texType: 'rgba16float' | 'rgba32float') {
-		return device.createRenderPipelineAsync({
-			label: 'equirec to cubemap pipeline',
-			layout:
-				texType === 'rgba16float'
-					? 'auto'
-					: device.createPipelineLayout({
-							label: 'equirec to cubemap pipeline layout',
-							bindGroupLayouts: [
-								device.createBindGroupLayout({
-									entries: [
-										{
-											binding: 0,
-											buffer: { type: 'uniform' },
-											visibility: GPUShaderStage.VERTEX,
-										},
-									] as GPUBindGroupLayoutEntry[],
-								}),
-								device.createBindGroupLayout({
-									entries: [
-										{
-											binding: 0,
-											sampler: { type: 'non-filtering' },
-											visibility: GPUShaderStage.FRAGMENT,
-										},
-										{
-											binding: 1,
-											texture: { sampleType: 'unfilterable-float' },
-											visibility: GPUShaderStage.FRAGMENT,
-										},
-									] as GPUBindGroupLayoutEntry[],
-								}),
-							],
-						}),
-			vertex: {
-				module: this._equirecShader.module,
-				entryPoint: 'vertex',
-			},
-			fragment: {
-				module: this._equirecShader.module,
-				entryPoint: 'fragment',
-				targets: [{ format: 'rgba16float' as GPUTextureFormat }],
-			},
-			primitive: {
-				topology: 'triangle-list',
-				cullMode: 'front',
-			},
-		});
-	}
-
-	private createRenderPassDescriptor() {
-		return {
-			colorAttachments: [
-				{
-					// view: Assigned later
-					// resolveTarget: Assigned Later
-					clearValue: { r: 0, g: 0, b: 0, a: 1 },
-					loadOp: 'clear',
-					storeOp: 'store',
-				} as GPURenderPassColorAttachment,
-			],
-		} as GPURenderPassDescriptor;
-	}
-
-	private createSampler() {
-		return device.createSampler({
-			label: 'equirec to cubemap sampler',
-		});
+		this._matrixBindGroup16f = this.createMatrixBindGroup(this._pipeline16f.gpuPipeline);
+		this._matrixBindGroup32f = this.createMatrixBindGroup(this._pipeline32f.gpuPipeline);
 	}
 
 	private createMatrixBindGroup(pipeline: GPURenderPipeline) {
@@ -159,7 +85,7 @@ export class EquirectangularToCubemapRenderer {
 		// create bindgroup to hold the supplied texture
 		const texBindGroup = device.createBindGroup({
 			label: 'equirec to cubemap conversion texture bindgroup',
-			layout: pipeline.getBindGroupLayout(EquirectangularShader.BINDING_GROUPS.TEXTURE),
+			layout: pipeline.gpuPipeline.getBindGroupLayout(EquirectangularShader.BINDING_GROUPS.TEXTURE),
 			entries: [
 				{ binding: 0, resource: this._sampler },
 				{ binding: 1, resource: equirecImage.createView() },
@@ -173,19 +99,17 @@ export class EquirectangularToCubemapRenderer {
 			// write view matrix to buffer
 			device.queue.writeBuffer(this._uniformBuffer, 0, cameraMatrix.toF32Array());
 
+			const cubemapFaceView = finalCubemap.createView({
+				arrayLayerCount: 1,
+				baseArrayLayer: i,
+				baseMipLevel: 0,
+				mipLevelCount: 1,
+			});
+
 			const commandEncoder = device.createCommandEncoder();
+			pipeline.defineColorRenderAttachment(0, cubemapFaceView);
 
-			(this._renderPassDescriptor.colorAttachments as GPURenderPassColorAttachment[])[0].view =
-				finalCubemap.createView({
-					arrayLayerCount: 1,
-					baseArrayLayer: i,
-					baseMipLevel: 0,
-					mipLevelCount: 1,
-				});
-
-			const passEncoder = commandEncoder.beginRenderPass(this._renderPassDescriptor);
-
-			passEncoder.setPipeline(pipeline);
+			const passEncoder = pipeline.beginRenderPassAndSetPipeline(commandEncoder);
 
 			// bind uniforms
 			passEncoder.setBindGroup(EquirectangularShader.BINDING_GROUPS.VIEWPROJ, matrixBindGroup);
