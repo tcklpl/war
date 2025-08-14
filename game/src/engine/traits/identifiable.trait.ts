@@ -2,13 +2,14 @@ import type { Constructor } from 'typeUtils';
 
 export interface IIdentifiable {
 	get id(): number;
-	get idUint32(): Uint32Array;
+
+	writeIdToBuffer(buffer: GPUBuffer, offset: number): void;
 }
 
 export function identifiable<T extends Constructor>(base: T): Constructor<IIdentifiable> & T {
 	return class extends base {
 		private readonly _id: number;
-		private readonly _idUint32: Uint32Array;
+		private readonly _idUint32: Uint32Array<ArrayBuffer>;
 
 		constructor(...args: any[]) {
 			super(...args);
@@ -16,12 +17,12 @@ export function identifiable<T extends Constructor>(base: T): Constructor<IIdent
 			this._idUint32 = new Uint32Array([this._id]);
 		}
 
-		get id() {
-			return this._id;
+		writeIdToBuffer(buffer: GPUBuffer, offset: number) {
+			device.queue.writeBuffer(buffer, offset, this._idUint32);
 		}
 
-		get idUint32() {
-			return this._idUint32;
+		get id() {
+			return this._id;
 		}
 	};
 }

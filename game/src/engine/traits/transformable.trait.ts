@@ -2,9 +2,9 @@ import { Mat4 } from ':engine/data/mat/mat4';
 import type { Constructor } from 'typeUtils';
 import { Subject } from 'rxjs';
 import type { Animatable } from './animatable.trait';
-import { positionable } from './positionable.trait';
-import { rotatable } from './rotatable.trait';
-import { scalable } from './scalable.trait';
+import { type Positionable, positionable } from './positionable.trait';
+import { type Rotatable, rotatable } from './rotatable.trait';
+import { type Scalable, scalable } from './scalable.trait';
 
 export type Transformable = {
 	buildModelMatrix(): void;
@@ -12,6 +12,8 @@ export type Transformable = {
 	registerChild(...children: Transformable[]): void;
 	removeChild(...children: Transformable[]): void;
 	clearChildren(): void;
+
+	registerTransformableBuffer(buffer: GPUBuffer, offsets: TransformableBufferOffsets): void;
 
 	get parent(): Transformable | undefined;
 	set parent(parent: Transformable | undefined);
@@ -24,26 +26,15 @@ export type Transformable = {
 	get transformSubject$(): Subject<void>;
 };
 
-type TransformableOptionsDontWriteToBuffer = {
-	writeToBuffer: false;
+export type TransformableBufferOffsets = {
+	modelMatrix: number;
+	inverseModelMatrix: number;
+	previousFrameModelMatrix: number;
 };
-
-type TransformableOptionsWriteToBuffer = {
-	writeToBuffer: true;
-	buffer: GPUBuffer;
-	bufferOffsets: {
-		modelMatrix: number;
-		inverseModelMatrix: number;
-		previousFrameModelMatrix: number;
-	};
-};
-
-type TransformableOptions = TransformableOptionsDontWriteToBuffer | TransformableOptionsWriteToBuffer;
 
 export function transformable<T extends Constructor<Animatable>>(
-	options: TransformableOptions,
 	base: T,
-): Constructor<Transformable> & T {
+): Constructor<Transformable & Positionable & Rotatable & Scalable> & T {
 	return class extends positionable(rotatable(scalable(base))) {
 		private _parent?: Transformable;
 		private _children: Transformable[] = [];
@@ -57,6 +48,9 @@ export function transformable<T extends Constructor<Animatable>>(
 		private _windingOrder: 'cw' | 'ccw' = 'ccw';
 
 		private readonly _transformSubject$ = new Subject<void>();
+
+		private _transformableBuffer?: GPUBuffer;
+		private _transformableBufferOffsets?: TransformableBufferOffsets;
 
 		constructor(...args: any[]) {
 			super(args);
@@ -76,15 +70,15 @@ export function transformable<T extends Constructor<Animatable>>(
 			// models that have a negative transformation matrix should be drawn in clockwise winding order, this allows mirrored geometry
 			this._windingOrder = this._modelMatrix.determinant() >= 0 ? 'ccw' : 'cw';
 
-			if (options.writeToBuffer) {
+			if (this._transformableBuffer && this._transformableBufferOffsets) {
 				device.queue.writeBuffer(
-					options.buffer,
-					options.bufferOffsets.modelMatrix,
+					this._transformableBuffer,
+					this._transformableBufferOffsets.modelMatrix,
 					this.modelMatrix.toF32Array(),
 				);
 				device.queue.writeBuffer(
-					options.buffer,
-					options.bufferOffsets.inverseModelMatrix,
+					this._transformableBuffer,
+					this._transformableBufferOffsets.inverseModelMatrix,
 					this.inverseModelMatrix.toF32Array(),
 				);
 			}
@@ -96,13 +90,18 @@ export function transformable<T extends Constructor<Animatable>>(
 			this._modelMatrixHasBeenUpdatedLastFrame = true;
 		}
 
+		registerTransformableBuffer(buffer: GPUBuffer, offsets: TransformableBufferOffsets) {
+			this._transformableBuffer = buffer;
+			this._transformableBufferOffsets = offsets;
+		}
+
 		private updateLastFrameModelMatrix() {
 			if (!this._modelMatrixHasBeenUpdatedLastFrame) return;
 			this._previousFrameModelMatrix = this.modelMatrix;
-			if (options.writeToBuffer) {
+			if (this._transformableBuffer && this._transformableBufferOffsets) {
 				device.queue.writeBuffer(
-					options.buffer,
-					options.bufferOffsets.previousFrameModelMatrix,
+					this._transformableBuffer,
+					this._transformableBufferOffsets.previousFrameModelMatrix,
 					this._previousFrameModelMatrix.toF32Array(),
 				);
 			}
