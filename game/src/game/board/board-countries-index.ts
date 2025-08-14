@@ -1,4 +1,5 @@
-import { EmptyEntity } from ':engine/data/entity/empty-entity';
+import { animatable } from ':engine/traits/animatable.trait';
+import { transformable } from ':engine/traits/transformable.trait';
 import { BCAlaska } from './board-countries/bc-alaska';
 import { BCAlgeria } from './board-countries/bc-algeria';
 import { BCAral } from './board-countries/bc-aral';
@@ -43,7 +44,7 @@ import { BCVenezuela } from './board-countries/bc-venezuela';
 import { BCVietnam } from './board-countries/bc-vietnam';
 import { BCVladvostok } from './board-countries/bc-vladvostok';
 
-export class BoardCountriesIndex extends EmptyEntity {
+export class BoardCountriesIndex extends transformable(animatable(class {})) {
 	private readonly BoardCountries = {
 		alaska: new BCAlaska(),
 		algeria: new BCAlgeria(),
@@ -91,10 +92,7 @@ export class BoardCountriesIndex extends EmptyEntity {
 	} as const;
 
 	constructor() {
-		super({
-			name: 'Country container',
-		});
-
+		super();
 		this.allCountries.forEach(c => (c.parent = this));
 	}
 
