@@ -87,6 +87,21 @@ export class RenderResourcePool {
 		this.resizeBloomBuffers(resolution);
 	}
 
+	/**
+	 * Maps and reads the picking id under the mouse, sending the result to the IO Mouse class.
+	 */
+	async updatePicking() {
+		try {
+			await this.pickingBuffer.mapAsync(GPUMapMode.READ, 0, 4);
+			const idArray = new Uint32Array(this.pickingBuffer.getMappedRange(0, 4));
+			const id = idArray[0];
+			this.pickingBuffer.unmap();
+			game.engine.managers.io.mouseInteractionManager.notifyFramePickingID(id);
+		} catch {
+			console.warn('Failed to get the picking buffer, probably due to the renderer being destructed');
+		}
+	}
+
 	private resizeCommonBuffers(resolution: Resolution) {
 		this._depthTexture.texture = device.createTexture({
 			label: 'render pool: depth texture',
@@ -193,7 +208,6 @@ export class RenderResourcePool {
 		projection: RenderProjection;
 		postEffets: RenderPostEffects;
 		jitter: Vec2;
-		luminanceHistogram: LuminanceHistogram;
 	}) {
 		this._scene = data.scene;
 		this._commandEncoder = data.commandEncoder;

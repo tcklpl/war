@@ -9,13 +9,13 @@ import { SceneManager } from './data/scene/scene-manager';
 import { IDBWarConnection } from './idb-war-connection';
 import { IdentifierPool } from './identifier-pool';
 import { GameIO } from './io/io';
-import { BRDFLUTRenderer } from './render/brdf-lut/brdf-lut-renderer';
-import { EquirectangularToCubemapRenderer } from './render/equirec-to-cubemap/equirec-to-cubemap-renderer';
-import { MipmapRenderer } from './render/mipmap/mipmap-renderer';
-import { CubemapPrefilterRenderer } from './render/renderer/cubemap-prefilter/cubemap-prefilter-renderer';
 import type { Renderer } from './render/renderer/renderer';
-import { TexturePackingRenderer } from './render/texture-packing/texture-packing-renderer';
-import { VanillaRenderer } from './render/vanilla/vanilla-renderer';
+import { BRDFLUTRenderer } from './render/renderer/util/brdf-lut.renderer';
+import { CubemapPrefilterRenderer } from './render/renderer/util/cubemap-prefilter.renderer';
+import { EquirectangularToCubemapRenderer } from './render/renderer/util/equirec-to-cubemap.renderer';
+import { MipmapRenderer } from './render/renderer/util/mipmap.renderer';
+import { TexturePackingRenderer } from './render/renderer/util/texture-packing.renderer';
+import { VanillaRenderer } from './render/renderer/vanilla/vanilla-renderer';
 import { Time } from './time';
 
 export class Engine {

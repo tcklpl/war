@@ -23,15 +23,7 @@ export class VanillaRenderer extends Renderer {
 		await this._renderResourcePool.initialize();
 		this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
 		this._renderPipeline.buildPipeline(game.engine.config.graphics);
-		await this._renderPipeline.initialize({
-			canvasPreferredTextureFormat: this._presentationFormat,
-			pickingBuffer: this._pickingBuffer,
-
-			luminanceHistogramBins: this._luminanceHistogram.bins,
-			luminanceHistogramBuffer: this._luminanceHistogram.buffer,
-
-			renderResourcePool: this._renderResourcePool,
-		});
+		await this._renderPipeline.initialize(this._renderResourcePool);
 		this.buildJitterOffsets(this._renderProjection.resolution.full);
 	}
 
@@ -58,7 +50,7 @@ export class VanillaRenderer extends Renderer {
 		this._jitterOffsets = offsets;
 	}
 
-	private assertCanvasResolution() {
+	private async assertCanvasResolution() {
 		const width = Math.max(1, Math.min(device.limits.maxTextureDimension2D, gameCanvas.clientWidth));
 		const height = Math.max(1, Math.min(device.limits.maxTextureDimension2D, gameCanvas.clientHeight));
 
@@ -66,27 +58,14 @@ export class VanillaRenderer extends Renderer {
 			!this._renderResourcePool.hasTextures || width !== gameCanvas.width || height !== gameCanvas.height;
 		if (!resize) return;
 
+		await device.queue.onSubmittedWorkDone();
+
 		gameCanvas.width = width;
 		gameCanvas.height = height;
 		this._renderProjection.updateResolution(new Vec2(width, height));
 		this._renderResourcePool.resizeBuffers(this._renderProjection.resolution);
 		this._renderPipeline.dispatchResolutionUpdate(this._renderResourcePool);
 		this.buildJitterOffsets(this._renderProjection.resolution.full);
-	}
-
-	/**
-	 * Maps and reads the picking id under the mouse, sending the result to the IO Mouse class.
-	 */
-	private async updatePicking() {
-		try {
-			await this._pickingBuffer.mapAsync(GPUMapMode.READ, 0, 4);
-			const idArray = new Uint32Array(this._pickingBuffer.getMappedRange(0, 4));
-			const id = idArray[0];
-			this._pickingBuffer.unmap();
-			game.engine.managers.io.mouseInteractionManager.notifyFramePickingID(id);
-		} catch {
-			console.warn('Failed to get the picking buffer, probably due to the renderer being destructed');
-		}
 	}
 
 	async render() {
@@ -104,7 +83,7 @@ export class VanillaRenderer extends Renderer {
 		this._currentJitter = (this._currentJitter + 1) % this._jitterOffsetCount;
 		const frameJitter = this._jitterOffsets[this._currentJitter];
 
-		this.assertCanvasResolution();
+		await this.assertCanvasResolution();
 		const commandEncoder = device.createCommandEncoder();
 		this._renderResourcePool.prepareForFrame({
 			scene,
@@ -113,18 +92,16 @@ export class VanillaRenderer extends Renderer {
 			postEffets: this._renderPostEffects,
 			jitter: frameJitter,
 		});
-		this._renderPipeline.render(this._renderResourcePool);
+		await this._renderPipeline.render(this._renderResourcePool);
 		device.queue.submit([commandEncoder.finish()]);
 
-		await this.updatePicking();
-		await this._luminanceHistogram.updateLuminanceHistogram();
-		this._renderPostEffects.avg_luminance_target = this._luminanceHistogram.avg;
+		await this._renderResourcePool.updatePicking();
+		await this._renderResourcePool.luminanceHistogram.updateLuminanceHistogram();
+		this._renderPostEffects.avg_luminance_target = this._renderResourcePool.luminanceHistogram.avg;
 	}
 
 	async free() {
 		this._renderResourcePool.free();
 		this._renderPipeline.free();
-		this._luminanceHistogram.free();
-		this._pickingBuffer.destroy();
 	}
 }
