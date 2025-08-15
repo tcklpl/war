@@ -22,7 +22,7 @@ const HUDAlert: React.FC = () => {
 
 	const handleClose = () => {
 		setOpen(false);
-		setCurrentAlert(undefined);
+		setTimeout(() => setCurrentAlert(undefined), 500);
 	};
 
 	return (
