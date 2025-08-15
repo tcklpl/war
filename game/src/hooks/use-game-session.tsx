@@ -8,7 +8,7 @@ import type { GamePauseReason, LobbyListState, LobbyState } from ':protocol';
 import type React from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAlert } from './use-alert';
+import { useAlertStore } from '../state/alert.store';
 import { useConfig } from './use-config';
 import { useGame } from './use-game';
 
@@ -51,7 +51,7 @@ const GameSessionProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
 	// Hooks
 	const { sessionConfig, saveConfig } = useConfig();
 	const { gameInstance } = useGame();
-	const { enqueueAlert } = useAlert();
+	const enqueueAlert = useAlertStore(state => state.enqueueAlert);
 	const { t } = useTranslation(['lobby', 'ingame']);
 
 	// Server connection and user states

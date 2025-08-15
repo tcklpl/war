@@ -1,4 +1,3 @@
-import { useAlert } from ':hooks/use-alert';
 import { useConfirmation } from ':hooks/use-confirmation';
 import { useGame } from ':hooks/use-game';
 import { useGameSession } from ':hooks/use-game-session';
@@ -12,12 +11,13 @@ import type React from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAlertStore } from '../../../state/alert.store';
 import PlayerNameBox from '../config/player-name-box/player-name-box';
 
 const MainMenu: React.FC = () => {
 	const { username, reconnectionInfo, setReconnectionInfo } = useGameSession();
 	const { gameInstance } = useGame();
-	const { enqueueAlert } = useAlert();
+	const enqueueAlert = useAlertStore(state => state.enqueueAlert);
 	const { enqueueConfirmation } = useConfirmation();
 	const navigate = useNavigate();
 	const { t } = useTranslation(['server_list', 'config', 'credits', 'common']);
