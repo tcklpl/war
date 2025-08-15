@@ -1,4 +1,3 @@
-import { useConfirmation } from ':hooks/use-confirmation';
 import {
 	alpha,
 	Box,
@@ -19,6 +18,7 @@ import { useGameSession } from ':hooks/use-game-session';
 import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import SaveIcon from '@mui/icons-material/Save';
+import { useConfirmationStore } from '../../../../state/confirmation.store';
 
 type PauseScreenText = {
 	reason: string;
@@ -30,7 +30,7 @@ type LobbyOwnerActions = 'keep paused' | 'save and exit' | 'move on';
 const PauseScreen: FunctionComponent = () => {
 	const { t } = useTranslation(['ingame']);
 	const { palette } = useTheme();
-	const { enqueueConfirmation } = useConfirmation();
+	const enqueueConfirmation = useConfirmationStore(state => state.enqueueConfirmation);
 	const { gIsPaused, gPauseReason, currentGameSession, username } = useGameSession();
 	const isLobbyOwner =
 		currentGameSession?.initialGameState.players.find(p => p.name === username)?.is_lobby_owner ?? false;

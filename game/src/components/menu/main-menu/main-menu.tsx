@@ -1,4 +1,3 @@
-import { useConfirmation } from ':hooks/use-confirmation';
 import { useGame } from ':hooks/use-game';
 import { useGameSession } from ':hooks/use-game-session';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,13 +11,14 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAlertStore } from '../../../state/alert.store';
+import { useConfirmationStore } from '../../../state/confirmation.store';
 import PlayerNameBox from '../config/player-name-box/player-name-box';
 
 const MainMenu: React.FC = () => {
 	const { username, reconnectionInfo, setReconnectionInfo } = useGameSession();
 	const { gameInstance } = useGame();
 	const enqueueAlert = useAlertStore(state => state.enqueueAlert);
-	const { enqueueConfirmation } = useConfirmation();
+	const enqueueConfirmation = useConfirmationStore(state => state.enqueueConfirmation);
 	const navigate = useNavigate();
 	const { t } = useTranslation(['server_list', 'config', 'credits', 'common']);
 

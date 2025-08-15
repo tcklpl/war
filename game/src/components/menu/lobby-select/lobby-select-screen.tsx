@@ -1,4 +1,3 @@
-import { useConfirmation } from ':hooks/use-confirmation';
 import { useGame } from ':hooks/use-game';
 import { useGameSession } from ':hooks/use-game-session';
 import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
@@ -8,6 +7,7 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useConfirmationStore } from '../../../state/confirmation.store';
 import LobbyCard from './lobby-card';
 import style from './lobby-select.module.scss';
 import LobbySelectCreateLobby from './lobby-select-create-lobby';
@@ -15,7 +15,7 @@ import LobbySelectCreateLobby from './lobby-select-create-lobby';
 const LobbySelectScreen: React.FC = () => {
 	const { palette } = useTheme();
 	const { t } = useTranslation(['lobby', 'common']);
-	const { enqueueConfirmation } = useConfirmation();
+	const enqueueConfirmation = useConfirmationStore(state => state.enqueueConfirmation);
 	const { username, lobbies, currentLobby } = useGameSession();
 	const { gameInstance } = useGame();
 	const navigate = useNavigate();

@@ -1,20 +1,20 @@
-import type { ConfirmationRequestInfo } from ':hooks/use-confirmation';
-import { useConfirmation } from ':hooks/use-confirmation';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Skeleton } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { type ConfirmationRequestInfo, useConfirmationStore } from '../../state/confirmation.store';
 
 const HUDConfirmation: React.FC = () => {
 	const [open, setOpen] = useState(false);
 	const [currentConfirmation, setCurrentConfirmation] = useState<ConfirmationRequestInfo | undefined>();
-	const { confirmationQueue, getCurrentConfirmation } = useConfirmation();
+	const confirmationQueue = useConfirmationStore(state => state.confirmationQueue);
+	const dequeueConfirmation = useConfirmationStore(state => state.dequeueConfirmation);
 	const { t } = useTranslation(['common']);
 
 	useEffect(() => {
 		if (!!currentConfirmation || confirmationQueue.length === 0) return;
-		setCurrentConfirmation(getCurrentConfirmation());
-	}, [currentConfirmation, confirmationQueue, getCurrentConfirmation]);
+		setCurrentConfirmation(dequeueConfirmation());
+	}, [currentConfirmation, confirmationQueue, dequeueConfirmation]);
 
 	useEffect(() => {
 		setOpen(!!currentConfirmation);
@@ -22,7 +22,7 @@ const HUDConfirmation: React.FC = () => {
 
 	const handleClose = useCallback(() => {
 		setOpen(false);
-		setCurrentConfirmation(undefined);
+		setTimeout(() => setCurrentConfirmation(undefined), 500);
 	}, []);
 
 	const confirm = useCallback(() => {
@@ -37,13 +37,9 @@ const HUDConfirmation: React.FC = () => {
 
 	return (
 		<Dialog open={open} onClose={cancel}>
-			<DialogTitle>
-				{currentConfirmation?.title ?? <Skeleton variant='text' sx={{ fontSize: '1rem' }} />}
-			</DialogTitle>
+			<DialogTitle>{currentConfirmation?.title}</DialogTitle>
 			<DialogContent>
-				<DialogContentText>
-					{currentConfirmation?.description ?? <Skeleton variant='text' sx={{ fontSize: '1rem' }} />}
-				</DialogContentText>
+				<DialogContentText>{currentConfirmation?.description}</DialogContentText>
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={cancel} variant='text'>

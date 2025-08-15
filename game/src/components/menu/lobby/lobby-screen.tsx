@@ -1,4 +1,3 @@
-import { useConfirmation } from ':hooks/use-confirmation';
 import { useGameSession } from ':hooks/use-game-session';
 import AnarchismIcon from ':icons/anarchism/anarchism-icon';
 import CapitalismIcon from ':icons/capitalism/capitalism-icon';
@@ -40,13 +39,14 @@ import { useNavigate } from 'react-router-dom';
 import LobbyAdminConfigScreen from './admin/lobby-admin-cfg';
 import LobbyChatBox from './lobby-chat-box';
 import './lobby-screen.scss';
+import { useConfirmationStore } from '../../../state/confirmation.store';
 import LobbyPartySelectorScreen from './party-selector/lobby-party-selector';
 
 const LobbyScreen: React.FC = () => {
 	const { palette } = useTheme();
 	const { t } = useTranslation(['lobby', 'common', 'parties']);
 	const { username, currentLobby, currentLobbyState, gameStartingIn, currentGameSession } = useGameSession();
-	const { enqueueConfirmation } = useConfirmation();
+	const enqueueConfirmation = useConfirmationStore(state => state.enqueueConfirmation);
 	const navigate = useNavigate();
 	const isLobbyOwner = currentLobbyState?.players.find(p => p.name === username)?.is_lobby_owner ?? false;
 	const canGameStart = !currentLobbyState?.players.some(p => p.party === 'not_set');
