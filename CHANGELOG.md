@@ -32,6 +32,7 @@ Icons:
 ### 🔨 Fixed
 
 - 🎮🔩 Fixed engine breaking due to chromium 135 dropping support for depth texture sampling.
+- 🎮 Alert and Confirmation screens no longer flicker when closing the last item.
 
 ### 🔧 Changed
 
