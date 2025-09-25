@@ -1,8 +1,8 @@
 import assetIndex from '../../asset-index.json';
 import { MissingAssetError } from '../../errors/engine/asset/missing-asset';
 import { BadGLTFFileError } from '../../errors/engine/gltf/bad-gltf-file';
+import type { IDBConnector } from '../../persistence/idb/idb-connector';
 import type { GLTFFile } from '../data/gltf/gltf-file';
-import type { IDBConnector } from '../idb/idb-connector';
 import { Manager } from '../manager';
 import type { Asset } from './asset';
 import { AssetCache } from './cache/asset-cache';

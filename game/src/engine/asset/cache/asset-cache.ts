@@ -1,5 +1,5 @@
-import type { IDBConnector } from '../../idb/idb-connector';
-import { IDBController } from '../../idb/idb-controller';
+import type { IDBConnector } from '../../../persistence/idb/idb-connector';
+import { IDBController } from '../../../persistence/idb/idb-controller';
 import type { CachedAsset } from './cached-asset';
 import type { CachedAssetIDBInterface } from './cached-asset-idb-interface';
 import type { CachedAssetKey } from './cached-asset-key';
