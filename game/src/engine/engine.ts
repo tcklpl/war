@@ -1,4 +1,7 @@
+import { t } from 'i18next';
 import { Subject } from 'rxjs';
+import { WebGPUUnsupportedError } from '../errors/engine/initialization/webgpu-unsupported';
+import { IDBWarConnection } from '../persistence/idb-war-connection';
 import { AssetManager } from './asset/asset-manager';
 import { ConfigManager } from './config/cfg-manager';
 import { CameraManager } from './data/camera/camera-manager';
@@ -6,7 +9,6 @@ import { LightManager } from './data/lights/light-manager';
 import { MaterialManager } from './data/material/material-manager';
 import { MeshManager } from './data/meshes/mesh-manager';
 import { SceneManager } from './data/scene/scene-manager';
-import { IDBWarConnection } from './idb-war-connection';
 import { IdentifierPool } from './identifier-pool';
 import { GameIO } from './io/io';
 import type { Renderer } from './render/renderer/renderer';
@@ -19,7 +21,9 @@ import { VanillaRenderer } from './render/renderer/vanilla/vanilla-renderer';
 import { Time } from './time';
 
 export class Engine {
-	private _renderer: Renderer = new VanillaRenderer();
+	private _device?: GPUDevice;
+
+	private _renderer?: Renderer;
 	private _shouldRender = false;
 
 	readonly idPool = new IdentifierPool();
@@ -85,8 +89,29 @@ export class Engine {
 	}
 
 	async initialize() {
+		const device = await this.initializeGPUDevice();
+		this._device = device;
+		this._renderer = new VanillaRenderer(device);
 		await this.initializeDB();
 		await this.initializeRenderers();
+	}
+
+	private async initializeGPUDevice() {
+		if (!navigator.gpu) throw new WebGPUUnsupportedError(t('engine:unsupported_webgpu'));
+
+		const adapter = await navigator.gpu?.requestAdapter();
+		if (!adapter) throw new WebGPUUnsupportedError(t('engine:disabled_webgpu'));
+
+		// check if we can render to a rg11b10ufloat texture. If it's possible it'll be preferred, as is uses 32 bits per pixel,
+		// compared from 64 from a rgba16f texture.
+		const canRenderToRG11B10 = adapter.features.has('rg11b10ufloat-renderable');
+
+		const device = await adapter?.requestDevice({
+			requiredFeatures: [...(canRenderToRG11B10 ? ['rg11b10ufloat-renderable' as GPUFeatureName] : [])],
+		});
+		if (!device) throw new WebGPUUnsupportedError(t('engine:unsupported_webgpu'));
+
+		return device;
 	}
 
 	private async initializeDB() {
