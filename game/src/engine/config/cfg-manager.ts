@@ -1,5 +1,5 @@
-import type { IDBConnector } from '../idb/idb-connector';
-import { IDBController } from '../idb/idb-controller';
+import type { IDBConnector } from '../../persistence/idb/idb-connector';
+import { IDBController } from '../../persistence/idb/idb-controller';
 import { ConfigDisplay } from './cfg-display';
 import { ConfigGame } from './cfg-game';
 import { ConfigGraphics } from './cfg-graphics';

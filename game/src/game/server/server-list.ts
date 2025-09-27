@@ -1,4 +1,4 @@
-import type { IDBConnector } from ':engine/idb/idb-connector';
+import type { IDBConnector } from '../../persistence/idb/idb-connector';
 import type { ServerListSelectInfo } from './server-list-select-info';
 import { ServerListStorage } from './server-list-storage';
 
