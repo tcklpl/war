@@ -49,12 +49,10 @@ export abstract class RenderPipeline extends RenderPipelineBase {
 export abstract class GeometryRenderPipeline extends RenderPipelineBase {
 	abstract primitiveDrawOptions: PrimitiveDrawOptions;
 	abstract sceneInfoBindGroupOptions: SceneInfoBindGroupOptions;
-	abstract initialize(pool: RenderResourcePool, windingOrder: WindingOrder): Promise<void>;
 
 	render(rpe: GPURenderPassEncoder, objects: Renderable[]) {
 		objects.forEach(o => o.render(rpe, this.gpuPipeline, this.primitiveDrawOptions));
 	}
 
-	abstract defineRenderAttachments(pool: RenderResourcePool): void;
 	abstract bindBindGroups(rpe: GPURenderPassEncoder, pool: RenderResourcePool): void;
 }
