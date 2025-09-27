@@ -15,14 +15,18 @@ export class PrepassPipeline extends GeometryRenderPipeline {
 
 	private readonly COLOR_ATTACHMENT_VELOCITY = 0;
 
-	async initialize(pool: RenderResourcePool, windingOrder: WindingOrder) {
+	constructor(private readonly _device: GPUDevice) {
+		super();
+	}
+
+	async initialize(windingOrder: WindingOrder, viewProjBuffer: GPUBuffer) {
 		await this.gpuShader.compile();
 		this.gpuPipeline = await this.buildPipeline(windingOrder);
-		this.viewProjBindGroup = this.buildViewProjBindBuffer(pool);
+		this.viewProjBindGroup = this.buildViewProjBindBuffer(viewProjBuffer);
 	}
 
 	private buildPipeline(windingOrder: WindingOrder) {
-		return device.createRenderPipelineAsync({
+		return this._device.createRenderPipelineAsync({
 			label: `rs pre pass ${windingOrder} pipeline`,
 			layout: 'auto',
 			vertex: {
@@ -73,17 +77,17 @@ export class PrepassPipeline extends GeometryRenderPipeline {
 		} as GPURenderPassDescriptor;
 	}
 
-	private buildViewProjBindBuffer(pool: RenderResourcePool) {
-		return device.createBindGroup({
+	private buildViewProjBindBuffer(viewProjBuffer: GPUBuffer) {
+		return this._device.createBindGroup({
 			label: 'Prepasss pipeline view/proj bind group',
 			layout: this.gpuPipeline.getBindGroupLayout(PrepassShader.BINDING_GROUPS.VIEW_PROJ),
-			entries: [{ binding: 0, resource: { buffer: pool.viewProjBuffer } }],
+			entries: [{ binding: 0, resource: { buffer: viewProjBuffer } }],
 		});
 	}
 
-	defineRenderAttachments(pool: RenderResourcePool): void {
-		this.defineColorRenderAttachment(this.COLOR_ATTACHMENT_VELOCITY, pool.velocityTextureView);
-		this.defineDepthRenderAttachment(pool.depthTextureView);
+	defineRenderAttachments(depthTextureView: GPUTextureView, velocityTextureView: GPUTextureView): void {
+		this.defineColorRenderAttachment(this.COLOR_ATTACHMENT_VELOCITY, velocityTextureView);
+		this.defineDepthRenderAttachment(depthTextureView);
 	}
 
 	bindBindGroups(rpe: GPURenderPassEncoder): void {

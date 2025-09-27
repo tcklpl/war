@@ -15,6 +15,10 @@ export class DepthPipeline extends GeometryRenderPipeline {
 	private _viewProjBuffer!: GPUBuffer;
 	private _viewProjBindGroup!: GPUBindGroup;
 
+	constructor(private readonly _device: GPUDevice) {
+		super();
+	}
+
 	async initialize() {
 		await this.gpuShader.compile();
 		this.gpuPipeline = await this.buildPipeline();
@@ -23,7 +27,7 @@ export class DepthPipeline extends GeometryRenderPipeline {
 	}
 
 	private buildPipeline() {
-		return device.createRenderPipelineAsync({
+		return this._device.createRenderPipelineAsync({
 			label: 'rs ssao pipeline',
 			layout: 'auto',
 			vertex: {
@@ -75,7 +79,7 @@ export class DepthPipeline extends GeometryRenderPipeline {
 	}
 
 	private buildViewProjBindGroup() {
-		return device.createBindGroup({
+		return this._device.createBindGroup({
 			label: 'PBR ViewProj',
 			layout: this.gpuPipeline.getBindGroupLayout(DepthShader.BINDING_GROUPS.VIEW_PROJ),
 			entries: [{ binding: 0, resource: { buffer: this._viewProjBuffer } }],
@@ -83,14 +87,10 @@ export class DepthPipeline extends GeometryRenderPipeline {
 	}
 
 	writeToDepthCommonBuffer(mat: Mat4) {
-		device.queue.writeBuffer(this._viewProjBuffer, 0, mat.toF32Array());
+		this._device.queue.writeBuffer(this._viewProjBuffer, 0, mat.toF32Array());
 	}
 
-	defineRenderAttachments(pool: RenderResourcePool) {
-		this.defineDepthRenderAttachment(pool.shadowMapAtlas.texture.view);
-	}
-
-	bindBindGroups(rpe: GPURenderPassEncoder, _pool: RenderResourcePool) {
+	bindBindGroups(rpe: GPURenderPassEncoder) {
 		rpe.setBindGroup(DepthShader.BINDING_GROUPS.VIEW_PROJ, this._viewProjBindGroup);
 	}
 

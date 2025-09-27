@@ -1,36 +1,42 @@
+import type { Scene } from ':engine/data/scene/scene.ts';
 import { PrepassPipeline } from ':engine/render/pipeline/geometry/prepass.pipeline';
-import type { RenderResourcePool } from '../../render-resource-pool';
-import type { RenderStage } from '../render-stage';
 
-export class RenderStagePrePass implements RenderStage {
-	private readonly _prepassPipelineCCW = new PrepassPipeline();
-	private readonly _prepassPipelineCW = new PrepassPipeline();
+export class RenderStagePrePass {
+	private readonly _prepassPipelineCCW = new PrepassPipeline(this._device);
+	private readonly _prepassPipelineCW = new PrepassPipeline(this._device);
 
-	async initialize(pool: RenderResourcePool) {
-		await this._prepassPipelineCCW.initialize(pool, 'ccw');
-		await this._prepassPipelineCW.initialize(pool, 'cw');
+	constructor(private readonly _device: GPUDevice) {}
+
+	async initialize(viewProjBuffer: GPUBuffer) {
+		await this._prepassPipelineCCW.initialize('ccw', viewProjBuffer);
+		await this._prepassPipelineCW.initialize('cw', viewProjBuffer);
 	}
 
-	render(pool: RenderResourcePool) {
-		pool.commandEncoder.pushDebugGroup('Pre-pass Render Stage');
-		this._prepassPipelineCCW.defineRenderAttachments(pool);
-		const rpe = pool.commandEncoder.beginRenderPass(this._prepassPipelineCCW.gpuRenderPassDescriptor);
+	render(
+		commandEncoder: GPUCommandEncoder,
+		scene: Scene,
+		depthTexture: GPUTextureView,
+		velocityTexture: GPUTextureView,
+	) {
+		commandEncoder.pushDebugGroup('Pre-pass Render Stage');
+		this._prepassPipelineCCW.defineRenderAttachments(depthTexture, velocityTexture);
+		const rpe = commandEncoder.beginRenderPass(this._prepassPipelineCCW.gpuRenderPassDescriptor);
 
-		if (pool.scene.entitiesPerWindingOrder.ccw.length > 0) {
-			this._prepassPipelineCCW.defineRenderAttachments(pool);
+		if (scene.entitiesPerWindingOrder.ccw.length > 0) {
+			this._prepassPipelineCCW.defineRenderAttachments(depthTexture, velocityTexture);
 			rpe.setPipeline(this._prepassPipelineCCW.gpuPipeline);
 			this._prepassPipelineCCW.bindBindGroups(rpe);
-			this._prepassPipelineCCW.render(rpe, pool.scene.entitiesPerWindingOrder.ccw);
+			this._prepassPipelineCCW.render(rpe, scene.entitiesPerWindingOrder.ccw);
 		}
 
-		if (pool.scene.entitiesPerWindingOrder.cw.length > 0) {
-			this._prepassPipelineCW.defineRenderAttachments(pool);
+		if (scene.entitiesPerWindingOrder.cw.length > 0) {
+			this._prepassPipelineCW.defineRenderAttachments(depthTexture, velocityTexture);
 			rpe.setPipeline(this._prepassPipelineCW.gpuPipeline);
 			this._prepassPipelineCW.bindBindGroups(rpe);
-			this._prepassPipelineCW.render(rpe, pool.scene.entitiesPerWindingOrder.cw);
+			this._prepassPipelineCW.render(rpe, scene.entitiesPerWindingOrder.cw);
 		}
 
 		rpe.end();
-		pool.commandEncoder.popDebugGroup();
+		commandEncoder.popDebugGroup();
 	}
 }
